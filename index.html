@@ -471,36 +471,74 @@
                         <svg class="w-6 h-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     </button>
                     <div>
-                        <h1 class="text-xl font-black text-slate-900 dark:text-white tracking-tighter">QUẢN LÝ <span class="text-blue-600">NGƯỜI DÙNG</span></h1>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Firebase Authentication — Bảo mật chuẩn công nghiệp</p>
+                        <h1 id="sysMgrTitle" class="text-xl font-black text-slate-900 dark:text-white tracking-tighter">QUẢN LÝ <span class="text-blue-600">NGƯỜI DÙNG</span></h1>
+                        <p id="sysMgrSubtitle" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Firebase Authentication — Bảo mật chuẩn công nghiệp</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button onclick="openAddUserModal()" class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-[11px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-blue-500/20 hover:scale-105 transition-all">
+                    <button id="addUserBtn" onclick="openAddUserModal()" class="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-[11px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-blue-500/20 hover:scale-105 transition-all">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                         Thêm người dùng
                     </button>
-                    <button onclick="refreshUserList()" class="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-blue-600 shadow-sm hover:shadow-md transition-all">
+                    <button onclick="refreshAdminData()" class="p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-blue-600 shadow-sm hover:shadow-md transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                     </button>
                 </div>
             </header>
 
-            <div class="data-section">
-                <div class="overflow-x-auto">
-                    <table class="data-table w-full text-sm text-left">
-                        <thead>
-                            <tr>
-                                <th>Tài khoản</th>
-                                <th>Trạng thái</th>
-                                <th>Hoạt động</th>
-                                <th class="text-center">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userTableBody">
-                            <tr><td colspan="4" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Đang tải danh sách...</td></tr>
-                        </tbody>
-                    </table>
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-slate-200 dark:border-slate-700 mb-6 gap-6 px-2">
+                <button id="tabUsers" onclick="switchAdminTab('users')" class="pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-blue-600 text-blue-600 transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A11.978 11.978 0 0 1 12 20.08a11.978 11.978 0 0 1-3-1.167v-.109m0 0c0-1.112.285-2.16.786-3.07M9 19.128a9.38 9.38 0 0 1-2.625.372 9.337 9.337 0 0 1-4.121-.952 4.125 4.125 0 0 1 7.533-2.493M9 19.128v-.003c0-1.113-.285-2.16-.786-3.07m0 0A10.995 10.995 0 0 1 12 12.75a10.995 10.995 0 0 1 5.001 1.25M12 12.75c.109 0 .217.003.325.008a9.07 9.07 0 0 0-.65 0 9.07 9.07 0 0 0-.65 0c.108-.005.216-.008.325-.008ZM12 12.75a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z" /></svg>
+                    Người dùng
+                </button>
+                <button id="tabFeedbacks" onclick="switchAdminTab('feedbacks')" class="pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8Z" /></svg>
+                    Phản hồi & Góp ý
+                </button>
+            </div>
+
+            <!-- View 1: Users -->
+            <div id="sysMgrUsersView">
+                <div class="data-section">
+                    <div class="overflow-x-auto">
+                        <table class="data-table w-full text-sm text-left">
+                            <thead>
+                                <tr>
+                                    <th>Tài khoản</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hoạt động</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <tr><td colspan="4" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Đang tải danh sách...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 2: Feedbacks -->
+            <div id="sysMgrFeedbacksView" class="hidden">
+                <div class="data-section">
+                    <div class="overflow-x-auto">
+                        <table class="data-table w-full text-sm text-left">
+                            <thead>
+                                <tr>
+                                    <th>Người gửi</th>
+                                    <th>Phân loại</th>
+                                    <th>Nội dung góp ý</th>
+                                    <th>Thời gian</th>
+                                    <th>Trạng thái</th>
+                                    <th class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feedbackTableBody">
+                                <tr><td colspan="6" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Đang tải phản hồi...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -977,6 +1015,7 @@
         let currentUserProfile = null;
         let lastLoggedUid = null; // Kiểm soát ghi log trùng lặp
         let appDataLoaded = false;
+        let activeAdminTab = 'users';
 
         // CHỐNG XSS
         function sanitize(str) {
@@ -1087,7 +1126,7 @@
                 overlay.style.display = 'none'; main.style.display = 'block';
                 sysMgr.style.display = 'block';
                 searchPanel.style.display = 'none'; dataSection.style.display = 'none';
-                refreshUserList();
+                switchAdminTab(activeAdminTab);
             }
         }
 
@@ -1958,6 +1997,160 @@
                 btn.disabled = false;
             }
         };        
+
+        // ============================================================
+        // LOGIC QUẢN TRỊ FEEDBACK (ADMIN)
+        // ============================================================
+
+        window.switchAdminTab = function(tab) {
+            activeAdminTab = tab;
+            const btnUsers = document.getElementById('tabUsers');
+            const btnFeedbacks = document.getElementById('tabFeedbacks');
+            const viewUsers = document.getElementById('sysMgrUsersView');
+            const viewFeedbacks = document.getElementById('sysMgrFeedbacksView');
+            const addUserBtn = document.getElementById('addUserBtn');
+            const titleEl = document.getElementById('sysMgrTitle');
+            const subtitleEl = document.getElementById('sysMgrSubtitle');
+
+            if (tab === 'users') {
+                if (btnUsers) btnUsers.className = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-blue-600 text-blue-600 transition-all flex items-center gap-2";
+                if (btnFeedbacks) btnFeedbacks.className = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all flex items-center gap-2";
+                
+                if (viewUsers) viewUsers.classList.remove('hidden');
+                if (viewFeedbacks) viewFeedbacks.classList.add('hidden');
+                
+                if (addUserBtn) addUserBtn.classList.remove('hidden');
+                if (addUserBtn) addUserBtn.style.display = 'flex';
+                if (titleEl) titleEl.innerHTML = `QUẢN LÝ <span class="text-blue-600">NGƯỜI DÙNG</span>`;
+                if (subtitleEl) subtitleEl.innerText = "Firebase Authentication — Bảo mật chuẩn công nghiệp";
+                
+                refreshUserList();
+            } else {
+                if (btnUsers) btnUsers.className = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all flex items-center gap-2";
+                if (btnFeedbacks) btnFeedbacks.className = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-blue-600 text-blue-600 transition-all flex items-center gap-2";
+                
+                if (viewUsers) viewUsers.classList.add('hidden');
+                if (viewFeedbacks) viewFeedbacks.classList.remove('hidden');
+                
+                if (addUserBtn) addUserBtn.classList.add('hidden');
+                if (addUserBtn) addUserBtn.style.display = 'none';
+                if (titleEl) titleEl.innerHTML = `PHẢN HỒI & <span class="text-blue-600">GÓP Ý</span>`;
+                if (subtitleEl) subtitleEl.innerText = "Danh sách ý kiến đóng góp từ các giám định viên";
+                
+                refreshFeedbackList();
+            }
+        };
+
+        window.refreshAdminData = function() {
+            if (activeAdminTab === 'users') {
+                refreshUserList();
+            } else {
+                refreshFeedbackList();
+            }
+        };
+
+        window.refreshFeedbackList = async function() {
+            const tableBody = document.getElementById('feedbackTableBody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Đang tải phản hồi...</td></tr>';
+
+            try {
+                const q = query(collection(db, "user_feedbacks"), orderBy("timestamp", "desc"));
+                const snap = await getDocs(q);
+                tableBody.innerHTML = '';
+                if (snap.empty) {
+                    tableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-20 text-center text-slate-400 font-bold italic text-xs uppercase">Chưa có phản hồi nào</td></tr>';
+                    return;
+                }
+                snap.forEach(docSnap => {
+                    const fb = docSnap.data();
+                    const id = docSnap.id;
+                    const date = fb.timestamp ? new Date(fb.timestamp.seconds * 1000).toLocaleString('vi-VN') : 'N/A';
+                    
+                    let typeBadge = '';
+                    if (fb.type === 'Báo lỗi (Bug)') {
+                        typeBadge = '<span class="badge-pro bg-red-100 text-red-600 border border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-800 font-bold">Báo lỗi</span>';
+                    } else if (fb.type === 'Góp ý phát triển') {
+                        typeBadge = '<span class="badge-pro bg-amber-100 text-amber-600 border border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-800 font-bold">Góp ý</span>';
+                    } else {
+                        typeBadge = '<span class="badge-pro bg-blue-100 text-blue-600 border border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800 font-bold">Khác</span>';
+                    }
+
+                    const isResolved = fb.status === 'resolved';
+                    const statusBadge = isResolved
+                        ? '<span class="px-2 py-1 bg-green-100 text-green-600 rounded-md font-bold text-[10px] uppercase">Đã xử lý</span>'
+                        : '<span class="px-2 py-1 bg-yellow-100 text-yellow-600 rounded-md font-bold text-[10px] uppercase">Chờ xử lý</span>';
+
+                    const toggleBtnHtml = isResolved 
+                        ? `<button onclick="toggleFeedbackStatus('${id}', 'resolved')" class="p-2 text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 rounded-lg transition-all" title="Đánh dấu chưa xử lý">
+                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/></svg>
+                           </button>`
+                        : `<button onclick="toggleFeedbackStatus('${id}', 'pending')" class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-950/20 rounded-lg transition-all" title="Đánh dấu đã xử lý">
+                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                           </button>`;
+
+                    const safeFullName = sanitize(fb.fullName || 'Thành viên');
+                    const safeEmail = sanitize(fb.email || 'Ẩn danh');
+                    const safeContent = sanitize(fb.content || '').replace(/\n/g, '<br>');
+                    const safeDate = sanitize(date);
+
+                    tableBody.innerHTML += `
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all">
+                            <td class="px-6 py-4">
+                                <div class="text-[13px] font-black text-slate-900 dark:text-white uppercase">${safeFullName}</div>
+                                <div class="text-[10px] font-bold text-slate-400 mt-1">Email: <span class="text-slate-600 dark:text-slate-300">${safeEmail}</span></div>
+                            </td>
+                            <td class="px-6 py-4">${typeBadge}</td>
+                            <td class="px-6 py-4">
+                                <div class="text-xs font-bold text-slate-700 dark:text-slate-200 max-w-[400px] whitespace-normal break-words">${safeContent}</div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-500 dark:text-slate-400 font-bold text-xs">${safeDate}</td>
+                            <td class="px-6 py-4">${statusBadge}</td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    ${toggleBtnHtml}
+                                    <button onclick="deleteFeedback('${id}')" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all" title="Xóa phản hồi">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 7h16M10 7V4a1 1 0 011-1h2a1 1 0 011 1v3M5 7l.867 12.142A2 2 0 007.862 21h8.276a2 2 0 001.995-1.858L19 7M10 11v6M14 11v6"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error loading feedbacks:", e);
+                tableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-20 text-center text-red-400 font-bold uppercase text-xs">Lỗi khi tải danh sách phản hồi!</td></tr>';
+            }
+        };
+
+        window.toggleFeedbackStatus = async function(id, currentStatus) {
+            const newStatus = currentStatus === 'resolved' ? 'pending' : 'resolved';
+            const confirmMsg = newStatus === 'resolved' 
+                ? 'Bạn muốn đánh dấu phản hồi này là ĐÃ XỬ LÝ?' 
+                : 'Bạn muốn đánh dấu phản hồi này là CHƯA XỬ LÝ?';
+            
+            customConfirm(confirmMsg, async () => {
+                try {
+                    await updateDoc(doc(db, "user_feedbacks", id), { status: newStatus });
+                    refreshFeedbackList();
+                    customAlert("Cập nhật trạng thái phản hồi thành công!", "success");
+                } catch (e) {
+                    customAlert("Lỗi cập nhật: " + e.message);
+                }
+            });
+        };
+
+        window.deleteFeedback = async function(id) {
+            customConfirm("Bạn có chắc chắn muốn XÓA phản hồi này khỏi hệ thống?", async () => {
+                try {
+                    await deleteDoc(doc(db, "user_feedbacks", id));
+                    refreshFeedbackList();
+                    customAlert("Đã xóa phản hồi thành công!", "success");
+                } catch (e) {
+                    customAlert("Lỗi xóa phản hồi: " + e.message);
+                }
+            });
+        };
     </script>
 </body>
 </html>
