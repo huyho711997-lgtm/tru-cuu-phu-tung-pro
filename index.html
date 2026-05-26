@@ -953,78 +953,100 @@
     </div>
 
     <div id="modalDonate" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-[fadeIn_0.3s_ease-out]">
-            <!-- Gradient Header Banner -->
-            <div class="relative bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 p-6 text-center text-white">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent)] pointer-events-none"></div>
-                <div class="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-3 animate-[floatAI_3s_ease-in-out_infinite]">
-                    <svg class="w-6 h-6 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-[fadeIn_0.3s_ease-out] border border-slate-200/50 dark:border-slate-800">
+            <!-- Premium Header Banner -->
+            <div class="relative bg-gradient-to-r from-blue-800 to-indigo-900 p-8 text-center text-white border-b border-white/5">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(244,123,32,0.15),transparent)] pointer-events-none"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(37,99,235,0.15),transparent)] pointer-events-none"></div>
+                <div class="w-14 h-14 bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10 shadow-lg shadow-black/10 animate-[floatAI_3s_ease-in-out_infinite]">
+                    <svg class="w-7 h-7 text-orange-400 fill-orange-400" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
                     </svg>
                 </div>
-                <h3 class="text-base font-black uppercase tracking-wider">Đồng Hành Cùng Phát Triển</h3>
-                <p class="text-[10px] text-blue-200 font-bold mt-1 uppercase tracking-widest">Ủng hộ để duy trì server tra cứu TASCO DLK</p>
+                <h3 class="text-lg font-black uppercase tracking-wider bg-gradient-to-r from-white via-slate-100 to-blue-200 bg-clip-text text-transparent">Đồng Hành Cùng Admin</h3>
+                <p class="text-[9px] text-blue-200/80 font-bold mt-1.5 uppercase tracking-[0.2em] leading-relaxed">Giao diện quyên góp cao cấp & tự động hóa</p>
             </div>
 
-            <div class="p-6 space-y-5">
-                <!-- Quick Amount Tabs -->
+            <div class="p-6 space-y-6">
+                <!-- Segmented Pill Tabs for Amounts -->
                 <div>
-                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-2 px-1 text-center">Chọn số tiền ủng hộ</label>
-                    <div class="grid grid-cols-4 gap-2">
-                        <button onclick="selectDonateAmount(20000, this)" class="py-2.5 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200/60 dark:border-slate-700 transition-all">20k</button>
-                        <button onclick="selectDonateAmount(50000, this)" class="py-2.5 bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 border-2 border-blue-500 rounded-xl text-xs font-black transition-all">50k</button>
-                        <button onclick="selectDonateAmount(100000, this)" class="py-2.5 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200/60 dark:border-slate-700 transition-all">100k</button>
-                        <button onclick="selectDonateAmount('custom', this)" class="py-2.5 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200/60 dark:border-slate-700 transition-all">Tùy chọn</button>
+                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] block mb-2.5 px-1 text-center">Chọn nhanh số tiền ủng hộ</label>
+                    <div class="relative bg-slate-100 dark:bg-slate-800/80 p-1 rounded-2xl flex gap-1 border border-slate-200/40 dark:border-slate-700/50">
+                        <button onclick="selectDonateAmount(20000, this)" class="flex-1 py-2 text-xs font-black text-slate-600 dark:text-slate-400 rounded-xl transition-all duration-200 select-amount-btn">20k</button>
+                        <button onclick="selectDonateAmount(50000, this)" class="flex-1 py-2 text-xs font-black text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-700 rounded-xl shadow-sm border border-slate-200/60 dark:border-slate-600 transition-all duration-200 select-amount-btn">50k</button>
+                        <button onclick="selectDonateAmount(100000, this)" class="flex-1 py-2 text-xs font-black text-slate-600 dark:text-slate-400 rounded-xl transition-all duration-200 select-amount-btn">100k</button>
+                        <button onclick="selectDonateAmount('custom', this)" class="flex-1 py-2 text-xs font-black text-slate-600 dark:text-slate-400 rounded-xl transition-all duration-200 select-amount-btn">Khác</button>
                     </div>
                 </div>
 
-                <!-- Custom Amount Input Container (Hidden by default) -->
-                <div id="customAmountContainer" class="hidden transition-all duration-300">
-                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1.5 px-1">Nhập số tiền (VNĐ)</label>
-                    <input type="number" id="customAmountInput" placeholder="Ví dụ: 150000" oninput="onCustomAmountChange()" class="w-full h-11 bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 rounded-xl px-4 text-xs font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none">
-                </div>
-
-                <!-- QR Display Container -->
-                <div class="flex flex-col items-center justify-center py-2 bg-slate-50 dark:bg-slate-950/40 rounded-2xl border border-slate-100 dark:border-slate-800/80">
-                    <div class="relative bg-white p-3 rounded-2xl shadow-md border border-slate-100/80 hover:scale-105 transition-all duration-300">
-                        <img id="donateQR" src="https://img.vietqr.io/image/VIB-917828538-compact.jpg?amount=50000&addInfo=TASCO%20DLK%20DONATE" alt="VietQR Donate" class="w-44 h-44 object-contain rounded-lg">
-                        <div class="absolute inset-0 bg-black/5 opacity-0 hover:opacity-100 rounded-2xl pointer-events-none transition-opacity"></div>
-                    </div>
-                    <div class="mt-2.5 flex items-center gap-1.5 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                        <svg class="w-3.5 h-3.5 text-blue-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-                        Quét mã VietQR để chuyển nhanh
+                <!-- Custom Amount Input Container -->
+                <div id="customAmountContainer" class="hidden transition-all duration-300 animate-[fadeIn_0.2s_ease-out]">
+                    <label class="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-1.5 px-1">Nhập số tiền ủng hộ (VNĐ)</label>
+                    <div class="relative">
+                        <input type="number" id="customAmountInput" placeholder="Ví dụ: 150000" oninput="onCustomAmountChange()" class="w-full h-11 bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 rounded-xl px-4 pr-10 text-xs font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-800 dark:text-slate-200">
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400 uppercase">đ</span>
                     </div>
                 </div>
 
-                <!-- Copyable Bank Information Card -->
-                <div class="bg-slate-50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800 rounded-2xl p-4 space-y-2.5">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Ngân hàng</span>
-                        <span class="font-black text-blue-700 dark:text-blue-400 uppercase">VIB - TMCP Quốc tế Việt Nam</span>
-                    </div>
-                    <div class="w-full h-px bg-slate-200/50 dark:bg-slate-700/50"></div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex flex-col">
-                            <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Số tài khoản</span>
-                            <span class="text-sm font-black tracking-wider text-slate-900 dark:text-white" id="donateAccNumber">917828538</span>
+                <!-- QR Display Container with Scanning Border Effect -->
+                <div class="flex flex-col items-center justify-center p-6 bg-slate-50/50 dark:bg-slate-900/30 rounded-2xl border border-slate-100 dark:border-slate-800/80">
+                    <div class="relative p-1 bg-gradient-to-tr from-blue-500 via-indigo-500 to-orange-500 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03]">
+                        <div class="bg-white p-3 rounded-[20px]">
+                            <img id="donateQR" src="https://img.vietqr.io/image/VIB-917828538-compact.jpg?amount=50000&addInfo=TASCO%20DLK%20DONATE" alt="VietQR Donate" class="w-40 h-40 object-contain rounded-lg">
                         </div>
-                        <button onclick="copyToClipboard('917828538', this)" class="px-3 py-1.5 bg-white hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-750 text-[10px] font-black text-blue-600 dark:text-blue-400 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center gap-1 shadow-sm transition-all">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                            <span>SAO CHÉP</span>
-                        </button>
                     </div>
-                    <div class="w-full h-px bg-slate-200/50 dark:bg-slate-700/50"></div>
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Chủ tài khoản</span>
-                        <span class="font-black text-slate-800 dark:text-white uppercase">HỒ QUANG HUY</span>
+                    
+                    <div class="mt-4 flex items-center gap-1.5 text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span>
+                        Hỗ trợ thanh toán nhanh VietQR
                     </div>
                 </div>
 
-                <p class="text-[9px] text-slate-400 dark:text-slate-500 italic text-center leading-relaxed">Mọi sự ủng hộ của các anh em giám định viên sẽ được dùng để duy trì máy chủ tra cứu phụ tùng TASCO DLK. Xin trân trọng cảm ơn!</p>
+                <!-- Premium VIB Physical Debit Card Simulation -->
+                <div class="relative bg-gradient-to-br from-[#003B73] via-[#005691] to-[#0A1931] p-5 rounded-2xl text-white shadow-xl overflow-hidden border border-white/10 group hover:shadow-2xl hover:shadow-[#005691]/20 transition-all duration-300">
+                    <!-- Curved glossy lines background decoration -->
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-gradient-to-tr from-orange-500/20 to-amber-500/0 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="absolute -left-10 -top-10 w-32 h-32 bg-blue-500/20 rounded-full blur-xl pointer-events-none"></div>
+                    
+                    <!-- Card Header -->
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <span class="text-[9px] font-black tracking-[0.2em] text-blue-200 uppercase leading-none block mb-1">Ngân hàng</span>
+                            <span class="text-sm font-extrabold tracking-tight text-white leading-none">VIB Bank</span>
+                        </div>
+                        <!-- Metallic Card Chip -->
+                        <div class="w-8 h-6 bg-gradient-to-br from-amber-300 via-amber-400 to-yellow-600 rounded-md border border-amber-200/40 relative overflow-hidden flex items-center justify-center shadow-inner">
+                            <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-yellow-900/20"></div>
+                            <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-yellow-900/20"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Number -->
+                    <div class="mb-5">
+                        <label class="text-[8px] font-black text-blue-200/80 uppercase tracking-widest block mb-1">Số tài khoản</label>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xl font-bold tracking-widest font-mono text-white" id="donateAccNumber">917828538</span>
+                            <button onclick="copyToClipboard('917828538', this)" class="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg flex items-center justify-center transition-all group-hover:scale-105 active:scale-95 border border-white/10 shadow-sm" title="Sao chép số tài khoản">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Footer -->
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <label class="text-[8px] font-black text-blue-200/80 uppercase tracking-widest block mb-1">Chủ tài khoản</label>
+                            <span class="text-xs font-black tracking-wide uppercase text-white">HỒ QUANG HUY</span>
+                        </div>
+                        <span class="px-2.5 py-1 bg-gradient-to-r from-orange-500 to-amber-500 text-[8px] font-black rounded-lg text-white tracking-widest uppercase shadow-md shadow-orange-500/20">PREMIUM</span>
+                    </div>
+                </div>
+
+                <p class="text-[9px] text-slate-400 dark:text-slate-500 italic text-center leading-relaxed">Mọi sự đóng góp hỗ trợ sẽ được dùng vào việc nâng cấp tài nguyên và duy trì máy chủ tra cứu phụ tùng TASCO DLK.</p>
             </div>
 
             <!-- Footer Action -->
-            <div class="p-4 bg-slate-50 dark:bg-slate-800/30 flex border-t border-slate-100 dark:border-slate-850">
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/30 flex border-t border-slate-100 dark:border-slate-800/80 justify-center">
                 <button onclick="closeModal('modalDonate')" class="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold rounded-xl text-center uppercase text-xs tracking-wider transition-colors shadow-sm">Đóng lại</button>
             </div>
         </div>
@@ -2025,19 +2047,21 @@
             }
             
             // Update active states of button
-            document.querySelectorAll('#modalDonate button[onclick^="selectDonateAmount"]').forEach(btn => {
-                btn.className = "py-2.5 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200/60 dark:border-slate-700 transition-all";
+            document.querySelectorAll('#modalDonate .select-amount-btn').forEach(btn => {
+                btn.className = "flex-1 py-2 text-xs font-black text-slate-600 dark:text-slate-400 rounded-xl transition-all duration-200 select-amount-btn";
             });
-            if (btnElement) btnElement.className = "py-2.5 bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 border-2 border-blue-500 rounded-xl text-xs font-black transition-all";
+            if (btnElement) {
+                btnElement.className = "flex-1 py-2 text-xs font-black text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-700 rounded-xl shadow-sm border border-slate-200/60 dark:border-slate-600 transition-all duration-200 select-amount-btn";
+            }
         };
 
         function updateDonateButtons(activeAmount) {
-            document.querySelectorAll('#modalDonate button[onclick^="selectDonateAmount"]').forEach(btn => {
+            document.querySelectorAll('#modalDonate .select-amount-btn').forEach(btn => {
                 const isMatch = btn.getAttribute('onclick').includes(activeAmount);
                 if (isMatch) {
-                    btn.className = "py-2.5 bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 border-2 border-blue-500 rounded-xl text-xs font-black transition-all";
+                    btn.className = "flex-1 py-2 text-xs font-black text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-700 rounded-xl shadow-sm border border-slate-200/60 dark:border-slate-600 transition-all duration-200 select-amount-btn";
                 } else {
-                    btn.className = "py-2.5 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 rounded-xl border border-slate-200/60 dark:border-slate-700 transition-all";
+                    btn.className = "flex-1 py-2 text-xs font-black text-slate-600 dark:text-slate-400 rounded-xl transition-all duration-200 select-amount-btn";
                 }
             });
         }
@@ -2063,12 +2087,30 @@
         window.copyToClipboard = function(text, btn) {
             navigator.clipboard.writeText(text).then(() => {
                 const originalHtml = btn.innerHTML;
-                btn.innerHTML = `<svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span>ĐÃ SAO CHÉP</span>`;
-                btn.classList.add('bg-green-50', 'border-green-300', 'text-green-600', 'dark:bg-green-950/20', 'dark:text-green-400');
+                btn.innerHTML = `<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
+                btn.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500/30');
+                btn.classList.remove('bg-white/10');
+                
+                // Hiển thị thông báo Toast siêu premium qua SweetAlert2
+                Swal.fire({
+                    toast: true,
+                    position: 'top',
+                    icon: 'success',
+                    title: 'Đã sao chép số tài khoản!',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: false,
+                    background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                    color: document.documentElement.classList.contains('dark') ? '#f8fafc' : '#0f172a',
+                    customClass: {
+                        popup: 'custom-rounded compact-modal'
+                    }
+                });
                 
                 setTimeout(() => {
                     btn.innerHTML = originalHtml;
-                    btn.classList.remove('bg-green-50', 'border-green-300', 'text-green-600', 'dark:bg-green-950/20', 'dark:text-green-400');
+                    btn.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500/30');
+                    btn.classList.add('bg-white/10');
                 }, 2000);
             }).catch(err => {
                 console.error('Cannot copy text: ', err);
