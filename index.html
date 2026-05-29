@@ -487,7 +487,7 @@
             </header>
 
             <!-- Tabs Navigation -->
-            <div class="flex border-b border-slate-200 dark:border-slate-700 mb-6 gap-6 px-2">
+            <div class="flex flex-wrap border-b border-slate-200 dark:border-slate-700 mb-6 gap-6 px-2">
                 <button id="tabUsers" onclick="switchAdminTab('users')" class="pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-blue-600 text-blue-600 transition-all flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A11.978 11.978 0 0 1 12 20.08a11.978 11.978 0 0 1-3-1.167v-.109m0 0c0-1.112.285-2.16.786-3.07M9 19.128a9.38 9.38 0 0 1-2.625.372 9.337 9.337 0 0 1-4.121-.952 4.125 4.125 0 0 1 7.533-2.493M9 19.128v-.003c0-1.113-.285-2.16-.786-3.07m0 0A10.995 10.995 0 0 1 12 12.75a10.995 10.995 0 0 1 5.001 1.25M12 12.75c.109 0 .217.003.325.008a9.07 9.07 0 0 0-.65 0 9.07 9.07 0 0 0-.65 0c.108-.005.216-.008.325-.008ZM12 12.75a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Z" /></svg>
                     Người dùng
@@ -495,6 +495,10 @@
                 <button id="tabFeedbacks" onclick="switchAdminTab('feedbacks')" class="pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8Z" /></svg>
                     Phản hồi & Góp ý
+                </button>
+                <button id="tabImport" onclick="switchAdminTab('import')" class="pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 12-4-4m4 4 4-4M4 20h16M6 20a2 2 0 0 1-2-2v-1m16 3a2 2 0 0 0 2-2v-1"/></svg>
+                    Import Excel
                 </button>
             </div>
 
@@ -538,6 +542,82 @@
                                 <tr><td colspan="6" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Đang tải phản hồi...</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 3: Import Excel -->
+            <div id="sysMgrImportView" class="hidden space-y-6">
+                <div class="data-section p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <div class="lg:col-span-4 rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 p-5">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 12-4-4m4 4 4-4M4 20h16"/></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase">Import lịch sử báo giá</h3>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Excel → Firestore/LichSuBaoGia</p>
+                                </div>
+                            </div>
+
+                            <input id="importExcelInput" type="file" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleImportExcelFile(event)">
+                            <button onclick="document.getElementById('importExcelInput').click()" class="w-full h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">
+                                1. Chọn file Excel
+                            </button>
+
+                            <div class="mt-5 space-y-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 leading-relaxed">
+                                <p>Khóa chống trùng: <b class="text-blue-600">so_hsbt + ten_phu_tung</b>.</p>
+                                <p>Cột bắt buộc: <b>Số HSBT, Tên phụ tùng, Hãng xe, Dòng xe, Năm SX, Loại hàng, Giá duyệt, Ngày báo giá, Garage, Tỉnh thành</b>.</p>
+                            </div>
+
+                            <div class="mt-5 border-t border-slate-200 dark:border-slate-700 pt-5">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Khi có dòng trùng</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"><input type="radio" name="importDuplicateMode" value="skip" checked class="w-4 h-4"> Bỏ qua dòng trùng</label>
+                                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"><input type="radio" name="importDuplicateMode" value="update" class="w-4 h-4"> Ghi đè dữ liệu cũ</label>
+                                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"><input type="radio" name="importDuplicateMode" value="keep" class="w-4 h-4"> Thêm tất cả, đánh dấu dup.</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-8 space-y-4">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <div class="rounded-2xl border border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-900"><div class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Tổng dòng</div><div id="importTotalRows" class="text-2xl font-black text-slate-900 dark:text-white mt-1">0</div></div>
+                                <div class="rounded-2xl border border-emerald-200 dark:border-emerald-900/60 p-4 bg-emerald-50/40 dark:bg-emerald-900/10"><div class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Dòng sạch</div><div id="importCleanRows" class="text-2xl font-black text-emerald-600 mt-1">0</div></div>
+                                <div class="rounded-2xl border border-red-200 dark:border-red-900/60 p-4 bg-red-50/40 dark:bg-red-900/10"><div class="text-[9px] font-black text-red-500 uppercase tracking-widest">Trùng</div><div id="importDupRows" class="text-2xl font-black text-red-500 mt-1">0</div></div>
+                                <div class="rounded-2xl border border-amber-200 dark:border-amber-900/60 p-4 bg-amber-50/40 dark:bg-amber-900/10"><div class="text-[9px] font-black text-amber-600 uppercase tracking-widest">Lỗi cột</div><div id="importInvalidRows" class="text-2xl font-black text-amber-600 mt-1">0</div></div>
+                            </div>
+
+                            <div id="importStatus" class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-xs font-bold text-slate-500 dark:text-slate-400">
+                                Chưa chọn file. Hệ thống sẽ preview 5 dòng đầu trước khi import.
+                            </div>
+
+                            <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-50 dark:bg-slate-800 text-[10px] uppercase tracking-widest text-slate-400 font-black">
+                                        <tr>
+                                            <th class="px-4 py-3">#</th>
+                                            <th class="px-4 py-3">Số HSBT</th>
+                                            <th class="px-4 py-3">Tên phụ tùng</th>
+                                            <th class="px-4 py-3">Xe</th>
+                                            <th class="px-4 py-3">Giá duyệt</th>
+                                            <th class="px-4 py-3">Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="importPreviewBody">
+                                        <tr><td colspan="6" class="px-4 py-10 text-center text-slate-300 font-black uppercase tracking-widest">Chưa có dữ liệu preview</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="flex flex-col md:flex-row gap-3 justify-end">
+                                <button id="btnClearImport" onclick="clearImportExcelState()" class="h-12 px-5 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300 text-xs font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Xóa preview</button>
+                                <button id="btnRunImport" onclick="runExcelImportToFirestore()" disabled class="h-12 px-6 rounded-2xl bg-slate-300 dark:bg-slate-700 text-white text-xs font-black uppercase tracking-widest cursor-not-allowed transition-all">
+                                    5. Batch write lên Firestore
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1149,6 +1229,7 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   
     <script type="module">
@@ -2102,6 +2183,380 @@
             openModal('modalDetail');
         };
 
+        // ============================================================
+        // IMPORT EXCEL → FIRESTORE — CHỐNG TRÙNG LẶP BẰNG duplicate_key
+        // ============================================================
+        let IMPORT_ROWS = [];
+        let IMPORT_EXISTING_MAP = new Map();
+
+        const IMPORT_REQUIRED_FIELDS = [
+            'so_hsbt', 'ten_phu_tung', 'hang_xe', 'hieu_xe', 'nam_sx',
+            'chinh_hang', 'gia_duyet', 'ngay_bao_gia', 'ten_garage', 'tinh_thanh'
+        ];
+
+        const IMPORT_FIELD_ALIASES = {
+            so_hsbt: ['so_hsbt', 'số hsbt', 'so hsbt', 'số hồ sơ', 'so ho so', 'mã hồ sơ', 'ma ho so', 'hsbt'],
+            ten_phu_tung: ['ten_phu_tung', 'tên phụ tùng', 'ten phu tung', 'phụ tùng', 'phu tung', 'tên vật tư', 'ten vat tu'],
+            hang_xe: ['hang_xe', 'hãng xe', 'hang xe'],
+            hieu_xe: ['hieu_xe', 'hiệu xe', 'hieu xe', 'dòng xe', 'dong xe'],
+            nam_sx: ['nam_sx', 'năm sx', 'nam sx', 'năm sản xuất', 'nam san xuat', 'đời xe', 'doi xe'],
+            chinh_hang: ['chinh_hang', 'chính hãng', 'chinh hang', 'loại hàng', 'loai hang', 'nguồn hàng', 'nguon hang'],
+            gia_duyet: ['gia_duyet', 'giá duyệt', 'gia duyet', 'đơn giá', 'don gia', 'giá', 'gia'],
+            ngay_bao_gia: ['ngay_bao_gia', 'ngày báo giá', 'ngay bao gia', 'ngày bg', 'ngay bg'],
+            ten_garage: ['ten_garage', 'tên garage', 'ten garage', 'garage', 'gara', 'đơn vị báo giá', 'don vi bao gia'],
+            tinh_thanh: ['tinh_thanh', 'tỉnh thành', 'tinh thanh', 'tỉnh/tp', 'tinh/tp', 'địa phương', 'dia phuong'],
+            loai_hinh: ['loai_hinh', 'loại hình', 'loai hinh']
+        };
+
+        function normalizeHeaderName(value) {
+            return String(value || '')
+                .trim()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd')
+                .replace(/\s+/g, ' ');
+        }
+
+        function normalizeKeyValue(value) {
+            return String(value || '')
+                .trim()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd')
+                .replace(/[^a-z0-9]+/g, ' ')
+                .trim()
+                .replace(/\s+/g, ' ');
+        }
+
+        function makeDuplicateKey(soHsbt, tenPhuTung) {
+            return `${normalizeKeyValue(soHsbt)}__${normalizeKeyValue(tenPhuTung)}`;
+        }
+
+        function hashDuplicateKey(str) {
+            let h1 = 0x811c9dc5;
+            for (let i = 0; i < str.length; i++) {
+                h1 ^= str.charCodeAt(i);
+                h1 = Math.imul(h1, 0x01000193);
+            }
+            return `dup_${(h1 >>> 0).toString(16).padStart(8, '0')}`;
+        }
+
+        function chunkArray(arr, size) {
+            const chunks = [];
+            for (let i = 0; i < arr.length; i += size) chunks.push(arr.slice(i, i + size));
+            return chunks;
+        }
+
+        function parseMoney(value) {
+            if (typeof value === 'number') return value;
+            const cleaned = String(value || '').replace(/[^\d.-]/g, '');
+            const num = Number(cleaned);
+            return Number.isFinite(num) ? num : 0;
+        }
+
+        function parseYear(value) {
+            const match = String(value || '').match(/\d{4}/);
+            return match ? Number(match[0]) : 0;
+        }
+
+        function excelDateToDisplay(value) {
+            if (!value) return '';
+            if (value instanceof Date && !Number.isNaN(value.getTime())) {
+                return value.toLocaleDateString('vi-VN');
+            }
+            if (typeof value === 'number' && window.XLSX?.SSF) {
+                try { return XLSX.SSF.format('dd/mm/yyyy', value); } catch (e) {}
+            }
+            return String(value).trim();
+        }
+
+        function normalizePartType(value) {
+            const raw = normalizeKeyValue(value);
+            if (!raw) return '';
+            if (raw.includes('chinh hang') || raw.includes('genuine')) return 'Chính hãng';
+            return 'Thay thế';
+        }
+
+        function buildHeaderMap(sampleRow) {
+            const headerMap = {};
+            Object.keys(sampleRow || {}).forEach(originalKey => {
+                const normalizedKey = normalizeHeaderName(originalKey);
+                Object.entries(IMPORT_FIELD_ALIASES).forEach(([field, aliases]) => {
+                    if (aliases.map(normalizeHeaderName).includes(normalizedKey)) headerMap[field] = originalKey;
+                });
+            });
+            return headerMap;
+        }
+
+        function readField(row, headerMap, field) {
+            const originalKey = headerMap[field];
+            return originalKey ? row[originalKey] : '';
+        }
+
+        function normalizeImportRow(row, headerMap, rowIndex) {
+            const item = {
+                so_hsbt: String(readField(row, headerMap, 'so_hsbt') || '').trim(),
+                ten_phu_tung: String(readField(row, headerMap, 'ten_phu_tung') || '').trim(),
+                hang_xe: String(readField(row, headerMap, 'hang_xe') || '').trim().toUpperCase(),
+                hieu_xe: String(readField(row, headerMap, 'hieu_xe') || '').trim().toUpperCase(),
+                nam_sx: parseYear(readField(row, headerMap, 'nam_sx')),
+                chinh_hang: normalizePartType(readField(row, headerMap, 'chinh_hang')),
+                gia_duyet: parseMoney(readField(row, headerMap, 'gia_duyet')),
+                ngay_bao_gia: excelDateToDisplay(readField(row, headerMap, 'ngay_bao_gia')),
+                ten_garage: String(readField(row, headerMap, 'ten_garage') || '').trim(),
+                tinh_thanh: String(readField(row, headerMap, 'tinh_thanh') || '').trim(),
+                loai_hinh: String(readField(row, headerMap, 'loai_hinh') || '').trim() || 'Gara',
+                verified: false,
+                import_source: 'excel_admin',
+                import_row_index: rowIndex,
+                imported_by: currentUserProfile?.email || '',
+                updatedAt: serverTimestamp()
+            };
+
+            item.duplicate_key = makeDuplicateKey(item.so_hsbt, item.ten_phu_tung);
+            item.import_doc_id = hashDuplicateKey(item.duplicate_key);
+            item._invalid = IMPORT_REQUIRED_FIELDS.filter(field => !item[field]);
+            return item;
+        }
+
+        async function findExistingImportRows(rows) {
+            const existing = new Map();
+            const keys = [...new Set(rows.map(row => row.duplicate_key).filter(Boolean))];
+            const soHsbtList = [...new Set(rows.map(row => row.so_hsbt).filter(Boolean))];
+
+            for (const keyChunk of chunkArray(keys, 30)) {
+                const snap = await getDocs(query(collection(db, 'LichSuBaoGia'), where('duplicate_key', 'in', keyChunk)));
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.duplicate_key) existing.set(data.duplicate_key, { id: docSnap.id, ref: docSnap.ref, data });
+                });
+            }
+
+            // Fallback cho dữ liệu cũ chưa có duplicate_key.
+            for (const hsbtChunk of chunkArray(soHsbtList, 30)) {
+                const snap = await getDocs(query(collection(db, 'LichSuBaoGia'), where('so_hsbt', 'in', hsbtChunk)));
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const key = data.duplicate_key || makeDuplicateKey(data.so_hsbt, data.ten_phu_tung);
+                    if (key && !existing.has(key)) existing.set(key, { id: docSnap.id, ref: docSnap.ref, data });
+                });
+            }
+
+            return existing;
+        }
+
+        function setImportButtonEnabled(enabled) {
+            const btn = document.getElementById('btnRunImport');
+            if (!btn) return;
+            btn.disabled = !enabled;
+            btn.className = enabled
+                ? 'h-12 px-6 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all'
+                : 'h-12 px-6 rounded-2xl bg-slate-300 dark:bg-slate-700 text-white text-xs font-black uppercase tracking-widest cursor-not-allowed transition-all';
+        }
+
+        function renderImportPreview() {
+            const body = document.getElementById('importPreviewBody');
+            const totalEl = document.getElementById('importTotalRows');
+            const cleanEl = document.getElementById('importCleanRows');
+            const dupEl = document.getElementById('importDupRows');
+            const invalidEl = document.getElementById('importInvalidRows');
+
+            const duplicateCount = IMPORT_ROWS.filter(row => row._duplicate).length;
+            const invalidCount = IMPORT_ROWS.filter(row => row._invalid?.length).length;
+            const cleanCount = IMPORT_ROWS.length - duplicateCount - invalidCount;
+
+            totalEl.innerText = IMPORT_ROWS.length;
+            cleanEl.innerText = Math.max(cleanCount, 0);
+            dupEl.innerText = duplicateCount;
+            invalidEl.innerText = invalidCount;
+
+            if (!IMPORT_ROWS.length) {
+                body.innerHTML = '<tr><td colspan="6" class="px-4 py-10 text-center text-slate-300 font-black uppercase tracking-widest">Chưa có dữ liệu preview</td></tr>';
+                setImportButtonEnabled(false);
+                return;
+            }
+
+            body.innerHTML = IMPORT_ROWS.slice(0, 5).map((row, idx) => {
+                const status = row._invalid?.length
+                    ? `<span class="px-2 py-1 rounded-lg bg-amber-100 text-amber-700 font-black">Thiếu: ${sanitize(row._invalid.join(', '))}</span>`
+                    : row._duplicate
+                        ? '<span class="px-2 py-1 rounded-lg bg-red-100 text-red-600 font-black">Trùng Firestore</span>'
+                        : '<span class="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-700 font-black">Sạch</span>';
+                return `
+                    <tr class="border-t border-slate-100 dark:border-slate-800">
+                        <td class="px-4 py-3 font-black text-slate-400">${idx + 1}</td>
+                        <td class="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">${sanitize(row.so_hsbt)}</td>
+                        <td class="px-4 py-3 font-black text-slate-900 dark:text-white uppercase">${sanitize(row.ten_phu_tung)}</td>
+                        <td class="px-4 py-3 font-bold text-slate-600 dark:text-slate-300">${sanitize(row.hang_xe)} ${sanitize(row.hieu_xe)} — ${sanitize(row.nam_sx)}</td>
+                        <td class="px-4 py-3 font-black text-blue-600">${new Intl.NumberFormat('vi-VN').format(row.gia_duyet || 0)}</td>
+                        <td class="px-4 py-3">${status}</td>
+                    </tr>`;
+            }).join('');
+
+            setImportButtonEnabled(IMPORT_ROWS.some(row => !row._invalid?.length));
+        }
+
+        window.handleImportExcelFile = async function(event) {
+            const file = event.target.files?.[0];
+            const status = document.getElementById('importStatus');
+            if (!file) return;
+            if (!window.XLSX) return customAlert('Chưa tải được thư viện SheetJS. Vui lòng kiểm tra kết nối CDN.');
+
+            try {
+                status.innerText = 'Đang đọc Excel và kiểm tra trùng lặp Firestore...';
+                setImportButtonEnabled(false);
+
+                const buffer = await file.arrayBuffer();
+                const workbook = XLSX.read(buffer, { type: 'array', cellDates: true });
+                const firstSheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[firstSheetName];
+                const rawRows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: true });
+
+                if (!rawRows.length) {
+                    clearImportExcelState();
+                    return customAlert('File Excel không có dữ liệu.');
+                }
+
+                const headerMap = buildHeaderMap(rawRows[0]);
+                const missingColumns = IMPORT_REQUIRED_FIELDS.filter(field => !headerMap[field]);
+                if (missingColumns.length) {
+                    clearImportExcelState();
+                    return customAlert('File Excel thiếu cột bắt buộc: ' + missingColumns.join(', '));
+                }
+
+                IMPORT_ROWS = rawRows.map((row, idx) => normalizeImportRow(row, headerMap, idx + 2));
+                IMPORT_EXISTING_MAP = await findExistingImportRows(IMPORT_ROWS);
+                IMPORT_ROWS.forEach(row => row._duplicate = IMPORT_EXISTING_MAP.has(row.duplicate_key));
+
+                renderImportPreview();
+                status.innerText = `Đã đọc ${IMPORT_ROWS.length} dòng từ sheet "${firstSheetName}". Preview 5 dòng đầu đã sẵn sàng.`;
+            } catch (error) {
+                console.error('Import Excel parse error:', error);
+                clearImportExcelState();
+                customAlert('Lỗi đọc file Excel: ' + error.message);
+            }
+        };
+
+        window.clearImportExcelState = function() {
+            IMPORT_ROWS = [];
+            IMPORT_EXISTING_MAP = new Map();
+            const input = document.getElementById('importExcelInput');
+            if (input) input.value = '';
+            const status = document.getElementById('importStatus');
+            if (status) status.innerText = 'Chưa chọn file. Hệ thống sẽ preview 5 dòng đầu trước khi import.';
+            renderImportPreview();
+        };
+
+        async function updateFilterMetadataAfterImport(rows) {
+            const metaRef = doc(db, 'metadata', 'filters');
+            const metaSnap = await getDoc(metaRef);
+            const meta = metaSnap.exists() ? metaSnap.data() : {};
+            const cay = meta.cay_gia_pha_xe || {};
+            const years = new Set(meta.nam_sx_all || []);
+
+            rows.forEach(row => {
+                if (!row.hang_xe || !row.hieu_xe || !row.nam_sx) return;
+                if (!cay[row.hang_xe]) cay[row.hang_xe] = {};
+                if (!Array.isArray(cay[row.hang_xe][row.hieu_xe])) cay[row.hang_xe][row.hieu_xe] = [];
+                if (!cay[row.hang_xe][row.hieu_xe].includes(row.nam_sx)) cay[row.hang_xe][row.hieu_xe].push(row.nam_sx);
+                cay[row.hang_xe][row.hieu_xe].sort((a, b) => b - a);
+                years.add(row.nam_sx);
+            });
+
+            await setDoc(metaRef, {
+                cay_gia_pha_xe: cay,
+                nam_sx_all: Array.from(years).sort((a, b) => b - a),
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+        }
+
+        window.runExcelImportToFirestore = async function() {
+            if (!IMPORT_ROWS.length) return customAlert('Bạn chưa chọn file Excel.');
+            const mode = document.querySelector('input[name="importDuplicateMode"]:checked')?.value || 'skip';
+            const validRows = IMPORT_ROWS.filter(row => !row._invalid?.length);
+            if (!validRows.length) return customAlert('Không có dòng hợp lệ để import.');
+
+            const rowsToWrite = validRows.filter(row => {
+                if (!row._duplicate) return true;
+                return mode === 'update' || mode === 'keep';
+            });
+
+            if (!rowsToWrite.length) return customAlert('Tất cả dòng hợp lệ đều bị trùng và bạn đang chọn chế độ bỏ qua.');
+
+            customConfirm(`Xác nhận import ${rowsToWrite.length} dòng vào Firestore?\nChế độ xử lý trùng: ${mode.toUpperCase()}`, async () => {
+                const btn = document.getElementById('btnRunImport');
+                const status = document.getElementById('importStatus');
+                const oldText = btn.innerText;
+                btn.disabled = true;
+                btn.innerText = 'ĐANG GHI DỮ LIỆU...';
+                status.innerText = 'Đang batch write lên Firestore, vui lòng không tắt trình duyệt...';
+
+                let created = 0, updated = 0, duplicated = 0, skipped = 0;
+                try {
+                    for (const chunk of chunkArray(rowsToWrite, 450)) {
+                        const batch = writeBatch(db);
+
+                        chunk.forEach(row => {
+                            const existing = IMPORT_EXISTING_MAP.get(row.duplicate_key);
+                            const cleanRow = { ...row };
+                            delete cleanRow._invalid;
+                            delete cleanRow._duplicate;
+
+                            if (existing && mode === 'update') {
+                                batch.set(existing.ref, cleanRow, { merge: true });
+                                updated++;
+                                return;
+                            }
+
+                            if (existing && mode === 'keep') {
+                                const newRef = doc(collection(db, 'LichSuBaoGia'));
+                                batch.set(newRef, {
+                                    ...cleanRow,
+                                    is_duplicate_import: true,
+                                    duplicate_of: existing.id,
+                                    createdAt: serverTimestamp()
+                                });
+                                duplicated++;
+                                return;
+                            }
+
+                            const newRef = doc(db, 'LichSuBaoGia', row.import_doc_id);
+                            batch.set(newRef, {
+                                ...cleanRow,
+                                createdAt: serverTimestamp()
+                            }, { merge: true });
+                            created++;
+                        });
+
+                        await batch.commit();
+                    }
+
+                    skipped = validRows.length - rowsToWrite.length;
+                    await updateFilterMetadataAfterImport(rowsToWrite);
+                    await loadFilters();
+
+                    await addDoc(collection(db, 'user_logs'), {
+                        email: currentUserProfile?.email || '',
+                        action: 'Import Excel',
+                        details: `created=${created}, updated=${updated}, duplicated=${duplicated}, skipped=${skipped}`,
+                        timestamp: serverTimestamp()
+                    });
+
+                    status.innerText = `Hoàn tất: thêm mới ${created}, ghi đè ${updated}, thêm bản dup ${duplicated}, bỏ qua ${skipped}.`;
+                    customAlert(`Import thành công!\nThêm mới: ${created}\nGhi đè: ${updated}\nThêm bản dup: ${duplicated}\nBỏ qua: ${skipped}`, 'success');
+                } catch (error) {
+                    console.error('Import Excel commit error:', error);
+                    status.innerText = 'Import thất bại: ' + error.message;
+                    customAlert('Lỗi ghi Firestore: ' + error.message);
+                } finally {
+                    btn.innerText = oldText;
+                    setImportButtonEnabled(IMPORT_ROWS.some(row => !row._invalid?.length));
+                }
+            });
+        };
+
         // KHỞI ĐỘNG CƠ SỞ DỮ LIỆU BỘ LỌC
         loadFilters();
         // ============================================================
@@ -2294,49 +2749,63 @@
 
         window.switchAdminTab = function(tab) {
             activeAdminTab = tab;
-            const btnUsers = document.getElementById('tabUsers');
-            const btnFeedbacks = document.getElementById('tabFeedbacks');
-            const viewUsers = document.getElementById('sysMgrUsersView');
-            const viewFeedbacks = document.getElementById('sysMgrFeedbacksView');
+
+            const activeClass = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-blue-600 text-blue-600 transition-all flex items-center gap-2";
+            const inactiveClass = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all flex items-center gap-2";
+
+            const tabs = {
+                users: document.getElementById('tabUsers'),
+                feedbacks: document.getElementById('tabFeedbacks'),
+                import: document.getElementById('tabImport')
+            };
+            const views = {
+                users: document.getElementById('sysMgrUsersView'),
+                feedbacks: document.getElementById('sysMgrFeedbacksView'),
+                import: document.getElementById('sysMgrImportView')
+            };
+
+            Object.keys(tabs).forEach(key => {
+                if (tabs[key]) tabs[key].className = key === tab ? activeClass : inactiveClass;
+                if (views[key]) views[key].classList.toggle('hidden', key !== tab);
+            });
+
             const addUserBtn = document.getElementById('addUserBtn');
             const titleEl = document.getElementById('sysMgrTitle');
             const subtitleEl = document.getElementById('sysMgrSubtitle');
 
             if (tab === 'users') {
-                if (btnUsers) btnUsers.className = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-blue-600 text-blue-600 transition-all flex items-center gap-2";
-                if (btnFeedbacks) btnFeedbacks.className = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all flex items-center gap-2";
-                
-                if (viewUsers) viewUsers.classList.remove('hidden');
-                if (viewFeedbacks) viewFeedbacks.classList.add('hidden');
-                
-                if (addUserBtn) addUserBtn.classList.remove('hidden');
-                if (addUserBtn) addUserBtn.style.display = 'flex';
+                if (addUserBtn) {
+                    addUserBtn.classList.remove('hidden');
+                    addUserBtn.style.display = 'flex';
+                }
                 if (titleEl) titleEl.innerHTML = `QUẢN LÝ <span class="text-blue-600">NGƯỜI DÙNG</span>`;
                 if (subtitleEl) subtitleEl.innerText = "Firebase Authentication — Bảo mật chuẩn công nghiệp";
-                
                 refreshUserList();
-            } else {
-                if (btnUsers) btnUsers.className = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all flex items-center gap-2";
-                if (btnFeedbacks) btnFeedbacks.className = "pb-3 text-xs font-black uppercase tracking-wider border-b-2 border-blue-600 text-blue-600 transition-all flex items-center gap-2";
-                
-                if (viewUsers) viewUsers.classList.add('hidden');
-                if (viewFeedbacks) viewFeedbacks.classList.remove('hidden');
-                
-                if (addUserBtn) addUserBtn.classList.add('hidden');
-                if (addUserBtn) addUserBtn.style.display = 'none';
+                return;
+            }
+
+            if (addUserBtn) {
+                addUserBtn.classList.add('hidden');
+                addUserBtn.style.display = 'none';
+            }
+
+            if (tab === 'feedbacks') {
                 if (titleEl) titleEl.innerHTML = `PHẢN HỒI & <span class="text-blue-600">GÓP Ý</span>`;
                 if (subtitleEl) subtitleEl.innerText = "Danh sách ý kiến đóng góp từ các giám định viên";
-                
                 refreshFeedbackList();
+                return;
+            }
+
+            if (tab === 'import') {
+                if (titleEl) titleEl.innerHTML = `IMPORT <span class="text-blue-600">EXCEL</span>`;
+                if (subtitleEl) subtitleEl.innerText = "Nạp dữ liệu LichSuBaoGia — chống trùng bằng duplicate_key";
             }
         };
 
         window.refreshAdminData = function() {
-            if (activeAdminTab === 'users') {
-                refreshUserList();
-            } else {
-                refreshFeedbackList();
-            }
+            if (activeAdminTab === 'users') return refreshUserList();
+            if (activeAdminTab === 'feedbacks') return refreshFeedbackList();
+            if (activeAdminTab === 'import') return clearImportExcelState();
         };
 
         window.refreshFeedbackList = async function() {
