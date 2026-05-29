@@ -568,7 +568,7 @@
 
                             <div class="mt-5 space-y-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 leading-relaxed">
                                 <p>Khóa chống trùng: <b class="text-blue-600">so_hsbt + ten_phu_tung</b>.</p>
-                                <p>Cột bắt buộc: <b>Số HSBT, Tên phụ tùng, Hãng xe, Hiệu xe/Dòng xe, Năm SX, Chính hãng/Loại hàng, Duyệt - Tiền phụ tùng/Giá duyệt, Ngày báo giá, Tên Garage</b>.</p><p>Cột <b>Tỉnh thành</b> là tùy chọn; nếu file không có vẫn import được.</p>
+                                <p>Cột bắt buộc: <b>Số HSBT, Tên phụ tùng, Hãng xe, Hiệu xe/Dòng xe, Chính hãng/Loại hàng, Duyệt - Tiền phụ tùng/Giá duyệt, Ngày báo giá, Tên Garage</b>.</p><p>Cột <b>Năm SX</b> và <b>Tỉnh thành</b> là tùy chọn; nếu file không có hoặc năm rỗng vẫn import được.</p>
                             </div>
 
                             <div class="mt-5 border-t border-slate-200 dark:border-slate-700 pt-5">
@@ -590,10 +590,10 @@
                             </div>
 
                             <div id="importStatus" class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-xs font-bold text-slate-500 dark:text-slate-400">
-                                Chưa chọn file. Hệ thống sẽ preview 5 dòng đầu trước khi import.
+                                Chưa chọn file. Hệ thống sẽ preview tối đa 200 dòng đầu trước khi import.
                             </div>
 
-                            <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                            <div class="overflow-auto max-h-[520px] rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
                                 <table class="w-full text-left text-xs">
                                     <thead class="bg-slate-50 dark:bg-slate-800 text-[10px] uppercase tracking-widest text-slate-400 font-black">
                                         <tr>
@@ -2190,9 +2190,10 @@
         let IMPORT_EXISTING_MAP = new Map();
 
         const IMPORT_REQUIRED_FIELDS = [
-            'so_hsbt', 'ten_phu_tung', 'hang_xe', 'hieu_xe', 'nam_sx',
+            'so_hsbt', 'ten_phu_tung', 'hang_xe', 'hieu_xe',
             'chinh_hang', 'gia_duyet', 'ngay_bao_gia', 'ten_garage'
         ];
+        const IMPORT_PREVIEW_LIMIT = 200;
         const IMPORT_OPTIONAL_FIELDS = ['tinh_thanh', 'loai_hinh'];
 
         const IMPORT_FIELD_ALIASES = {
@@ -2400,7 +2401,8 @@
                 return;
             }
 
-            body.innerHTML = IMPORT_ROWS.slice(0, 5).map((row, idx) => {
+            const visibleRows = IMPORT_ROWS.slice(0, IMPORT_PREVIEW_LIMIT);
+            body.innerHTML = visibleRows.map((row, idx) => {
                 const status = row._invalid?.length
                     ? `<span class="px-2 py-1 rounded-lg bg-amber-100 text-amber-700 font-black">Thiếu: ${sanitize(row._invalid.join(', '))}</span>`
                     : row._duplicate
@@ -2411,11 +2413,20 @@
                         <td class="px-4 py-3 font-black text-slate-400">${idx + 1}</td>
                         <td class="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">${sanitize(row.so_hsbt)}</td>
                         <td class="px-4 py-3 font-black text-slate-900 dark:text-white uppercase">${sanitize(row.ten_phu_tung)}</td>
-                        <td class="px-4 py-3 font-bold text-slate-600 dark:text-slate-300">${sanitize(row.hang_xe)} ${sanitize(row.hieu_xe)} — ${sanitize(row.nam_sx)}</td>
+                        <td class="px-4 py-3 font-bold text-slate-600 dark:text-slate-300">${sanitize(row.hang_xe)} ${sanitize(row.hieu_xe)} — ${sanitize(row.nam_sx || 'Chưa rõ')}</td>
                         <td class="px-4 py-3 font-black text-blue-600">${new Intl.NumberFormat('vi-VN').format(row.gia_duyet || 0)}</td>
                         <td class="px-4 py-3">${status}</td>
                     </tr>`;
             }).join('');
+
+            if (IMPORT_ROWS.length > IMPORT_PREVIEW_LIMIT) {
+                body.innerHTML += `
+                    <tr class="border-t border-slate-100 dark:border-slate-800">
+                        <td colspan="6" class="px-4 py-4 text-center text-slate-400 font-black uppercase tracking-widest">
+                            Đang hiển thị ${IMPORT_PREVIEW_LIMIT}/${IMPORT_ROWS.length} dòng. Khi import, hệ thống vẫn ghi toàn bộ dòng hợp lệ.
+                        </td>
+                    </tr>`;
+            }
 
             setImportButtonEnabled(IMPORT_ROWS.some(row => !row._invalid?.length));
         }
@@ -2455,7 +2466,7 @@
                 IMPORT_ROWS.forEach(row => row._duplicate = IMPORT_EXISTING_MAP.has(row.duplicate_key));
 
                 renderImportPreview();
-                status.innerText = `Đã đọc ${IMPORT_ROWS.length} dòng từ sheet "${firstSheetName}". Preview 5 dòng đầu đã sẵn sàng.`;
+                status.innerText = `Đã đọc ${IMPORT_ROWS.length} dòng từ sheet "${firstSheetName}". Đang preview ${Math.min(IMPORT_ROWS.length, IMPORT_PREVIEW_LIMIT)} dòng đầu; khi import sẽ ghi toàn bộ dòng hợp lệ.`;
             } catch (error) {
                 console.error('Import Excel parse error:', error);
                 clearImportExcelState();
@@ -2469,7 +2480,7 @@
             const input = document.getElementById('importExcelInput');
             if (input) input.value = '';
             const status = document.getElementById('importStatus');
-            if (status) status.innerText = 'Chưa chọn file. Hệ thống sẽ preview 5 dòng đầu trước khi import.';
+            if (status) status.innerText = 'Chưa chọn file. Hệ thống sẽ preview tối đa 200 dòng đầu trước khi import.';
             renderImportPreview();
         };
 
