@@ -472,6 +472,53 @@
         html.dark input[type="checkbox"]:checked { background-color: #2563eb !important; border-color: #2563eb !important; }
         html.dark input[type="checkbox"]:checked::before { transform: scale(1); }
 
+
+
+        /* ============ PREMIUM USER MANAGEMENT ============ */
+        .admin-user-dashboard { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px; }
+        .admin-user-stat-card { position: relative; overflow: hidden; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e2e8f0; border-radius: 22px; padding: 18px; box-shadow: 0 12px 30px -22px rgba(15,23,42,.45); }
+        .admin-user-stat-card::after { content:""; position:absolute; width:92px; height:92px; border-radius:999px; right:-34px; top:-36px; background: radial-gradient(circle, rgba(37,99,235,.14), rgba(37,99,235,0)); pointer-events:none; }
+        .admin-user-stat-icon { width:38px; height:38px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
+        .admin-user-stat-label { font-size:9px; font-weight:1000; color:#94a3b8; text-transform:uppercase; letter-spacing:.14em; }
+        .admin-user-stat-value { margin-top:4px; font-size:26px; line-height:1; font-weight:1000; color:#0f172a; letter-spacing:-.04em; }
+        .admin-user-toolbar { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px; border-bottom:1px solid #e2e8f0; background: linear-gradient(180deg, rgba(248,250,252,.9), rgba(255,255,255,.9)); }
+        .admin-user-search-wrap { position:relative; width:min(100%,420px); }
+        .admin-user-search { width:100%; height:44px; padding:0 16px 0 42px; border-radius:16px; border:1px solid #e2e8f0; background:#fff; outline:none; font-size:12px; font-weight:800; color:#0f172a; transition:all var(--transition-base) var(--ease-smooth); }
+        .admin-user-search:focus { border-color:#2563eb; box-shadow:0 0 0 4px rgba(37,99,235,.08); }
+        .admin-filter-chip { height:36px; padding:0 13px; border-radius:999px; border:1px solid #e2e8f0; background:#fff; color:#64748b; font-size:10px; font-weight:1000; text-transform:uppercase; letter-spacing:.08em; transition:all var(--transition-base) var(--ease-smooth); }
+        .admin-filter-chip:hover { transform:translateY(-1px); border-color:#bfdbfe; color:#2563eb; }
+        .admin-filter-chip.active { border-color:#2563eb; color:#fff; background:linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow:0 12px 24px -16px rgba(37,99,235,.85); }
+        .admin-user-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; padding:16px; }
+        .admin-user-card { position:relative; overflow:hidden; border:1px solid #e2e8f0; background:#fff; border-radius:22px; padding:16px; box-shadow:0 12px 30px -24px rgba(15,23,42,.55); transition:all var(--transition-base) var(--ease-smooth); }
+        .admin-user-card::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 100% 0%, rgba(37,99,235,.10), transparent 32%), radial-gradient(circle at 0% 100%, rgba(16,185,129,.08), transparent 30%); opacity:.9; pointer-events:none; }
+        .admin-user-card:hover { transform:translateY(-2px); border-color:#bfdbfe; box-shadow:0 20px 44px -30px rgba(37,99,235,.75); }
+        .admin-user-card > * { position:relative; z-index:1; }
+        .admin-user-avatar { width:46px; height:46px; border-radius:16px; background:linear-gradient(135deg,#2563eb,#4f46e5); color:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:1000; box-shadow:0 14px 26px -16px rgba(37,99,235,.9); flex-shrink:0; }
+        .admin-user-name { font-size:13px; font-weight:1000; color:#0f172a; text-transform:uppercase; letter-spacing:-.02em; }
+        .admin-user-email { margin-top:2px; font-size:10px; font-weight:800; color:#64748b; word-break:break-word; }
+        .admin-user-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:9px; font-weight:1000; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap; }
+        .admin-user-pill.active { background:#dcfce7; color:#15803d; border:1px solid #bbf7d0; }
+        .admin-user-pill.locked { background:#fee2e2; color:#dc2626; border:1px solid #fecaca; }
+        .admin-user-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:14px; }
+        .admin-user-metric { border-radius:16px; background:rgba(248,250,252,.86); border:1px solid #eef2f7; padding:10px; }
+        .admin-user-metric-label { font-size:8px; font-weight:1000; color:#94a3b8; text-transform:uppercase; letter-spacing:.1em; }
+        .admin-user-metric-value { margin-top:4px; font-size:13px; font-weight:1000; color:#1e40af; }
+        .admin-user-actions { display:flex; align-items:center; justify-content:flex-end; gap:8px; margin-top:14px; padding-top:14px; border-top:1px solid #eef2f7; }
+        .admin-user-action-btn { width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; border-radius:14px; border:1px solid #e2e8f0; background:rgba(255,255,255,.9); transition:all var(--transition-base) var(--ease-smooth); }
+        .admin-user-action-btn:hover { transform:translateY(-1px); }
+        .admin-user-empty { padding:54px 20px; text-align:center; font-size:12px; font-weight:900; color:#94a3b8; text-transform:uppercase; letter-spacing:.12em; }
+        html.dark .admin-user-stat-card, html.dark .admin-user-card, html.dark .admin-user-toolbar { background:linear-gradient(135deg,#0f172a 0%,#111827 100%) !important; border-color:#334155 !important; }
+        html.dark .admin-user-stat-value, html.dark .admin-user-name { color:#f8fafc !important; }
+        html.dark .admin-user-email { color:#cbd5e1 !important; }
+        html.dark .admin-user-search, html.dark .admin-filter-chip, html.dark .admin-user-action-btn { background:#1e293b !important; border-color:#334155 !important; color:#cbd5e1 !important; }
+        html.dark .admin-filter-chip.active { background:linear-gradient(135deg,#2563eb,#1d4ed8) !important; color:#fff !important; }
+        html.dark .admin-user-metric { background:rgba(15,23,42,.8) !important; border-color:#334155 !important; }
+        html.dark .admin-user-actions { border-top-color:#334155 !important; }
+        html.dark .admin-user-pill.active { background:rgba(22,163,74,.16) !important; color:#4ade80 !important; border-color:rgba(34,197,94,.28) !important; }
+        html.dark .admin-user-pill.locked { background:rgba(239,68,68,.14) !important; color:#f87171 !important; border-color:rgba(248,113,113,.24) !important; }
+        @media (max-width:1024px) { .admin-user-dashboard { grid-template-columns:repeat(2,minmax(0,1fr)); } .admin-user-grid { grid-template-columns:1fr; } }
+        @media (max-width:640px) { .admin-user-dashboard { grid-template-columns:1fr; } .admin-user-toolbar { flex-direction:column; align-items:stretch; } .admin-user-search-wrap { width:100%; } .admin-user-grid { padding:12px; } }
+
         /* Security badge */
         .security-badge {
             display: inline-flex; align-items: center; gap: 6px;
@@ -642,22 +689,19 @@
 
             <!-- View 1: Users -->
             <div id="sysMgrUsersView">
-                <div class="data-section">
-                    <div class="overflow-x-auto">
-                        <table class="data-table w-full text-sm text-left">
-                            <thead>
-                                <tr>
-                                    <th>Tài khoản</th>
-                                    <th>Trạng thái</th>
-                                    <th>Hoạt động</th>
-                                    <th class="text-center">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="userTableBody">
-                                <tr><td colspan="4" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Đang tải danh sách...</td></tr>
-                            </tbody>
-                        </table>
+                <div class="admin-user-dashboard">
+                    <div class="admin-user-stat-card"><div class="admin-user-stat-icon bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a4 4 0 0 0-5-3.87M9 20H4v-2a4 4 0 0 1 5-3.87m8-6.13a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm-8 0a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/></svg></div><div class="admin-user-stat-label">Tổng thành viên</div><div id="adminTotalUsers" class="admin-user-stat-value">0</div></div>
+                    <div class="admin-user-stat-card"><div class="admin-user-stat-icon bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div><div class="admin-user-stat-label">Đang hoạt động</div><div id="adminActiveUsers" class="admin-user-stat-value text-emerald-600">0</div></div>
+                    <div class="admin-user-stat-card"><div class="admin-user-stat-icon bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16.5 10.5V7a4.5 4.5 0 0 0-9 0v3.5m-.75 0h10.5A1.75 1.75 0 0 1 19 12.25v6A1.75 1.75 0 0 1 17.25 20H6.75A1.75 1.75 0 0 1 5 18.25v-6a1.75 1.75 0 0 1 1.75-1.75Z"/></svg></div><div class="admin-user-stat-label">Đang khóa</div><div id="adminLockedUsers" class="admin-user-stat-value text-red-500">0</div></div>
+                    <div class="admin-user-stat-card"><div class="admin-user-stat-icon bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 13.5h5.25L10.5 6l3 12 2.25-4.5H21"/></svg></div><div class="admin-user-stat-label">Lượt tra cứu</div><div id="adminTotalSearches" class="admin-user-stat-value text-indigo-600">0</div></div>
+                </div>
+                <div class="data-section overflow-hidden">
+                    <div class="admin-user-toolbar">
+                        <div class="admin-user-search-wrap"><svg class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg><input id="adminUserSearch" oninput="filterAdminUserCards()" class="admin-user-search" placeholder="Tìm theo họ tên, email..."></div>
+                        <div class="flex flex-wrap items-center gap-2"><button id="adminFilterAll" onclick="setAdminUserStatusFilter('all')" class="admin-filter-chip active">Tất cả</button><button id="adminFilterActive" onclick="setAdminUserStatusFilter('active')" class="admin-filter-chip">Hoạt động</button><button id="adminFilterLocked" onclick="setAdminUserStatusFilter('locked')" class="admin-filter-chip">Đã khóa</button></div>
                     </div>
+                    <div id="adminUserCardList" class="admin-user-grid"><div class="admin-user-empty col-span-full">Đang tải danh sách...</div></div>
+                    <table class="hidden"><tbody id="userTableBody"></tbody></table>
                 </div>
             </div>
 
@@ -1459,6 +1503,8 @@
         let lastLoggedUid = null; // Kiểm soát ghi log trùng lặp
         let appDataLoaded = false;
         let activeAdminTab = 'users';
+        let ADMIN_USER_CACHE = [];
+        let ADMIN_USER_STATUS_FILTER = 'all';
 
         // CHỐNG XSS
         function sanitize(str) {
@@ -1728,74 +1774,100 @@
         };
 
         // TẢI DANH SÁCH USER CHO ADMIN QUẢN LÝ
-        window.refreshUserList = async function() {
-            const tableBody = document.getElementById('userTableBody');
-            tableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Đang tải danh sách...</td></tr>';
+        function getInitials(nameOrEmail) {
+            const raw = String(nameOrEmail || '').trim();
+            if (!raw) return 'U';
+            const parts = raw.replace(/@.*/, '').split(/\s+/).filter(Boolean);
+            if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            return raw.slice(0, 2).toUpperCase();
+        }
 
+        function updateAdminUserStats(users) {
+            const total = users.length;
+            const locked = users.filter(u => u.status === 'locked').length;
+            const active = total - locked;
+            const totalSearches = users.reduce((sum, u) => sum + Number(u.searchCount || 0), 0);
+            const setText = (id, value) => { const el = document.getElementById(id); if (el) el.innerText = new Intl.NumberFormat('vi-VN').format(value); };
+            setText('adminTotalUsers', total); setText('adminActiveUsers', active); setText('adminLockedUsers', locked); setText('adminTotalSearches', totalSearches);
+        }
+
+        function renderAdminUserCards() {
+            const container = document.getElementById('adminUserCardList');
+            if (!container) return;
+            const keyword = (document.getElementById('adminUserSearch')?.value || '').toLowerCase().trim();
+            let users = [...ADMIN_USER_CACHE];
+            if (ADMIN_USER_STATUS_FILTER !== 'all') users = users.filter(u => (u.status || 'active') === ADMIN_USER_STATUS_FILTER);
+            if (keyword) users = users.filter(u => String(u.fullName || '').toLowerCase().includes(keyword) || String(u.email || '').toLowerCase().includes(keyword));
+            if (!users.length) { container.innerHTML = '<div class="admin-user-empty col-span-full">Không tìm thấy người dùng phù hợp</div>'; return; }
+
+            container.innerHTML = users.map(u => {
+                const uid = sanitize(u.uid);
+                const fullName = sanitize(u.fullName || 'Chưa có tên');
+                const email = sanitize(u.email || '');
+                const isLocked = (u.status || 'active') === 'locked';
+                const statusClass = isLocked ? 'locked' : 'active';
+                const statusText = isLocked ? 'Đã khóa' : 'Hoạt động';
+                const lockText = isLocked ? 'Mở khóa' : 'Khóa';
+                const lockColor = isLocked ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' : 'text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20';
+                const lastLogin = u.lastLogin ? new Date(u.lastLogin.seconds * 1000).toLocaleString('vi-VN') : 'Chưa đăng nhập';
+                const initials = sanitize(getInitials(u.fullName || u.email));
+                const loginCount = new Intl.NumberFormat('vi-VN').format(Number(u.loginCount || 0));
+                const searchCount = new Intl.NumberFormat('vi-VN').format(Number(u.searchCount || 0));
+
+                return `
+                    <div class="admin-user-card">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex items-center gap-3 min-w-0"><div class="admin-user-avatar">${initials}</div><div class="min-w-0"><div class="admin-user-name truncate">${fullName}</div><div class="admin-user-email">${email}</div></div></div>
+                            <span class="admin-user-pill ${statusClass}"><span class="w-1.5 h-1.5 rounded-full ${isLocked ? 'bg-red-500' : 'bg-emerald-500'}"></span>${statusText}</span>
+                        </div>
+                        <div class="admin-user-metrics">
+                            <div class="admin-user-metric"><div class="admin-user-metric-label">Đăng nhập</div><div class="admin-user-metric-value">${loginCount}</div></div>
+                            <div class="admin-user-metric"><div class="admin-user-metric-label">Tra cứu</div><div class="admin-user-metric-value">${searchCount}</div></div>
+                            <div class="admin-user-metric"><div class="admin-user-metric-label">Lần cuối</div><div class="admin-user-metric-value text-[10px] leading-snug text-slate-600 dark:text-slate-300">${sanitize(lastLogin)}</div></div>
+                        </div>
+                        <div class="admin-user-actions">
+                            <button onclick="viewUserHistoryById('${uid}')" class="admin-user-action-btn text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20" title="Xem lịch sử"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></button>
+                            <button onclick="toggleUserStatus('${uid}', '${sanitize(u.status || 'active')}')" class="admin-user-action-btn ${lockColor}" title="${lockText} tài khoản">${isLocked ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13.5 10.5V7a4.5 4.5 0 0 0-8.6-1.8M6.75 10.5h10.5A1.75 1.75 0 0 1 19 12.25v6A1.75 1.75 0 0 1 17.25 20H6.75A1.75 1.75 0 0 1 5 18.25v-6a1.75 1.75 0 0 1 1.75-1.75Z"/></svg>' : '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16.5 10.5V7a4.5 4.5 0 0 0-9 0v3.5m-.75 0h10.5A1.75 1.75 0 0 1 19 12.25v6A1.75 1.75 0 0 1 17.25 20H6.75A1.75 1.75 0 0 1 5 18.25v-6a1.75 1.75 0 0 1 1.75-1.75Z"/></svg>'}</button>
+                            <button onclick="openEditUserById('${uid}')" class="admin-user-action-btn text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20" title="Sửa thông tin"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z"/></svg></button>
+                            <button onclick="deleteSubUserById('${uid}')" class="admin-user-action-btn text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30" title="Xóa hồ sơ"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 7h16M10 7V4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3M5 7l.867 12.142A2 2 0 0 0 7.862 21h8.276a2 2 0 0 0 1.995-1.858L19 7M10 11v6M14 11v6"/></svg></button>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        window.setAdminUserStatusFilter = function(filter) {
+            ADMIN_USER_STATUS_FILTER = filter;
+            const map = { all: 'adminFilterAll', active: 'adminFilterActive', locked: 'adminFilterLocked' };
+            Object.entries(map).forEach(([key, id]) => { const el = document.getElementById(id); if (el) el.classList.toggle('active', key === filter); });
+            renderAdminUserCards();
+        };
+        window.filterAdminUserCards = function() { renderAdminUserCards(); };
+        window.openEditUserById = function(uid) { const user = ADMIN_USER_CACHE.find(item => item.uid === uid); if (!user) return customAlert('Không tìm thấy thông tin người dùng để chỉnh sửa.'); openEditUser(uid, user.email || '', user.fullName || ''); };
+        window.viewUserHistoryById = function(uid) { const user = ADMIN_USER_CACHE.find(item => item.uid === uid); if (!user) return customAlert('Không tìm thấy lịch sử người dùng.'); viewUserHistory(user.email || ''); };
+        window.deleteSubUserById = function(uid) { const user = ADMIN_USER_CACHE.find(item => item.uid === uid); if (!user) return customAlert('Không tìm thấy hồ sơ người dùng để xóa.'); deleteSubUser(uid, user.email || ''); };
+
+        window.refreshUserList = async function() {
+            const container = document.getElementById('adminUserCardList');
+            if (container) container.innerHTML = '<div class="admin-user-empty col-span-full">Đang tải danh sách...</div>';
             try {
                 const snap = await getDocs(collection(db, "user_profiles"));
-                tableBody.innerHTML = '';
-                if (snap.empty) {
-                    tableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-20 text-center text-slate-400 font-bold italic text-xs uppercase">Chưa có người dùng nào</td></tr>';
-                    return;
-                }
+                ADMIN_USER_CACHE = [];
                 snap.forEach(docSnap => {
                     const u = docSnap.data();
-                    const uid = docSnap.id;
-                    if (u.email === MGR_EMAIL) return; 
-
-                    const lastLogin = u.lastLogin ? new Date(u.lastLogin.seconds * 1000).toLocaleString('vi-VN') : 'Chưa đăng nhập';
-                    const isLocked = u.status === 'locked';
-
-                    const safeFullName = sanitize(u.fullName || 'Chưa có tên');
-                    const safeEmail = sanitize(u.email);
-                    const safeLastLogin = sanitize(lastLogin);
-
-                    const statusBadge = isLocked
-                        ? '<span class="px-2 py-1 bg-red-100 text-red-600 rounded-md font-bold text-[10px] uppercase">Đã khóa</span>'
-                        : '<span class="px-2 py-1 bg-green-100 text-green-600 rounded-md font-bold text-[10px] uppercase">Hoạt động</span>';
-
-                    const lockColor = isLocked ? 'text-green-600 hover:bg-green-50' : 'text-orange-500 hover:bg-orange-50';
-                    const lockTitle = isLocked ? 'Mở khóa' : 'Khóa tài khoản';
-                    const lockIcon = isLocked
-                        ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>'
-                        : '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>';
-
-                    tableBody.innerHTML += `
-                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all">
-                            <td class="px-6 py-4">
-                                <div class="text-[13px] font-black text-slate-900 dark:text-white uppercase">${safeFullName}</div>
-                                <div class="text-[10px] font-bold text-slate-400 mt-1">Email: <span class="text-slate-600 dark:text-slate-300">${safeEmail}</span></div>
-                                <div class="text-[9px] font-bold text-green-600 mt-0.5">Firebase Auth ✓</div>
-                            </td>
-                            <td class="px-6 py-4">${statusBadge}</td>
-                            <td class="px-6 py-4">
-                                <div class="text-[10px] font-bold text-slate-500">Đăng nhập: <span class="text-blue-600">${sanitize(u.loginCount || 0)}</span> lần</div>
-                                <div class="text-[10px] font-bold text-slate-500">Tra cứu: <span class="text-blue-600">${sanitize(u.searchCount || 0)}</span> lần</div>
-                                <div class="text-[9px] text-slate-400 mt-1 uppercase">Cuối: ${safeLastLogin}</div>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <div class="flex items-center justify-center gap-2">
-                                    <button onclick="viewUserHistory('${safeEmail}')" class="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all" title="Xem lịch sử">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    </button>
-                                    <button onclick="toggleUserStatus('${uid}', '${u.status || 'active'}')" class="p-2 ${lockColor} rounded-lg transition-all" title="${lockTitle}">
-                                        ${lockIcon}
-                                    </button>
-                                    <button onclick="openEditUser('${uid}', '${safeEmail}', '${safeFullName}')" class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all" title="Sửa thông tin">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    </button>
-                                    <button onclick="deleteSubUser('${uid}', '${safeEmail}')" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all" title="Xóa">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 7h16M10 7V4a1 1 0 011-1h2a1 1 0 011 1v3M5 7l.867 12.142A2 2 0 007.862 21h8.276a2 2 0 001.995-1.858L19 7M10 11v6M14 11v6"/></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
+                    if (String(u.email || '').toLowerCase() === MGR_EMAIL.toLowerCase()) return;
+                    ADMIN_USER_CACHE.push({ ...u, uid: docSnap.id, status: u.status || 'active' });
                 });
+                ADMIN_USER_CACHE.sort((a, b) => {
+                    const aLocked = (a.status || 'active') === 'locked';
+                    const bLocked = (b.status || 'active') === 'locked';
+                    if (aLocked !== bLocked) return aLocked ? 1 : -1;
+                    return String(a.fullName || a.email || '').localeCompare(String(b.fullName || b.email || ''), 'vi');
+                });
+                updateAdminUserStats(ADMIN_USER_CACHE);
+                renderAdminUserCards();
             } catch (e) {
                 console.error("Error:", e);
-                tableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-20 text-center text-red-400 font-bold uppercase text-xs">Lỗi khi tải danh sách người dùng!</td></tr>';
+                if (container) container.innerHTML = '<div class="admin-user-empty col-span-full text-red-500">Lỗi khi tải danh sách người dùng</div>';
             }
         };
 
@@ -2112,7 +2184,7 @@
         };
 
         // THỰC THI TRA CỨU PHỤ TÙNG DATA
-        window.searchData = async function() {
+        window.searchData = async function(options = {}) {
             const hang = document.getElementById('filterHang').value;
             const hieus = Array.from(document.querySelectorAll('input[name="hieu_xe"]:checked')).map(cb => cb.value);
             const nam = document.getElementById('filterNam').value;
@@ -2120,8 +2192,10 @@
             const search = document.getElementById('searchInput').value.toLowerCase().trim();
             const exactPartName = document.getElementById('exactPartName')?.value === '1';
             const loading = document.getElementById('loadingIndicator');
+            const silent = !!options?.silent;
+            const skipLog = !!options?.skipLog;
 
-            loading.classList.remove('hidden');
+            if (loading) loading.classList.remove('hidden');
             let constraints = [];
             if (hang) constraints.push(where("hang_xe", "==", hang));
             if (hieus.length > 0) constraints.push(where("hieu_xe", "in", hieus.slice(0, 30)));
@@ -2154,7 +2228,7 @@
                 CURRENT_PAGE = 1;
                 renderTable();
 
-                if (currentUserProfile && currentUserProfile.uid) {
+                if (!skipLog && currentUserProfile && currentUserProfile.uid) {
                     try {
                         const userRef = doc(db, "user_profiles", currentUserProfile.uid);
                         const userSnap = await getDoc(userRef);
@@ -2171,9 +2245,9 @@
                 }
             } catch (e) {
                 console.error(e);
-                customAlert("Lỗi máy chủ khi tải dữ liệu phụ tùng: " + e.message);
+                if (!silent) customAlert("Lỗi máy chủ khi tải dữ liệu phụ tùng: " + e.message);
             } finally {
-                loading.classList.add('hidden');
+                if (loading) loading.classList.add('hidden');
             }
         };
         function parsePriceValue(value) {
@@ -2698,6 +2772,17 @@
             }, { merge: true });
         }
 
+
+
+        async function refreshDataAfterImportSuccess(rowsToWrite) {
+            await updateFilterMetadataAfterImport(rowsToWrite);
+            await loadFilters();
+
+            // Làm mới lại bảng tra cứu nền để dữ liệu vừa import hiển thị ngay khi quay về màn hình chính.
+            CURRENT_PAGE = 1;
+            await searchData({ silent: true, skipLog: true });
+        }
+
         window.runExcelImportToFirestore = async function() {
             if (!IMPORT_ROWS.length) return customAlert('Bạn chưa chọn file Excel.');
             const mode = document.querySelector('input[name="importDuplicateMode"]:checked')?.value || 'skip';
@@ -2760,8 +2845,8 @@
                     }
 
                     skipped = validRows.length - rowsToWrite.length;
-                    await updateFilterMetadataAfterImport(rowsToWrite);
-                    await loadFilters();
+                    status.innerText = 'Đã ghi xong. Đang làm mới bộ lọc, bảng tra cứu và trạng thái import...';
+                    await refreshDataAfterImportSuccess(rowsToWrite);
 
                     await addDoc(collection(db, 'user_logs'), {
                         email: currentUserProfile?.email || '',
