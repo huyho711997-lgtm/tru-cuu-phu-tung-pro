@@ -1285,7 +1285,7 @@
                             </svg>
                         </span>
                         <div class="min-w-0">
-                            <div class="exact-part-filter-eyebrow">Đang tra cứu chính xác phụ tùng trong các hồ sơ khác</div>
+                            <div class="exact-part-filter-eyebrow">Đang tra cứu chính xác phụ tùng trong tất cả hồ sơ</div>
                             <div id="exactPartFilterName" class="exact-part-filter-name">—</div>
                             <div id="exactPartFilterMeta" class="exact-part-filter-meta">0 kết quả</div>
                         </div>
@@ -1361,12 +1361,12 @@
                         <tr>
                             <th>Phụ tùng</th><th>Loại hàng</th><th>Thông tin xe</th>
                             <th>Garage báo giá</th><th>Ngày báo giá</th>
-                            <th>Xác thực</th><th class="text-right">Đơn giá</th><th class="text-center">#</th>
+                            <th>Xác thực</th><th class="text-right">Đơn giá</th>
                         </tr>
                     </thead>
                     <tbody id="resultsTableBody">
                         <tr>
-                            <td colspan="8" class="px-6 py-40 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">
+                            <td colspan="7" class="px-6 py-40 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">
                                 Sẵn sàng tra cứu
                             </td>
                         </tr>
@@ -2704,7 +2704,7 @@
             document.querySelectorAll('#listHang .dropdown-item').forEach(item => item.style.display = 'flex');
             MASTER_DATA = []; CURRENT_PAGE = 1;
             EXACT_SOURCE_CONTEXT = null;
-            document.getElementById('resultsTableBody').innerHTML = '<tr><td colspan="8" class="px-6 py-40 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Sẵn sàng tra cứu</td></tr>';
+            document.getElementById('resultsTableBody').innerHTML = '<tr><td colspan="7" class="px-6 py-40 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Sẵn sàng tra cứu</td></tr>';
             document.getElementById('statCount').innerText = "0 kết quả";
             document.getElementById('priceSummaryBox')?.classList.add('hidden');
             updateExactPartFilterBanner();
@@ -2749,7 +2749,6 @@
 
                     if (exactPartName) {
                         if (tenPhuTung !== search) return;
-                        if (EXACT_SOURCE_CONTEXT?.so_hsbt && String(item.so_hsbt || '') === EXACT_SOURCE_CONTEXT.so_hsbt) return;
                         MASTER_DATA.push(item);
                     } else {
                         if (tenPhuTung.includes(search)) MASTER_DATA.push(item);
@@ -2772,7 +2771,7 @@
                         await addDoc(collection(db, "user_logs"), {
                             email: currentUserProfile.email,
                             action: "Tra cứu",
-                            details: `Từ khóa: "${search || 'Trống'}" — Chế độ: ${exactPartName ? 'Khớp chính xác' : 'Tìm gần đúng'}${EXACT_SOURCE_CONTEXT?.so_hsbt ? ' — Loại trừ HSBT: ' + EXACT_SOURCE_CONTEXT.so_hsbt : ''} — Hãng: ${hang || 'Tất cả'}, ${hieus.length ? hieus.length + ' dòng' : 'Tất cả dòng'} — Kết quả: ${MASTER_DATA.length}`,
+                            details: `Từ khóa: "${search || 'Trống'}" — Chế độ: ${exactPartName ? 'Khớp chính xác' : 'Tìm gần đúng'}${EXACT_SOURCE_CONTEXT?.so_hsbt ? ' — Nguồn chọn HSBT: ' + EXACT_SOURCE_CONTEXT.so_hsbt : ''} — Hãng: ${hang || 'Tất cả'}, ${hieus.length ? hieus.length + ' dòng' : 'Tất cả dòng'} — Kết quả: ${MASTER_DATA.length}`,
                             searchKeyword: search || '',
                             resultCount: MASTER_DATA.length,
                             exactPartName: exactPartName,
@@ -2855,8 +2854,8 @@
 
             banner.classList.remove('hidden');
             nameEl.innerText = partName;
-            const excluded = EXACT_SOURCE_CONTEXT?.so_hsbt ? ` • Đã loại trừ hồ sơ đang chọn: ${EXACT_SOURCE_CONTEXT.so_hsbt}` : '';
-            metaEl.innerText = `${MASTER_DATA.length} kết quả khớp chính xác${excluded}`;
+            const source = EXACT_SOURCE_CONTEXT?.so_hsbt ? ` • Bao gồm hồ sơ đang chọn: ${EXACT_SOURCE_CONTEXT.so_hsbt}` : '';
+            metaEl.innerText = `${MASTER_DATA.length} kết quả khớp chính xác${source}`;
         }
 
         window.clearExactPartFilter = function() {
@@ -2905,7 +2904,7 @@
             updateExactPartFilterBanner();
 
             if (MASTER_DATA.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="8" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Không tìm thấy phụ tùng khớp bộ lọc</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Không tìm thấy phụ tùng khớp bộ lọc</td></tr>';
                 updatePaginationUI(0); return;
             }
             MASTER_DATA.slice(startIndex, startIndex + ITEMS_PER_PAGE).forEach(item => {
@@ -2920,14 +2919,14 @@
                 const safeGarage = sanitize(item.ten_garage || 'KHÁC');
                 const safeTinh = sanitize(item.tinh_thanh || 'Toàn quốc');
                 const safeNgay = sanitize(ngay);
-                const safeItemIdForJs = String(item.id || '').replace(/\/g, '\\').replace(/'/g, "\'");
+                const safeItemIdForJs = String(item.id || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
                 tableBody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition-all cursor-pointer">
                         <td class="px-6 py-4" onclick="showDetail('${item.id}')">
                             <div class="text-[13px] font-black text-slate-900 uppercase">${safeTenPT}</div>
                             <div class="text-[9px] text-slate-400 font-bold mt-1 uppercase">${safeHSBT}</div>
-                            <button type="button" class="quick-exact-btn mt-2" onclick="event.stopPropagation(); searchExactPartFromResult('${safeItemIdForJs}')" title="Tra cứu chính xác phụ tùng này trong các hồ sơ khác">
+                            <button type="button" class="quick-exact-btn mt-2" onclick="event.stopPropagation(); searchExactPartFromResult('${safeItemIdForJs}')" title="Tra cứu chính xác phụ tùng này trong tất cả hồ sơ">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"/>
                                 </svg>
@@ -2949,13 +2948,6 @@
                             : `<span class="badge-pro badge-unverified" onclick="verifyPart('${item.id}')">Xác thực ngay</span>`
                         }</td>
                         <td class="px-6 py-4 text-right" onclick="showDetail('${item.id}')"><div class="price-text">${new Intl.NumberFormat('vi-VN').format(item.gia_duyet || 0)}</div></td>
-                        <td class="px-6 py-4 text-center">
-                            <button type="button" class="quick-exact-btn !h-9 !px-3" onclick="event.stopPropagation(); searchExactPartFromResult('${safeItemIdForJs}')" title="Tìm phụ tùng này ở hồ sơ khác">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15zM8 10.5h5"/>
-                                </svg>
-                            </button>
-                        </td>
                     </tr>
                 `;
             });
