@@ -568,7 +568,7 @@
 
                             <div class="mt-5 space-y-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 leading-relaxed">
                                 <p>Khóa chống trùng: <b class="text-blue-600">so_hsbt + ten_phu_tung</b>.</p>
-                                <p>Cột bắt buộc: <b>Số HSBT, Tên phụ tùng, Hãng xe, Dòng xe, Năm SX, Loại hàng, Giá duyệt, Ngày báo giá, Garage, Tỉnh thành</b>.</p>
+                                <p>Cột bắt buộc: <b>Số HSBT, Tên phụ tùng, Hãng xe, Hiệu xe/Dòng xe, Năm SX, Chính hãng/Loại hàng, Duyệt - Tiền phụ tùng/Giá duyệt, Ngày báo giá, Tên Garage</b>.</p><p>Cột <b>Tỉnh thành</b> là tùy chọn; nếu file không có vẫn import được.</p>
                             </div>
 
                             <div class="mt-5 border-t border-slate-200 dark:border-slate-700 pt-5">
@@ -2191,19 +2191,21 @@
 
         const IMPORT_REQUIRED_FIELDS = [
             'so_hsbt', 'ten_phu_tung', 'hang_xe', 'hieu_xe', 'nam_sx',
-            'chinh_hang', 'gia_duyet', 'ngay_bao_gia', 'ten_garage', 'tinh_thanh'
+            'chinh_hang', 'gia_duyet', 'ngay_bao_gia', 'ten_garage'
         ];
+        const IMPORT_OPTIONAL_FIELDS = ['tinh_thanh', 'loai_hinh'];
 
         const IMPORT_FIELD_ALIASES = {
             so_hsbt: ['so_hsbt', 'số hsbt', 'so hsbt', 'số hồ sơ', 'so ho so', 'mã hồ sơ', 'ma ho so', 'hsbt'],
-            ten_phu_tung: ['ten_phu_tung', 'tên phụ tùng', 'ten phu tung', 'phụ tùng', 'phu tung', 'tên vật tư', 'ten vat tu'],
+            ten_phu_tung: ['ten_phu_tung', 'tên phụ tùng', 'ten phu tung', 'phụ tùng', 'phu tung', 'tên vật tư', 'ten vat tu', 'tên phụ tùng/vật tư'],
             hang_xe: ['hang_xe', 'hãng xe', 'hang xe'],
-            hieu_xe: ['hieu_xe', 'hiệu xe', 'hieu xe', 'dòng xe', 'dong xe'],
+            hieu_xe: ['hieu_xe', 'hiệu xe', 'hieu xe', 'dòng xe', 'dong xe', 'model xe', 'mẫu xe', 'mau xe'],
             nam_sx: ['nam_sx', 'năm sx', 'nam sx', 'năm sản xuất', 'nam san xuat', 'đời xe', 'doi xe'],
             chinh_hang: ['chinh_hang', 'chính hãng', 'chinh hang', 'loại hàng', 'loai hang', 'nguồn hàng', 'nguon hang'],
-            gia_duyet: ['gia_duyet', 'giá duyệt', 'gia duyet', 'đơn giá', 'don gia', 'giá', 'gia'],
+            // Ưu tiên cột đã duyệt. Nếu file chỉ có đơn giá garage thì vẫn đọc được.
+            gia_duyet: ['gia_duyet', 'giá duyệt', 'gia duyet', 'duyệt - tiền phụ tùng', 'duyet tien phu tung', 'duyệt tiền phụ tùng', 'trình - tiền phụ tùng', 'trinh tien phu tung', 'đơn giá garage', 'don gia garage', 'đơn giá', 'don gia', 'giá', 'gia'],
             ngay_bao_gia: ['ngay_bao_gia', 'ngày báo giá', 'ngay bao gia', 'ngày bg', 'ngay bg'],
-            ten_garage: ['ten_garage', 'tên garage', 'ten garage', 'garage', 'gara', 'đơn vị báo giá', 'don vi bao gia'],
+            ten_garage: ['ten_garage', 'tên garage', 'ten garage', 'garage', 'gara', 'tên gara', 'ten gara', 'đơn vị báo giá', 'don vi bao gia'],
             tinh_thanh: ['tinh_thanh', 'tỉnh thành', 'tinh thanh', 'tỉnh/tp', 'tinh/tp', 'địa phương', 'dia phuong'],
             loai_hinh: ['loai_hinh', 'loại hình', 'loai hinh']
         };
@@ -2251,8 +2253,26 @@
 
         function parseMoney(value) {
             if (typeof value === 'number') return value;
-            const cleaned = String(value || '').replace(/[^\d.-]/g, '');
-            const num = Number(cleaned);
+            const raw = String(value || '').trim();
+            if (!raw) return 0;
+
+            const cleaned = raw.replace(/[^\d,.-]/g, '');
+            let normalized = cleaned;
+
+            // Kiểu Việt Nam: 4.200.000 hoặc 4.200.000,50
+            if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(cleaned)) {
+                normalized = cleaned.replace(/\./g, '').replace(',', '.');
+            }
+            // Kiểu quốc tế: 4,200,000 hoặc 4,200,000.50
+            else if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(cleaned)) {
+                normalized = cleaned.replace(/,/g, '');
+            }
+            // Dữ liệu tiền VN thường không cần phần thập phân, fallback giữ chữ số.
+            else if (!Number.isFinite(Number(cleaned))) {
+                normalized = cleaned.replace(/[^\d-]/g, '');
+            }
+
+            const num = Number(normalized);
             return Number.isFinite(num) ? num : 0;
         }
 
@@ -2275,6 +2295,8 @@
         function normalizePartType(value) {
             const raw = normalizeKeyValue(value);
             if (!raw) return '';
+            // Phải kiểm tra phủ định trước, nếu không “Không chính hãng” sẽ bị nhận nhầm là “Chính hãng”.
+            if (raw.includes('khong chinh hang') || raw.includes('khong hang chinh hang') || raw.includes('aftermarket') || raw.includes('thay the') || raw.includes('ngoai')) return 'Thay thế';
             if (raw.includes('chinh hang') || raw.includes('genuine')) return 'Chính hãng';
             return 'Thay thế';
         }
@@ -2363,9 +2385,9 @@
             const dupEl = document.getElementById('importDupRows');
             const invalidEl = document.getElementById('importInvalidRows');
 
-            const duplicateCount = IMPORT_ROWS.filter(row => row._duplicate).length;
+            const duplicateCount = IMPORT_ROWS.filter(row => row._duplicate && !row._invalid?.length).length;
             const invalidCount = IMPORT_ROWS.filter(row => row._invalid?.length).length;
-            const cleanCount = IMPORT_ROWS.length - duplicateCount - invalidCount;
+            const cleanCount = IMPORT_ROWS.filter(row => !row._duplicate && !row._invalid?.length).length;
 
             totalEl.innerText = IMPORT_ROWS.length;
             cleanEl.innerText = Math.max(cleanCount, 0);
@@ -2423,7 +2445,9 @@
                 const missingColumns = IMPORT_REQUIRED_FIELDS.filter(field => !headerMap[field]);
                 if (missingColumns.length) {
                     clearImportExcelState();
-                    return customAlert('File Excel thiếu cột bắt buộc: ' + missingColumns.join(', '));
+                    const message = 'File Excel thiếu cột bắt buộc hoặc chưa nhận diện được tên cột: ' + missingColumns.join(', ');
+                    status.innerText = message;
+                    return customAlert(message);
                 }
 
                 IMPORT_ROWS = rawRows.map((row, idx) => normalizeImportRow(row, headerMap, idx + 2));
