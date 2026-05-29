@@ -135,39 +135,177 @@
         }
 
         
+        .price-summary-shell {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 4% 15%, rgba(37, 99, 235, 0.08), transparent 28%),
+                radial-gradient(circle at 96% 0%, rgba(245, 158, 11, 0.10), transparent 24%),
+                linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.92));
+        }
+        .price-summary-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image: radial-gradient(rgba(37, 99, 235, 0.18) 1px, transparent 1px);
+            background-size: 18px 18px;
+            mask-image: linear-gradient(90deg, black 0%, transparent 22%, transparent 100%);
+            opacity: 0.45;
+        }
+        .price-summary-grid {
+            position: relative;
+            z-index: 1;
+        }
         .price-summary-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            min-height: 118px;
+            border-radius: 22px;
+            padding: 20px 22px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            background: rgba(255,255,255,0.86);
+            box-shadow: 0 18px 45px -28px rgba(15, 23, 42, 0.45);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            isolation: isolate;
+            transition: transform var(--transition-base) var(--ease-smooth), box-shadow var(--transition-base) var(--ease-smooth), border-color var(--transition-base) var(--ease-smooth);
+        }
+        .price-summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 24px 55px -30px rgba(15, 23, 42, 0.55);
+        }
+        .price-summary-card::before {
+            content: "";
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            right: -76px;
+            bottom: -116px;
+            border-radius: 999px;
+            z-index: -2;
+            opacity: 0.85;
+        }
+        .price-summary-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.55;
+            background-repeat: no-repeat;
+            background-position: right bottom;
+            background-size: 210px 78px;
+        }
+        .price-card-min {
+            border-color: rgba(20, 184, 166, 0.24);
+        }
+        .price-card-min::before {
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.22), transparent 68%);
+        }
+        .price-card-min::after {
+            background-image: url("data:image/svg+xml,%3Csvg width='260' height='90' viewBox='0 0 260 90' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 66C42 18 79 92 121 42C164 -8 191 44 260 10V90H0Z' fill='%2314b8a6' fill-opacity='.13'/%3E%3Cpath d='M18 52C62 28 91 74 133 38C172 5 205 24 245 5' stroke='%230f766e' stroke-opacity='.18' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+        }
+        .price-card-avg {
+            border-color: rgba(37, 99, 235, 0.24);
+        }
+        .price-card-avg::before {
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.20), transparent 68%);
+        }
+        .price-card-avg::after {
+            background-image: url("data:image/svg+xml,%3Csvg width='260' height='90' viewBox='0 0 260 90' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%232563eb' stroke-opacity='.13'%3E%3Cpath d='M0 70C46 10 93 86 139 36C185 -12 212 48 260 18'/%3E%3Cpath d='M0 84C55 32 97 78 143 49C190 19 217 62 260 34'/%3E%3Cpath d='M0 56C52 21 91 64 133 25C174 -13 218 21 260 4'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .price-card-max {
+            border-color: rgba(245, 158, 11, 0.28);
+        }
+        .price-card-max::before {
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.22), transparent 68%);
+        }
+        .price-card-max::after {
+            background-image: url("data:image/svg+xml,%3Csvg width='260' height='90' viewBox='0 0 260 90' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 84C44 80 76 72 104 66C150 56 188 44 224 0' stroke='%23f59e0b' stroke-opacity='.20' stroke-width='4' fill='none'/%3E%3Cpath d='M214 0H260V46' fill='%23f59e0b' fill-opacity='.12'/%3E%3Cpath d='M0 74C54 72 94 84 135 69C179 53 206 31 260 8V90H0Z' fill='%23f59e0b' fill-opacity='.10'/%3E%3C/svg%3E");
+        }
+        .summary-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            opacity: 0.95;
+        }
+        .price-card-min .summary-accent { background: linear-gradient(90deg, #0f766e, #14b8a6); }
+        .price-card-avg .summary-accent { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+        .price-card-max .summary-accent { background: linear-gradient(90deg, #d97706, #fbbf24); }
+        .price-summary-icon {
+            width: 58px;
+            height: 58px;
             border-radius: 18px;
-            padding: 16px 18px;
-            box-shadow: 0 8px 20px -12px rgba(15, 23, 42, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.75), 0 14px 30px -20px currentColor;
+        }
+        .price-summary-icon svg {
+            width: 34px;
+            height: 34px;
+            filter: drop-shadow(0 8px 10px rgba(15, 23, 42, 0.12));
+        }
+        .price-card-min .price-summary-icon {
+            color: #0f766e;
+            background: linear-gradient(145deg, rgba(240,253,250,0.98), rgba(204,251,241,0.92));
+        }
+        .price-card-avg .price-summary-icon {
+            color: #2563eb;
+            background: linear-gradient(145deg, rgba(239,246,255,0.98), rgba(191,219,254,0.92));
+        }
+        .price-card-max .price-summary-icon {
+            color: #d97706;
+            background: linear-gradient(145deg, rgba(255,251,235,0.98), rgba(254,215,170,0.92));
+        }
+        .price-summary-content {
+            min-width: 0;
         }
         .price-summary-label {
             font-size: 10px;
-            font-weight: 900;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 6px;
-        }
-        .price-summary-value {
-            font-size: 18px;
             font-weight: 1000;
-            color: #0f172a;
-            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            margin-bottom: 7px;
+            line-height: 1;
+        }
+        .price-card-min .price-summary-label { color: #0f766e; }
+        .price-card-avg .price-summary-label { color: #2563eb; }
+        .price-card-max .price-summary-label { color: #d97706; }
+        .price-summary-value {
+            font-size: clamp(20px, 2vw, 28px);
+            font-weight: 1000;
+            color: #020617;
+            line-height: 1.03;
+            letter-spacing: -0.04em;
         }
         .price-summary-note {
             font-size: 10px;
             font-weight: 800;
-            color: #94a3b8;
-            margin-top: 5px;
+            color: #64748b;
+            margin-top: 7px;
+            line-height: 1.35;
+        }
+        html.dark .price-summary-shell {
+            background:
+                radial-gradient(circle at 4% 15%, rgba(59, 130, 246, 0.14), transparent 28%),
+                radial-gradient(circle at 96% 0%, rgba(245, 158, 11, 0.12), transparent 24%),
+                linear-gradient(180deg, rgba(15,23,42,0.96), rgba(2,6,23,0.96)) !important;
         }
         html.dark .price-summary-card {
-            background: #0f172a !important;
-            border-color: #334155 !important;
+            background: rgba(15, 23, 42, 0.84) !important;
+            border-color: rgba(51, 65, 85, 0.9) !important;
+            box-shadow: 0 18px 45px -30px rgba(0,0,0,0.9);
         }
         html.dark .price-summary-value {
             color: #f8fafc !important;
+        }
+        html.dark .price-summary-note {
+            color: #94a3b8 !important;
         }
 
         .search-btn {
@@ -764,22 +902,64 @@
                     </div>
                 </div>
             </div>
-            <div id="priceSummaryBox" class="hidden px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="price-summary-card">
-                        <div class="price-summary-label">Giá thấp nhất</div>
-                        <div id="priceMinValue" class="price-summary-value">0</div>
-                        <div class="price-summary-note">Mức giá thấp nhất trong kết quả tra cứu</div>
+            <div id="priceSummaryBox" class="hidden price-summary-shell px-6 py-5 border-b border-slate-100 dark:border-slate-700">
+                <div class="price-summary-grid grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="price-summary-card price-card-min">
+                        <span class="summary-accent"></span>
+                        <div class="price-summary-icon" aria-hidden="true">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="28" cy="28" r="20" fill="currentColor" opacity="0.12"/>
+                                <circle cx="28" cy="28" r="15" stroke="currentColor" stroke-width="5" opacity="0.9"/>
+                                <circle cx="28" cy="28" r="6" fill="currentColor"/>
+                                <path d="M44 18L28 34" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+                                <path d="M43 18H54V29" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M39 43H54V58" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+                            </svg>
+                        </div>
+                        <div class="price-summary-content">
+                            <div class="price-summary-label">Giá thấp nhất</div>
+                            <div id="priceMinValue" class="price-summary-value">0</div>
+                            <div class="price-summary-note">Mức giá thấp nhất trong kết quả tra cứu</div>
+                        </div>
                     </div>
-                    <div class="price-summary-card">
-                        <div class="price-summary-label">Giá trung bình</div>
-                        <div id="priceAvgValue" class="price-summary-value">0</div>
-                        <div class="price-summary-note">Tính theo các báo giá hợp lệ</div>
+                    <div class="price-summary-card price-card-avg">
+                        <span class="summary-accent"></span>
+                        <div class="price-summary-icon" aria-hidden="true">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="10" y="34" width="9" height="18" rx="3" fill="currentColor" opacity="0.34"/>
+                                <rect x="26" y="26" width="9" height="26" rx="3" fill="currentColor" opacity="0.62"/>
+                                <rect x="42" y="16" width="9" height="36" rx="3" fill="currentColor"/>
+                                <path d="M13 27L27 18L39 24L52 10" stroke="#0f172a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="13" cy="27" r="4" fill="#0f172a"/>
+                                <circle cx="27" cy="18" r="4" fill="#0f172a"/>
+                                <circle cx="39" cy="24" r="4" fill="#0f172a"/>
+                                <circle cx="52" cy="10" r="4" fill="#0f172a"/>
+                            </svg>
+                        </div>
+                        <div class="price-summary-content">
+                            <div class="price-summary-label">Giá trung bình</div>
+                            <div id="priceAvgValue" class="price-summary-value">0</div>
+                            <div class="price-summary-note">Tính theo các báo giá hợp lệ</div>
+                        </div>
                     </div>
-                    <div class="price-summary-card">
-                        <div class="price-summary-label">Giá cao nhất</div>
-                        <div id="priceMaxValue" class="price-summary-value">0</div>
-                        <div class="price-summary-note">Mức giá cao nhất trong kết quả tra cứu</div>
+                    <div class="price-summary-card price-card-max">
+                        <span class="summary-accent"></span>
+                        <div class="price-summary-icon" aria-hidden="true">
+                            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 22L24 30L32 14L40 30L48 22L45 46H19L16 22Z" fill="currentColor" opacity="0.92"/>
+                                <path d="M20 50H44" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+                                <path d="M25 57H39" stroke="#0f172a" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+                                <circle cx="16" cy="20" r="4" fill="#fef3c7" stroke="currentColor" stroke-width="3"/>
+                                <circle cx="32" cy="13" r="4" fill="#fef3c7" stroke="currentColor" stroke-width="3"/>
+                                <circle cx="48" cy="20" r="4" fill="#fef3c7" stroke="currentColor" stroke-width="3"/>
+                                <path d="M24 38H40" stroke="#fef3c7" stroke-width="4" stroke-linecap="round" opacity="0.95"/>
+                            </svg>
+                        </div>
+                        <div class="price-summary-content">
+                            <div class="price-summary-label">Giá cao nhất</div>
+                            <div id="priceMaxValue" class="price-summary-value">0</div>
+                            <div class="price-summary-note">Mức giá cao nhất trong kết quả tra cứu</div>
+                        </div>
                     </div>
                 </div>
             </div>
