@@ -2283,6 +2283,144 @@
             transition: all .18s ease;
         }
         .exec-sync-btn:hover { background:#2563eb; color:#fff; border-color:#2563eb; transform: translateY(-1px); }
+        .exec-panel-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .quote-settings-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #bfdbfe;
+            background: linear-gradient(180deg, #ffffff, #eff6ff);
+            color: #2563eb;
+            box-shadow: 0 12px 26px -22px rgba(37,99,235,.7);
+            transition: all .18s ease;
+        }
+        .quote-settings-btn:hover {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+            transform: translateY(-1px) rotate(18deg);
+            box-shadow: 0 18px 34px -22px rgba(37,99,235,.9);
+        }
+        .quote-summary-row { grid-template-columns: 1fr !important; }
+        .quote-settings-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(15,23,42,.52);
+            backdrop-filter: blur(10px);
+        }
+        .quote-settings-modal.hidden { display: none !important; }
+        .quote-settings-card {
+            width: min(560px, 100%);
+            border-radius: 28px;
+            border: 1px solid rgba(219,229,242,.98);
+            background: linear-gradient(180deg, #ffffff, #f8fbff);
+            box-shadow: 0 34px 80px -38px rgba(15,23,42,.58);
+            padding: 22px;
+        }
+        .quote-settings-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .quote-settings-kicker {
+            font-size: 10px;
+            font-weight: 1000;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+        }
+        .quote-settings-title {
+            margin-top: 5px;
+            font-size: 22px;
+            font-weight: 1000;
+            letter-spacing: -.035em;
+            color: #0f172a;
+        }
+        .quote-settings-desc {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 750;
+            line-height: 1.65;
+        }
+        .quote-settings-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #64748b;
+            font-size: 24px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .18s ease;
+        }
+        .quote-settings-close:hover { background:#fee2e2; color:#dc2626; border-color:#fecaca; }
+        .quote-settings-field span {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 1000;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+        }
+        .quote-settings-field input {
+            width: 100%;
+            height: 52px;
+            border-radius: 16px;
+            border: 1px solid #dbe5f2;
+            background: #ffffff;
+            color: #0f172a;
+            padding: 0 14px;
+            font-size: 13px;
+            font-weight: 900;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            outline: none;
+            box-shadow: 0 10px 24px -23px rgba(15,23,42,.4);
+        }
+        .quote-settings-field input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37,99,235,.09), 0 14px 28px -24px rgba(37,99,235,.72);
+        }
+        .quote-settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+        .quote-settings-primary,
+        .quote-settings-secondary {
+            height: 42px;
+            padding: 0 16px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            transition: all .18s ease;
+        }
+        .quote-settings-primary { background:#2563eb; color:#fff; border:1px solid #2563eb; }
+        .quote-settings-primary:hover { transform: translateY(-1px); box-shadow: 0 16px 28px -20px rgba(37,99,235,.9); }
+        .quote-settings-secondary { background:#fff; color:#475569; border:1px solid #e2e8f0; }
+        .quote-settings-secondary:hover { background:#f8fafc; color:#0f172a; }
         .exec-form-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2385,6 +2523,26 @@
             align-items: stretch;
         }
         .exec-upload-panel { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+        .appraisal-upload-block { margin-top: 4px; padding-top: 14px; border-top: 1px dashed #dbe5f2; }
+        .appraisal-upload-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+        .appraisal-title { color:#0f172a; font-size:14px; font-weight:1000; letter-spacing:-.02em; }
+        .appraisal-note { margin-top:4px; color:#64748b; font-size:10px; line-height:1.55; font-weight:800; }
+        .appraisal-mode-badge { flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; padding:7px 10px; border-radius:999px; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; font-size:9px; font-weight:1000; text-transform:uppercase; letter-spacing:.06em; }
+        #appraisalDropZone { min-height:168px; border-radius:20px; border:1.6px dashed rgba(16,185,129,.42); background:radial-gradient(circle at 50% 0%, rgba(16,185,129,.10), transparent 34%), linear-gradient(180deg, #ffffff, #f8fffb); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:18px; cursor:pointer; transition:all .18s ease; }
+        #appraisalDropZone:hover { transform:translateY(-1px); border-color:#10b981; box-shadow:0 18px 34px -28px rgba(16,185,129,.5); }
+        .appraisal-drop-icon { width:48px; height:48px; border-radius:16px; display:flex; align-items:center; justify-content:center; color:#059669; background:linear-gradient(135deg,#d1fae5,#ecfeff); margin-bottom:12px; }
+        .appraisal-drop-title { color:#0f172a; font-size:14px; line-height:1.25; font-weight:1000; text-transform:uppercase; letter-spacing:-.02em; }
+        .appraisal-drop-note { margin-top:7px; color:#64748b; font-size:10px; line-height:1.6; font-weight:800; max-width:300px; }
+        #appraisalFileName { margin-top:9px; padding:6px 10px; border-radius:999px; background:#fff; border:1px solid #bbf7d0; color:#047857; font-size:10px; font-weight:900; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .appraisal-status-card { display:none; margin-top:10px; padding:10px 12px; border-radius:16px; border:1px solid #bbf7d0; background:#f0fdf4; color:#166534; font-size:10px; line-height:1.6; font-weight:850; }
+        .appraisal-status-card.show { display:block; }
+        .appraisal-status-card strong { color:#064e3b; }
+        html.dark .appraisal-upload-block { border-top-color:#334155 !important; }
+        html.dark .appraisal-title, html.dark .appraisal-drop-title { color:#f8fafc !important; }
+        html.dark .appraisal-note, html.dark .appraisal-drop-note { color:#94a3b8 !important; }
+        html.dark #appraisalDropZone { background:rgba(15,23,42,.86) !important; border-color:rgba(16,185,129,.34) !important; }
+        html.dark .appraisal-status-card { background:rgba(20,83,45,.25) !important; border-color:rgba(34,197,94,.28) !important; color:#86efac !important; }
+
         .exec-editor-panel { padding: 18px; min-height: 590px; display: flex; flex-direction: column; }
         .exec-upload-zone,
         #quoteDropZone {
@@ -2746,6 +2904,26 @@
         }
 
     
+
+
+        html.dark .quote-settings-btn {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+            color: #93c5fd !important;
+        }
+        html.dark .quote-settings-card {
+            background: linear-gradient(180deg, #0f172a, #111827) !important;
+            border-color: #334155 !important;
+        }
+        html.dark .quote-settings-title { color: #f8fafc !important; }
+        html.dark .quote-settings-desc { color: #94a3b8 !important; }
+        html.dark .quote-settings-close,
+        html.dark .quote-settings-secondary,
+        html.dark .quote-settings-field input {
+            background: #111827 !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
 
         /* === OCR editor compact tuning === */
         .quote-ocr-table,
@@ -3341,6 +3519,136 @@
             color: #93c5fd !important;
         }
 
+
+
+        /* === Compact dual source upload panel === */
+        .exec-upload-panel {
+            gap: 10px !important;
+            padding: 16px !important;
+        }
+        .exec-upload-panel .exec-panel-top {
+            margin-bottom: 2px !important;
+        }
+        .exec-upload-panel .exec-panel-title {
+            font-size: 15px !important;
+        }
+        .exec-upload-panel .exec-panel-note {
+            font-size: 10px !important;
+            line-height: 1.55 !important;
+            max-width: 330px;
+        }
+        #quoteDropZone,
+        #appraisalDropZone {
+            min-height: 94px !important;
+            border-radius: 18px !important;
+            padding: 13px 14px !important;
+            display: grid !important;
+            grid-template-columns: 44px minmax(0, 1fr) !important;
+            grid-template-areas:
+                "icon title"
+                "icon note"
+                "icon file" !important;
+            align-items: center !important;
+            justify-content: initial !important;
+            text-align: left !important;
+            column-gap: 12px !important;
+        }
+        #quoteDropZone {
+            background: linear-gradient(135deg, #ffffff, #f8fbff) !important;
+        }
+        #appraisalDropZone {
+            background: linear-gradient(135deg, #ffffff, #f8fffb) !important;
+        }
+        .quote-drop-icon,
+        .appraisal-drop-icon {
+            grid-area: icon !important;
+            width: 44px !important;
+            height: 44px !important;
+            min-width: 44px !important;
+            border-radius: 15px !important;
+            margin: 0 !important;
+            box-shadow: 0 14px 26px -20px rgba(37,99,235,.7) !important;
+        }
+        .quote-drop-icon svg,
+        .appraisal-drop-icon svg {
+            width: 22px !important;
+            height: 22px !important;
+        }
+        .quote-drop-title,
+        .appraisal-drop-title {
+            grid-area: title !important;
+            font-size: 14px !important;
+            line-height: 1.2 !important;
+            font-weight: 1000 !important;
+            letter-spacing: -.02em !important;
+            text-transform: none !important;
+            margin: 0 !important;
+        }
+        .quote-drop-note,
+        .appraisal-drop-note {
+            grid-area: note !important;
+            margin: 3px 0 0 !important;
+            max-width: none !important;
+            font-size: 10px !important;
+            line-height: 1.45 !important;
+            font-weight: 800 !important;
+        }
+        #quoteFileName,
+        #appraisalFileName {
+            grid-area: file !important;
+            justify-self: start !important;
+            margin-top: 7px !important;
+            max-width: 250px !important;
+            padding: 5px 9px !important;
+            font-size: 9px !important;
+        }
+        .appraisal-upload-block {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            border-top: 0 !important;
+        }
+        .appraisal-upload-head {
+            display: none !important;
+        }
+        .exec-progress {
+            gap: 5px !important;
+            margin-top: 0 !important;
+        }
+        .quote-progress-track {
+            height: 7px !important;
+        }
+        #quoteStatusText,
+        #appraisalStatusText {
+            font-size: 10px !important;
+            line-height: 1.35 !important;
+        }
+        .appraisal-status-card {
+            margin-top: 6px !important;
+            padding: 8px 10px !important;
+            border-radius: 14px !important;
+            font-size: 9px !important;
+            line-height: 1.45 !important;
+        }
+        .exec-actions {
+            margin-top: 2px !important;
+        }
+        .exec-tip-stack {
+            display: none !important;
+        }
+        @media (max-width: 768px) {
+            #quoteDropZone,
+            #appraisalDropZone {
+                min-height: 88px !important;
+                grid-template-columns: 40px minmax(0, 1fr) !important;
+            }
+            .quote-drop-icon,
+            .appraisal-drop-icon {
+                width: 40px !important;
+                height: 40px !important;
+                min-width: 40px !important;
+            }
+        }
+
 </style>
 </head>
 <body class="bg-slate-50 text-slate-700 min-h-screen transition-colors duration-300">
@@ -3879,7 +4187,12 @@
                             <div class="exec-panel-title">Thông tin xe đối chiếu</div>
                             <div class="exec-panel-note">Chọn riêng cho báo giá đang xử lý để hệ thống chỉ so khớp trong đúng kho giá của dòng xe. Có thể lấy nhanh từ tab tra cứu phụ tùng.</div>
                         </div>
-                        <button type="button" onclick="syncQuoteVehicleFromMainFilters()" class="exec-sync-btn">Lấy từ tab tra cứu</button>
+                        <div class="exec-panel-actions">
+                            <button type="button" onclick="openQuoteGeminiSettings()" class="quote-settings-btn" title="Cấu hình Gemini API Key">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.89 3.31.877 2.42 2.42a1.724 1.724 0 001.065 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.89 1.543-.877 3.31-2.42 2.42a1.724 1.724 0 00-2.573 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.89-3.31-.877-2.42-2.42a1.724 1.724 0 00-1.065-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.89-1.543.877-3.31 2.42-2.42.996.575 2.25.04 2.573-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </button>
+                            <button type="button" onclick="syncQuoteVehicleFromMainFilters()" class="exec-sync-btn">Lấy từ tab tra cứu</button>
+                        </div>
                     </div>
                     <div class="exec-form-grid quote-form-grid-pro">
                         <div class="field-group quote-filter-field">
@@ -3948,8 +4261,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="exec-form-grid bottom">
-                        <label class="exec-field"><span>Gemini API Key</span><input id="quoteGeminiKeyInput" type="password" autocomplete="off" value="AIzaSyDWQ6fATzFmqDozABBEDiEwTwuuN2X_mHo" oninput="saveQuoteGeminiKey()" placeholder="Nhập Gemini API Key"></label>
+                    <div class="exec-form-grid bottom quote-summary-row">
                         <div id="quoteVehicleSummary">Chưa chọn xe để đối chiếu kho giá.</div>
                     </div>
                     <div class="hidden" aria-hidden="true">
@@ -3964,8 +4276,8 @@
                     <div class="exec-upload-panel">
                         <div class="exec-panel-top">
                             <div>
-                                <div class="exec-panel-title">Tải báo giá</div>
-                                <div class="exec-panel-note">Hỗ trợ ảnh, PDF, Excel, CSV hoặc TXT. Ảnh/PDF sẽ được gửi sang Gemini để đọc bảng báo giá.</div>
+                                <div class="exec-panel-title">Tải dữ liệu đầu vào</div>
+                                <div class="exec-panel-note">Chọn Báo giá gara hoặc BB giám định. Kết quả đều được đưa vào bảng chỉnh sửa bên phải trước khi tra kho giá.</div>
                             </div>
                         </div>
                         <input id="quoteFileInput" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.xlsx,.xls,.csv,.txt" class="hidden" onchange="handleQuoteFileUpload(event)">
@@ -3973,13 +4285,35 @@
                             <div class="quote-drop-icon">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.9A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 12v9m0 0l-3-3m3 3l3-3"/></svg>
                             </div>
-                            <div class="quote-drop-title">Kéo thả hoặc bấm để chọn file</div>
-                            <div class="quote-drop-note">Gemini sẽ trả về bảng dòng dữ liệu sạch hơn OCR thường, sau đó bạn có thể chỉnh lại trước khi tra kho.</div>
+                            <div class="quote-drop-title">Báo giá gara</div>
+                            <div class="quote-drop-note">Đọc phụ tùng, số lượng và đơn giá từ ảnh/PDF/Excel/CSV/TXT.</div>
                             <div id="quoteFileName" class="hidden">Chưa chọn file</div>
                         </div>
                         <div class="exec-progress">
                             <div class="quote-progress-track"><div id="quoteProgressBar" class="quote-progress-bar"></div></div>
                             <div id="quoteStatusText">Sẵn sàng nhận báo giá</div>
+                        </div>
+
+                        <div class="appraisal-upload-block">
+                            <div class="appraisal-upload-head">
+                                <div>
+                                    <div class="appraisal-title">Biên bản giám định</div>
+                                    <div class="appraisal-note">Chức năng độc lập: lấy thông tin xe và các phụ tùng đề xuất <b>Thay thế</b> từ BB giám định Word/ảnh/PDF.</div>
+                                </div>
+                                <span class="appraisal-mode-badge">BB giám định</span>
+                            </div>
+                            <input id="appraisalFileInput" type="file" accept=".docx,.pdf,.png,.jpg,.jpeg,.webp,.txt" class="hidden" onchange="handleAppraisalFileUpload(event)">
+                            <div id="appraisalDropZone" onclick="document.getElementById('appraisalFileInput').click()">
+                                <div class="appraisal-drop-icon"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6M7 3h7l5 5v11a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg></div>
+                                <div class="appraisal-drop-title">BB giám định</div>
+                                <div class="appraisal-drop-note">Lấy thông tin xe và phụ tùng đề xuất thay thế từ DOCX/ảnh/PDF/TXT.</div>
+                                <div id="appraisalFileName" class="hidden">Chưa chọn file</div>
+                            </div>
+                            <div class="exec-progress">
+                                <div class="quote-progress-track"><div id="appraisalProgressBar" class="quote-progress-bar"></div></div>
+                                <div id="appraisalStatusText">Sẵn sàng nhận biên bản giám định</div>
+                            </div>
+                            <div id="appraisalSummaryCard" class="appraisal-status-card"></div>
                         </div>
                         <div class="exec-actions">
                             <button id="btnRunQuoteLookup" type="button" onclick="runQuotePriceLookup()" class="quote-primary-btn" disabled>
@@ -4685,9 +5019,35 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Gemini Settings Modal -->
+    <div id="quoteGeminiSettingsModal" class="quote-settings-modal hidden" onclick="if(event.target === this) closeQuoteGeminiSettings()">
+        <div class="quote-settings-card">
+            <div class="quote-settings-head">
+                <div>
+                    <div class="quote-settings-kicker">Cấu hình OCR báo giá</div>
+                    <div class="quote-settings-title">Gemini API Key</div>
+                    <div class="quote-settings-desc">API key được lưu trên trình duyệt của bạn để Gemini 2.5 Flash đọc ảnh/PDF báo giá và biên bản giám định. Nếu key bị báo lộ/leaked, hãy tạo key mới rồi dán vào đây.</div>
+                </div>
+                <button type="button" onclick="closeQuoteGeminiSettings()" class="quote-settings-close" title="Đóng">×</button>
+            </div>
+            <label class="quote-settings-field">
+                <span>Gemini API Key</span>
+                <input id="quoteGeminiKeyInput" type="password" autocomplete="off" value="" oninput="saveQuoteGeminiKey()" placeholder="Dán Gemini API Key mới tại đây">
+            </label>
+            <div class="quote-settings-actions">
+                <button type="button" onclick="closeQuoteGeminiSettings()" class="quote-settings-secondary">Đóng</button>
+                <button type="button" onclick="saveQuoteGeminiSettings()" class="quote-settings-primary">Lưu cấu hình</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
   
     <script type="module">
@@ -5443,7 +5803,7 @@
         let PRICE_ANALYSIS = null;
         let QUOTE_SELECTED_FILE = null, QUOTE_OCR_ROWS = [], QUOTE_EXTRACTED_PARTS = [], QUOTE_RESULTS = [];
         let QUOTE_LAST_GEMINI_JSON = null;
-        const GEMINI_DEFAULT_API_KEY = 'AIzaSyDWQ6fATzFmqDozABBEDiEwTwuuN2X_mHo';
+        const GEMINI_DEFAULT_API_KEY = '';
         const GEMINI_QUOTE_MODEL = 'gemini-2.5-flash';
 
         async function loadFilters() {
@@ -5666,15 +6026,34 @@
         };
 
         window.saveQuoteGeminiKey = function() {
-            const key = document.getElementById('quoteGeminiKeyInput')?.value?.trim();
+            const key = document.getElementById('quoteGeminiKeyInput')?.value?.trim() || '';
             if (key) localStorage.setItem('tascoGeminiQuoteKey', key);
+            else localStorage.removeItem('tascoGeminiQuoteKey');
+        };
+
+        window.openQuoteGeminiSettings = function() {
+            const modal = document.getElementById('quoteGeminiSettingsModal');
+            const input = document.getElementById('quoteGeminiKeyInput');
+            if (input) input.value = localStorage.getItem('tascoGeminiQuoteKey') || input.value || '';
+            if (modal) modal.classList.remove('hidden');
+            setTimeout(() => input?.focus(), 50);
+        };
+
+        window.closeQuoteGeminiSettings = function() {
+            document.getElementById('quoteGeminiSettingsModal')?.classList.add('hidden');
+        };
+
+        window.saveQuoteGeminiSettings = function() {
+            saveQuoteGeminiKey();
+            closeQuoteGeminiSettings();
+            customAlert('Đã lưu cấu hình Gemini API Key.', 'success');
         };
 
         function initQuoteGeminiKey() {
             const input = document.getElementById('quoteGeminiKeyInput');
             if (!input) return;
             const saved = localStorage.getItem('tascoGeminiQuoteKey');
-            input.value = saved || GEMINI_DEFAULT_API_KEY;
+            input.value = saved || '';
         }
         setTimeout(() => { initQuoteGeminiKey(); renderQuoteVehicleSelectors(); updateQuoteVehicleSummary(); }, 0);
 
@@ -7122,9 +7501,34 @@ Schema JSON bắt buộc:
 Tên file: ${fileName}`;
         }
 
+        function isGeminiKeyLeakedError(message = '') {
+            return /leaked|reported as leaked|API key was reported/i.test(String(message || ''));
+        }
+
+        function buildGeminiKeyErrorMessage(message = '') {
+            if (isGeminiKeyLeakedError(message)) {
+                return 'Gemini API Key hiện tại đã bị Google đánh dấu là bị lộ nên không thể dùng tiếp. Hãy tạo key mới, bấm nút cài đặt Gemini và dán key mới vào. Với file DOCX, hệ thống sẽ thử đọc biên bản bằng bộ đọc nội bộ không cần Gemini.';
+            }
+            if (/API key not valid|invalid api key|API_KEY_INVALID/i.test(String(message || ''))) {
+                return 'Gemini API Key không hợp lệ. Hãy kiểm tra lại key trong phần cài đặt Gemini.';
+            }
+            return message || 'Gemini API lỗi không xác định.';
+        }
+
+        function handleGeminiApiError(error) {
+            const message = error?.message || String(error || '');
+            if (isGeminiKeyLeakedError(message)) {
+                localStorage.removeItem('tascoGeminiQuoteKey');
+                const input = document.getElementById('quoteGeminiKeyInput');
+                if (input) input.value = '';
+                setTimeout(() => openQuoteGeminiSettings?.(), 120);
+            }
+            return buildGeminiKeyErrorMessage(message);
+        }
+
         async function callGeminiQuoteExtraction({ file = null, text = '' }) {
             const apiKey = getQuoteGeminiKey();
-            if (!apiKey) throw new Error('Chưa có Gemini API Key.');
+            if (!apiKey) throw new Error('Chưa có Gemini API Key. Hãy bấm nút cài đặt Gemini để nhập key mới.');
 
             const parts = [{ text: buildGeminiQuotePrompt(file?.name || 'dữ liệu báo giá') }];
             if (file) {
@@ -7149,10 +7553,285 @@ Tên file: ${fileName}`;
                 })
             });
             const payload = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(payload?.error?.message || `Gemini API lỗi HTTP ${response.status}`);
+            if (!response.ok) throw new Error(buildGeminiKeyErrorMessage(payload?.error?.message || `Gemini API lỗi HTTP ${response.status}`));
             const output = payload?.candidates?.[0]?.content?.parts?.map(part => part.text || '').join('\n') || '';
             return extractJsonObjectFromGeminiText(output);
         }
+
+
+        function setAppraisalStatus(text, percent = null) {
+            const status = document.getElementById('appraisalStatusText');
+            const bar = document.getElementById('appraisalProgressBar');
+            if (status) status.innerText = text || '';
+            if (bar && percent !== null) bar.style.width = Math.max(0, Math.min(100, Number(percent) || 0)) + '%';
+        }
+
+        function buildGeminiAppraisalPrompt(fileName = '') {
+            return `Bạn là hệ thống đọc BIÊN BẢN GIÁM ĐỊNH/XÁC ĐỊNH THIỆT HẠI xe cơ giới của bảo hiểm tại Việt Nam.
+Nhiệm vụ: trích xuất thông tin xe và danh sách PHỤ TÙNG ĐỀ XUẤT THAY THẾ để đưa đi tra kho giá.
+
+Yêu cầu rất quan trọng:
+- Chỉ trả về JSON hợp lệ, không markdown, không giải thích.
+- Ưu tiên đọc bảng hạng mục giám định có cột STT, Chi tiết thiệt hại, Mô tả thiệt hại, Đề xuất giải quyết Sửa chữa/Thay thế.
+- Chỉ đưa vào replacement_items các dòng có cột Đề xuất giải quyết / Thay thế được đánh dấu X hoặc thể hiện phải thay thế.
+- Các dòng chỉ sửa chữa, công tháo lắp, vệ sinh, sơn, nhân công, dầu/nhớt/chất lỏng không phải phụ tùng thay thế thì không đưa vào replacement_items, trừ khi văn bản thể hiện rõ cần thay thế.
+- Nếu không chắc cột Thay thế được đánh dấu, vẫn trả về dòng nhưng đặt confidence thấp và ghi lý do trong note.
+- Điền thông tin xe nếu thấy: biển số, số khung, số máy, nhãn hiệu/hãng xe, dòng/hiệu xe, năm sản xuất, garage/đơn vị sửa chữa, ngày giám định.
+
+Schema JSON bắt buộc:
+{
+  "document_date": "",
+  "garage_name": "",
+  "license_plate": "",
+  "vin": "",
+  "engine_no": "",
+  "vehicle_brand_hint": "",
+  "vehicle_model_hint": "",
+  "manufacture_year_hint": "",
+  "replacement_items": [
+    { "stt": 1, "name": "Tên phụ tùng đề xuất thay thế", "damage_description": "", "resolution": "Thay thế", "recover_material": "Có/Không/Không rõ", "confidence": 0.9, "note": "" }
+  ]
+}
+
+Tên file: ${fileName}`;
+        }
+
+        function getDocxNodeText(node) {
+            if (!node) return '';
+            return Array.from(node.getElementsByTagName('*'))
+                .filter(el => el.localName === 't')
+                .map(el => el.textContent || '')
+                .join('')
+                .replace(/\u00a0/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function getDocxPlainTextFromXml(xmlDoc) {
+            const paragraphs = Array.from(xmlDoc.getElementsByTagName('*')).filter(el => el.localName === 'p');
+            const lines = paragraphs.map(p => getDocxNodeText(p)).filter(Boolean);
+            return lines.join('\n');
+        }
+
+        function isMarkedX(value = '') {
+            return /(^|\s)(x|✓|✔|☑|1|yes|co|có)(\s|$)/i.test(normalizeQuoteText(value));
+        }
+
+        function isNonPartAppraisalItem(name = '') {
+            const key = normalizeQuoteText(name);
+            return /\b(nhan cong|cong thao|thao lap|ve sinh|son|go|dong|dau hop so|nhot dong co|chat pha|vat|thue|tong cong)\b/.test(key);
+        }
+
+        function extractAppraisalVehicleInfoFromText(text = '') {
+            const clean = String(text || '').replace(/\u00a0/g, ' ');
+            const match = (regex) => (clean.match(regex)?.[1] || '').trim();
+            const documentDateMatch = clean.match(/ngày\s+(\d{1,2})\s+tháng\s+(\d{1,2})\s+năm\s+(\d{4})/i);
+            const documentDate = documentDateMatch ? `${documentDateMatch[1].padStart(2, '0')}/${documentDateMatch[2].padStart(2, '0')}/${documentDateMatch[3]}` : '';
+            const garageByAt = match(/tại\s*:?\s*([^\n]+)/i);
+            const garageByGara = match(/Gara\s+([^\n]+)/i);
+            return {
+                document_date: documentDate,
+                garage_name: garageByGara || garageByAt,
+                license_plate: match(/Biển\s*(?:kiểm\s*soát|số|số xe)?\s*:?\s*([A-Z0-9.\-]+)/i).replace(/[.\-]/g, ''),
+                vin: match(/\bSK\s*:?\s*([A-Z0-9]+)/i),
+                engine_no: match(/\bSM\s*:?\s*([A-Z0-9]+)/i),
+                vehicle_brand_hint: match(/Nhãn\s*hiệu\s*:?\s*([^;\n]+)/i),
+                vehicle_model_hint: match(/(?:Hiệu\s*xe|Dòng\s*xe)\s*:?\s*([^;\n]+)/i),
+                manufacture_year_hint: match(/Năm\s*SX\s*:?\s*(\d{4})/i)
+            };
+        }
+
+        async function extractAppraisalDataFromDocxLocally(file) {
+            if (!window.JSZip) throw new Error('Chưa tải được thư viện đọc cấu trúc DOCX. Hãy kiểm tra kết nối internet hoặc dùng Gemini với API key mới.');
+            const zip = await window.JSZip.loadAsync(await file.arrayBuffer());
+            const xmlText = await zip.file('word/document.xml')?.async('text');
+            if (!xmlText) throw new Error('Không đọc được nội dung document.xml trong DOCX.');
+            const xml = new DOMParser().parseFromString(xmlText, 'application/xml');
+            const plainText = getDocxPlainTextFromXml(xml);
+            const data = extractAppraisalVehicleInfoFromText(plainText);
+            const tables = Array.from(xml.getElementsByTagName('*')).filter(el => el.localName === 'tbl');
+            const replacementItems = [];
+            tables.forEach(table => {
+                const rows = Array.from(table.getElementsByTagName('*')).filter(el => el.localName === 'tr');
+                const matrix = rows.map(row => Array.from(row.children).filter(el => el.localName === 'tc').map(getDocxNodeText));
+                const headerIndex = matrix.findIndex(row => row.some(cell => /chi\s*tiết\s*thiệt\s*hại/i.test(cell)) && row.some(cell => /thay\s*thế/i.test(cell)));
+                if (headerIndex < 0) return;
+                const subHeaderIndex = matrix.findIndex((row, idx) => idx >= headerIndex && row.some(cell => /^sửa\s*chữa$/i.test(cell)) && row.some(cell => /^thay\s*thế$/i.test(cell)));
+                const start = subHeaderIndex >= 0 ? subHeaderIndex + 1 : headerIndex + 1;
+                const headerRow = subHeaderIndex >= 0 ? matrix[subHeaderIndex] : matrix[headerIndex];
+                const idxStt = headerRow.findIndex(cell => /^stt$/i.test(cell)) >= 0 ? headerRow.findIndex(cell => /^stt$/i.test(cell)) : 0;
+                const idxName = headerRow.findIndex(cell => /chi\s*tiết/i.test(cell));
+                const idxDamage = headerRow.findIndex(cell => /mô\s*tả/i.test(cell));
+                let idxReplace = headerRow.findIndex(cell => /thay\s*thế/i.test(cell));
+                if (idxReplace < 0) idxReplace = 4;
+                const idxRecoverYes = headerRow.findIndex(cell => /^có$/i.test(cell));
+                const idxRecoverNo = headerRow.findIndex(cell => /^không$/i.test(cell));
+                matrix.slice(start).forEach(row => {
+                    const sttRaw = row[idxStt] || row[0] || '';
+                    const stt = String(sttRaw).match(/\d+/)?.[0] || '';
+                    const name = String(row[idxName >= 0 ? idxName : 1] || '').trim();
+                    if (!name || !/^\d+$/.test(stt)) return;
+                    const replaceMark = row[idxReplace] || '';
+                    if (!isMarkedX(replaceMark)) return;
+                    if (isNonPartAppraisalItem(name)) return;
+                    const recover = isMarkedX(row[idxRecoverYes] || '') ? 'Có' : isMarkedX(row[idxRecoverNo] || '') ? 'Không' : 'Không rõ';
+                    replacementItems.push({
+                        stt: Number(stt),
+                        name,
+                        damage_description: row[idxDamage >= 0 ? idxDamage : 2] || '',
+                        resolution: 'Thay thế',
+                        recover_material: recover,
+                        confidence: 0.98,
+                        note: 'Đọc trực tiếp từ bảng DOCX, không dùng Gemini'
+                    });
+                });
+            });
+            data.replacement_items = replacementItems;
+            return data;
+        }
+
+        function extractAppraisalDataFromPlainTextLocally(text = '') {
+            const data = extractAppraisalVehicleInfoFromText(text);
+            data.replacement_items = [];
+            const lines = String(text || '').split(/\n+/).map(line => line.trim()).filter(Boolean);
+            lines.forEach(line => {
+                const m = line.match(/^(\d{1,3})\s+(.+?)\s+(?:Hư hỏng|Ướt nước|Trầy xước|Khác)/i);
+                if (!m) return;
+                const name = m[2].trim();
+                if (isNonPartAppraisalItem(name)) return;
+                if (/hư hỏng|hộp điều khiển|motor|công tắc|loa|cảm biến|máy phát/i.test(line)) {
+                    data.replacement_items.push({ stt: Number(m[1]), name, damage_description: line.replace(m[1], '').replace(name, '').trim(), resolution: 'Thay thế', recover_material: 'Không rõ', confidence: 0.55, note: 'Suy luận từ text, nên kiểm tra lại cột Thay thế' });
+                }
+            });
+            return data;
+        }
+
+        async function extractTextFromDocx(file) {
+            if (!window.mammoth) throw new Error('Chưa tải được thư viện đọc DOCX. Hãy kiểm tra kết nối internet hoặc dùng ảnh/PDF.');
+            const arrayBuffer = await file.arrayBuffer();
+            const result = await window.mammoth.extractRawText({ arrayBuffer });
+            return result?.value || '';
+        }
+
+        async function callGeminiAppraisalExtraction({ file = null, text = '' }) {
+            const apiKey = getQuoteGeminiKey();
+            if (!apiKey) throw new Error('Chưa có Gemini API Key. Hãy bấm nút cài đặt Gemini để nhập key mới.');
+            const parts = [{ text: buildGeminiAppraisalPrompt(file?.name || 'biên bản giám định') }];
+            if (file) {
+                const name = (file.name || '').toLowerCase();
+                const mimeType = file.type || (name.endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
+                const data = await fileToBase64(file);
+                parts.push({ inline_data: { mime_type: mimeType, data } });
+            } else {
+                parts.push({ text: `\nNỘI DUNG BIÊN BẢN GIÁM ĐỊNH DẠNG TEXT:\n${text}` });
+            }
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_QUOTE_MODEL}:generateContent`;
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+                body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig: { temperature: 0.03, responseMimeType: 'application/json' } })
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(buildGeminiKeyErrorMessage(payload?.error?.message || `Gemini API lỗi HTTP ${response.status}`));
+            const output = payload?.candidates?.[0]?.content?.parts?.map(part => part.text || '').join('\n') || '';
+            return extractJsonObjectFromGeminiText(output);
+        }
+
+        async function extractAppraisalDataFromFile(file) {
+            const name = (file.name || '').toLowerCase();
+            const type = (file.type || '').toLowerCase();
+            if (name.endsWith('.docx')) {
+                setAppraisalStatus('Đang đọc bảng trong DOCX bằng bộ xử lý nội bộ...', 12);
+                try {
+                    const localData = await extractAppraisalDataFromDocxLocally(file);
+                    if (Array.isArray(localData?.replacement_items) && localData.replacement_items.length) {
+                        setAppraisalStatus('Đã đọc được phụ tùng thay thế từ DOCX, không cần Gemini.', 60);
+                        return localData;
+                    }
+                } catch (localError) {
+                    console.warn('Không đọc được DOCX nội bộ, thử fallback:', localError);
+                }
+                const docText = await extractTextFromDocx(file);
+                if (!docText.trim()) throw new Error('Không đọc được nội dung DOCX. Hãy thử xuất PDF hoặc chụp ảnh biên bản.');
+                const localTextData = extractAppraisalDataFromPlainTextLocally(docText);
+                if (Array.isArray(localTextData?.replacement_items) && localTextData.replacement_items.length) {
+                    setAppraisalStatus('Đã suy luận được phụ tùng thay thế từ text DOCX. Bạn hãy kiểm tra lại bảng OCR.', 60);
+                    return localTextData;
+                }
+                setAppraisalStatus('DOCX không đủ cấu trúc để đọc nội bộ, đang gửi sang Gemini...', 35);
+                return callGeminiAppraisalExtraction({ text: docText });
+            }
+            if (name.endsWith('.txt') || type.startsWith('text/')) {
+                setAppraisalStatus('Đang đọc text BB giám định...', 20);
+                const rawText = await file.text();
+                const localTextData = extractAppraisalDataFromPlainTextLocally(rawText);
+                if (Array.isArray(localTextData?.replacement_items) && localTextData.replacement_items.length) return localTextData;
+                return callGeminiAppraisalExtraction({ text: rawText });
+            }
+            if (type.includes('pdf') || name.endsWith('.pdf') || type.startsWith('image/') || /\.(png|jpe?g|webp)$/i.test(name)) {
+                setAppraisalStatus('Đang gửi ảnh/PDF BB giám định sang Gemini...', 25);
+                return callGeminiAppraisalExtraction({ file });
+            }
+            throw new Error('Định dạng BB giám định chưa hỗ trợ. Hãy dùng DOCX, ảnh, PDF hoặc TXT.');
+        }
+
+        function normalizeAppraisalItemsToRows(data) {
+            const items = Array.isArray(data?.replacement_items) ? data.replacement_items : [];
+            const seen = new Set();
+            return items.filter(item => String(item?.name || '').trim()).map((item, idx) => {
+                const name = String(item.name || '').trim();
+                return {
+                    id: makeQuoteRowId(), stt: item.stt || idx + 1, status: 'TRA KHO', need_lookup: true,
+                    name, originalName: name, unit: 'Cái', quantity: 1, unitPrice: 0, totalPrice: 0, quotedPrice: 0,
+                    is_labor: false, strict_match: false, source: 'appraisal_report',
+                    note: [item.damage_description ? `Mô tả: ${item.damage_description}` : '', item.recover_material ? `Thu hồi: ${item.recover_material}` : '', item.note || ''].filter(Boolean).join(' | '),
+                    rawLine: `BB giám định | ${item.stt || idx + 1} | ${name} | ${item.damage_description || ''} | ${item.resolution || 'Thay thế'}`
+                };
+            }).filter(row => {
+                const key = normalizeQuotePart(row.name);
+                if (!key || seen.has(key)) return false;
+                seen.add(key); return true;
+            }).slice(0, 120);
+        }
+
+        function renderAppraisalSummary(data, rows) {
+            const box = document.getElementById('appraisalSummaryCard');
+            if (!box) return;
+            const vehicle = [data?.vehicle_brand_hint, data?.vehicle_model_hint, data?.manufacture_year_hint].filter(Boolean).join(' / ');
+            const plate = data?.license_plate ? `BKS: ${sanitize(data.license_plate)}` : 'Chưa đọc được biển số';
+            box.innerHTML = `<div><strong>Đã đọc BB giám định:</strong> ${rows.length} phụ tùng đề xuất thay thế.</div><div>${plate}${vehicle ? ` — Xe: ${sanitize(vehicle)}` : ''}</div>${data?.garage_name ? `<div>Đơn vị sửa chữa: ${sanitize(data.garage_name)}</div>` : ''}`;
+            box.classList.add('show');
+        }
+
+        window.handleAppraisalFileUpload = async function(event) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            const fileNameEl = document.getElementById('appraisalFileName');
+            if (fileNameEl) { fileNameEl.innerText = file.name; fileNameEl.classList.remove('hidden'); }
+            try {
+                setAppraisalStatus('Đang xử lý biên bản giám định...', 5);
+                const data = await extractAppraisalDataFromFile(file);
+                const rows = normalizeAppraisalItemsToRows(data);
+                if (!rows.length) {
+                    setAppraisalStatus('Gemini chưa tìm thấy phụ tùng đề xuất thay thế trong BB giám định.', 100);
+                    customAlert('Không tìm thấy phụ tùng đề xuất thay thế. Hãy kiểm tra lại file hoặc dùng ảnh/PDF rõ hơn.');
+                    return;
+                }
+                applyQuoteVehicleHints({ vehicle_brand_hint: data.vehicle_brand_hint || '', vehicle_model_hint: data.vehicle_model_hint || '', manufacture_year_hint: data.manufacture_year_hint || data.year || '' });
+                QUOTE_OCR_ROWS = rows;
+                QUOTE_RESULTS = [];
+                renderQuoteOcrRows();
+                rebuildQuoteExtractedPartsFromEditableRows(true);
+                document.getElementById('btnRunQuoteLookup').disabled = QUOTE_EXTRACTED_PARTS.length === 0;
+                renderAppraisalSummary(data, rows);
+                setAppraisalStatus(`Hoàn tất — đã lấy ${rows.length} phụ tùng thay thế từ BB giám định.`, 100);
+                customAlert(`Đã lấy ${rows.length} phụ tùng thay thế từ biên bản giám định.`, 'success');
+            } catch (error) {
+                console.error('Lỗi đọc BB giám định:', error);
+                setAppraisalStatus('Lỗi xử lý biên bản giám định', 0);
+                customAlert('Không xử lý được biên bản giám định: ' + handleGeminiApiError(error));
+            } finally { event.target.value = ''; }
+        };
 
         async function extractTextFromSpreadsheet(file) {
             const buffer = await file.arrayBuffer();
@@ -7363,7 +8042,7 @@ Tên file: ${fileName}`;
             if (best && best.score >= 0.30) {
                 status = best.score >= 0.65 ? 'ok' : 'watch';
                 statusText = part.strict_match
-                    ? 'Khớp khóa chặt'
+                    ? 'Khớp tên phụ tùng'
                     : (priceBuckets.length > 1 || candidateGroups.some(group => group.count > 1)
                         ? 'Có nhiều mức giá'
                         : (best.score >= 0.65 ? 'Khớp tốt' : 'Cần kiểm tra tên'));
