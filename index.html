@@ -124,7 +124,7 @@
             border-radius: 999px;
             background: rgba(37, 99, 235, 0.08);
             color: #2563eb;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.14em;
@@ -245,7 +245,7 @@
             border-radius: 999px;
             background: rgba(239,246,255,0.92);
             color: #2563eb;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 800;
             border: 1px solid rgba(191,219,254,0.95);
         }
@@ -305,7 +305,7 @@
             border-radius: 14px;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 800;
             color: #475569;
             white-space: nowrap;
@@ -436,7 +436,7 @@
             border: 1px solid #dbeafe;
             background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 100%);
             color: #1d4ed8;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -498,7 +498,7 @@
             height: 18px;
         }
         .exact-part-filter-eyebrow {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 900;
             letter-spacing: 0.14em;
             text-transform: uppercase;
@@ -1079,6 +1079,118 @@
             .control-panel { padding: 1.3rem; border-radius: 24px; }
         }
 
+
+        /* ============ MAIN LOOKUP TABS ============ */
+        .main-lookup-tabs {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin: -0.45rem 0 1.45rem;
+            padding: 10px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.90);
+            border: 1px solid rgba(226, 232, 240, 0.96);
+            box-shadow: 0 24px 48px -34px rgba(15, 23, 42, 0.34);
+            backdrop-filter: blur(14px);
+        }
+        .main-lookup-tab-btn {
+            position: relative;
+            overflow: hidden;
+            min-height: 76px;
+            border-radius: 22px;
+            padding: 14px 16px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            text-align: left;
+            transition: all var(--transition-base) var(--ease-smooth);
+            cursor: pointer;
+        }
+        .main-lookup-tab-btn:hover {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        .main-lookup-tab-btn.active {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 56%, #0f766e 100%);
+            color: #ffffff;
+            box-shadow: 0 20px 38px -24px rgba(37, 99, 235, 0.75);
+        }
+        .main-lookup-tab-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 17px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #2563eb;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            transition: all var(--transition-base) var(--ease-smooth);
+        }
+        .main-lookup-tab-icon svg { width: 23px; height: 23px; }
+        .main-lookup-tab-btn.active .main-lookup-tab-icon {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+        .main-lookup-tab-title {
+            display: block;
+            font-size: 13px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            color: #0f172a;
+            line-height: 1.18;
+            margin-bottom: 4px;
+        }
+        .main-lookup-tab-btn.active .main-lookup-tab-title { color: #ffffff; }
+        .main-lookup-tab-desc {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            color: #64748b;
+            line-height: 1.45;
+        }
+        .main-lookup-tab-btn.active .main-lookup-tab-desc { color: rgba(255,255,255,0.82); }
+        .main-lookup-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            right: -44px;
+            bottom: -58px;
+            width: 150px;
+            height: 150px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(255,255,255,0.20), transparent 68%);
+            pointer-events: none;
+        }
+        html.dark .main-lookup-tabs {
+            background: rgba(15, 23, 42, 0.88) !important;
+            border-color: rgba(51, 65, 85, 0.95) !important;
+            box-shadow: 0 28px 60px -44px rgba(2, 6, 23, 0.82) !important;
+        }
+        html.dark .main-lookup-tab-btn { color: #cbd5e1; }
+        html.dark .main-lookup-tab-btn:hover {
+            background: rgba(30, 41, 59, 0.76);
+            border-color: #334155;
+        }
+        html.dark .main-lookup-tab-title { color: #f8fafc; }
+        html.dark .main-lookup-tab-desc { color: #94a3b8; }
+        html.dark .main-lookup-tab-icon {
+            background: rgba(30, 41, 59, 0.82);
+            border-color: rgba(59, 130, 246, 0.25);
+            color: #93c5fd;
+        }
+        @media (max-width: 768px) {
+            .main-lookup-tabs { grid-template-columns: 1fr; margin-top: -0.15rem; }
+            .main-lookup-tab-btn { min-height: 70px; }
+        }
+
         /* ============ DARK MODE ============ */
         html.dark body {
             background:
@@ -1246,6 +1358,637 @@
         @media (max-width:1024px) { .user-usage-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .admin-usage-dashboard { grid-template-columns:1fr; } .admin-usage-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
         @media (max-width:640px) { .user-usage-hero { flex-direction:column; align-items:flex-start; } .user-usage-grid, .admin-usage-metrics { grid-template-columns:1fr; } }
 
+
+        /* ============ QUOTE PRICE OCR LOOKUP ============ */
+        .quote-price-panel {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 4% 4%, rgba(37, 99, 235, 0.10), transparent 28%),
+                radial-gradient(circle at 96% 16%, rgba(16, 185, 129, 0.10), transparent 24%),
+                linear-gradient(135deg, rgba(255,255,255,0.98), rgba(248,250,252,0.95));
+        }
+        .quote-price-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image: radial-gradient(rgba(37, 99, 235, 0.13) 1px, transparent 1px);
+            background-size: 18px 18px;
+            mask-image: linear-gradient(90deg, black 0%, transparent 44%, transparent 100%);
+            opacity: 0.55;
+        }
+        .quote-price-panel > * { position: relative; z-index: 1; }
+        .quote-price-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.78);
+        }
+        .quote-price-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 9px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.13);
+            color: #2563eb;
+            font-size: 10px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+        .quote-price-title {
+            font-size: 22px;
+            line-height: 1.15;
+            font-weight: 1000;
+            letter-spacing: -0.04em;
+            color: #0f172a;
+        }
+        .quote-price-desc {
+            margin-top: 7px;
+            max-width: 850px;
+            font-size: 12px;
+            font-weight: 750;
+            color: #64748b;
+            line-height: 1.65;
+        }
+        .quote-price-flow {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .quote-flow-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border-radius: 14px;
+            padding: 9px 11px;
+            background: rgba(255,255,255,0.84);
+            border: 1px solid rgba(226,232,240,0.9);
+            color: #475569;
+            font-size: 10px;
+            font-weight: 950;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+        .quote-flow-chip svg { width: 15px; height: 15px; color: #2563eb; }
+        .quote-workspace {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+        .quote-vehicle-box { margin-bottom: 18px; padding: 16px; border-radius: 24px; border: 1px solid rgba(219,234,254,0.95); background: radial-gradient(circle at 0% 0%, rgba(37,99,235,0.10), transparent 26%), linear-gradient(180deg, rgba(248,250,252,0.96), rgba(255,255,255,0.94)); box-shadow: 0 16px 32px -28px rgba(15,23,42,0.42); }
+        .quote-vehicle-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+        .quote-vehicle-title { font-size: 13px; font-weight: 1000; color: #0f172a; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.25; }
+        .quote-vehicle-desc { margin-top: 4px; font-size: 10px; font-weight: 800; color: #64748b; line-height: 1.55; }
+        .quote-vehicle-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+        .quote-select-field { display: block; min-width: 0; }
+        .quote-select-field span { display: block; margin-bottom: 7px; font-size: 9px; font-weight: 1000; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.12em; }
+        .quote-select { width: 100%; height: 42px; border: 1px solid #dbe3ef; border-radius: 14px; background: rgba(255,255,255,0.94); color: #0f172a; padding: 0 12px; font-size: 12px; font-weight: 900; outline: none; transition: all var(--transition-base) var(--ease-smooth); box-shadow: 0 10px 22px -22px rgba(15,23,42,0.45); }
+        .quote-select:focus { border-color: #2563eb; background: #ffffff; box-shadow: 0 0 0 4px rgba(37,99,235,0.10), 0 12px 26px -24px rgba(37,99,235,0.85); }
+        .quote-gemini-key-row { display: grid; grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr); gap: 10px; margin-top: 12px; align-items: end; }
+        .quote-key-field input { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; }
+        .quote-vehicle-summary { min-height: 42px; display: flex; align-items: center; padding: 10px 12px; border-radius: 14px; background: rgba(239,246,255,0.86); border: 1px solid rgba(191,219,254,0.95); color: #1d4ed8; font-size: 10px; font-weight: 950; line-height: 1.45; text-transform: uppercase; letter-spacing: 0.05em; }
+        .quote-mini-btn { height: 34px; padding: 0 12px; border-radius: 12px; border: 1px solid #bfdbfe; background: #ffffff; color: #2563eb; font-size: 9px; font-weight: 1000; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; white-space: nowrap; transition: all var(--transition-base) var(--ease-smooth); }
+        .quote-mini-btn:hover { background: #2563eb; color: #ffffff; border-color: #2563eb; transform: translateY(-1px); }
+        .quote-upload-card,
+        .quote-results-card {
+            border-radius: 28px;
+            border: 1px solid rgba(226, 232, 240, 0.94);
+            background: rgba(255,255,255,0.90);
+            box-shadow: 0 22px 48px -34px rgba(15, 23, 42, 0.46);
+            overflow: hidden;
+        }
+        .quote-upload-card {
+            display: grid;
+            grid-template-columns: minmax(380px, 0.82fr) minmax(0, 1.65fr);
+            grid-template-rows: auto auto auto auto;
+            gap: 18px;
+            padding: 18px;
+            align-items: start;
+        }
+        .quote-upload-card .quote-vehicle-box {
+            grid-column: 1 / -1;
+            grid-row: 1;
+            margin: 0;
+        }
+        .quote-upload-card .quote-drop-zone {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .quote-upload-card .quote-status-wrap {
+            grid-column: 1;
+            grid-row: 3;
+        }
+        .quote-upload-card .quote-actions {
+            grid-column: 1;
+            grid-row: 4;
+        }
+        .quote-upload-card .quote-edit-box {
+            grid-column: 2;
+            grid-row: 2 / span 3;
+        }
+        .quote-drop-zone {
+            position: relative;
+            margin: 0;
+            min-height: 300px;
+            border: 1.5px dashed rgba(37, 99, 235, 0.26);
+            border-radius: 22px;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(37,99,235,0.08), transparent 42%),
+                rgba(248,250,252,0.86);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            transition: all var(--transition-base) var(--ease-smooth);
+            cursor: pointer;
+        }
+        .quote-drop-zone:hover,
+        .quote-drop-zone.drag-over {
+            border-color: #2563eb;
+            background: rgba(239,246,255,0.95);
+            transform: translateY(-1px);
+            box-shadow: 0 16px 30px -26px rgba(37,99,235,0.85);
+        }
+        .quote-drop-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            background: linear-gradient(145deg, #eff6ff, #dbeafe);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.82), 0 18px 32px -24px rgba(37,99,235,.9);
+            margin-bottom: 14px;
+        }
+        .quote-drop-icon svg { width: 31px; height: 31px; }
+        .quote-drop-title {
+            font-size: 15px;
+            font-weight: 1000;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+            text-transform: uppercase;
+        }
+        .quote-drop-note {
+            margin-top: 7px;
+            font-size: 13px;
+            font-weight: 750;
+            color: #64748b;
+            line-height: 1.55;
+            max-width: 330px;
+        }
+        .quote-file-name {
+            margin-top: 12px;
+            max-width: 100%;
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: #ffffff;
+            border: 1px solid #dbeafe;
+            color: #2563eb;
+            font-size: 10px;
+            font-weight: 950;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .quote-status-wrap {
+            padding: 0;
+        }
+        .quote-progress-track {
+            height: 9px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #e2e8f0;
+            border: 1px solid rgba(226,232,240,0.9);
+        }
+        .quote-progress-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #2563eb, #14b8a6);
+            transition: width var(--transition-slow) var(--ease-smooth);
+        }
+        .quote-status-text {
+            margin-top: 9px;
+            font-size: 10px;
+            font-weight: 900;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .quote-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 0;
+        }
+        .quote-primary-btn,
+        .quote-secondary-btn {
+            height: 44px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all var(--transition-base) var(--ease-smooth);
+            cursor: pointer;
+        }
+        .quote-primary-btn {
+            color: #ffffff;
+            border: 1px solid #2563eb;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8 62%, #0f766e);
+            box-shadow: 0 18px 32px -22px rgba(37,99,235,0.95);
+        }
+        .quote-primary-btn:hover { transform: translateY(-1px); box-shadow: 0 20px 38px -21px rgba(37,99,235,1); }
+        .quote-primary-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+        .quote-secondary-btn {
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+        .quote-secondary-btn:hover { color: #2563eb; border-color: #bfdbfe; background: #eff6ff; }
+        .quote-edit-box {
+            margin: 0;
+            border-radius: 26px;
+            min-height: 452px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(191, 219, 254, 0.98);
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.08), transparent 28%),
+                linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.94));
+            box-shadow: 0 18px 34px -30px rgba(15, 23, 42, 0.42);
+        }
+        .quote-edit-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(219, 234, 254, 0.95);
+            background: rgba(239,246,255,0.62);
+        }
+        .quote-edit-title {
+            font-size: 14px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #1d4ed8;
+            line-height: 1.25;
+        }
+        .quote-edit-note {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 750;
+            line-height: 1.45;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        .quote-edit-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .quote-edit-mini-btn {
+            height: 38px;
+            padding: 0 14px;
+            border-radius: 999px;
+            border: 1px solid #bfdbfe;
+            background: #ffffff;
+            color: #2563eb;
+            font-size: 9.5px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: all var(--transition-base) var(--ease-smooth);
+            white-space: nowrap;
+        }
+        .quote-edit-mini-btn:hover { background: #2563eb; color: #ffffff; border-color: #2563eb; transform: translateY(-1px); }
+        .quote-ocr-table-wrap {
+            max-height: none;
+            min-height: 370px;
+            flex: 1;
+            overflow: auto;
+            background: rgba(255,255,255,0.78);
+        }
+        .quote-ocr-table {
+            width: 100%;
+            min-width: 1180px;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .quote-ocr-table th {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 1000;
+            letter-spacing: 0.10em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .quote-ocr-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(226,232,240,0.78);
+            vertical-align: top;
+            font-size: 12px;
+            color: #334155;
+        }
+        .quote-ocr-table tr.row-lookup { background: rgba(240,253,244,0.55); }
+        .quote-ocr-table tr.row-skip { background: rgba(248,250,252,0.78); opacity: 0.82; }
+        .quote-ocr-status {
+            width: 126px;
+            height: 42px;
+            border-radius: 11px;
+            border: 1px solid #dbeafe;
+            background: #ffffff;
+            color: #1d4ed8;
+            font-size: 10px;
+            font-weight: 950;
+            outline: none;
+            padding: 0 8px;
+        }
+        .quote-ocr-name-input,
+        .quote-ocr-small-input {
+            width: 100%;
+            min-height: 44px;
+            border-radius: 12px;
+            border: 1px solid #dbe3ef;
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 13px;
+            font-weight: 850;
+            outline: none;
+            padding: 8px 10px;
+            transition: all var(--transition-base) var(--ease-smooth);
+        }
+        .quote-ocr-name-input:focus,
+        .quote-ocr-small-input:focus,
+        .quote-ocr-status:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+            background: #ffffff;
+        }
+        .quote-ocr-name-input { min-width: 420px; }
+        .quote-ocr-small-input { min-width: 108px; text-align: right; }
+        .quote-ocr-unit-input { min-width: 78px; text-align: center; }
+        .quote-ocr-original {
+            margin-top: 4px;
+            font-size: 9.5px;
+            font-weight: 750;
+            color: #94a3b8;
+            line-height: 1.3;
+        }
+        .quote-ocr-del-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            border: 1px solid #fee2e2;
+            background: #fff1f2;
+            color: #dc2626;
+            font-size: 13px;
+            font-weight: 1000;
+            cursor: pointer;
+            transition: all var(--transition-base) var(--ease-smooth);
+        }
+        .quote-ocr-del-btn:hover { background: #dc2626; color: #ffffff; border-color: #dc2626; }
+        .quote-ocr-empty {
+            padding: 28px 14px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 850;
+        }
+
+        .quote-mini-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            padding: 18px;
+            border-bottom: 1px solid #e2e8f0;
+            background: rgba(248,250,252,0.76);
+        }
+        .quote-stat {
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            background: rgba(255,255,255,0.86);
+            padding: 12px;
+        }
+        .quote-stat-label {
+            font-size: 8px;
+            font-weight: 1000;
+            letter-spacing: 0.13em;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .quote-stat-value {
+            font-size: 19px;
+            line-height: 1;
+            color: #0f172a;
+            font-weight: 1000;
+            letter-spacing: -0.04em;
+        }
+        .quote-result-tabs {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 15px 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .quote-result-title {
+            font-size: 13px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            color: #0f172a;
+        }
+        .quote-result-subtitle {
+            margin-top: 3px;
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 750;
+        }
+        .quote-parts-list {
+            max-height: 210px;
+            overflow: auto;
+            padding: 14px 18px;
+            display: grid;
+            gap: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .quote-part-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 900;
+            color: #334155;
+        }
+        .quote-part-pill small {
+            font-size: 10px;
+            font-weight: 950;
+            color: #2563eb;
+            white-space: nowrap;
+        }
+        .quote-result-table-wrap {
+            max-height: 680px;
+            overflow: auto;
+        }
+        .quote-result-table {
+            width: 100%;
+            min-width: 1120px;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .quote-result-table th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 13px 14px;
+            text-align: left;
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 1000;
+            letter-spacing: 0.11em;
+            text-transform: uppercase;
+        }
+        .quote-result-table td {
+            padding: 13px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: top;
+            font-size: 13px;
+            color: #334155;
+        }
+        .quote-match-name { font-size: 13px; font-weight: 1000; color: #0f172a; text-transform: uppercase; line-height: 1.42; }
+        .quote-match-meta { margin-top: 6px; font-size: 10px; color: #94a3b8; font-weight: 850; text-transform: uppercase; letter-spacing: 0.06em; }
+        .quote-score-badge,
+        .quote-status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            padding: 6px 9px;
+            font-size: 10px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+        .quote-score-strong { color: #047857; background: #d1fae5; border-color: #a7f3d0; }
+        .quote-score-medium { color: #b45309; background: #fef3c7; border-color: #fde68a; }
+        .quote-score-low { color: #64748b; background: #f1f5f9; border-color: #e2e8f0; }
+        .quote-status-ok { color: #047857; background: #d1fae5; border-color: #a7f3d0; }
+        .quote-status-watch { color: #b45309; background: #fef3c7; border-color: #fde68a; }
+        .quote-status-danger { color: #dc2626; background: #fee2e2; border-color: #fecaca; }
+        .quote-row-action {
+            margin-top: 8px;
+            height: 30px;
+            padding: 0 10px;
+            border-radius: 10px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 10px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            cursor: pointer;
+            transition: all var(--transition-base) var(--ease-smooth);
+        }
+        .quote-row-action:hover { background: #2563eb; color: #ffffff; border-color: #2563eb; }
+        html.dark .quote-price-panel,
+        html.dark .quote-upload-card,
+        html.dark .quote-results-card { background: rgba(15,23,42,0.88) !important; border-color: rgba(51,65,85,0.95) !important; }
+        html.dark .quote-price-title,
+        html.dark .quote-drop-title,
+        html.dark .quote-result-title,
+        html.dark .quote-stat-value,
+        html.dark .quote-match-name { color: #f8fafc !important; }
+        html.dark .quote-price-desc,
+        html.dark .quote-drop-note,
+        html.dark .quote-status-text,
+        html.dark .quote-result-subtitle,
+        html.dark .quote-match-meta { color: #94a3b8 !important; }
+        html.dark .quote-flow-chip,
+        html.dark .quote-drop-zone,
+        html.dark .quote-raw-box,
+        html.dark .quote-stat,
+        html.dark .quote-part-pill { background: rgba(30,41,59,0.78) !important; border-color: #334155 !important; color: #cbd5e1 !important; }
+        html.dark .quote-raw-head,
+        html.dark .quote-mini-stats,
+        html.dark .quote-result-tabs,
+        html.dark .quote-parts-list { border-color: #334155 !important; background: rgba(15,23,42,0.55) !important; }
+        html.dark .quote-raw-text { color: #f8fafc !important; }
+        html.dark .quote-edit-box { background: rgba(15,23,42,0.78) !important; border-color: #334155 !important; }
+        html.dark .quote-edit-head { background: rgba(30,41,59,0.68) !important; border-color: #334155 !important; }
+        html.dark .quote-edit-title { color: #93c5fd !important; }
+        html.dark .quote-edit-note, html.dark .quote-ocr-original { color: #94a3b8 !important; }
+        html.dark .quote-ocr-table-wrap { background: rgba(15,23,42,0.58) !important; }
+        html.dark .quote-ocr-table th { background: #1e293b !important; border-color: #334155 !important; color: #cbd5e1 !important; }
+        html.dark .quote-ocr-table td { border-color: #1e293b !important; color: #cbd5e1 !important; }
+        html.dark .quote-ocr-table tr.row-lookup { background: rgba(20,83,45,0.16) !important; }
+        html.dark .quote-ocr-table tr.row-skip { background: rgba(30,41,59,0.42) !important; }
+        html.dark .quote-ocr-name-input, html.dark .quote-ocr-small-input, html.dark .quote-ocr-status { background: #0f172a !important; border-color: #334155 !important; color: #f8fafc !important; }
+        html.dark .quote-result-table th { background: #1e293b !important; border-color: #334155 !important; color: #cbd5e1 !important; }
+        html.dark .quote-result-table td { border-color: #1e293b !important; color: #cbd5e1 !important; }
+        html.dark .quote-vehicle-box { background: rgba(15,23,42,0.76) !important; border-color: #334155 !important; }
+        html.dark .quote-vehicle-title { color: #f8fafc !important; }
+        html.dark .quote-vehicle-desc { color: #94a3b8 !important; }
+        html.dark .quote-select { background: #1e293b !important; border-color: #334155 !important; color: #f8fafc !important; }
+        html.dark .quote-vehicle-summary { background: rgba(37,99,235,0.14) !important; border-color: rgba(96,165,250,0.26) !important; color: #93c5fd !important; }
+        html.dark .quote-mini-btn { background: #0f172a !important; border-color: #334155 !important; color: #93c5fd !important; }
+        @media (max-width: 1280px) {
+            .quote-upload-card { grid-template-columns: 1fr; grid-template-rows: auto; padding: 18px; }
+            .quote-upload-card .quote-vehicle-box,
+            .quote-upload-card .quote-drop-zone,
+            .quote-upload-card .quote-status-wrap,
+            .quote-upload-card .quote-actions,
+            .quote-upload-card .quote-edit-box { grid-column: 1; grid-row: auto; margin: 0; }
+            .quote-drop-zone { min-height: 260px; }
+            .quote-edit-box { min-height: 420px; }
+            .quote-ocr-table-wrap { min-height: 320px; }
+        }
+        @media (max-width: 1100px) { .quote-price-head { flex-direction: column; } .quote-price-flow { justify-content: flex-start; } .quote-vehicle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .quote-gemini-key-row { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { .quote-actions, .quote-mini-stats, .quote-vehicle-grid { grid-template-columns: 1fr; } .quote-vehicle-head, .quote-result-tabs, .quote-edit-head { flex-direction: column; align-items: flex-start; } }
+
+        /* FIX QUOTE OCR LAYOUT: các phần upload/progress/button không còn chồng lên nhau */
         /* Security badge */
         .security-badge {
             display: inline-flex; align-items: center; gap: 6px;
@@ -1254,7 +1997,1105 @@
             letter-spacing: 0.05em; text-transform: uppercase;
         }
         html.dark .security-badge { background: rgba(22,163,74,0.2); color: #4ade80; border-color: rgba(34,197,94,0.3); }
-    </style>
+    
+
+        /* ===== EXECUTIVE REDESIGN V2 - CLEAN PREMIUM WORKBENCH ===== */
+        :root {
+            --exec-navy: #0b1220;
+            --exec-navy-2: #101a2f;
+            --exec-blue: #2563eb;
+            --exec-cyan: #06b6d4;
+            --exec-green: #10b981;
+            --exec-border: #dbe5f2;
+            --exec-soft: #f6f8fc;
+            --exec-text: #0f172a;
+            --exec-muted: #64748b;
+        }
+        body {
+            background:
+                radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.08), transparent 28%),
+                radial-gradient(circle at 92% 5%, rgba(6, 182, 212, 0.08), transparent 24%),
+                linear-gradient(180deg, #f7faff 0%, #f6f8fb 45%, #eef2f7 100%);
+        }
+        .main-container {
+            max-width: 1720px;
+            padding: 1.4rem 1.5rem 2rem;
+        }
+        .app-topbar {
+            border-radius: 28px !important;
+            background: rgba(255,255,255,0.9) !important;
+            border: 1px solid rgba(219, 229, 242, 0.95) !important;
+            box-shadow: 0 22px 50px -42px rgba(15, 23, 42, 0.35) !important;
+            backdrop-filter: blur(18px);
+        }
+
+        #mainLookupTabs.main-lookup-tabs {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px !important;
+            padding: 8px;
+            margin: 0 0 1.2rem !important;
+            border-radius: 26px;
+            background: rgba(255,255,255,0.72);
+            border: 1px solid rgba(219, 229, 242, 0.95);
+            box-shadow: 0 20px 48px -42px rgba(15, 23, 42, 0.30);
+            backdrop-filter: blur(14px);
+        }
+        #mainLookupTabs .main-lookup-tab-btn {
+            position: relative;
+            min-height: 82px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 15px 16px;
+            border: 1px solid transparent;
+            border-radius: 20px;
+            background: transparent;
+            color: #475569;
+            text-align: left;
+            transition: all .22s ease;
+            overflow: hidden;
+        }
+        #mainLookupTabs .main-lookup-tab-btn:hover {
+            background: rgba(248,250,252,0.92);
+            border-color: rgba(219,229,242,0.95);
+        }
+        #mainLookupTabs .main-lookup-tab-btn.active {
+            background: linear-gradient(135deg, #0f172a 0%, #172554 58%, #1d4ed8 100%);
+            border-color: rgba(96,165,250,0.45);
+            color: #ffffff;
+            box-shadow: 0 20px 38px -26px rgba(30, 64, 175, .75);
+        }
+        #mainLookupTabs .main-lookup-tab-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+        }
+        #mainLookupTabs .main-lookup-tab-btn.active .main-lookup-tab-icon {
+            color: #ffffff;
+            background: rgba(255,255,255,0.14);
+            border-color: rgba(255,255,255,0.22);
+        }
+        #mainLookupTabs .main-lookup-tab-icon svg { width: 22px; height: 22px; }
+        #mainLookupTabs .main-lookup-tab-title {
+            display: block;
+            font-size: 14px;
+            font-weight: 1000;
+            line-height: 1.25;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+        }
+        #mainLookupTabs .main-lookup-tab-desc {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            line-height: 1.45;
+            font-weight: 750;
+            color: #64748b;
+        }
+        #mainLookupTabs .main-lookup-tab-btn.active .main-lookup-tab-title,
+        #mainLookupTabs .main-lookup-tab-btn.active .main-lookup-tab-desc { color: #ffffff; }
+        #mainLookupTabs .main-lookup-tab-btn.active .main-lookup-tab-desc { opacity: .78; }
+
+        #quotePriceSection.exec-quote {
+            padding: 0 !important;
+            overflow: hidden !important;
+            border-radius: 30px !important;
+            background: #f5f7fb !important;
+            border: 1px solid rgba(219,229,242,0.95) !important;
+            box-shadow: 0 28px 70px -52px rgba(15,23,42,0.38) !important;
+        }
+        #quotePriceSection.exec-quote::before { display: none !important; }
+        .exec-quote-shell { padding: 18px; }
+        .exec-quote-header {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: stretch;
+            padding: 22px;
+            border-radius: 26px;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 16% 20%, rgba(59,130,246,.35), transparent 34%),
+                radial-gradient(circle at 95% 0%, rgba(14,165,233,.26), transparent 26%),
+                linear-gradient(135deg, #07111f 0%, #0f1d35 48%, #173b75 100%);
+            box-shadow: 0 24px 48px -34px rgba(15,23,42,.75);
+            overflow: hidden;
+            position: relative;
+        }
+        .exec-quote-header::after {
+            content: "";
+            position: absolute;
+            right: -100px;
+            bottom: -120px;
+            width: 310px;
+            height: 310px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(255,255,255,.14), transparent 68%);
+            pointer-events: none;
+        }
+        .exec-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.18);
+            color: #bfdbfe;
+            font-size: 10px;
+            font-weight: 1000;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+        .exec-quote-title {
+            margin-top: 14px;
+            font-size: clamp(26px, 2.4vw, 40px);
+            font-weight: 1000;
+            letter-spacing: -0.055em;
+            line-height: 1.02;
+        }
+        .exec-quote-subtitle {
+            margin-top: 12px;
+            max-width: 850px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 750;
+            line-height: 1.75;
+        }
+        .exec-header-actions {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(130px, 1fr));
+            gap: 10px;
+            min-width: 330px;
+        }
+        .exec-header-card {
+            padding: 14px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.16);
+            backdrop-filter: blur(14px);
+        }
+        .exec-header-card.wide { grid-column: span 2; }
+        .exec-header-card b {
+            display: block;
+            font-size: 19px;
+            line-height: 1;
+            font-weight: 1000;
+            letter-spacing: -0.035em;
+        }
+        .exec-header-card span {
+            display: block;
+            margin-top: 7px;
+            color: #bfdbfe;
+            font-size: 9px;
+            font-weight: 1000;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+        .exec-step-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 14px 2px 0;
+        }
+        .exec-step-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 14px;
+            background: #ffffff;
+            border: 1px solid rgba(219,229,242,0.96);
+            color: #334155;
+            box-shadow: 0 12px 26px -25px rgba(15,23,42,.35);
+            font-size: 11px;
+            font-weight: 900;
+        }
+        .exec-step-number {
+            width: 22px;
+            height: 22px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            font-size: 10px;
+            font-weight: 1000;
+        }
+        .exec-vehicle-panel,
+        .exec-upload-panel,
+        .exec-editor-panel,
+        .exec-results-panel {
+            background: rgba(255,255,255,.94);
+            border: 1px solid rgba(219,229,242,0.96);
+            border-radius: 26px;
+            box-shadow: 0 20px 48px -38px rgba(15,23,42,.28);
+        }
+        .exec-vehicle-panel {
+            margin-top: 14px;
+            padding: 18px;
+        }
+        .exec-panel-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+        .exec-panel-title {
+            color: #0f172a;
+            font-size: 16px;
+            font-weight: 1000;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+        .exec-panel-note {
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 750;
+            line-height: 1.65;
+        }
+        .exec-sync-btn {
+            height: 38px;
+            padding: 0 14px;
+            border-radius: 13px;
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 10px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            white-space: nowrap;
+            transition: all .18s ease;
+        }
+        .exec-sync-btn:hover { background:#2563eb; color:#fff; border-color:#2563eb; transform: translateY(-1px); }
+        .exec-form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .exec-form-grid.bottom { grid-template-columns: minmax(280px, .88fr) minmax(0, 1.12fr); margin-top: 12px; }
+        .exec-field span,
+        .quote-select-field span {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 9px;
+            font-weight: 1000;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+        }
+        .exec-select,
+        .exec-input,
+        #quoteHangSelect,
+        #quoteHieuSelect,
+        #quoteNamSelect,
+        #quoteTypeSelect,
+        #quoteGeminiKeyInput {
+            width: 100%;
+            height: 48px;
+            border-radius: 15px;
+            border: 1px solid #dbe5f2;
+            background: #ffffff;
+            color: #0f172a;
+            padding: 0 13px;
+            font-size: 13px;
+            font-weight: 900;
+            outline: none;
+            box-shadow: 0 10px 24px -23px rgba(15,23,42,.4);
+            transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+        }
+        #quoteGeminiKeyInput { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; }
+        .exec-select:focus,
+        .exec-input:focus,
+        #quoteHangSelect:focus,
+        #quoteHieuSelect:focus,
+        #quoteNamSelect:focus,
+        #quoteTypeSelect:focus,
+        #quoteGeminiKeyInput:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37,99,235,.09), 0 14px 28px -24px rgba(37,99,235,.72);
+        }
+        .exec-vehicle-summary,
+        #quoteVehicleSummary {
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #eff6ff, #f8fafc);
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            font-size: 10px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            line-height: 1.45;
+        }
+        .exec-workbench {
+            display: grid;
+            grid-template-columns: minmax(340px, 390px) minmax(0, 1fr);
+            gap: 14px;
+            margin-top: 14px;
+            align-items: stretch;
+        }
+        .exec-upload-panel { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+        .exec-editor-panel { padding: 18px; min-height: 590px; display: flex; flex-direction: column; }
+        .exec-upload-zone,
+        #quoteDropZone {
+            min-height: 255px;
+            border-radius: 24px;
+            border: 1.6px dashed rgba(37,99,235,.40);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(37,99,235,.10), transparent 34%),
+                linear-gradient(180deg, #ffffff, #f8fbff);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px 20px;
+            cursor: pointer;
+            transition: all .22s ease;
+        }
+        #quoteDropZone:hover,
+        #quoteDropZone.drag-over {
+            border-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 22px 42px -32px rgba(37,99,235,.45);
+        }
+        .exec-upload-icon,
+        .quote-drop-icon {
+            width: 68px;
+            height: 68px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            box-shadow: 0 22px 38px -22px rgba(37,99,235,.78);
+        }
+        .quote-drop-icon svg { width: 31px; height: 31px; }
+        .exec-upload-title,
+        .quote-drop-title { font-size: 22px; font-weight: 1000; color: #0f172a; letter-spacing: -0.035em; line-height: 1.1; }
+        .exec-upload-note,
+        .quote-drop-note { margin-top: 10px; color:#64748b; font-size: 12px; font-weight: 750; line-height: 1.7; max-width: 420px; }
+        #quoteFileName {
+            display: inline-flex;
+            margin-top: 12px;
+            max-width: 100%;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            font-size: 11px;
+            font-weight: 950;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        #quoteFileName.hidden { display: none !important; }
+        .exec-progress { padding: 2px 4px 0; }
+        .quote-progress-track {
+            height: 9px;
+            border-radius: 999px;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+        .quote-progress-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #2563eb, #06b6d4, #10b981);
+            transition: width .28s ease;
+        }
+        #quoteStatusText,
+        .quote-status-text {
+            margin-top: 10px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 1000;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+        .exec-actions {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 10px;
+        }
+        .exec-primary-btn,
+        .exec-secondary-btn,
+        .quote-primary-btn,
+        .quote-secondary-btn {
+            height: 50px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 1000;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            transition: all .18s ease;
+            border: 1px solid transparent;
+        }
+        .exec-primary-btn,
+        .quote-primary-btn { color: #fff; background: linear-gradient(135deg, #2563eb, #1d4ed8 62%, #06b6d4); box-shadow: 0 18px 34px -22px rgba(37,99,235,.85); }
+        .exec-primary-btn:hover,
+        .quote-primary-btn:hover { transform: translateY(-1px); box-shadow: 0 22px 38px -22px rgba(37,99,235,1); }
+        .exec-primary-btn:disabled,
+        .quote-primary-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+        .exec-secondary-btn,
+        .quote-secondary-btn { background: #ffffff; border-color: #dbe5f2; color: #475569; }
+        .exec-secondary-btn:hover,
+        .quote-secondary-btn:hover { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
+        .exec-tip-stack { display: grid; gap: 9px; }
+        .exec-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            padding: 11px;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.55;
+        }
+        .exec-tip svg { width: 16px; height: 16px; margin-top: 1px; color: #2563eb; flex-shrink: 0; }
+        .exec-editor-toolbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 13px;
+        }
+        .exec-editor-actions { display: flex; gap: 9px; flex-wrap: wrap; justify-content: flex-end; }
+        .exec-mini-btn,
+        .quote-edit-mini-btn {
+            height: 38px;
+            padding: 0 13px;
+            border-radius: 13px;
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 10px;
+            font-weight: 1000;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            transition: all .18s ease;
+        }
+        .exec-mini-btn:hover,
+        .quote-edit-mini-btn:hover { background: #2563eb; border-color: #2563eb; color:#fff; transform: translateY(-1px); }
+        .quote-ocr-table-wrap,
+        .exec-table-wrap,
+        .quote-result-table-wrap {
+            flex: 1;
+            overflow: auto;
+            border-radius: 20px;
+            border: 1px solid #dbe5f2;
+            background: #ffffff;
+        }
+        .quote-ocr-table,
+        .quote-result-table { width: 100%; min-width: 1080px; border-collapse: separate; border-spacing: 0; }
+        .quote-ocr-table th,
+        .quote-result-table th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            padding: 14px 14px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 1000;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .quote-ocr-table td,
+        .quote-result-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 800;
+            vertical-align: top;
+        }
+        .quote-ocr-table tbody tr:hover,
+        .quote-result-table tbody tr:hover { background: #f8fafc; }
+        .quote-ocr-table tr.row-lookup { background: rgba(240,253,244,.65); }
+        .quote-ocr-table tr.row-skip { background: rgba(248,250,252,.88); opacity: .9; }
+        .quote-ocr-status,
+        .quote-ocr-name-input,
+        .quote-ocr-small-input {
+            width: 100%;
+            height: 39px;
+            border-radius: 12px;
+            border: 1px solid #dbe5f2;
+            background: #ffffff;
+            color: #0f172a;
+            padding: 0 10px;
+            font-size: 12px;
+            font-weight: 850;
+            outline: none;
+            transition: all .18s ease;
+        }
+        .quote-ocr-name-input { min-width: 480px; }
+        .quote-ocr-small-input { min-width: 110px; text-align: right; }
+        .quote-ocr-unit-input { min-width: 80px; text-align: center; }
+        .quote-ocr-status:focus,
+        .quote-ocr-name-input:focus,
+        .quote-ocr-small-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.08); }
+        .quote-ocr-original { margin-top: 6px; color: #94a3b8; font-size: 10px; font-weight: 800; line-height: 1.45; }
+        .quote-ocr-del-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 11px;
+            border: 1px solid #fecaca;
+            background: #fff;
+            color: #ef4444;
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1;
+            transition: all .18s ease;
+        }
+        .quote-ocr-del-btn:hover { background:#dc2626; color:#fff; border-color:#dc2626; }
+        .quote-ocr-empty { padding: 86px 20px !important; text-align: center; color:#94a3b8 !important; font-size:12px !important; font-weight:1000 !important; text-transform: uppercase; letter-spacing: .12em; }
+        .exec-results-panel { margin-top: 14px; padding: 18px; }
+        .exec-result-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .exec-stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+        .exec-stat-card {
+            min-height: 98px;
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid #dbe5f2;
+            background: linear-gradient(180deg, #ffffff, #f8fafc);
+        }
+        .exec-stat-label { color:#94a3b8; font-size:9px; font-weight:1000; text-transform:uppercase; letter-spacing:.14em; }
+        .exec-stat-value { margin-top:10px; color:#0f172a; font-size:30px; font-weight:1000; line-height:1; letter-spacing:-.05em; }
+        #quotePartsList {
+            min-height: 64px;
+            margin-bottom: 14px;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #dbe5f2;
+            background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            align-items: flex-start;
+        }
+        .quote-part-pill {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 2px;
+            max-width: 280px;
+            padding: 9px 12px;
+            border-radius: 15px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            font-size: 11px;
+            font-weight: 950;
+            line-height: 1.35;
+        }
+        .quote-part-pill small { color:#64748b; font-size:9px; font-weight:850; }
+        .quote-match-name { font-size: 13px; font-weight: 1000; color:#0f172a; line-height:1.4; text-transform: none; }
+        .quote-match-meta { margin-top:5px; color:#64748b; font-size:10px; font-weight:800; line-height:1.5; }
+        .quote-row-action { margin-top:8px; display:inline-flex; padding:6px 9px; border-radius:999px; background:#f8fafc; border:1px solid #e2e8f0; color:#2563eb; font-size:9px; font-weight:1000; text-transform:uppercase; letter-spacing:.06em; }
+        .quote-row-action:hover { background:#2563eb; color:#fff; border-color:#2563eb; }
+        .quote-score-badge,
+        .quote-status-badge { display:inline-flex; align-items:center; padding:6px 9px; border-radius:999px; border:1px solid transparent; font-size:9px; font-weight:1000; text-transform:uppercase; letter-spacing:.06em; white-space: nowrap; }
+        .quote-score-strong, .quote-status-ok { color:#047857; background:#d1fae5; border-color:#a7f3d0; }
+        .quote-score-medium, .quote-status-watch { color:#b45309; background:#fef3c7; border-color:#fde68a; }
+        .quote-score-low, .quote-status-danger { color:#dc2626; background:#fee2e2; border-color:#fecaca; }
+        .quote-result-table-wrap { max-height: 560px; }
+
+        html.dark #mainLookupTabs.main-lookup-tabs,
+        html.dark #quotePriceSection.exec-quote,
+        html.dark .exec-vehicle-panel,
+        html.dark .exec-upload-panel,
+        html.dark .exec-editor-panel,
+        html.dark .exec-results-panel,
+        html.dark .exec-stat-card,
+        html.dark #quotePartsList,
+        html.dark .quote-ocr-table-wrap,
+        html.dark .quote-result-table-wrap {
+            background: rgba(15,23,42,.92) !important;
+            border-color: rgba(51,65,85,.95) !important;
+        }
+        html.dark .exec-panel-title,
+        html.dark .exec-stat-value,
+        html.dark .quote-match-name,
+        html.dark #mainLookupTabs .main-lookup-tab-title { color:#f8fafc !important; }
+        html.dark .exec-panel-note,
+        html.dark .quote-match-meta,
+        html.dark #mainLookupTabs .main-lookup-tab-desc { color:#94a3b8 !important; }
+        html.dark #quoteHangSelect,
+        html.dark #quoteHieuSelect,
+        html.dark #quoteNamSelect,
+        html.dark #quoteTypeSelect,
+        html.dark #quoteGeminiKeyInput,
+        html.dark .quote-ocr-status,
+        html.dark .quote-ocr-name-input,
+        html.dark .quote-ocr-small-input {
+            background:#111827 !important;
+            border-color:#334155 !important;
+            color:#f8fafc !important;
+        }
+        html.dark #quoteVehicleSummary { background:#0f172a !important; border-color:#334155 !important; color:#93c5fd !important; }
+        html.dark #quoteDropZone { background:#0f172a !important; border-color:#334155 !important; }
+        html.dark .quote-drop-title { color:#f8fafc !important; }
+        html.dark .quote-drop-note, html.dark #quoteStatusText { color:#94a3b8 !important; }
+        html.dark .quote-ocr-table th,
+        html.dark .quote-result-table th { background:#1e293b !important; color:#94a3b8 !important; border-bottom-color:#334155 !important; }
+        html.dark .quote-ocr-table td,
+        html.dark .quote-result-table td { color:#cbd5e1 !important; border-bottom-color:#1e293b !important; }
+        html.dark .quote-ocr-table tbody tr:hover,
+        html.dark .quote-result-table tbody tr:hover { background:#1e293b !important; }
+        html.dark .quote-part-pill { background:#172554 !important; border-color:#1d4ed8 !important; color:#bfdbfe !important; }
+        html.dark .quote-secondary-btn,
+        html.dark .exec-secondary-btn,
+        html.dark .exec-sync-btn,
+        html.dark .exec-mini-btn { background:#0f172a !important; border-color:#334155 !important; color:#cbd5e1 !important; }
+
+        @media (max-width: 1240px) {
+            .exec-workbench { grid-template-columns: 1fr; }
+            .exec-editor-panel { min-height: 520px; }
+            .exec-quote-header { grid-template-columns: 1fr; }
+            .exec-header-actions { min-width: 0; }
+        }
+        @media (max-width: 980px) {
+            #mainLookupTabs.main-lookup-tabs,
+            .exec-form-grid,
+            .exec-form-grid.bottom,
+            .exec-stat-grid { grid-template-columns: 1fr; }
+            .exec-panel-top,
+            .exec-result-head,
+            .exec-editor-toolbar { flex-direction: column; }
+            .exec-actions { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .main-container { padding: 1rem; }
+            .exec-quote-shell { padding: 12px; }
+            .exec-quote-header { padding: 18px; border-radius: 22px; }
+            .exec-header-actions { grid-template-columns: 1fr; }
+            .exec-header-card.wide { grid-column: span 1; }
+            .exec-vehicle-panel,
+            .exec-upload-panel,
+            .exec-editor-panel,
+            .exec-results-panel { border-radius: 22px; padding: 14px; }
+            #quoteDropZone { min-height: 220px; }
+        }
+
+    
+
+        /* === OCR editor compact tuning === */
+        .quote-ocr-table,
+        .quote-result-table { min-width: 1000px; }
+        .quote-ocr-table th,
+        .quote-result-table th {
+            padding: 12px 12px;
+            font-size: 9px;
+            letter-spacing: .11em;
+        }
+        .quote-ocr-table td,
+        .quote-result-table td {
+            padding: 10px 12px;
+            font-size: 11px;
+        }
+        .quote-ocr-status,
+        .quote-ocr-name-input,
+        .quote-ocr-small-input {
+            height: 36px;
+            border-radius: 11px;
+            padding: 0 10px;
+            font-size: 11px;
+        }
+        .quote-ocr-name-input { min-width: 400px; }
+        .quote-ocr-small-input { min-width: 92px; }
+        .quote-ocr-unit-input { min-width: 72px; }
+        .quote-ocr-original { margin-top: 5px; font-size: 9px; }
+        .quote-ocr-table th:last-child,
+        .quote-ocr-table td:last-child {
+            width: 56px;
+            min-width: 56px;
+            max-width: 56px;
+            text-align: center;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .quote-ocr-del-btn {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            margin: 0 auto;
+            padding: 0;
+        }
+        .quote-ocr-empty { padding: 64px 16px !important; font-size: 11px !important; }
+
+        @media (max-width: 1280px) {
+            .quote-ocr-table,
+            .quote-result-table { min-width: 920px; }
+            .quote-ocr-name-input { min-width: 320px; }
+        }
+
+
+
+        /* === Compact hero reduction === */
+        .compact-hero-panel {
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            border-radius: 24px;
+        }
+        .compact-hero-panel::before {
+            width: 180px;
+            height: 180px;
+            inset: -24% -4% auto auto;
+            opacity: .7;
+        }
+        .compact-hero-panel::after {
+            width: 140px;
+            height: 140px;
+            left: -36px;
+            bottom: -62px;
+            opacity: .8;
+        }
+        .compact-hero-bar {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.9fr);
+            gap: 1rem;
+            align-items: center;
+        }
+        .compact-hero-copy {
+            min-width: 0;
+        }
+        .compact-hero-badge {
+            padding: 6px 12px;
+            font-size: 11px;
+            letter-spacing: .12em;
+        }
+        .compact-hero-title {
+            margin-top: .55rem;
+            font-size: 19px;
+            line-height: 1.2;
+            font-weight: 900;
+            letter-spacing: -.03em;
+            color: #0f172a;
+            max-width: 760px;
+        }
+        .compact-hero-desc {
+            margin-top: .45rem;
+            font-size: 12px;
+            line-height: 1.65;
+            color: #64748b;
+            font-weight: 700;
+            max-width: 760px;
+        }
+        .compact-hero-highlights {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .compact-highlight-card {
+            min-height: 86px;
+            border-radius: 18px;
+            padding: 12px 13px;
+            background: rgba(255,255,255,0.84);
+            border: 1px solid rgba(226,232,240,0.95);
+            box-shadow: 0 14px 28px -24px rgba(15,23,42,.28);
+        }
+        .compact-highlight-value {
+            font-size: 18px;
+            line-height: 1.05;
+            font-weight: 900;
+            letter-spacing: -.03em;
+            color: #0f172a;
+        }
+        .compact-highlight-note {
+            margin-top: 8px;
+            font-size: 11px;
+            line-height: 1.45;
+            font-weight: 700;
+            color: #64748b;
+        }
+        .compact-hero-chip-row {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: .8rem;
+        }
+        .compact-hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.82);
+            border: 1px solid rgba(226,232,240,0.95);
+            color: #334155;
+            font-size: 11px;
+            font-weight: 800;
+            box-shadow: 0 12px 24px -22px rgba(15,23,42,.25);
+        }
+        .compact-hero-chip svg {
+            width: 14px;
+            height: 14px;
+            color: #2563eb;
+            flex-shrink: 0;
+        }
+        html.dark .compact-hero-title,
+        html.dark .compact-highlight-value {
+            color: #f8fafc !important;
+        }
+        html.dark .compact-hero-desc,
+        html.dark .compact-highlight-note {
+            color: #94a3b8 !important;
+        }
+        html.dark .compact-highlight-card,
+        html.dark .compact-hero-chip {
+            background: rgba(15,23,42,0.72) !important;
+            border-color: rgba(51,65,85,0.95) !important;
+            color: #cbd5e1 !important;
+        }
+        @media (max-width: 1180px) {
+            .compact-hero-bar {
+                grid-template-columns: 1fr;
+            }
+            .compact-hero-highlights {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 860px) {
+            .compact-hero-highlights {
+                grid-template-columns: 1fr;
+            }
+            .compact-hero-title {
+                font-size: 17px;
+            }
+        }
+
+
+
+        /* === Multi-price quote result cards === */
+        .quote-candidate-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .quote-candidate-item {
+            padding: 9px 10px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            box-shadow: 0 10px 22px -20px rgba(15,23,42,.22);
+        }
+        .quote-candidate-main {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            min-width: 0;
+        }
+        .quote-candidate-main strong {
+            color: #0f172a;
+            font-size: 11px;
+            line-height: 1.45;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .quote-type-pill {
+            flex: 0 0 auto;
+            padding: 4px 7px;
+            border-radius: 999px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            font-size: 9px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            white-space: nowrap;
+        }
+        .quote-candidate-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 7px;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 850;
+        }
+        .quote-candidate-meta span:first-child {
+            color: #0f172a;
+            font-weight: 1000;
+        }
+        .quote-candidate-meta button {
+            height: 24px;
+            padding: 0 8px;
+            border-radius: 8px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 9px;
+            font-weight: 1000;
+            text-transform: uppercase;
+        }
+        .quote-price-bucket-list {
+            display: grid;
+            gap: 8px;
+            min-width: 210px;
+        }
+        .quote-price-bucket {
+            padding: 10px 11px;
+            border-radius: 14px;
+            border: 1px solid #dbeafe;
+            background: linear-gradient(180deg, #ffffff, #f8fafc);
+        }
+        .quote-price-bucket-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            color: #2563eb;
+            font-size: 9px;
+            font-weight: 1000;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+        }
+        .quote-price-bucket-value {
+            margin-top: 7px;
+            color: #0f172a;
+            font-size: 14px;
+            line-height: 1.25;
+            font-weight: 1000;
+            letter-spacing: -.02em;
+        }
+        .quote-price-bucket-meta {
+            margin-top: 4px;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 850;
+        }
+        html.dark .quote-candidate-item,
+        html.dark .quote-price-bucket {
+            background: rgba(15,23,42,.86) !important;
+            border-color: #334155 !important;
+        }
+        html.dark .quote-candidate-main strong,
+        html.dark .quote-candidate-meta span:first-child,
+        html.dark .quote-price-bucket-value {
+            color: #f8fafc !important;
+        }
+        html.dark .quote-candidate-meta,
+        html.dark .quote-price-bucket-meta {
+            color: #94a3b8 !important;
+        }
+        html.dark .quote-type-pill,
+        html.dark .quote-candidate-meta button {
+            background: rgba(37,99,235,.16) !important;
+            border-color: rgba(96,165,250,.32) !important;
+            color: #93c5fd !important;
+        }
+
+
+
+        /* === Fix quote result columns overlap === */
+        .quote-result-table {
+            min-width: 1320px;
+            table-layout: fixed;
+        }
+        .quote-result-table th,
+        .quote-result-table td {
+            overflow: hidden;
+        }
+        .quote-result-table td:nth-child(4),
+        .quote-result-table td:nth-child(5) {
+            overflow: visible;
+        }
+        .quote-price-bucket-list {
+            min-width: 0 !important;
+            width: 100%;
+            max-width: 100%;
+        }
+        .quote-price-bucket {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: 9px 10px;
+        }
+        .quote-price-bucket-head {
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 8px;
+            line-height: 1.25;
+        }
+        .quote-price-bucket-head span:last-child {
+            margin-left: auto;
+            white-space: nowrap;
+        }
+        .quote-price-bucket-value {
+            font-size: 13px;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+        .quote-price-bucket-meta {
+            font-size: 9px;
+            line-height: 1.35;
+        }
+        .quote-status-badge {
+            max-width: 100%;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.25;
+            padding: 6px 9px;
+        }
+        .quote-result-table td:nth-child(5) .quote-match-meta {
+            max-width: 100%;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        @media (max-width: 1280px) {
+            .quote-result-table {
+                min-width: 1260px;
+            }
+        }
+
+</style>
 </head>
 <body class="bg-slate-50 text-slate-700 min-h-screen transition-colors duration-300">
 
@@ -1412,46 +3253,36 @@
             </div>
         </header>
 
-        <section id="mainHeroPanel" class="premium-hero-panel">
-            <div class="premium-hero-grid">
-                <div class="premium-hero-copy">
-                    <span class="hero-badge">
+                <section id="mainHeroPanel" class="premium-hero-panel compact-hero-panel">
+            <div class="compact-hero-bar">
+                <div class="compact-hero-copy">
+                    <span class="hero-badge compact-hero-badge">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg>
-                        Nền tảng tra cứu phụ tùng thông minh
+                        Tra cứu phụ tùng thông minh
                     </span>
-                    <div class="hero-title">Tra cứu nhanh, đối chiếu giá chuẩn và <span>ra quyết định phụ tùng chính xác hơn</span></div>
-                    <div class="hero-desc">Tập trung toàn bộ dữ liệu báo giá phụ tùng theo hãng xe, dòng xe, năm sản xuất và tên phụ tùng. Tra cứu nhanh hơn, so sánh rõ hơn và phát hiện mức giá bất thường ngay trên cùng một màn hình.</div>
-                    <div class="hero-chip-row">
-                        <span class="hero-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"/></svg>Tra cứu đa bộ lọc</span>
-                        <span class="hero-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 19h16M4 12h10M4 5h16"/></svg>Lọc đúng tên phụ tùng</span>
-                        <span class="hero-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7H7v6m0 0l4-4 3 3 5-5"/></svg>Phân tích giá đề xuất</span>
-                        <span class="hero-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>Đối chiếu đúng phụ tùng</span>
+                    <div class="compact-hero-title">Tra cứu nhanh, đối chiếu giá chuẩn và ra quyết định chính xác hơn</div>
+                    <div class="compact-hero-desc">Tập trung dữ liệu báo giá theo hãng xe, dòng xe, năm sản xuất và tên phụ tùng trên một màn hình gọn hơn, dễ thao tác hơn.</div>
+                </div>
+                <div class="compact-hero-highlights">
+                    <div class="compact-highlight-card">
+                        <div class="compact-highlight-value">Nhanh hơn</div>
+                        <div class="compact-highlight-note">Tra cứu & đối chiếu tập trung</div>
+                    </div>
+                    <div class="compact-highlight-card">
+                        <div class="compact-highlight-value">Chuẩn hơn</div>
+                        <div class="compact-highlight-note">Lọc đúng tên phụ tùng</div>
+                    </div>
+                    <div class="compact-highlight-card">
+                        <div class="compact-highlight-value">Rõ hơn</div>
+                        <div class="compact-highlight-note">Hỗ trợ so sánh giá</div>
                     </div>
                 </div>
-                <div class="premium-hero-side">
-                    <div class="hero-stat-card">
-                        <div class="hero-stat-label">Hiệu quả nghiệp vụ</div>
-                        <div class="hero-stat-value">Nhanh hơn</div>
-                        <div class="hero-stat-note">Tập trung tra cứu, đối chiếu và xác thực giá trên một giao diện thống nhất.</div>
-                    </div>
-                    <div class="hero-stat-card">
-                        <div class="hero-stat-label">Truy vấn thông minh</div>
-                        <div class="hero-stat-value">Chuẩn hơn</div>
-                        <div class="hero-stat-note">Lọc chính xác theo tên phụ tùng để so sánh cùng một mặt hàng qua nhiều hồ sơ.</div>
-                    </div>
-                    <div class="hero-stat-card wide">
-                        <div>
-                            <div class="hero-stat-label">Giá trị nổi bật</div>
-                            <div class="hero-stat-value">Premium experience</div>
-                            <div class="hero-stat-note">Thiết kế tinh gọn, nhấn mạnh tác vụ chính và làm nổi bật dữ liệu quan trọng cho giám định viên.</div>
-                        </div>
-                        <div class="hero-mini-row">
-                            <span class="hero-mini-pill">So sánh giá</span>
-                            <span class="hero-mini-pill">Cảnh báo bất thường</span>
-                            <span class="hero-mini-pill">Ra quyết định nhanh</span>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="compact-hero-chip-row">
+                <span class="compact-hero-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"/></svg>Tra cứu đa bộ lọc</span>
+                <span class="compact-hero-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 19h16M4 12h10M4 5h16"/></svg>Lọc đúng tên phụ tùng</span>
+                <span class="compact-hero-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7H7v6m0 0l4-4 3 3 5-5"/></svg>Phân tích giá đề xuất</span>
+                <span class="compact-hero-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>Đối chiếu đúng phụ tùng</span>
             </div>
         </section>
 
@@ -1625,6 +3456,28 @@
             </div>
         </div>
 
+        <!-- ====== MAIN LOOKUP TABS ====== -->
+        <div id="mainLookupTabs" class="main-lookup-tabs" role="tablist" aria-label="Chọn chế độ tra cứu">
+            <button id="tabBtnPartsLookup" type="button" class="main-lookup-tab-btn active" onclick="switchMainLookupTab('parts')" role="tab" aria-selected="true" aria-controls="searchPanel">
+                <span class="main-lookup-tab-icon" aria-hidden="true">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 110-15 7.5 7.5 0 010 15z"/></svg>
+                </span>
+                <span>
+                    <span class="main-lookup-tab-title">Tra cứu phụ tùng theo dòng xe</span>
+                    <span class="main-lookup-tab-desc">Chọn Hãng xe, Dòng xe, Năm SX và tên phụ tùng để tra trực tiếp trong kho giá.</span>
+                </span>
+            </button>
+            <button id="tabBtnQuoteLookup" type="button" class="main-lookup-tab-btn" onclick="switchMainLookupTab('quote')" role="tab" aria-selected="false" aria-controls="quotePriceSection">
+                <span class="main-lookup-tab-icon" aria-hidden="true">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"/></svg>
+                </span>
+                <span>
+                    <span class="main-lookup-tab-title">Tra cứu phụ tùng theo báo giá</span>
+                    <span class="main-lookup-tab-desc">Tải báo giá gara, dùng Gemini 2.5 Flash lọc phụ tùng rồi đối chiếu kho giá.</span>
+                </span>
+            </button>
+        </div>
+
         <!-- ====== TRA CỨU SECTION ====== -->
         <div class="control-panel" id="searchPanel">
             <div class="search-panel-head">
@@ -1746,6 +3599,174 @@
                 </div>
             </div>
         </div>
+
+        <!-- ====== TÌM GIÁ THEO BÁO GIÁ GARA ====== -->
+        
+        <div class="control-panel quote-price-panel exec-quote" id="quotePriceSection">
+            <div class="exec-quote-shell">
+                <div class="exec-quote-header">
+                    <div>
+                        <span class="exec-kicker">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"/></svg>
+                            AI báo giá gara
+                        </span>
+                        <div class="exec-quote-title">Tra cứu phụ tùng theo báo giá</div>
+                        <div class="exec-quote-subtitle">Workbench dành cho giám định viên: tải báo giá, dùng Gemini 2.5 Flash bóc bảng hạng mục, chỉnh sửa từng dòng OCR và đối chiếu kho giá theo đúng Hãng xe / Dòng xe / Năm sản xuất.</div>
+                    </div>
+                    <div class="exec-header-actions">
+                        <div class="exec-header-card"><b>Gemini</b><span>OCR thông minh</span></div>
+                        <div class="exec-header-card"><b>Editable</b><span>Sửa từng dòng</span></div>
+                        <div class="exec-header-card wide"><b>Đối chiếu kho giá</b><span>Lọc công / sơn / VAT trước khi tra</span></div>
+                    </div>
+                </div>
+
+                <div class="exec-step-row">
+                    <span class="exec-step-pill"><span class="exec-step-number">1</span>Tải báo giá</span>
+                    <span class="exec-step-pill"><span class="exec-step-number">2</span>Rà soát dòng OCR</span>
+                    <span class="exec-step-pill"><span class="exec-step-number">3</span>Tra kho giá</span>
+                    <span class="exec-step-pill"><span class="exec-step-number">4</span>Xuất kết quả CSV</span>
+                </div>
+
+                <div class="exec-vehicle-panel">
+                    <div class="exec-panel-top">
+                        <div>
+                            <div class="exec-panel-title">Thông tin xe đối chiếu</div>
+                            <div class="exec-panel-note">Chọn riêng cho báo giá đang xử lý để hệ thống chỉ so khớp trong đúng kho giá của dòng xe. Có thể lấy nhanh từ tab tra cứu phụ tùng.</div>
+                        </div>
+                        <button type="button" onclick="syncQuoteVehicleFromMainFilters()" class="exec-sync-btn">Lấy từ tab tra cứu</button>
+                    </div>
+                    <div class="exec-form-grid">
+                        <label class="exec-field"><span>Hãng xe</span><select id="quoteHangSelect" onchange="onQuoteHangChange()"><option value="">Chọn hãng xe</option></select></label>
+                        <label class="exec-field"><span>Dòng / hiệu xe</span><select id="quoteHieuSelect" onchange="onQuoteHieuChange()"><option value="">Chọn hãng trước</option></select></label>
+                        <label class="exec-field"><span>Năm sản xuất</span><select id="quoteNamSelect" onchange="updateQuoteVehicleSummary()"><option value="">Chọn dòng trước</option></select></label>
+                        <label class="exec-field"><span>Loại hàng</span><select id="quoteTypeSelect" onchange="updateQuoteVehicleSummary()"><option value="all">Tất cả</option><option value="genuine">Chính hãng</option><option value="aftermarket">Thay thế / Ngoài</option></select></label>
+                    </div>
+                    <div class="exec-form-grid bottom">
+                        <label class="exec-field"><span>Gemini API Key</span><input id="quoteGeminiKeyInput" type="password" autocomplete="off" value="AIzaSyDWQ6fATzFmqDozABBEDiEwTwuuN2X_mHo" oninput="saveQuoteGeminiKey()" placeholder="Nhập Gemini API Key"></label>
+                        <div id="quoteVehicleSummary">Chưa chọn xe để đối chiếu kho giá.</div>
+                    </div>
+                </div>
+
+                <div class="exec-workbench">
+                    <div class="exec-upload-panel">
+                        <div class="exec-panel-top">
+                            <div>
+                                <div class="exec-panel-title">Tải báo giá</div>
+                                <div class="exec-panel-note">Hỗ trợ ảnh, PDF, Excel, CSV hoặc TXT. Ảnh/PDF sẽ được gửi sang Gemini để đọc bảng báo giá.</div>
+                            </div>
+                        </div>
+                        <input id="quoteFileInput" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.xlsx,.xls,.csv,.txt" class="hidden" onchange="handleQuoteFileUpload(event)">
+                        <div id="quoteDropZone" onclick="document.getElementById('quoteFileInput').click()">
+                            <div class="quote-drop-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 16a4 4 0 01-.88-7.9A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 12v9m0 0l-3-3m3 3l3-3"/></svg>
+                            </div>
+                            <div class="quote-drop-title">Kéo thả hoặc bấm để chọn file</div>
+                            <div class="quote-drop-note">Gemini sẽ trả về bảng dòng dữ liệu sạch hơn OCR thường, sau đó bạn có thể chỉnh lại trước khi tra kho.</div>
+                            <div id="quoteFileName" class="hidden">Chưa chọn file</div>
+                        </div>
+                        <div class="exec-progress">
+                            <div class="quote-progress-track"><div id="quoteProgressBar" class="quote-progress-bar"></div></div>
+                            <div id="quoteStatusText">Sẵn sàng nhận báo giá</div>
+                        </div>
+                        <div class="exec-actions">
+                            <button id="btnRunQuoteLookup" type="button" onclick="runQuotePriceLookup()" class="quote-primary-btn" disabled>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                Tra kho giá
+                            </button>
+                            <button type="button" onclick="clearQuotePriceLookup()" class="quote-secondary-btn">Làm mới</button>
+                        </div>
+                        <div class="exec-tip-stack">
+                            <div class="exec-tip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg><span>Chỉ các dòng trạng thái <b>TRA KHO</b> mới được đưa vào đối chiếu kho giá.</span></div>
+                            <div class="exec-tip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"/></svg><span>Nếu gara viết tắt hoặc sai tên, hãy sửa trực tiếp ở bảng bên phải trước khi bấm tra.</span></div>
+                        </div>
+                    </div>
+
+                    <div class="exec-editor-panel">
+                        <div class="exec-editor-toolbar">
+                            <div>
+                                <div class="exec-panel-title">Bảng OCR chỉnh sửa</div>
+                                <div class="exec-panel-note">Kiểm tra lại tên phụ tùng, số lượng, đơn giá và loại bỏ các dòng công/sơn/VAT trước khi đối chiếu.</div>
+                            </div>
+                            <div class="exec-editor-actions">
+                                <button type="button" onclick="addManualQuoteOcrRow()" class="quote-edit-mini-btn">+ Thêm dòng</button>
+                                <button type="button" onclick="rebuildQuoteExtractedPartsFromEditableRows(true)" class="quote-edit-mini-btn">Cập nhật danh sách tra</button>
+                            </div>
+                        </div>
+                        <div class="quote-ocr-table-wrap">
+                            <table class="quote-ocr-table">
+                                <colgroup>
+                                    <col style="width: 5%">
+                                    <col style="width: 12%">
+                                    <col style="width: 40%">
+                                    <col style="width: 8%">
+                                    <col style="width: 7%">
+                                    <col style="width: 12%">
+                                    <col style="width: 12%">
+                                    <col style="width: 4%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Trạng thái</th>
+                                        <th>Tên phụ tùng / hạng mục</th>
+                                        <th>ĐVT</th>
+                                        <th>SL</th>
+                                        <th>Đơn giá</th>
+                                        <th>Thành tiền</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quoteOcrTableBody">
+                                    <tr><td colspan="8" class="quote-ocr-empty">Chưa có dữ liệu OCR. Tải báo giá để Gemini đọc bảng hạng mục.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exec-results-panel">
+                    <div class="exec-result-head">
+                        <div>
+                            <div class="exec-panel-title">Kết quả đối chiếu báo giá</div>
+                            <div id="quoteResultSubtitle" class="exec-panel-note">Chọn Hãng xe, Dòng xe, Năm SX rồi tải báo giá để bắt đầu.</div>
+                        </div>
+                        <button type="button" onclick="exportQuotePriceResultsCSV()" class="quote-secondary-btn !h-10 !px-4">Xuất CSV</button>
+                    </div>
+                    <div class="exec-stat-grid">
+                        <div class="exec-stat-card"><div class="exec-stat-label">Phụ tùng OCR</div><div id="quotePartCount" class="exec-stat-value">0</div></div>
+                        <div class="exec-stat-card"><div class="exec-stat-label">Khớp kho giá</div><div id="quoteMatchedCount" class="exec-stat-value">0</div></div>
+                        <div class="exec-stat-card"><div class="exec-stat-label">Cần kiểm tra</div><div id="quoteWarningCount" class="exec-stat-value">0</div></div>
+                    </div>
+                    <div id="quotePartsList">
+                        <div class="text-center text-[11px] font-bold text-slate-400 italic py-8">Chưa có phụ tùng được trích xuất</div>
+                    </div>
+                    <div class="quote-result-table-wrap">
+                        <table class="quote-result-table">
+                            <colgroup>
+                                <col style="width: 27%">
+                                <col style="width: 34%">
+                                <col style="width: 11%">
+                                <col style="width: 16%">
+                                <col style="width: 12%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Phụ tùng trong báo giá</th>
+                                    <th>Khớp kho giá</th>
+                                    <th>Giá gara</th>
+                                    <th>Các mức giá kho</th>
+                                    <th>Đánh giá</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quoteResultBody">
+                                <tr><td colspan="5" class="text-center !py-16 !text-slate-300 !font-bold !uppercase !tracking-[0.16em]">Chưa có kết quả đối chiếu</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="data-section" id="dataSection">
             <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex items-center justify-between">
@@ -2352,6 +4373,7 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   
     <script type="module">
@@ -2390,6 +4412,7 @@
         let lastLoggedUid = null; // Kiểm soát ghi log trùng lặp
         let appDataLoaded = false;
         let activeAdminTab = 'dashboard';
+        let activeMainLookupTab = localStorage.getItem('tasco_main_lookup_tab') || 'parts';
         let ADMIN_USER_CACHE = [];
         let ADMIN_USER_STATUS_FILTER = 'all';
         let ADMIN_USAGE_LOGS = [];
@@ -2653,6 +4676,36 @@
             }
         });
 
+        // CHUYỂN TAB TRA CỨU CHÍNH
+        window.switchMainLookupTab = function(tab = 'parts', persist = true) {
+            activeMainLookupTab = tab === 'quote' ? 'quote' : 'parts';
+            if (persist) localStorage.setItem('tasco_main_lookup_tab', activeMainLookupTab);
+
+            const searchPanel = document.getElementById('searchPanel');
+            const dataSection = document.getElementById('dataSection');
+            const quotePriceSection = document.getElementById('quotePriceSection');
+            const partsBtn = document.getElementById('tabBtnPartsLookup');
+            const quoteBtn = document.getElementById('tabBtnQuoteLookup');
+
+            const isQuoteTab = activeMainLookupTab === 'quote';
+            if (searchPanel) searchPanel.style.display = isQuoteTab ? 'none' : 'block';
+            if (dataSection) dataSection.style.display = isQuoteTab ? 'none' : 'block';
+            if (quotePriceSection) quotePriceSection.style.display = isQuoteTab ? 'block' : 'none';
+
+            if (partsBtn) {
+                partsBtn.classList.toggle('active', !isQuoteTab);
+                partsBtn.setAttribute('aria-selected', String(!isQuoteTab));
+            }
+            if (quoteBtn) {
+                quoteBtn.classList.toggle('active', isQuoteTab);
+                quoteBtn.setAttribute('aria-selected', String(isQuoteTab));
+            }
+
+            if (isQuoteTab) {
+                window.updateQuoteVehicleSummary?.();
+            }
+        };
+
         // HIỂN THỊ / ẨN APP VIEWS
         function updateView(view) {
             const overlay = document.getElementById('loginOverlay');
@@ -2660,23 +4713,29 @@
             const sysMgr = document.getElementById('sysMgrSection');
             const searchPanel = document.getElementById('searchPanel');
             const dataSection = document.getElementById('dataSection');
+            const quotePriceSection = document.getElementById('quotePriceSection');
             const heroPanel = document.getElementById('mainHeroPanel');
+            const lookupTabs = document.getElementById('mainLookupTabs');
             const userUsage = document.getElementById('currentUserUsageDashboard');
 
             if (view === 'login') {
                 overlay.style.display = 'flex'; main.style.display = 'none';
+                if (lookupTabs) lookupTabs.style.display = 'none';
                 if (userUsage) userUsage.classList.add('hidden');
             } else if (view === 'main') {
                 overlay.style.display = 'none'; main.style.display = 'block';
                 sysMgr.style.display = 'none';
                 if (heroPanel) heroPanel.style.display = 'block';
-                searchPanel.style.display = 'block'; dataSection.style.display = 'block';
+                if (lookupTabs) lookupTabs.style.display = 'grid';
+                window.switchMainLookupTab(activeMainLookupTab, false);
                 if (userUsage) userUsage.classList.add('hidden');
             } else if (view === 'admin') {
                 overlay.style.display = 'none'; main.style.display = 'block';
                 sysMgr.style.display = 'block';
                 if (heroPanel) heroPanel.style.display = 'none';
+                if (lookupTabs) lookupTabs.style.display = 'none';
                 searchPanel.style.display = 'none'; dataSection.style.display = 'none';
+                if (quotePriceSection) quotePriceSection.style.display = 'none';
                 if (userUsage) userUsage.classList.add('hidden');
                 switchAdminTab(activeAdminTab);
             }
@@ -3068,6 +5127,10 @@
         let CAY_GIA_PHA = {}, NAM_ALL = [], MASTER_DATA = [], CURRENT_PAGE = 1, ITEMS_PER_PAGE = 10;
         let EXACT_SOURCE_CONTEXT = null;
         let PRICE_ANALYSIS = null;
+        let QUOTE_SELECTED_FILE = null, QUOTE_OCR_ROWS = [], QUOTE_EXTRACTED_PARTS = [], QUOTE_RESULTS = [];
+        let QUOTE_LAST_GEMINI_JSON = null;
+        const GEMINI_DEFAULT_API_KEY = 'AIzaSyDWQ6fATzFmqDozABBEDiEwTwuuN2X_mHo';
+        const GEMINI_QUOTE_MODEL = 'gemini-2.5-flash';
 
         async function loadFilters() {
             try {
@@ -3078,6 +5141,7 @@
                     NAM_ALL = data.nam_sx_all || [];
                     renderHangList();
                     fillNamSXDropdown(NAM_ALL);
+                    renderQuoteVehicleSelectors();
                 }
             } catch (e) { console.error("Lỗi đồng bộ bộ lọc xe:", e); }
         }
@@ -3168,6 +5232,130 @@
                 el.classList.toggle('active', el.innerText === (nam || 'Tất cả'));
             });
         };
+
+
+        function setSelectOptions(select, options, placeholder, selectedValue = '') {
+            if (!select) return;
+            const selectedStr = String(selectedValue || '');
+            select.innerHTML = `<option value="">${sanitize(placeholder)}</option>` + options.map(value => {
+                const safe = sanitize(value);
+                const selected = String(value) === selectedStr ? ' selected' : '';
+                return `<option value="${safe}"${selected}>${safe}</option>`;
+            }).join('');
+        }
+
+        function renderQuoteVehicleSelectors() {
+            const hangSelect = document.getElementById('quoteHangSelect');
+            if (!hangSelect) return;
+            const currentHang = hangSelect.value || document.getElementById('filterHang')?.value || '';
+            const sortedHang = Object.keys(CAY_GIA_PHA || {}).sort();
+            setSelectOptions(hangSelect, sortedHang, 'Chọn hãng xe', currentHang);
+            if (currentHang && CAY_GIA_PHA[currentHang]) hangSelect.value = currentHang;
+            onQuoteHangChange(true);
+        }
+
+        window.onQuoteHangChange = function(skipSummary = false) {
+            const hang = document.getElementById('quoteHangSelect')?.value || '';
+            const hieuSelect = document.getElementById('quoteHieuSelect');
+            const namSelect = document.getElementById('quoteNamSelect');
+            const currentHieu = hieuSelect?.value || Array.from(document.querySelectorAll('input[name="hieu_xe"]:checked')).map(cb => cb.value)[0] || '';
+            const hieus = hang && CAY_GIA_PHA[hang] ? Object.keys(CAY_GIA_PHA[hang]).sort() : [];
+            setSelectOptions(hieuSelect, hieus, hang ? 'Chọn dòng / hiệu xe' : 'Chọn hãng trước', currentHieu);
+            if (currentHieu && hieus.includes(currentHieu)) hieuSelect.value = currentHieu;
+            else if (hieuSelect) hieuSelect.value = '';
+            setSelectOptions(namSelect, [], hieuSelect?.value ? 'Chọn năm sản xuất' : 'Chọn dòng trước');
+            onQuoteHieuChange(skipSummary);
+        };
+
+        window.onQuoteHieuChange = function(skipSummary = false) {
+            const hang = document.getElementById('quoteHangSelect')?.value || '';
+            const hieu = document.getElementById('quoteHieuSelect')?.value || '';
+            const namSelect = document.getElementById('quoteNamSelect');
+            const currentNam = namSelect?.value || document.getElementById('filterNam')?.value || '';
+            const years = hang && hieu && CAY_GIA_PHA[hang]?.[hieu] ? [...CAY_GIA_PHA[hang][hieu]].sort((a, b) => Number(b) - Number(a)) : [];
+            setSelectOptions(namSelect, years, hieu ? 'Chọn năm sản xuất' : 'Chọn dòng trước', currentNam);
+            if (currentNam && years.map(String).includes(String(currentNam))) namSelect.value = currentNam;
+            else if (namSelect) namSelect.value = '';
+            if (!skipSummary) updateQuoteVehicleSummary();
+        };
+
+        window.syncQuoteVehicleFromMainFilters = function() {
+            const hang = document.getElementById('filterHang')?.value || '';
+            const hieu = Array.from(document.querySelectorAll('input[name="hieu_xe"]:checked')).map(cb => cb.value)[0] || '';
+            const nam = document.getElementById('filterNam')?.value || '';
+            const type = document.getElementById('filterType')?.value || 'all';
+            const hangSelect = document.getElementById('quoteHangSelect');
+            const hieuSelect = document.getElementById('quoteHieuSelect');
+            const namSelect = document.getElementById('quoteNamSelect');
+            const typeSelect = document.getElementById('quoteTypeSelect');
+            if (hangSelect && hang) hangSelect.value = hang;
+            onQuoteHangChange(true);
+            if (hieuSelect && hieu) hieuSelect.value = hieu;
+            onQuoteHieuChange(true);
+            if (namSelect && nam) namSelect.value = nam;
+            if (typeSelect) typeSelect.value = type;
+            updateQuoteVehicleSummary();
+        };
+
+        function findBestOptionMatch(options, hint) {
+            const normHint = normalizeQuoteText(hint || '');
+            if (!normHint) return '';
+            return options.find(opt => normalizeQuoteText(opt) === normHint)
+                || options.find(opt => normHint.includes(normalizeQuoteText(opt)) || normalizeQuoteText(opt).includes(normHint))
+                || '';
+        }
+
+        function applyQuoteVehicleHints(data) {
+            if (!data) return;
+            const hangSelect = document.getElementById('quoteHangSelect');
+            const hieuSelect = document.getElementById('quoteHieuSelect');
+            const namSelect = document.getElementById('quoteNamSelect');
+            if (!hangSelect) return;
+            const brands = Object.keys(CAY_GIA_PHA || {}).sort();
+            const brandHint = data.vehicle_brand_hint || data.brand || '';
+            let matchedBrand = findBestOptionMatch(brands, brandHint);
+            const modelHint = data.vehicle_model_hint || data.model || data.vehicle_name || '';
+            if (!matchedBrand && modelHint) matchedBrand = brands.find(brand => normalizeQuoteText(modelHint).includes(normalizeQuoteText(brand))) || '';
+            if (matchedBrand) {
+                hangSelect.value = matchedBrand;
+                onQuoteHangChange(true);
+            }
+            const hang = hangSelect.value;
+            const models = hang && CAY_GIA_PHA[hang] ? Object.keys(CAY_GIA_PHA[hang]).sort() : [];
+            const matchedModel = findBestOptionMatch(models, modelHint);
+            if (matchedModel && hieuSelect) {
+                hieuSelect.value = matchedModel;
+                onQuoteHieuChange(true);
+            }
+            const yearHint = String(data.manufacture_year_hint || data.year || '').match(/\d{4}/)?.[0] || '';
+            if (yearHint && namSelect && Array.from(namSelect.options).some(opt => opt.value === yearHint)) namSelect.value = yearHint;
+            updateQuoteVehicleSummary();
+        }
+
+        window.updateQuoteVehicleSummary = function() {
+            const summary = document.getElementById('quoteVehicleSummary');
+            if (!summary) return;
+            const criteria = getQuoteVehicleCriteria(false);
+            const typeLabels = { all: 'Tất cả loại hàng', genuine: 'Chính hãng', aftermarket: 'Thay thế / Ngoài' };
+            if (!criteria.hang || !criteria.hieus.length || !criteria.nam) {
+                summary.innerText = 'Chưa chọn đủ Hãng xe / Dòng xe / Năm SX để đối chiếu kho giá.';
+                return;
+            }
+            summary.innerText = `Đang tra theo: ${criteria.hang} / ${criteria.hieus[0]} / ${criteria.nam} / ${typeLabels[criteria.type] || 'Tất cả'}`;
+        };
+
+        window.saveQuoteGeminiKey = function() {
+            const key = document.getElementById('quoteGeminiKeyInput')?.value?.trim();
+            if (key) localStorage.setItem('tascoGeminiQuoteKey', key);
+        };
+
+        function initQuoteGeminiKey() {
+            const input = document.getElementById('quoteGeminiKeyInput');
+            if (!input) return;
+            const saved = localStorage.getItem('tascoGeminiQuoteKey');
+            input.value = saved || GEMINI_DEFAULT_API_KEY;
+        }
+        setTimeout(() => { initQuoteGeminiKey(); renderQuoteVehicleSelectors(); updateQuoteVehicleSummary(); }, 0);
 
         window.filterDropdown = function(type) {
             const input = document.getElementById('search' + type).value.toLowerCase();
@@ -3658,6 +5846,1025 @@
 
         window.changePage = (offset) => { CURRENT_PAGE += offset; renderTable(); };
         window.changePageSize = () => { ITEMS_PER_PAGE = parseInt(document.getElementById('pageSize').value); CURRENT_PAGE = 1; renderTable(); };
+
+
+        // ============================================================
+        // TÌM GIÁ THEO BÁO GIÁ GARA — OCR MIỄN PHÍ TRÊN TRÌNH DUYỆT
+        // ============================================================
+        const QUOTE_PART_KEYWORDS = [
+            'cản', 'ba đờ sốc', 'badoc', 'ba do soc', 'đèn', 'den', 'pha', 'hậu', 'hau', 'gương', 'guong', 'kính', 'kinh',
+            'cửa', 'cua', 'nắp', 'nap', 'capo', 'ca pô', 'cốp', 'cop', 'vè', 've', 'tai xe', 'ốp', 'op', 'mặt ca lăng', 'calang',
+            'lưới', 'luoi', 'két', 'ket', 'giàn', 'gian', 'quạt', 'quat', 'bơm', 'bom', 'lọc', 'loc', 'lốc', 'loc', 'máy', 'may',
+            'túi khí', 'tui khi', 'dây', 'day', 'cảm biến', 'cam bien', 'la zăng', 'lazang', 'vành', 'vanh', 'lốp', 'lop',
+            'giảm xóc', 'giam xoc', 'phuộc', 'phuoc', 'rotuyn', 'rô tuyn', 'thước lái', 'thuoc lai', 'moay ơ', 'moay o',
+            'mâm', 'mam', 'bậc', 'bac', 'nẹp', 'nep', 'tay mở', 'tay mo', 'khóa', 'khoa', 'chắn bùn', 'chan bun', 'xương', 'xuong',
+            'dầm', 'dam', 'sườn', 'suon', 'mô tơ', 'motor', 'cụm', 'cum', 'bộ', 'bo'
+        ];
+        const QUOTE_STOPWORDS = new Set(['bao', 'gia', 'gara', 'garage', 'vat', 'thue', 'cong', 'son', 'thay', 'lap', 'thao', 'kiem', 'tra', 'sua', 'chua', 'nhan', 'cong', 'don', 'gia', 'thanh', 'tien', 'tong', 'cong', 'so', 'luong', 'sl', 'stt', 'hang', 'muc', 'phu', 'tung', 'vat', 'vnd', 'vnđ', 'dong', 'xe', 'nam', 'sx']);
+
+        function setQuoteStatus(message, progress = null) {
+            const statusEl = document.getElementById('quoteStatusText');
+            const progressEl = document.getElementById('quoteProgressBar');
+            if (statusEl) statusEl.innerText = message || 'Sẵn sàng';
+            if (progressEl && progress !== null) progressEl.style.width = `${Math.max(0, Math.min(100, Math.round(progress)))}%`;
+        }
+
+        function updateQuoteStats() {
+            const matched = QUOTE_RESULTS.filter(r => r.best && r.best.score >= 0.30).length;
+            const warnings = QUOTE_RESULTS.filter(r => !r.best || r.best.score < 0.45 || r.status === 'danger' || r.status === 'watch').length;
+            updateTextContent('quotePartCount', formatNumberVN(QUOTE_EXTRACTED_PARTS.length));
+            updateTextContent('quoteMatchedCount', formatNumberVN(matched));
+            updateTextContent('quoteWarningCount', formatNumberVN(warnings));
+        }
+
+        function getQuoteVehicleCriteria(preferQuoteSelectors = true) {
+            const quoteHang = document.getElementById('quoteHangSelect')?.value || '';
+            const quoteHieu = document.getElementById('quoteHieuSelect')?.value || '';
+            const quoteNam = document.getElementById('quoteNamSelect')?.value || '';
+            const quoteType = document.getElementById('quoteTypeSelect')?.value || '';
+
+            const mainHang = document.getElementById('filterHang')?.value || '';
+            const mainHieus = Array.from(document.querySelectorAll('input[name="hieu_xe"]:checked')).map(cb => cb.value).filter(Boolean);
+            const mainNam = document.getElementById('filterNam')?.value || '';
+            const mainType = document.getElementById('filterType')?.value || 'all';
+
+            const hang = preferQuoteSelectors ? (quoteHang || mainHang) : quoteHang;
+            const hieus = preferQuoteSelectors ? (quoteHieu ? [quoteHieu] : mainHieus) : (quoteHieu ? [quoteHieu] : []);
+            const nam = preferQuoteSelectors ? (quoteNam || mainNam) : quoteNam;
+            const type = quoteType || mainType || 'all';
+            return { hang, hieus, nam, type };
+        }
+
+        function validateQuoteVehicleCriteria() {
+            const criteria = getQuoteVehicleCriteria();
+            if (!criteria.hang || !criteria.hieus.length || !criteria.nam) {
+                customAlert('Vui lòng chọn đủ Hãng xe, Dòng / hiệu xe và Năm sản xuất ngay trong khối Tìm giá theo báo giá trước khi tra kho giá.');
+                return null;
+            }
+            return criteria;
+        }
+
+        function normalizeQuoteText(value) {
+            return String(value || '')
+                .toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd')
+                .replace(/[^a-z0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function normalizeQuotePart(value) {
+            let text = normalizeQuoteText(value);
+
+            // Chuẩn hoá các cách gara/kho hay gọi khác nhau cho cùng 1 phụ tùng.
+            // Mục tiêu là tăng khả năng khớp mềm, không ép người dùng phải nhập đúng 100% tên trong kho.
+            const replacements = [
+                [/ba\s*do\s*soc|badoc|ba\s*doc|ba\s*đơ\s*soc/g, 'can'],
+                [/can\s*truoc|ba\s*do\s*soc\s*truoc/g, 'can truoc'],
+                [/can\s*sau|ba\s*do\s*soc\s*sau/g, 'can sau'],
+                [/ca\s*lang|calang|mat\s*ga\s*lang/g, 'mat ca lang'],
+                [/kinh\s*chan\s*gio|kinh\s*truoc/g, 'kinh chan gio'],
+                [/den\s*pha|pha\s*den|cum\s*den\s*truoc/g, 'den pha'],
+                [/den\s*hau|cum\s*den\s*sau/g, 'den hau'],
+                [/den\s*suong\s*mu|den\s*gam|den\s*can/g, 'den gam'],
+                [/den\s*xi\s*nhan|den\s*xinhan|xinhan|xi\s*nhan/g, 'den xi nhan'],
+                [/guong\s*chieu\s*hau|guong\s*ngoai|guong\s*cua/g, 'guong'],
+                [/nap\s*ca\s*po|nap\s*capo|ca\s*po/g, 'nap capo'],
+                [/la\s*zang|lazang|mam\s*xe/g, 'mam'],
+                [/chup\s*mam|nap\s*mam|op\s*mam/g, 'chup mam'],
+                [/ro\s*tuyn|rotuyn/g, 'rotuyn'],
+                [/chan\s*bun|can\s*bun|tam\s*chan\s*bun|tam\s*chan|che\s*bun|chan\s*gam|long\s*ve/g, 'chan bun'],
+                [/duoi\s*gam\s*may|duoi\s*gam|gam\s*may/g, 'duoi gam may'],
+                [/tay\s*nam\s*mo\s*cua|tay\s*nam\s*cua|tay\s*mo\s*cua/g, 'tay nam cua'],
+                [/op\s*trang\s*tri|nep\s*trang\s*tri|nep\s*op|nep/g, 'op trang tri'],
+                [/vom\s*banh|long\s*banh|hoc\s*banh/g, 'vom banh'],
+                [/ben\s*t\b|trai\b/g, 'trai'],
+                [/ben\s*p\b|phai\b/g, 'phai']
+            ];
+            replacements.forEach(([pattern, replacement]) => { text = text.replace(pattern, replacement); });
+
+            // Bỏ các từ mô tả tình trạng/đặc tính không ảnh hưởng nhiều tới định danh phụ tùng.
+            text = text
+                .replace(/\b(luxury|deluxe|cao\s*cap|khong\s*son|co\s*son|mau\s*den|mau\s*bac|mau\s*trang)\b/g, ' ')
+                .replace(/\b(chinh\s*hang|hang\s*ngoai|ngoai|thay\s*the|khong\s*chinh\s*hang)\b/g, ' ');
+
+            return text.replace(/\s+/g, ' ').trim();
+        }
+
+        function tokenizeQuotePart(value) {
+            return normalizeQuotePart(value)
+                .split(' ')
+                .filter(token => token.length >= 2 && !QUOTE_STOPWORDS.has(token));
+        }
+
+        function diceCoefficient(a, b) {
+            const sa = normalizeQuotePart(a);
+            const sb = normalizeQuotePart(b);
+            if (!sa || !sb) return 0;
+            if (sa === sb) return 1;
+            function bigrams(str) {
+                const s = str.replace(/\s+/g, ' ');
+                const arr = [];
+                for (let i = 0; i < s.length - 1; i++) arr.push(s.slice(i, i + 2));
+                return arr;
+            }
+            const aPairs = bigrams(sa);
+            const bPairs = bigrams(sb);
+            if (!aPairs.length || !bPairs.length) return 0;
+            const counts = new Map();
+            aPairs.forEach(p => counts.set(p, (counts.get(p) || 0) + 1));
+            let intersection = 0;
+            bPairs.forEach(p => {
+                const count = counts.get(p) || 0;
+                if (count > 0) { intersection++; counts.set(p, count - 1); }
+            });
+            return (2 * intersection) / (aPairs.length + bPairs.length);
+        }
+
+        function quoteTokenCoverage(quoteName, dbName) {
+            const qTokens = new Set(tokenizeQuotePart(quoteName));
+            const dTokens = new Set(tokenizeQuotePart(dbName));
+            if (!qTokens.size || !dTokens.size) return 0;
+            let inter = 0;
+            qTokens.forEach(t => { if (dTokens.has(t)) inter++; });
+            return inter / qTokens.size;
+        }
+
+        function quotePartSimilarity(quoteName, dbName) {
+            const qn = normalizeQuotePart(quoteName);
+            const dn = normalizeQuotePart(dbName);
+            if (!qn || !dn) return 0;
+            if (qn === dn) return 1;
+            if (dn.includes(qn) || qn.includes(dn)) return 0.88;
+
+            const qTokens = new Set(tokenizeQuotePart(qn));
+            const dTokens = new Set(tokenizeQuotePart(dn));
+            const union = new Set([...qTokens, ...dTokens]);
+            let inter = 0;
+            qTokens.forEach(t => { if (dTokens.has(t)) inter++; });
+            const jaccard = union.size ? inter / union.size : 0;
+            const coverage = qTokens.size ? inter / qTokens.size : 0;
+            const reverseCoverage = dTokens.size ? inter / dTokens.size : 0;
+            const dice = diceCoefficient(qn, dn);
+
+            let score = Math.max(jaccard * 0.42 + coverage * 0.36 + reverseCoverage * 0.10 + dice * 0.12, dice * 0.70);
+
+            // Nếu các token chính đã phủ khá nhiều, nâng nhẹ điểm để bắt các tên khác cách gọi.
+            if (coverage >= 0.7 && inter >= 2) score = Math.max(score, 0.58);
+            if (coverage >= 0.5 && reverseCoverage >= 0.5 && inter >= 2) score = Math.max(score, 0.50);
+            if (inter >= 3) score = Math.max(score, 0.55);
+
+            return Math.min(1, score);
+        }
+
+        function classifyQuotePartType(value) {
+            const raw = String(value || '').trim();
+            const key = normalizeQuoteText(raw);
+            if (key.includes('khong chinh hang') || key.includes('hang ngoai') || key.includes('thay the') || key.includes('ngoai')) return 'Thay thế / Ngoài';
+            if (key.includes('chinh hang') || key.includes('genuine')) return 'Chính hãng';
+            return raw || 'Không rõ';
+        }
+
+        function quoteTypeOrder(type) {
+            const key = normalizeQuoteText(type);
+            if (key.includes('chinh hang')) return 1;
+            if (key.includes('thay the') || key.includes('ngoai')) return 2;
+            return 3;
+        }
+
+        function summarizeQuoteCandidatePrices(candidates) {
+            const buckets = new Map();
+            candidates
+                .filter(entry => entry && entry.price > 0)
+                .forEach(entry => {
+                    const type = classifyQuotePartType(entry.item?.chinh_hang);
+                    if (!buckets.has(type)) buckets.set(type, []);
+                    buckets.get(type).push(entry);
+                });
+
+            return Array.from(buckets.entries()).map(([type, entries]) => {
+                const prices = entries.map(e => e.price).filter(Boolean).sort((a, b) => a - b);
+                const min = prices[0] || 0;
+                const max = prices[prices.length - 1] || 0;
+                const avg = prices.length ? Math.round(prices.reduce((s, p) => s + p, 0) / prices.length) : 0;
+                return { type, entries, prices, count: entries.length, min, max, avg };
+            }).sort((a, b) => quoteTypeOrder(a.type) - quoteTypeOrder(b.type) || a.min - b.min);
+        }
+
+        function formatQuotePriceRange(bucket) {
+            if (!bucket || !bucket.min) return '—';
+            if (bucket.min === bucket.max) return formatVND(bucket.min);
+            return `${formatVND(bucket.min)} - ${formatVND(bucket.max)}`;
+        }
+
+        function escapeJsSingle(value) {
+            return String(value || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        }
+
+        function parseQuotePriceFromLine(line) {
+            const matches = String(line || '').match(/(?:\d{1,3}(?:[.,]\d{3})+|\d{5,})(?:\s*(?:đ|d|vnd|vnđ))?/gi) || [];
+            const prices = matches.map(raw => parsePriceValue(raw)).filter(v => v >= 1000);
+            return prices.length ? Math.max(...prices) : 0;
+        }
+
+        function looksLikeQuotePartLine(line) {
+            const normalized = normalizeQuoteText(line);
+            if (!normalized || normalized.length < 4) return false;
+            if (/^(stt|so luong|don gia|thanh tien|tong cong|vat|bao gia|cong sua chua|ngay|bien so|khach hang)\b/.test(normalized)) return false;
+            const digitRatio = (normalized.match(/\d/g) || []).length / Math.max(normalized.length, 1);
+            if (digitRatio > 0.45) return false;
+            return QUOTE_PART_KEYWORDS.some(keyword => normalized.includes(normalizeQuoteText(keyword))) || tokenizeQuotePart(normalized).length >= 2;
+        }
+
+        function cleanQuotePartLine(line) {
+            let text = String(line || '')
+                .replace(/\t+/g, '  ')
+                .replace(/^\s*\d+\s*[\).\-\/]?\s*/g, '')
+                .replace(/(?:\d{1,3}(?:[.,]\d{3})+|\d{5,})(?:\s*(?:đ|d|vnd|vnđ))?/gi, ' ')
+                .replace(/\b(?:sl|số lượng|so luong|đơn giá|don gia|thành tiền|thanh tien|vat|vnđ|vnd)\b/gi, ' ')
+                .replace(/\s{2,}/g, ' ')
+                .trim();
+
+            const chunks = text.split(/\s{2,}|\|/).map(x => x.trim()).filter(Boolean);
+            if (chunks.length > 1) {
+                const scored = chunks
+                    .map(chunk => ({ chunk, score: tokenizeQuotePart(chunk).length + (looksLikeQuotePartLine(chunk) ? 5 : 0) }))
+                    .sort((a, b) => b.score - a.score);
+                text = scored[0]?.chunk || text;
+            }
+            return text.replace(/^[\-–—:;]+|[\-–—:;]+$/g, '').replace(/\s+/g, ' ').trim();
+        }
+
+        function extractPartsFromQuoteText(rawText) {
+            const lines = String(rawText || '')
+                .split(/\r?\n/)
+                .map(line => line.trim())
+                .filter(Boolean);
+            const seen = new Set();
+            const parts = [];
+            lines.forEach((line, index) => {
+                const quotedPrice = parseQuotePriceFromLine(line);
+                const cleaned = cleanQuotePartLine(line);
+                if (!looksLikeQuotePartLine(cleaned)) return;
+                const key = normalizeQuotePart(cleaned);
+                if (!key || key.length < 4 || seen.has(key)) return;
+                seen.add(key);
+                parts.push({ name: cleaned, rawLine: line, quotedPrice, index: index + 1 });
+            });
+            return parts.slice(0, 80);
+        }
+
+
+        function makeQuoteRowId(index = 0) {
+            return `qrow_${Date.now()}_${index}_${Math.random().toString(36).slice(2, 8)}`;
+        }
+
+        function getQuoteRowPrice(row) {
+            return quoteNumber(row?.totalPrice) || quoteNumber(row?.unitPrice) || quoteNumber(row?.quotedPrice) || 0;
+        }
+
+        function buildQuoteOcrRowsFromGeminiData(data) {
+            const items = Array.isArray(data?.items) ? data.items : [];
+            return items.map((item, idx) => {
+                const name = String(item?.name || '').replace(/^[-–—:;\s]+|[-–—:;\s]+$/g, '').trim();
+                const labor = isLaborOrServiceQuoteItem(item);
+                const needLookup = item?.need_lookup !== false && !labor;
+                const unitPrice = quoteNumber(item?.unit_price);
+                const totalPrice = quoteNumber(item?.total_price) || unitPrice;
+                return {
+                    id: makeQuoteRowId(idx),
+                    stt: item?.stt || idx + 1,
+                    name,
+                    originalName: name,
+                    unit: item?.unit || '',
+                    quantity: Number(item?.quantity || 0) || '',
+                    unitPrice,
+                    totalPrice,
+                    quotedPrice: totalPrice || unitPrice || 0,
+                    need_lookup: !!needLookup,
+                    is_labor: !!labor,
+                    note: item?.note || '',
+                    rawLine: `${item?.stt || idx + 1} | ${name} | ĐVT ${item?.unit || ''} | SL ${item?.quantity || ''} | Đơn giá ${unitPrice || ''} | Thành tiền ${totalPrice || ''}`,
+                    source: 'gemini'
+                };
+            }).filter(row => row.name || row.totalPrice || row.unitPrice);
+        }
+
+        function parseQuoteRowsFromFormattedText(text) {
+            const lines = String(text || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+            const rows = [];
+            lines.forEach((line, idx) => {
+                if (!/^(TRA KHO|BỎ QUA|BO QUA)\s*\|/i.test(line)) return;
+                const chunks = line.split('|').map(x => x.trim());
+                const status = normalizeQuoteText(chunks[0] || '');
+                const stt = chunks[1] || idx + 1;
+                const name = chunks[2] || '';
+                const unitChunk = chunks.find(x => /^ĐVT\s+/i.test(x) || /^DVT\s+/i.test(x)) || '';
+                const qtyChunk = chunks.find(x => /^SL\s+/i.test(x)) || '';
+                const unitPriceChunk = chunks.find(x => /^Đơn giá\s+/i.test(x) || /^Don gia\s+/i.test(normalizeQuoteText(x))) || '';
+                const totalChunk = chunks.find(x => /^Thành tiền\s+/i.test(x) || /^Thanh tien\s+/i.test(normalizeQuoteText(x))) || '';
+                rows.push({
+                    id: makeQuoteRowId(idx),
+                    stt,
+                    name,
+                    originalName: name,
+                    unit: unitChunk.replace(/^(ĐVT|DVT)\s*/i, '').trim(),
+                    quantity: Number(String(qtyChunk).replace(/^SL\s*/i, '').replace(',', '.')) || '',
+                    unitPrice: parseQuotePriceFromLine(unitPriceChunk),
+                    totalPrice: parseQuotePriceFromLine(totalChunk) || parseQuotePriceFromLine(line),
+                    quotedPrice: parseQuotePriceFromLine(totalChunk) || parseQuotePriceFromLine(line),
+                    need_lookup: status.includes('tra kho'),
+                    is_labor: status.includes('bo qua'),
+                    note: '',
+                    rawLine: line,
+                    source: 'formatted-text'
+                });
+            });
+            if (rows.length) return rows;
+
+            return extractPartsFromQuoteText(text).map((part, idx) => ({
+                id: makeQuoteRowId(idx),
+                stt: part.index || idx + 1,
+                name: part.name || '',
+                originalName: part.name || '',
+                unit: '',
+                quantity: '',
+                unitPrice: 0,
+                totalPrice: part.quotedPrice || 0,
+                quotedPrice: part.quotedPrice || 0,
+                need_lookup: true,
+                is_labor: false,
+                note: '',
+                rawLine: part.rawLine || '',
+                source: 'text'
+            }));
+        }
+
+        function renderQuoteOcrRows() {
+            const body = document.getElementById('quoteOcrTableBody');
+            if (!body) return;
+            if (!QUOTE_OCR_ROWS.length) {
+                body.innerHTML = '<tr><td colspan="8" class="quote-ocr-empty">Chưa có dữ liệu OCR. Tải báo giá để Gemini đọc bảng hạng mục.</td></tr>';
+                return;
+            }
+            body.innerHTML = QUOTE_OCR_ROWS.map((row, idx) => {
+                const lookup = row.need_lookup !== false;
+                const original = row.originalName && row.originalName !== row.name ? `<div class="quote-ocr-original">Gốc OCR: ${sanitize(row.originalName)}</div>` : '';
+                const note = row.note ? `<div class="quote-ocr-original">Ghi chú: ${sanitize(row.note)}</div>` : '';
+                return `
+                    <tr class="${lookup ? 'row-lookup' : 'row-skip'}">
+                        <td class="font-black text-slate-500">${sanitize(row.stt || idx + 1)}</td>
+                        <td>
+                            <select class="quote-ocr-status" onchange="updateQuoteOcrRow('${row.id}', 'need_lookup', this.value)">
+                                <option value="lookup"${lookup ? ' selected' : ''}>TRA KHO</option>
+                                <option value="skip"${!lookup ? ' selected' : ''}>BỎ QUA</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input class="quote-ocr-name-input" value="${sanitize(row.name || '')}" oninput="updateQuoteOcrRow('${row.id}', 'name', this.value)" placeholder="Nhập/sửa tên phụ tùng cần tra">
+                            ${original}${note}
+                        </td>
+                        <td><input class="quote-ocr-small-input quote-ocr-unit-input" value="${sanitize(row.unit || '')}" oninput="updateQuoteOcrRow('${row.id}', 'unit', this.value)" placeholder="ĐVT"></td>
+                        <td><input class="quote-ocr-small-input" value="${sanitize(row.quantity || '')}" oninput="updateQuoteOcrRow('${row.id}', 'quantity', this.value)" placeholder="SL"></td>
+                        <td><input class="quote-ocr-small-input" value="${row.unitPrice ? sanitize(row.unitPrice) : ''}" oninput="updateQuoteOcrRow('${row.id}', 'unitPrice', this.value)" placeholder="Đơn giá"></td>
+                        <td><input class="quote-ocr-small-input" value="${row.totalPrice ? sanitize(row.totalPrice) : ''}" oninput="updateQuoteOcrRow('${row.id}', 'totalPrice', this.value)" placeholder="Thành tiền"></td>
+                        <td><button type="button" class="quote-ocr-del-btn" onclick="deleteQuoteOcrRow('${row.id}')" title="Xóa dòng">×</button></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.updateQuoteOcrRow = function(rowId, field, value) {
+            const row = QUOTE_OCR_ROWS.find(item => item.id === rowId);
+            if (!row) return;
+            if (field === 'need_lookup') row.need_lookup = value === 'lookup';
+            else if (field === 'name') row.name = String(value || '').trimStart();
+            else if (field === 'unit') row.unit = String(value || '').trimStart();
+            else if (field === 'quantity') row.quantity = String(value || '').replace(',', '.');
+            else if (field === 'unitPrice') row.unitPrice = parsePriceValue(value);
+            else if (field === 'totalPrice') row.totalPrice = parsePriceValue(value);
+            row.quotedPrice = getQuoteRowPrice(row);
+            QUOTE_RESULTS = [];
+            rebuildQuoteExtractedPartsFromEditableRows(false);
+        };
+
+        window.deleteQuoteOcrRow = function(rowId) {
+            QUOTE_OCR_ROWS = QUOTE_OCR_ROWS.filter(row => row.id !== rowId);
+            QUOTE_RESULTS = [];
+            renderQuoteOcrRows();
+            rebuildQuoteExtractedPartsFromEditableRows(true);
+        };
+
+        window.addManualQuoteOcrRow = function() {
+            QUOTE_OCR_ROWS.push({
+                id: makeQuoteRowId(QUOTE_OCR_ROWS.length),
+                stt: QUOTE_OCR_ROWS.length + 1,
+                name: '',
+                originalName: '',
+                unit: 'Cái',
+                quantity: 1,
+                unitPrice: 0,
+                totalPrice: 0,
+                quotedPrice: 0,
+                need_lookup: true,
+                is_labor: false,
+                note: 'Người dùng thêm thủ công',
+                rawLine: '',
+                source: 'manual'
+            });
+            QUOTE_RESULTS = [];
+            renderQuoteOcrRows();
+            rebuildQuoteExtractedPartsFromEditableRows(true);
+        };
+
+        window.rebuildQuoteExtractedPartsFromEditableRows = function(showStatus = false) {
+            const seen = new Set();
+            QUOTE_EXTRACTED_PARTS = QUOTE_OCR_ROWS
+                .filter(row => row.need_lookup !== false && String(row.name || '').trim())
+                .map((row, idx) => {
+                    const cleanName = String(row.name || '').trim();
+                    return {
+                        name: cleanName,
+                        originalName: row.originalName || cleanName,
+                        rawLine: row.rawLine || `${row.stt || idx + 1} | ${cleanName}`,
+                        quotedPrice: getQuoteRowPrice(row),
+                        unitPrice: quoteNumber(row.unitPrice),
+                        quantity: row.quantity || '',
+                        unit: row.unit || '',
+                        index: row.stt || idx + 1,
+                        rowId: row.id,
+                        source: row.source || 'editable-table'
+                    };
+                })
+                .filter(part => {
+                    const key = normalizeQuotePart(part.name);
+                    if (!key || seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                });
+            const btn = document.getElementById('btnRunQuoteLookup');
+            if (btn) btn.disabled = QUOTE_EXTRACTED_PARTS.length === 0;
+            if (showStatus) {
+                setQuoteStatus(QUOTE_EXTRACTED_PARTS.length ? `Đã cập nhật ${QUOTE_EXTRACTED_PARTS.length} phụ tùng sẽ đưa đi tra kho giá` : 'Chưa có dòng nào ở trạng thái TRA KHO', QUOTE_EXTRACTED_PARTS.length ? 100 : 0);
+                renderQuoteResults();
+            } else {
+                updateQuoteStats();
+                renderQuotePartsList();
+                const subtitle = document.getElementById('quoteResultSubtitle');
+                const resultBody = document.getElementById('quoteResultBody');
+                if (subtitle && !QUOTE_RESULTS.length) subtitle.innerText = QUOTE_EXTRACTED_PARTS.length ? 'Đã cập nhật danh sách tra, bấm Tra kho giá để đối chiếu.' : 'Chưa có dòng nào ở trạng thái TRA KHO.';
+                if (resultBody && !QUOTE_RESULTS.length) resultBody.innerHTML = '<tr><td colspan="5" class="text-center !py-16 !text-slate-300 !font-bold !uppercase !tracking-[0.16em]">Chưa có kết quả đối chiếu</td></tr>';
+            }
+            return QUOTE_EXTRACTED_PARTS;
+        };
+
+        function renderQuotePartsList() {
+            const box = document.getElementById('quotePartsList');
+            if (!box) return;
+            if (!QUOTE_EXTRACTED_PARTS.length) {
+                box.innerHTML = '<div class="text-center text-[11px] font-bold text-slate-400 italic py-8">Chưa có phụ tùng được trích xuất</div>';
+                return;
+            }
+            box.innerHTML = QUOTE_EXTRACTED_PARTS.map(part => {
+                const original = part.originalName && part.originalName !== part.name ? `<small>OCR gốc: ${sanitize(part.originalName)}</small>` : `<small>${part.quotedPrice ? formatVND(part.quotedPrice) : 'Chưa có giá'}</small>`;
+                return `
+                    <div class="quote-part-pill">
+                        <span class="truncate">${sanitize(part.name)}</span>
+                        ${original}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderQuoteResults() {
+            const body = document.getElementById('quoteResultBody');
+            const subtitle = document.getElementById('quoteResultSubtitle');
+            if (!body) return;
+            updateQuoteStats();
+            renderQuotePartsList();
+            if (!QUOTE_RESULTS.length) {
+                body.innerHTML = '<tr><td colspan="5" class="text-center !py-16 !text-slate-300 !font-bold !uppercase !tracking-[0.16em]">Chưa có kết quả đối chiếu</td></tr>';
+                if (subtitle) subtitle.innerText = QUOTE_EXTRACTED_PARTS.length ? 'Đã lọc phụ tùng, bấm Tra kho giá để đối chiếu.' : 'Chọn Hãng xe, Dòng xe, Năm SX rồi tải báo giá để bắt đầu.';
+                return;
+            }
+            if (subtitle) {
+                const criteria = getQuoteVehicleCriteria();
+                const multiPriceCount = QUOTE_RESULTS.filter(r => (r.priceBuckets || []).length > 1).length;
+                subtitle.innerText = `${QUOTE_RESULTS.length} dòng báo giá — ${criteria.hang} / ${criteria.hieus.join(', ')} / ${criteria.nam}${multiPriceCount ? ` — ${multiPriceCount} dòng có nhiều mức giá kho` : ''}`;
+            }
+            body.innerHTML = QUOTE_RESULTS.map((row) => {
+                const best = row.best;
+                const score = best ? Math.round(best.score * 100) : 0;
+                const scoreClass = score >= 70 ? 'quote-score-strong' : score >= 45 ? 'quote-score-medium' : 'quote-score-low';
+                const statusClass = row.status === 'danger' ? 'quote-status-danger' : row.status === 'watch' ? 'quote-status-watch' : 'quote-status-ok';
+                const quotePrice = row.part.quotedPrice ? formatVND(row.part.quotedPrice) : '—';
+                const variance = row.variancePercent === null || row.variancePercent === undefined ? '' : `<div class="quote-match-meta">Lệch ${row.variancePercent > 0 ? '+' : ''}${row.variancePercent}% so với mức gần nhất</div>`;
+                const encodedPart = encodeURIComponent(row.part.name);
+
+                const candidateSummary = best ? `
+                    <div class="quote-match-name">${sanitize(best.item.ten_phu_tung || 'Không rõ')}</div>
+                    <div class="quote-match-meta">Hiển thị ${row.candidates.length} ứng viên phù hợp / ${row.priceBuckets.length || 1} nhóm giá${row.hiddenCandidateCount ? ` — ẩn ${row.hiddenCandidateCount} ứng viên nhiễu` : ''}</div>
+                    <div class="mt-2 flex flex-wrap gap-1.5">
+                        <span class="quote-score-badge ${scoreClass}">${score}% khớp</span>
+                        ${row.priceBuckets.length > 1 ? '<span class="quote-score-badge quote-score-medium">Nhiều loại giá</span>' : ''}
+                    </div>
+                    <div class="quote-candidate-list">
+                        ${row.candidates.map(entry => {
+                            const safeId = entry.item?.id ? escapeJsSingle(entry.item.id) : '';
+                            return `
+                                <div class="quote-candidate-item">
+                                    <div class="quote-candidate-main">
+                                        <span class="quote-type-pill">${sanitize(classifyQuotePartType(entry.item?.chinh_hang))}</span>
+                                        <strong>${sanitize(entry.item?.ten_phu_tung || 'Không rõ')}</strong>
+                                    </div>
+                                    <div class="quote-candidate-meta">
+                                        <span>${formatVND(entry.price)}</span>
+                                        <span>${Math.round(entry.score * 100)}% khớp</span>
+                                        <span>${sanitize(entry.item?.ten_garage || 'Garage N/A')}</span>
+                                        ${safeId ? `<button type="button" onclick="showDetail('${safeId}')">Xem</button>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                ` : '<span class="quote-score-badge quote-score-low">Chưa tìm thấy</span>';
+
+                const priceBucketHtml = row.priceBuckets?.length ? `
+                    <div class="quote-price-bucket-list">
+                        ${row.priceBuckets.map(bucket => `
+                            <div class="quote-price-bucket">
+                                <div class="quote-price-bucket-head">
+                                    <span>${sanitize(bucket.type)}</span>
+                                    <span>${bucket.count} mẫu</span>
+                                </div>
+                                <div class="quote-price-bucket-value">${formatQuotePriceRange(bucket)}</div>
+                                <div class="quote-price-bucket-meta">TB: ${formatVND(bucket.avg)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '<div class="price-text">—</div>';
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="quote-match-name">${sanitize(row.part.name)}</div>
+                            <div class="quote-match-meta">Dòng OCR ${row.part.index}${row.part.originalName && row.part.originalName !== row.part.name ? ' — Gốc: ' + sanitize(row.part.originalName).slice(0, 70) : (row.part.rawLine ? ' — ' + sanitize(row.part.rawLine).slice(0, 80) : '')}</div>
+                            <button type="button" class="quote-row-action" onclick="applyQuotePartToMainSearch('${encodedPart}')">Tra cứu riêng</button>
+                        </td>
+                        <td>${candidateSummary}</td>
+                        <td><div class="price-text">${quotePrice}</div></td>
+                        <td>${priceBucketHtml}</td>
+                        <td><span class="quote-status-badge ${statusClass}">${sanitize(row.statusText)}</span>${variance}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.extractQuotePartsFromTextarea = function() {
+            const text = document.getElementById('quoteRawText')?.value || '';
+            if (!text.trim()) return customAlert('Hiện không còn ô dữ liệu thô. Hãy chỉnh trực tiếp trong bảng dòng OCR.');
+            QUOTE_OCR_ROWS = parseQuoteRowsFromFormattedText(text);
+            QUOTE_RESULTS = [];
+            renderQuoteOcrRows();
+            rebuildQuoteExtractedPartsFromEditableRows(true);
+        };
+
+        function getQuoteGeminiKey() {
+            return (document.getElementById('quoteGeminiKeyInput')?.value || localStorage.getItem('tascoGeminiQuoteKey') || GEMINI_DEFAULT_API_KEY || '').trim();
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(String(reader.result || '').split(',')[1] || '');
+                reader.onerror = () => reject(reader.error || new Error('Không đọc được file.'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function extractJsonObjectFromGeminiText(text) {
+            const raw = String(text || '').trim();
+            if (!raw) throw new Error('Gemini không trả về nội dung.');
+            try { return JSON.parse(raw); } catch (_) {}
+            const cleaned = raw.replace(/^```(?:json)?/i, '').replace(/```$/i, '').trim();
+            try { return JSON.parse(cleaned); } catch (_) {}
+            const first = cleaned.indexOf('{');
+            const last = cleaned.lastIndexOf('}');
+            if (first >= 0 && last > first) return JSON.parse(cleaned.slice(first, last + 1));
+            throw new Error('Gemini trả về dữ liệu không đúng định dạng JSON.');
+        }
+
+        function buildGeminiQuotePrompt(fileName = '') {
+            return `Bạn là hệ thống OCR và bóc tách báo giá sửa chữa ô tô cho giám định bảo hiểm tại Việt Nam.
+Nhiệm vụ: đọc file báo giá gara, trích xuất chính xác bảng hạng mục và chỉ đánh dấu các PHỤ TÙNG cần tra kho giá.
+
+Yêu cầu rất quan trọng:
+- Chỉ trả về JSON hợp lệ, không markdown, không giải thích.
+- Giữ đúng tiếng Việt có dấu nếu đọc được.
+- Tách từng dòng hàng trong bảng báo giá.
+- Không lấy các dòng tổng cộng, VAT, bằng chữ, chữ ký, ngày tháng, thông tin công ty làm phụ tùng.
+- Dòng công việc/sửa chữa như: sơn, gò, gò móp, công tháo ráp, công làm điện, sửa chữa, nắn chỉnh, hàn, mài, matit, đánh bóng phải đặt is_labor=true và need_lookup=false.
+- Dòng là phụ tùng/vật tư thay thế như: đèn pha, mí đèn, ốp, cản, mặt ca lăng, gương, kính, đèn hậu, lazang... đặt need_lookup=true.
+- Nếu dòng vừa có tên phụ tùng nhưng bản chất là công sửa/sơn/gò trên phụ tùng đó thì need_lookup=false.
+- Giá dùng số nguyên VND, bỏ dấu chấm/phẩy.
+- Nếu thấy hiệu xe/biển số/ngày báo giá thì điền vào metadata.
+
+Schema JSON bắt buộc:
+{
+  "garage_name": "",
+  "quote_date": "",
+  "license_plate": "",
+  "vehicle_brand_hint": "",
+  "vehicle_model_hint": "",
+  "manufacture_year_hint": "",
+  "items": [
+    {
+      "stt": 1,
+      "name": "Tên hạng mục",
+      "unit": "Cái",
+      "quantity": 1,
+      "unit_price": 0,
+      "total_price": 0,
+      "is_labor": false,
+      "need_lookup": true,
+      "note": ""
+    }
+  ],
+  "summary": { "subtotal": 0, "vat": 0, "total": 0 }
+}
+
+Tên file: ${fileName}`;
+        }
+
+        async function callGeminiQuoteExtraction({ file = null, text = '' }) {
+            const apiKey = getQuoteGeminiKey();
+            if (!apiKey) throw new Error('Chưa có Gemini API Key.');
+
+            const parts = [{ text: buildGeminiQuotePrompt(file?.name || 'dữ liệu báo giá') }];
+            if (file) {
+                const name = (file.name || '').toLowerCase();
+                const mimeType = file.type || (name.endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
+                const data = await fileToBase64(file);
+                parts.push({ inline_data: { mime_type: mimeType, data } });
+            } else {
+                parts.push({ text: `\nDỮ LIỆU BÁO GIÁ DẠNG TEXT/BẢNG:\n${text}` });
+            }
+
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_QUOTE_MODEL}:generateContent`;
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+                body: JSON.stringify({
+                    contents: [{ role: 'user', parts }],
+                    generationConfig: {
+                        temperature: 0.05,
+                        responseMimeType: 'application/json'
+                    }
+                })
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(payload?.error?.message || `Gemini API lỗi HTTP ${response.status}`);
+            const output = payload?.candidates?.[0]?.content?.parts?.map(part => part.text || '').join('\n') || '';
+            return extractJsonObjectFromGeminiText(output);
+        }
+
+        async function extractTextFromSpreadsheet(file) {
+            const buffer = await file.arrayBuffer();
+            const workbook = XLSX.read(buffer, { type: 'array' });
+            const rows = [];
+            workbook.SheetNames.forEach(name => {
+                const sheet = workbook.Sheets[name];
+                const aoa = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, defval: '' });
+                aoa.forEach(row => {
+                    const line = row.map(cell => String(cell || '').trim()).filter(Boolean).join('  |  ');
+                    if (line) rows.push(line);
+                });
+            });
+            return rows.join('\n');
+        }
+
+        async function extractQuoteDataFromFileWithGemini(file) {
+            const name = (file.name || '').toLowerCase();
+            const type = (file.type || '').toLowerCase();
+            if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+                setQuoteStatus('Đang đọc Excel rồi gửi Gemini bóc tách phụ tùng...', 15);
+                const sheetText = await extractTextFromSpreadsheet(file);
+                return callGeminiQuoteExtraction({ text: sheetText });
+            }
+            if (name.endsWith('.csv') || name.endsWith('.txt') || type.startsWith('text/')) {
+                setQuoteStatus('Đang gửi dữ liệu text sang Gemini bóc tách phụ tùng...', 15);
+                return callGeminiQuoteExtraction({ text: await file.text() });
+            }
+            if (type.includes('pdf') || name.endsWith('.pdf') || type.startsWith('image/') || /\.(png|jpe?g|webp)$/i.test(name)) {
+                setQuoteStatus('Đang gửi ảnh/PDF sang Gemini 2.5 Flash để OCR...', 18);
+                return callGeminiQuoteExtraction({ file });
+            }
+            throw new Error('Định dạng file chưa được hỗ trợ. Hãy dùng ảnh, PDF, Excel, CSV hoặc TXT.');
+        }
+
+        function quoteNumber(value) {
+            if (typeof value === 'number' && Number.isFinite(value)) return Math.round(value);
+            return parsePriceValue(value);
+        }
+
+        function isLaborOrServiceQuoteItem(item) {
+            const name = normalizeQuoteText(item?.name || '');
+            return item?.is_labor === true || /\b(son|go|go mop|cong|thao|lap|lam dien|sua|sua chua|nan|han|mai|matit|danh bong|vat|thue|tong)\b/.test(name);
+        }
+
+        function normalizeGeminiQuoteItems(data) {
+            const seen = new Set();
+            return buildQuoteOcrRowsFromGeminiData(data)
+                .filter(row => row.need_lookup !== false && String(row.name || '').trim())
+                .map((row, idx) => ({
+                    name: row.name,
+                    originalName: row.originalName || row.name,
+                    rawLine: row.rawLine,
+                    quotedPrice: getQuoteRowPrice(row),
+                    unitPrice: quoteNumber(row.unitPrice),
+                    quantity: row.quantity || '',
+                    unit: row.unit || '',
+                    index: row.stt || idx + 1,
+                    rowId: row.id,
+                    source: row.source || 'gemini'
+                }))
+                .filter(part => {
+                    const key = normalizeQuotePart(part.name);
+                    if (!key || seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                })
+                .slice(0, 80);
+        }
+
+        function formatGeminiQuoteDataText(data) {
+            const items = Array.isArray(data?.items) ? data.items : [];
+            const lines = [];
+            if (data?.garage_name) lines.push(`Garage: ${data.garage_name}`);
+            if (data?.license_plate) lines.push(`Biển số: ${data.license_plate}`);
+            if (data?.vehicle_model_hint) lines.push(`Hiệu xe: ${data.vehicle_model_hint}`);
+            if (data?.quote_date) lines.push(`Ngày báo giá: ${data.quote_date}`);
+            if (items.length) lines.push('--- BẢNG HẠNG MỤC GEMINI ĐÃ ĐỌC ---');
+            items.forEach((item, idx) => {
+                const labor = isLaborOrServiceQuoteItem(item);
+                const needLookup = item?.need_lookup !== false && !labor;
+                const status = needLookup ? 'TRA KHO' : 'BỎ QUA';
+                const price = quoteNumber(item?.total_price) || quoteNumber(item?.unit_price) || '';
+                lines.push(`${status} | ${item?.stt || idx + 1} | ${item?.name || ''} | ĐVT ${item?.unit || ''} | SL ${item?.quantity || ''} | Đơn giá ${quoteNumber(item?.unit_price) || ''} | Thành tiền ${price}`);
+            });
+            const summary = data?.summary || {};
+            if (summary.subtotal || summary.vat || summary.total) lines.push(`Tổng hợp | Cộng ${quoteNumber(summary.subtotal) || ''} | VAT ${quoteNumber(summary.vat) || ''} | Tổng cộng ${quoteNumber(summary.total) || ''}`);
+            return lines.join('\n');
+        }
+
+        window.handleQuoteFileUpload = async function(event) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            QUOTE_SELECTED_FILE = file;
+            QUOTE_OCR_ROWS = [];
+            QUOTE_RESULTS = [];
+            QUOTE_EXTRACTED_PARTS = [];
+            QUOTE_LAST_GEMINI_JSON = null;
+            const fileNameEl = document.getElementById('quoteFileName');
+            if (fileNameEl) { fileNameEl.innerText = file.name; fileNameEl.classList.remove('hidden'); }
+            document.getElementById('btnRunQuoteLookup').disabled = true;
+            renderQuoteResults();
+            try {
+                setQuoteStatus('Đang xử lý báo giá bằng Gemini 2.5 Flash...', 5);
+                const geminiData = await extractQuoteDataFromFileWithGemini(file);
+                QUOTE_LAST_GEMINI_JSON = geminiData;
+                applyQuoteVehicleHints(geminiData);
+                QUOTE_OCR_ROWS = buildQuoteOcrRowsFromGeminiData(geminiData);
+                renderQuoteOcrRows();
+                rebuildQuoteExtractedPartsFromEditableRows(false);
+                document.getElementById('btnRunQuoteLookup').disabled = QUOTE_EXTRACTED_PARTS.length === 0;
+                setQuoteStatus(QUOTE_EXTRACTED_PARTS.length ? `Gemini OCR hoàn tất — đã lọc ${QUOTE_EXTRACTED_PARTS.length} phụ tùng cần tra. Bạn có thể sửa trực tiếp trong bảng dòng OCR trước khi tra kho.` : 'Gemini đã đọc báo giá nhưng chưa thấy phụ tùng cần tra. Kiểm tra bảng dòng OCR, đổi trạng thái TRA KHO hoặc chỉnh dữ liệu rồi bấm Cập nhật danh sách tra.', 100);
+                renderQuoteResults();
+            } catch (error) {
+                console.error('Lỗi Gemini OCR báo giá:', error);
+                setQuoteStatus('Lỗi xử lý báo giá bằng Gemini', 0);
+                customAlert('Không xử lý được báo giá bằng Gemini: ' + error.message);
+            }
+        };
+
+        async function fetchQuoteWarehouseData(criteria) {
+            const constraints = [];
+            constraints.push(where('hang_xe', '==', criteria.hang));
+            constraints.push(where('hieu_xe', 'in', criteria.hieus.slice(0, 30)));
+            constraints.push(where('nam_sx', '==', parseInt(criteria.nam)));
+            if (criteria.type === 'genuine') constraints.push(where('chinh_hang', '==', 'Chính hãng'));
+            constraints.push(limit(2000));
+
+            const snap = await getDocs(query(collection(db, 'LichSuBaoGia'), ...constraints));
+            const data = [];
+            snap.forEach(docSnap => {
+                const item = docSnap.data();
+                item.id = docSnap.id;
+                if (criteria.type === 'aftermarket' && String(item.chinh_hang || '').toLowerCase() === 'chính hãng') return;
+                data.push(item);
+            });
+            return data;
+        }
+
+        function buildQuoteResultRow(part, warehouse) {
+            const scored = warehouse
+                .map(item => {
+                    const dbName = item.ten_phu_tung || '';
+                    const score = quotePartSimilarity(part.name, dbName);
+                    const coverage = quoteTokenCoverage(part.name, dbName);
+                    const price = parsePriceValue(item.gia_duyet);
+                    return { item, score, coverage, price, type: classifyQuotePartType(item.chinh_hang) };
+                })
+                .filter(entry => {
+                    if (!entry.price) return false;
+                    // Cho phép khớp mềm hơn khi tên gara khác tên kho, nhưng vẫn cần có độ phủ token tối thiểu.
+                    return entry.score >= 0.30 || (entry.score >= 0.24 && entry.coverage >= 0.55);
+                })
+                .sort((a, b) => {
+                    const scoreDiff = b.score - a.score;
+                    if (Math.abs(scoreDiff) > 0.04) return scoreDiff;
+                    return quoteTypeOrder(a.type) - quoteTypeOrder(b.type) || a.price - b.price;
+                });
+
+            const unique = [];
+            const seen = new Set();
+            scored.forEach(entry => {
+                const key = [
+                    normalizeQuotePart(entry.item?.ten_phu_tung || ''),
+                    classifyQuotePartType(entry.item?.chinh_hang),
+                    entry.price,
+                    entry.item?.so_hsbt || '',
+                    entry.item?.ten_garage || ''
+                ].join('|');
+                if (seen.has(key)) return;
+                seen.add(key);
+                unique.push(entry);
+            });
+
+            const allCandidates = unique.slice(0, 16);
+            const best = allCandidates[0] || null;
+
+            let relevantCandidates = allCandidates.slice();
+            if (best) {
+                const minScore = Math.max(0.45, best.score - 0.18);
+                relevantCandidates = allCandidates.filter(entry => {
+                    const scoreOk = entry.score >= minScore;
+                    const coverageOk = entry.coverage >= 0.45 || entry.score >= 0.70;
+                    const sameNormalizedName = normalizeQuotePart(entry.item?.ten_phu_tung || '') === normalizeQuotePart(best.item?.ten_phu_tung || '');
+                    return (scoreOk && coverageOk) || sameNormalizedName;
+                });
+                if (!relevantCandidates.length) relevantCandidates = [best];
+            }
+
+            const candidates = relevantCandidates.slice(0, 8);
+            const hiddenCandidateCount = Math.max(0, allCandidates.length - candidates.length);
+            const priceBuckets = summarizeQuoteCandidatePrices(candidates);
+            const closestPriceCandidate = part.quotedPrice && candidates.length
+                ? candidates.reduce((bestEntry, entry) => {
+                    if (!bestEntry) return entry;
+                    return Math.abs(entry.price - part.quotedPrice) < Math.abs(bestEntry.price - part.quotedPrice) ? entry : bestEntry;
+                }, null)
+                : null;
+            const compareCandidate = closestPriceCandidate || best;
+
+            let status = 'danger';
+            let statusText = 'Chưa khớp kho';
+            let variancePercent = null;
+
+            if (best && best.score >= 0.30) {
+                status = best.score >= 0.65 ? 'ok' : 'watch';
+                statusText = priceBuckets.length > 1 ? 'Có nhiều mức giá' : (best.score >= 0.65 ? 'Khớp tốt' : 'Cần kiểm tra tên');
+
+                if (part.quotedPrice && compareCandidate?.price) {
+                    variancePercent = Math.round(((part.quotedPrice - compareCandidate.price) / compareCandidate.price) * 100);
+                    if (variancePercent > 15) { status = 'danger'; statusText = 'Gara cao hơn kho'; }
+                    else if (variancePercent < -20) { status = 'watch'; statusText = 'Gara thấp hơn kho'; }
+                    else if (Math.abs(variancePercent) <= 15 && best.score >= 0.45) { status = priceBuckets.length > 1 ? 'watch' : 'ok'; statusText = priceBuckets.length > 1 ? 'Có nhiều mức giá' : 'Giá phù hợp'; }
+                }
+            }
+
+            return { part, best, candidates, allCandidates, hiddenCandidateCount, priceBuckets, compareCandidate, status, statusText, variancePercent };
+        }
+
+        window.runQuotePriceLookup = async function() {
+            const criteria = validateQuoteVehicleCriteria();
+            if (!criteria) return;
+            rebuildQuoteExtractedPartsFromEditableRows(false);
+            if (!QUOTE_EXTRACTED_PARTS.length) {
+                window.extractQuotePartsFromTextarea();
+                if (!QUOTE_EXTRACTED_PARTS.length) return customAlert('Chưa có danh sách phụ tùng để tra kho giá. Hãy kiểm tra bảng dòng OCR và đặt các dòng cần tra về trạng thái TRA KHO.');
+            }
+
+            const btn = document.getElementById('btnRunQuoteLookup');
+            if (btn) { btn.disabled = true; btn.innerText = 'ĐANG TRA...'; }
+            try {
+                setQuoteStatus('Đang tải kho giá phù hợp với xe...', 20);
+                const warehouse = await fetchQuoteWarehouseData(criteria);
+                if (!warehouse.length) {
+                    QUOTE_RESULTS = QUOTE_EXTRACTED_PARTS.map(part => ({ part, best: null, candidates: [], status: 'danger', statusText: 'Kho chưa có dữ liệu', variancePercent: null }));
+                    setQuoteStatus('Kho giá chưa có dữ liệu cho xe đã chọn', 100);
+                    renderQuoteResults();
+                    return;
+                }
+                setQuoteStatus(`Đang so khớp ${QUOTE_EXTRACTED_PARTS.length} phụ tùng với ${warehouse.length} dòng kho giá...`, 60);
+                QUOTE_RESULTS = QUOTE_EXTRACTED_PARTS.map(part => buildQuoteResultRow(part, warehouse));
+                setQuoteStatus('Đối chiếu báo giá hoàn tất', 100);
+                renderQuoteResults();
+
+                if (currentUserProfile?.email) {
+                    addDoc(collection(db, 'user_logs'), {
+                        email: currentUserProfile.email,
+                        action: 'Tra cứu báo giá OCR',
+                        details: `Báo giá: ${QUOTE_SELECTED_FILE?.name || 'Không rõ'} — ${QUOTE_EXTRACTED_PARTS.length} phụ tùng — Xe: ${criteria.hang}/${criteria.hieus.join(', ')}/${criteria.nam} — Khớp: ${QUOTE_RESULTS.filter(r => r.best && r.best.score >= 0.30).length}`,
+                        resultCount: QUOTE_RESULTS.length,
+                        timestamp: serverTimestamp()
+                    }).catch(err => console.warn('Không ghi được log tra báo giá:', err));
+                }
+            } catch (error) {
+                console.error('Lỗi tra kho giá theo báo giá:', error);
+                setQuoteStatus('Lỗi tra kho giá', 0);
+                customAlert('Không tra được kho giá theo báo giá: ' + error.message);
+            } finally {
+                if (btn) { btn.disabled = QUOTE_EXTRACTED_PARTS.length === 0; btn.innerText = 'Tra kho giá'; }
+            }
+        };
+
+        window.applyQuotePartToMainSearch = function(encodedName) {
+            const name = decodeURIComponent(encodedName || '');
+            const input = document.getElementById('searchInput');
+            const exactInput = document.getElementById('exactPartName');
+            if (!input || !exactInput) return;
+            input.value = name;
+            exactInput.value = '0';
+            document.getElementById('btnExactPartName')?.classList.remove('active');
+            EXACT_SOURCE_CONTEXT = null;
+            toggleClearBtn();
+            document.getElementById('searchPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            searchData();
+        };
+
+        window.clearQuotePriceLookup = function() {
+            QUOTE_SELECTED_FILE = null;
+            QUOTE_OCR_ROWS = [];
+            QUOTE_EXTRACTED_PARTS = [];
+            QUOTE_RESULTS = [];
+            const fileInput = document.getElementById('quoteFileInput');
+            if (fileInput) fileInput.value = '';
+            const fileNameEl = document.getElementById('quoteFileName');
+            if (fileNameEl) { fileNameEl.innerText = 'Chưa chọn file'; fileNameEl.classList.add('hidden'); }
+            renderQuoteOcrRows();
+            document.getElementById('btnRunQuoteLookup').disabled = true;
+            setQuoteStatus('Sẵn sàng nhận báo giá', 0);
+            renderQuoteResults();
+        };
+
+        window.exportQuotePriceResultsCSV = function() {
+            if (!QUOTE_RESULTS.length) return customAlert('Chưa có kết quả để xuất CSV.');
+            const headers = ['Phu tung da chinh', 'Ten OCR goc', 'Gia gara', 'Phu tung khop kho tot nhat', 'Cac muc gia kho', 'So muc gia', 'Ty le khop tot nhat', 'Danh gia', 'Lech phan tram', 'HSBT tot nhat'];
+            const rows = QUOTE_RESULTS.map(r => [
+                r.part.name,
+                r.part.originalName || '',
+                r.part.quotedPrice || '',
+                r.best?.item?.ten_phu_tung || '',
+                (r.priceBuckets || []).map(bucket => `${bucket.type}: ${formatQuotePriceRange(bucket)} (${bucket.count} mẫu)`).join(' | '),
+                r.candidates?.length || 0,
+                r.best ? Math.round(r.best.score * 100) + '%' : '',
+                r.statusText,
+                r.variancePercent ?? '',
+                r.best?.item?.so_hsbt || ''
+            ]);
+            const csv = [headers, ...rows]
+                .map(row => row.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(','))
+                .join('\n');
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `doi-chieu-bao-gia-${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        };
+
+        function initQuoteDropZone() {
+            const zone = document.getElementById('quoteDropZone');
+            const input = document.getElementById('quoteFileInput');
+            if (!zone || !input || zone.dataset.bound === '1') return;
+            zone.dataset.bound = '1';
+            ['dragenter', 'dragover'].forEach(evt => zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.add('drag-over'); }));
+            ['dragleave', 'drop'].forEach(evt => zone.addEventListener(evt, e => { e.preventDefault(); zone.classList.remove('drag-over'); }));
+            zone.addEventListener('drop', e => {
+                const file = e.dataTransfer?.files?.[0];
+                if (!file) return;
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+                window.handleQuoteFileUpload({ target: input });
+            });
+        }
+        setTimeout(initQuoteDropZone, 0);
 
         // WINDOW OVERLAYS MODALS UTIL
         window.openModal = (id) => document.getElementById(id).classList.remove('hidden');
