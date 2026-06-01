@@ -1686,6 +1686,7 @@
             white-space: nowrap;
         }
         .quote-edit-mini-btn:hover { background: #2563eb; color: #ffffff; border-color: #2563eb; transform: translateY(-1px); }
+        .quote-edit-mini-btn.active { background: #2563eb; color: #ffffff; border-color: #2563eb; box-shadow: 0 14px 28px -20px rgba(37,99,235,.7); }
         .quote-ocr-table-wrap {
             max-height: none;
             min-height: 370px;
@@ -2345,6 +2346,37 @@
             letter-spacing: .06em;
             line-height: 1.45;
         }
+        .quote-form-grid-pro { position: relative; z-index: 20; }
+        .quote-filter-field { position: relative; }
+        .quote-multi-btn {
+            height: 48px;
+            width: 100%;
+            justify-content: space-between;
+            padding-left: 40px;
+            padding-right: 14px;
+            font-size: 13px;
+            font-weight: 900;
+            border-radius: 15px;
+            box-shadow: 0 10px 24px -23px rgba(15,23,42,.4);
+        }
+        .quote-filter-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            z-index: 60;
+        }
+        .quote-filter-dropdown .dropdown-item {
+            align-items: center;
+            justify-content: space-between;
+        }
+        .quote-filter-dropdown .dropdown-item small {
+            color: #94a3b8;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: .03em;
+            text-transform: uppercase;
+        }
         .exec-workbench {
             display: grid;
             grid-template-columns: minmax(340px, 390px) minmax(0, 1fr);
@@ -2931,6 +2963,26 @@
             gap: 8px;
             min-width: 0;
         }
+        .quote-record-count-badge {
+            margin-left: auto;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 58px;
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 1000;
+            letter-spacing: .03em;
+            box-shadow: 0 10px 20px -14px rgba(37,99,235,.95);
+        }
+        .quote-candidate-item.has-many-records {
+            border-color: #bfdbfe;
+            background: linear-gradient(180deg, #ffffff, #f8fbff);
+        }
         .quote-candidate-main strong {
             color: #0f172a;
             font-size: 11px;
@@ -2942,14 +2994,27 @@
             flex: 0 0 auto;
             padding: 4px 7px;
             border-radius: 999px;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            color: #1d4ed8;
             font-size: 9px;
             font-weight: 1000;
             text-transform: uppercase;
             letter-spacing: .05em;
             white-space: nowrap;
+            border: 1px solid transparent;
+        }
+        .quote-type-pill.quote-type-genuine {
+            background: #dcfce7;
+            border-color: #bbf7d0;
+            color: #15803d;
+        }
+        .quote-type-pill.quote-type-aftermarket {
+            background: #fef3c7;
+            border-color: #fde68a;
+            color: #92400e;
+        }
+        .quote-type-pill.quote-type-unknown {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1d4ed8;
         }
         .quote-candidate-meta {
             display: flex;
@@ -2997,6 +3062,20 @@
             letter-spacing: .07em;
             text-transform: uppercase;
         }
+        .quote-price-sample-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 46px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 1000;
+            letter-spacing: .02em;
+            box-shadow: 0 10px 20px -14px rgba(37,99,235,.85);
+        }
         .quote-price-bucket-value {
             margin-top: 7px;
             color: #0f172a;
@@ -3010,6 +3089,34 @@
             color: #64748b;
             font-size: 10px;
             font-weight: 850;
+        }
+
+        .quote-price-bucket-stats {
+            display: grid;
+            gap: 4px;
+            margin-top: 8px;
+            padding-top: 7px;
+            border-top: 1px dashed #dbeafe;
+        }
+        .quote-price-bucket-stats div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 800;
+        }
+        .quote-price-bucket-stats strong {
+            color: #0f172a;
+            font-size: 11px;
+            font-weight: 1000;
+        }
+        html.dark .quote-price-bucket-stats {
+            border-top-color: #334155 !important;
+        }
+        html.dark .quote-price-bucket-stats strong {
+            color: #f8fafc !important;
         }
         html.dark .quote-candidate-item,
         html.dark .quote-price-bucket {
@@ -3030,6 +3137,21 @@
             background: rgba(37,99,235,.16) !important;
             border-color: rgba(96,165,250,.32) !important;
             color: #93c5fd !important;
+        }
+        html.dark .quote-type-pill.quote-type-genuine {
+            background: rgba(22, 163, 74, 0.2) !important;
+            color: #4ade80 !important;
+            border-color: rgba(34, 197, 94, 0.3) !important;
+        }
+        html.dark .quote-type-pill.quote-type-aftermarket {
+            background: rgba(217, 119, 6, 0.2) !important;
+            color: #fbbf24 !important;
+            border-color: rgba(180, 83, 9, 0.3) !important;
+        }
+        html.dark .quote-type-pill.quote-type-unknown {
+            background: rgba(37,99,235,.16) !important;
+            color: #93c5fd !important;
+            border-color: rgba(96,165,250,.32) !important;
         }
 
 
@@ -3093,6 +3215,130 @@
             .quote-result-table {
                 min-width: 1260px;
             }
+        }
+
+
+        .quote-money-input {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.01em;
+        }
+
+
+
+        /* === Fix quote dropdown row hit-area === */
+        .quote-filter-dropdown button.dropdown-item,
+        .quote-filter-dropdown .dropdown-item {
+            width: 100%;
+            min-height: 38px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .quote-filter-dropdown button.dropdown-item span,
+        .quote-filter-dropdown button.dropdown-item small {
+            pointer-events: none;
+        }
+        .quote-filter-dropdown button.dropdown-item:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+            padding-left: 16px;
+        }
+        .quote-filter-dropdown button.dropdown-item.active {
+            background: #eff6ff;
+            color: var(--primary);
+        }
+        html.dark .quote-filter-dropdown button.dropdown-item:hover,
+        html.dark .quote-filter-dropdown button.dropdown-item.active {
+            background: #1e293b !important;
+            color: #2563eb !important;
+        }
+
+        .quote-ocr-original {
+            margin-top: 5px;
+            font-size: 9px;
+        }
+        .quote-ocr-name-tools {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .quote-strict-toggle {
+            height: 28px;
+            padding: 0 10px;
+            border-radius: 999px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 9px;
+            font-weight: 1000;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all .18s ease;
+        }
+        .quote-strict-toggle:hover {
+            background: #dbeafe;
+            border-color: #93c5fd;
+        }
+        .quote-strict-toggle.active {
+            background: linear-gradient(135deg, #0f172a, #1d4ed8);
+            border-color: #1d4ed8;
+            color: #ffffff;
+            box-shadow: 0 12px 22px -16px rgba(37,99,235,.9);
+        }
+        .quote-strict-note {
+            color: #64748b;
+            font-size: 9px;
+            font-weight: 800;
+        }
+        .quote-strict-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 7px;
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            font-size: 9px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+
+        html.dark .quote-record-count-badge,
+        html.dark .quote-price-sample-badge {
+            background: linear-gradient(135deg, #2563eb, #38bdf8) !important;
+            color: #ffffff !important;
+        }
+        html.dark .quote-strict-toggle {
+            background: rgba(37,99,235,.16) !important;
+            border-color: rgba(96,165,250,.32) !important;
+            color: #93c5fd !important;
+        }
+        html.dark .quote-strict-toggle.active {
+            background: linear-gradient(135deg, #1e293b, #2563eb) !important;
+            color: #ffffff !important;
+            border-color: #2563eb !important;
+        }
+        html.dark .quote-strict-note { color: #94a3b8 !important; }
+        html.dark .quote-strict-badge {
+            background: rgba(37,99,235,.16) !important;
+            border-color: rgba(96,165,250,.32) !important;
+            color: #93c5fd !important;
         }
 
 </style>
@@ -3635,15 +3881,82 @@
                         </div>
                         <button type="button" onclick="syncQuoteVehicleFromMainFilters()" class="exec-sync-btn">Lấy từ tab tra cứu</button>
                     </div>
-                    <div class="exec-form-grid">
-                        <label class="exec-field"><span>Hãng xe</span><select id="quoteHangSelect" onchange="onQuoteHangChange()"><option value="">Chọn hãng xe</option></select></label>
-                        <label class="exec-field"><span>Dòng / hiệu xe</span><select id="quoteHieuSelect" onchange="onQuoteHieuChange()"><option value="">Chọn hãng trước</option></select></label>
-                        <label class="exec-field"><span>Năm sản xuất</span><select id="quoteNamSelect" onchange="updateQuoteVehicleSummary()"><option value="">Chọn dòng trước</option></select></label>
-                        <label class="exec-field"><span>Loại hàng</span><select id="quoteTypeSelect" onchange="updateQuoteVehicleSummary()"><option value="all">Tất cả</option><option value="genuine">Chính hãng</option><option value="aftermarket">Thay thế / Ngoài</option></select></label>
+                    <div class="exec-form-grid quote-form-grid-pro">
+                        <div class="field-group quote-filter-field">
+                            <label class="field-label">Hãng xe</label>
+                            <svg class="w-4 h-4 field-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <button id="quoteBtnHang" type="button" class="multi-btn quote-multi-btn" onclick="toggleQuoteDropdown('Hang')">
+                                <span id="quoteLabelHang" class="truncate">Chọn hãng xe</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="quoteDropdownHang" class="quote-filter-dropdown hidden bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 w-full p-2">
+                                <div class="relative w-full mb-2">
+                                    <input type="text" id="quoteSearchHang" oninput="filterQuoteDropdown('Hang'); toggleQuoteDropdownClearBtn('Hang')" placeholder="Tìm hãng xe..." class="search-inner !mb-0 pr-8">
+                                    <button id="quoteClearSearchHang" onclick="clearQuoteDropdownSearch('Hang')" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full flex items-center justify-center transition-all cursor-pointer z-10" title="Xóa" type="button">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                                <div id="quoteListHang" class="max-h-60 overflow-y-auto space-y-0.5"></div>
+                            </div>
+                        </div>
+
+                        <div class="field-group quote-filter-field">
+                            <label class="field-label">Dòng xe</label>
+                            <svg class="w-4 h-4 field-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                            <button id="quoteBtnHieu" type="button" class="multi-btn quote-multi-btn" onclick="toggleQuoteDropdown('Hieu')">
+                                <span id="quoteLabelHieu" class="truncate">Chọn dòng xe...</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="quoteDropdownHieu" class="quote-filter-dropdown hidden bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 w-full p-2">
+                                <div class="relative w-full mb-2">
+                                    <input type="text" id="quoteSearchHieu" oninput="filterQuoteDropdown('Hieu'); toggleQuoteDropdownClearBtn('Hieu')" placeholder="Tìm dòng xe..." class="search-inner !mb-0 pr-8">
+                                    <button id="quoteClearSearchHieu" onclick="clearQuoteDropdownSearch('Hieu')" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full flex items-center justify-center transition-all cursor-pointer z-10" title="Xóa" type="button">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                                <div id="quoteListHieu" class="max-h-60 overflow-y-auto space-y-0.5"></div>
+                            </div>
+                        </div>
+
+                        <div class="field-group quote-filter-field">
+                            <label class="field-label">Năm SX</label>
+                            <svg class="w-4 h-4 field-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <button id="quoteBtnNam" type="button" class="multi-btn quote-multi-btn" onclick="toggleQuoteDropdown('Nam')">
+                                <span id="quoteLabelNam" class="truncate">Chọn năm SX</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="quoteDropdownNam" class="quote-filter-dropdown hidden bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 w-full p-2">
+                                <div class="relative w-full mb-2">
+                                    <input type="text" id="quoteSearchNam" oninput="filterQuoteDropdown('Nam'); toggleQuoteDropdownClearBtn('Nam')" placeholder="Tìm năm sản xuất..." class="search-inner !mb-0 pr-8">
+                                    <button id="quoteClearSearchNam" onclick="clearQuoteDropdownSearch('Nam')" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full flex items-center justify-center transition-all cursor-pointer z-10" title="Xóa" type="button">
+                                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                                <div id="quoteListNam" class="max-h-60 overflow-y-auto space-y-0.5"></div>
+                            </div>
+                        </div>
+
+                        <div class="field-group quote-filter-field">
+                            <label class="field-label">Loại hàng</label>
+                            <svg class="w-4 h-4 field-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            <button id="quoteBtnType" type="button" class="multi-btn quote-multi-btn" onclick="toggleQuoteDropdown('Type')">
+                                <span id="quoteLabelType" class="truncate">Tất cả loại hàng</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div id="quoteDropdownType" class="quote-filter-dropdown hidden bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 w-full p-2">
+                                <div id="quoteListType" class="space-y-0.5"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="exec-form-grid bottom">
                         <label class="exec-field"><span>Gemini API Key</span><input id="quoteGeminiKeyInput" type="password" autocomplete="off" value="AIzaSyDWQ6fATzFmqDozABBEDiEwTwuuN2X_mHo" oninput="saveQuoteGeminiKey()" placeholder="Nhập Gemini API Key"></label>
                         <div id="quoteVehicleSummary">Chưa chọn xe để đối chiếu kho giá.</div>
+                    </div>
+                    <div class="hidden" aria-hidden="true">
+                        <select id="quoteHangSelect" onchange="onQuoteHangChange()"><option value="">Chọn hãng xe</option></select>
+                        <select id="quoteHieuSelect" onchange="onQuoteHieuChange()"><option value="">Chọn hãng trước</option></select>
+                        <select id="quoteNamSelect" onchange="updateQuoteVehicleSummary()"><option value="">Chọn dòng trước</option></select>
+                        <select id="quoteTypeSelect" onchange="updateQuoteVehicleSummary()"><option value="all">Tất cả</option><option value="genuine">Chính hãng</option><option value="aftermarket">Thay thế / Ngoài</option></select>
                     </div>
                 </div>
 
@@ -3688,6 +4001,7 @@
                                 <div class="exec-panel-note">Kiểm tra lại tên phụ tùng, số lượng, đơn giá và loại bỏ các dòng công/sơn/VAT trước khi đối chiếu.</div>
                             </div>
                             <div class="exec-editor-actions">
+                                <button type="button" id="btnQuoteStrictAll" onclick="toggleQuoteStrictAllRows()" class="quote-edit-mini-btn">Khớp toàn bộ</button>
                                 <button type="button" onclick="addManualQuoteOcrRow()" class="quote-edit-mini-btn">+ Thêm dòng</button>
                                 <button type="button" onclick="rebuildQuoteExtractedPartsFromEditableRows(true)" class="quote-edit-mini-btn">Cập nhật danh sách tra</button>
                             </div>
@@ -5251,6 +5565,7 @@
             const sortedHang = Object.keys(CAY_GIA_PHA || {}).sort();
             setSelectOptions(hangSelect, sortedHang, 'Chọn hãng xe', currentHang);
             if (currentHang && CAY_GIA_PHA[currentHang]) hangSelect.value = currentHang;
+            renderQuoteTypeDropdown();
             onQuoteHangChange(true);
         }
 
@@ -5263,6 +5578,7 @@
             setSelectOptions(hieuSelect, hieus, hang ? 'Chọn dòng / hiệu xe' : 'Chọn hãng trước', currentHieu);
             if (currentHieu && hieus.includes(currentHieu)) hieuSelect.value = currentHieu;
             else if (hieuSelect) hieuSelect.value = '';
+            renderQuoteHangDropdown();
             setSelectOptions(namSelect, [], hieuSelect?.value ? 'Chọn năm sản xuất' : 'Chọn dòng trước');
             onQuoteHieuChange(skipSummary);
         };
@@ -5276,6 +5592,9 @@
             setSelectOptions(namSelect, years, hieu ? 'Chọn năm sản xuất' : 'Chọn dòng trước', currentNam);
             if (currentNam && years.map(String).includes(String(currentNam))) namSelect.value = currentNam;
             else if (namSelect) namSelect.value = '';
+            renderQuoteHieuDropdown();
+            renderQuoteNamDropdown();
+            renderQuoteTypeDropdown();
             if (!skipSummary) updateQuoteVehicleSummary();
         };
 
@@ -5294,6 +5613,7 @@
             onQuoteHieuChange(true);
             if (namSelect && nam) namSelect.value = nam;
             if (typeSelect) typeSelect.value = type;
+            renderQuoteTypeDropdown();
             updateQuoteVehicleSummary();
         };
 
@@ -5329,6 +5649,7 @@
             }
             const yearHint = String(data.manufacture_year_hint || data.year || '').match(/\d{4}/)?.[0] || '';
             if (yearHint && namSelect && Array.from(namSelect.options).some(opt => opt.value === yearHint)) namSelect.value = yearHint;
+            renderQuoteNamDropdown();
             updateQuoteVehicleSummary();
         }
 
@@ -5336,7 +5657,7 @@
             const summary = document.getElementById('quoteVehicleSummary');
             if (!summary) return;
             const criteria = getQuoteVehicleCriteria(false);
-            const typeLabels = { all: 'Tất cả loại hàng', genuine: 'Chính hãng', aftermarket: 'Thay thế / Ngoài' };
+            const typeLabels = QUOTE_TYPE_LABELS;
             if (!criteria.hang || !criteria.hieus.length || !criteria.nam) {
                 summary.innerText = 'Chưa chọn đủ Hãng xe / Dòng xe / Năm SX để đối chiếu kho giá.';
                 return;
@@ -5417,6 +5738,158 @@
                 input.focus();
             }
         };
+
+
+        const QUOTE_TYPE_LABELS = { all: 'Tất cả loại hàng', genuine: 'Chính hãng', aftermarket: 'Thay thế / Ngoài' };
+
+        function closeAllQuoteDropdowns(exceptType = '') {
+            ['Hang', 'Hieu', 'Nam', 'Type'].forEach(type => {
+                if (type === exceptType) return;
+                document.getElementById('quoteDropdown' + type)?.classList.add('hidden');
+            });
+        }
+
+        window.toggleQuoteDropdown = function(type) {
+            const dropdown = document.getElementById('quoteDropdown' + type);
+            if (!dropdown) return;
+            const willOpen = dropdown.classList.contains('hidden');
+            closeAllQuoteDropdowns(willOpen ? type : '');
+            dropdown.classList.toggle('hidden', !willOpen);
+            if (willOpen) {
+                const input = document.getElementById('quoteSearch' + type);
+                if (input) setTimeout(() => input.focus(), 0);
+            }
+        };
+
+        function setQuoteDropdownButtonLabel(type, text) {
+            const el = document.getElementById('quoteLabel' + type);
+            if (el) el.innerText = text;
+        }
+
+        function updateQuoteTypeButtonLabel() {
+            const type = document.getElementById('quoteTypeSelect')?.value || 'all';
+            setQuoteDropdownButtonLabel('Type', QUOTE_TYPE_LABELS[type] || 'Tất cả loại hàng');
+        }
+
+        function renderQuoteTypeDropdown() {
+            const box = document.getElementById('quoteListType');
+            if (!box) return;
+            const current = document.getElementById('quoteTypeSelect')?.value || 'all';
+            box.innerHTML = ['all', 'genuine', 'aftermarket'].map(value => {
+                const active = value === current ? ' active' : '';
+                const note = value === 'genuine' ? 'Ưu tiên phụ tùng chính hãng' : value === 'aftermarket' ? 'Nhóm thay thế / ngoài hãng' : 'Không giới hạn loại hàng';
+                return `<button type="button" class="dropdown-item${active}" onclick="selectQuoteType('${value}')"><span>${QUOTE_TYPE_LABELS[value]}</span><small>${note}</small></button>`;
+            }).join('');
+            updateQuoteTypeButtonLabel();
+        }
+
+        function renderQuoteHangDropdown() {
+            const box = document.getElementById('quoteListHang');
+            if (!box) return;
+            const select = document.getElementById('quoteHangSelect');
+            const current = select?.value || '';
+            const options = Array.from(select?.options || []).map(opt => opt.value).filter(Boolean);
+            box.innerHTML = options.length
+                ? options.map(value => `<button type="button" class="dropdown-item${value === current ? ' active' : ''}" data-label="${sanitize(value).toLowerCase()}" onclick="selectQuoteHang('${escapeJsSingle(value)}')"><span>${sanitize(value)}</span></button>`).join('')
+                : '<div class="dropdown-item !cursor-default !text-slate-400">Chưa có dữ liệu hãng xe</div>';
+            setQuoteDropdownButtonLabel('Hang', current || 'Chọn hãng xe');
+            filterQuoteDropdown('Hang');
+        }
+
+        function renderQuoteHieuDropdown() {
+            const box = document.getElementById('quoteListHieu');
+            if (!box) return;
+            const select = document.getElementById('quoteHieuSelect');
+            const current = select?.value || '';
+            const options = Array.from(select?.options || []).map(opt => opt.value).filter(Boolean);
+            box.innerHTML = options.length
+                ? options.map(value => `<button type="button" class="dropdown-item${value === current ? ' active' : ''}" data-label="${sanitize(value).toLowerCase()}" onclick="selectQuoteHieu('${escapeJsSingle(value)}')"><span>${sanitize(value)}</span></button>`).join('')
+                : `<div class="dropdown-item !cursor-default !text-slate-400">${document.getElementById('quoteHangSelect')?.value ? 'Không có dòng xe' : 'Chọn hãng xe trước'}</div>`;
+            setQuoteDropdownButtonLabel('Hieu', current || (document.getElementById('quoteHangSelect')?.value ? 'Chọn dòng xe...' : 'Chọn hãng trước'));
+            filterQuoteDropdown('Hieu');
+        }
+
+        function renderQuoteNamDropdown() {
+            const box = document.getElementById('quoteListNam');
+            if (!box) return;
+            const select = document.getElementById('quoteNamSelect');
+            const current = select?.value || '';
+            const options = Array.from(select?.options || []).map(opt => opt.value).filter(Boolean);
+            box.innerHTML = options.length
+                ? options.map(value => `<button type="button" class="dropdown-item${String(value) === String(current) ? ' active' : ''}" data-label="${sanitize(String(value)).toLowerCase()}" onclick="selectQuoteNam('${escapeJsSingle(String(value))}')"><span>${sanitize(String(value))}</span></button>`).join('')
+                : `<div class="dropdown-item !cursor-default !text-slate-400">${document.getElementById('quoteHieuSelect')?.value ? 'Không có năm sản xuất' : 'Chọn dòng xe trước'}</div>`;
+            setQuoteDropdownButtonLabel('Nam', current || (document.getElementById('quoteHieuSelect')?.value ? 'Chọn năm SX' : 'Chọn dòng trước'));
+            filterQuoteDropdown('Nam');
+        }
+
+        window.selectQuoteHang = function(value) {
+            const select = document.getElementById('quoteHangSelect');
+            if (!select) return;
+            select.value = value || '';
+            document.getElementById('quoteSearchHieu') && (document.getElementById('quoteSearchHieu').value = '');
+            document.getElementById('quoteSearchNam') && (document.getElementById('quoteSearchNam').value = '');
+            onQuoteHangChange();
+            closeAllQuoteDropdowns();
+        };
+
+        window.selectQuoteHieu = function(value) {
+            const select = document.getElementById('quoteHieuSelect');
+            if (!select) return;
+            select.value = value || '';
+            document.getElementById('quoteSearchNam') && (document.getElementById('quoteSearchNam').value = '');
+            onQuoteHieuChange();
+            closeAllQuoteDropdowns();
+        };
+
+        window.selectQuoteNam = function(value) {
+            const select = document.getElementById('quoteNamSelect');
+            if (!select) return;
+            select.value = value || '';
+            renderQuoteNamDropdown();
+            updateQuoteVehicleSummary();
+            closeAllQuoteDropdowns();
+        };
+
+        window.selectQuoteType = function(value) {
+            const select = document.getElementById('quoteTypeSelect');
+            if (!select) return;
+            select.value = value || 'all';
+            renderQuoteTypeDropdown();
+            updateQuoteVehicleSummary();
+            closeAllQuoteDropdowns();
+        };
+
+        window.filterQuoteDropdown = function(type) {
+            const input = document.getElementById('quoteSearch' + type);
+            const list = document.getElementById('quoteList' + type);
+            if (!list) return;
+            const keyword = String(input?.value || '').trim().toLowerCase();
+            list.querySelectorAll('.dropdown-item[data-label]').forEach(item => {
+                const label = item.dataset.label || item.innerText.toLowerCase();
+                item.style.display = label.includes(keyword) ? 'flex' : 'none';
+            });
+        };
+
+        window.toggleQuoteDropdownClearBtn = function(type) {
+            const input = document.getElementById('quoteSearch' + type);
+            const btn = document.getElementById('quoteClearSearch' + type);
+            if (input && btn) btn.classList.toggle('hidden', !input.value.length);
+        };
+
+        window.clearQuoteDropdownSearch = function(type) {
+            const input = document.getElementById('quoteSearch' + type);
+            if (input) {
+                input.value = '';
+                toggleQuoteDropdownClearBtn(type);
+                filterQuoteDropdown(type);
+                input.focus();
+            }
+        };
+
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('.quote-filter-field')) return;
+            closeAllQuoteDropdowns();
+        });
 
         window.clearFilters = function() {
             selectHang(''); selectNam(''); selectType('all');
@@ -5526,13 +5999,40 @@
         };
         function parsePriceValue(value) {
             if (value === null || value === undefined || value === '') return 0;
-            if (typeof value === 'number') return value;
+            if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
 
-            const cleaned = String(value)
-                .replace(/[^\d.-]/g, '')
-                .trim();
+            const raw = String(value).trim();
+            if (!raw) return 0;
 
-            const numberValue = Number(cleaned);
+            // Hỗ trợ cả định dạng chưa phân tách và đã phân tách hàng nghìn:
+            // 2416668, 2.416.668, 2,416,668, 2 416 668, 2.416.668đ
+            let cleaned = raw.replace(/[^\d,.-]/g, '');
+            if (!/\d/.test(cleaned)) return 0;
+
+            const negative = cleaned.includes('-');
+            cleaned = cleaned.replace(/-/g, '');
+
+            const dotCount = (cleaned.match(/\./g) || []).length;
+            const commaCount = (cleaned.match(/,/g) || []).length;
+
+            if (dotCount || commaCount) {
+                const separators = [...cleaned.matchAll(/[.,]/g)].map(match => match.index);
+                const lastSeparatorIndex = separators.length ? separators[separators.length - 1] : -1;
+                const decimalLength = lastSeparatorIndex >= 0 ? cleaned.length - lastSeparatorIndex - 1 : 0;
+
+                // Với tiền VND, đa số dấu . hoặc , là phân tách nghìn. Nếu có nhiều dấu
+                // hoặc phần sau dấu cuối đủ 3 chữ số thì bỏ toàn bộ dấu phân tách.
+                if (separators.length > 1 || decimalLength === 3) {
+                    cleaned = cleaned.replace(/[.,]/g, '');
+                } else {
+                    cleaned = cleaned.replace(/[.,]/g, '');
+                }
+            }
+
+            cleaned = cleaned.replace(/\D/g, '');
+            if (!cleaned) return 0;
+
+            const numberValue = Number((negative ? '-' : '') + cleaned);
             return Number.isFinite(numberValue) ? numberValue : 0;
         }
 
@@ -6018,6 +6518,13 @@
             return Math.min(1, score);
         }
 
+        function isQuoteExactNameMatch(quoteName, dbName) {
+            const qn = normalizeQuotePart(quoteName);
+            const dn = normalizeQuotePart(dbName);
+            if (!qn || !dn) return false;
+            return qn === dn;
+        }
+
         function classifyQuotePartType(value) {
             const raw = String(value || '').trim();
             const key = normalizeQuoteText(raw);
@@ -6031,6 +6538,13 @@
             if (key.includes('chinh hang')) return 1;
             if (key.includes('thay the') || key.includes('ngoai')) return 2;
             return 3;
+        }
+
+        function getQuoteTypePillClass(type) {
+            const key = normalizeQuoteText(type);
+            if (key.includes('chinh hang')) return 'quote-type-genuine';
+            if (key.includes('thay the') || key.includes('ngoai')) return 'quote-type-aftermarket';
+            return 'quote-type-unknown';
         }
 
         function summarizeQuoteCandidatePrices(candidates) {
@@ -6048,8 +6562,50 @@
                 const min = prices[0] || 0;
                 const max = prices[prices.length - 1] || 0;
                 const avg = prices.length ? Math.round(prices.reduce((s, p) => s + p, 0) / prices.length) : 0;
-                return { type, entries, prices, count: entries.length, min, max, avg };
+                const freq = new Map();
+                prices.forEach(price => freq.set(price, (freq.get(price) || 0) + 1));
+                const modePair = Array.from(freq.entries()).sort((a, b) => {
+                    if (b[1] !== a[1]) return b[1] - a[1];
+                    return a[0] - b[0];
+                })[0] || [0, 0];
+                const mode = modePair[0] || 0;
+                const modeCount = modePair[1] || 0;
+                const distinctPriceCount = freq.size;
+                return { type, entries, prices, count: entries.length, min, max, avg, mode, modeCount, distinctPriceCount };
             }).sort((a, b) => quoteTypeOrder(a.type) - quoteTypeOrder(b.type) || a.min - b.min);
+        }
+
+        function summarizeQuoteCandidateGroups(candidates) {
+            const groups = new Map();
+            candidates.forEach(entry => {
+                if (!entry?.item || !entry?.price) return;
+                const type = classifyQuotePartType(entry.item?.chinh_hang);
+                const name = entry.item?.ten_phu_tung || 'Không rõ';
+                const key = [normalizeQuotePart(name), type, entry.price].join('|');
+                if (!groups.has(key)) {
+                    groups.set(key, {
+                        key,
+                        type,
+                        name,
+                        price: entry.price,
+                        score: entry.score || 0,
+                        count: 0,
+                        items: [],
+                        garages: []
+                    });
+                }
+                const group = groups.get(key);
+                group.count += 1;
+                group.score = Math.max(group.score, entry.score || 0);
+                group.items.push(entry.item);
+                const garage = String(entry.item?.ten_garage || '').trim();
+                if (garage && !group.garages.includes(garage)) group.garages.push(garage);
+            });
+            return Array.from(groups.values()).sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                if (b.count !== a.count) return b.count - a.count;
+                return a.price - b.price;
+            });
         }
 
         function formatQuotePriceRange(bucket) {
@@ -6143,6 +6699,7 @@
                     totalPrice,
                     quotedPrice: totalPrice || unitPrice || 0,
                     need_lookup: !!needLookup,
+                    strict_match: false,
                     is_labor: !!labor,
                     note: item?.note || '',
                     rawLine: `${item?.stt || idx + 1} | ${name} | ĐVT ${item?.unit || ''} | SL ${item?.quantity || ''} | Đơn giá ${unitPrice || ''} | Thành tiền ${totalPrice || ''}`,
@@ -6175,6 +6732,7 @@
                     totalPrice: parseQuotePriceFromLine(totalChunk) || parseQuotePriceFromLine(line),
                     quotedPrice: parseQuotePriceFromLine(totalChunk) || parseQuotePriceFromLine(line),
                     need_lookup: status.includes('tra kho'),
+                    strict_match: false,
                     is_labor: status.includes('bo qua'),
                     note: '',
                     rawLine: line,
@@ -6194,6 +6752,7 @@
                 totalPrice: part.quotedPrice || 0,
                 quotedPrice: part.quotedPrice || 0,
                 need_lookup: true,
+                strict_match: false,
                 is_labor: false,
                 note: '',
                 rawLine: part.rawLine || '',
@@ -6206,6 +6765,7 @@
             if (!body) return;
             if (!QUOTE_OCR_ROWS.length) {
                 body.innerHTML = '<tr><td colspan="8" class="quote-ocr-empty">Chưa có dữ liệu OCR. Tải báo giá để Gemini đọc bảng hạng mục.</td></tr>';
+                updateQuoteStrictAllButton();
                 return;
             }
             body.innerHTML = QUOTE_OCR_ROWS.map((row, idx) => {
@@ -6223,17 +6783,34 @@
                         </td>
                         <td>
                             <input class="quote-ocr-name-input" value="${sanitize(row.name || '')}" oninput="updateQuoteOcrRow('${row.id}', 'name', this.value)" placeholder="Nhập/sửa tên phụ tùng cần tra">
+                            <div class="quote-ocr-name-tools">
+                                <button type="button" class="quote-strict-toggle ${row.strict_match ? 'active' : ''}" onclick="toggleQuoteStrictMatch('${row.id}')" title="Chỉ trả về kết quả có tên kho trùng đúng với tên phụ tùng đang nhập">${row.strict_match ? '🎯 Đang khớp tên phụ tùng' : '🎯 Khớp tên phụ tùng'}</button>
+                                <span class="quote-strict-note">Bật khi chỉ muốn lấy đúng tên phụ tùng này, tránh lẫn sang ốp/nẹp/cụm khác.</span>
+                            </div>
                             ${original}${note}
                         </td>
                         <td><input class="quote-ocr-small-input quote-ocr-unit-input" value="${sanitize(row.unit || '')}" oninput="updateQuoteOcrRow('${row.id}', 'unit', this.value)" placeholder="ĐVT"></td>
                         <td><input class="quote-ocr-small-input" value="${sanitize(row.quantity || '')}" oninput="updateQuoteOcrRow('${row.id}', 'quantity', this.value)" placeholder="SL"></td>
-                        <td><input class="quote-ocr-small-input" value="${row.unitPrice ? sanitize(row.unitPrice) : ''}" oninput="updateQuoteOcrRow('${row.id}', 'unitPrice', this.value)" placeholder="Đơn giá"></td>
-                        <td><input class="quote-ocr-small-input" value="${row.totalPrice ? sanitize(row.totalPrice) : ''}" oninput="updateQuoteOcrRow('${row.id}', 'totalPrice', this.value)" placeholder="Thành tiền"></td>
+                        <td><input class="quote-ocr-small-input quote-money-input" inputmode="numeric" value="${row.unitPrice ? sanitize(formatVND(row.unitPrice)) : ''}" oninput="updateQuoteOcrRow('${row.id}', 'unitPrice', this.value)" onblur="formatQuoteMoneyInput(this, '${row.id}', 'unitPrice')" placeholder="Đơn giá"></td>
+                        <td><input class="quote-ocr-small-input quote-money-input" inputmode="numeric" value="${row.totalPrice ? sanitize(formatVND(row.totalPrice)) : ''}" oninput="updateQuoteOcrRow('${row.id}', 'totalPrice', this.value)" onblur="formatQuoteMoneyInput(this, '${row.id}', 'totalPrice')" placeholder="Thành tiền"></td>
                         <td><button type="button" class="quote-ocr-del-btn" onclick="deleteQuoteOcrRow('${row.id}')" title="Xóa dòng">×</button></td>
                     </tr>
                 `;
             }).join('');
+            updateQuoteStrictAllButton();
         }
+
+        window.formatQuoteMoneyInput = function(input, rowId, field) {
+            const row = QUOTE_OCR_ROWS.find(item => item.id === rowId);
+            if (!row) return;
+            const value = parsePriceValue(input?.value || 0);
+            if (field === 'unitPrice') row.unitPrice = value;
+            else if (field === 'totalPrice') row.totalPrice = value;
+            row.quotedPrice = getQuoteRowPrice(row);
+            if (input) input.value = value ? formatVND(value) : '';
+            QUOTE_RESULTS = [];
+            rebuildQuoteExtractedPartsFromEditableRows(false);
+        };
 
         window.updateQuoteOcrRow = function(rowId, field, value) {
             const row = QUOTE_OCR_ROWS.find(item => item.id === rowId);
@@ -6244,9 +6821,44 @@
             else if (field === 'quantity') row.quantity = String(value || '').replace(',', '.');
             else if (field === 'unitPrice') row.unitPrice = parsePriceValue(value);
             else if (field === 'totalPrice') row.totalPrice = parsePriceValue(value);
+            else if (field === 'strict_match') row.strict_match = !!value;
             row.quotedPrice = getQuoteRowPrice(row);
             QUOTE_RESULTS = [];
             rebuildQuoteExtractedPartsFromEditableRows(false);
+        };
+
+        window.toggleQuoteStrictMatch = function(rowId) {
+            const row = QUOTE_OCR_ROWS.find(item => item.id === rowId);
+            if (!row) return;
+            row.strict_match = !row.strict_match;
+            QUOTE_RESULTS = [];
+            renderQuoteOcrRows();
+            rebuildQuoteExtractedPartsFromEditableRows(true);
+        };
+
+        function updateQuoteStrictAllButton() {
+            const btn = document.getElementById('btnQuoteStrictAll');
+            if (!btn) return;
+            const lookupRows = QUOTE_OCR_ROWS.filter(row => row.need_lookup !== false);
+            const allStrict = lookupRows.length > 0 && lookupRows.every(row => !!row.strict_match);
+            btn.innerText = allStrict ? 'Bỏ khớp toàn bộ' : 'Khớp toàn bộ';
+            btn.title = allStrict
+                ? 'Tắt khớp tên phụ tùng cho toàn bộ các dòng đang TRA KHO'
+                : 'Bật khớp tên phụ tùng cho toàn bộ các dòng đang TRA KHO';
+            btn.classList.toggle('active', allStrict);
+        }
+
+        window.toggleQuoteStrictAllRows = function() {
+            const lookupRows = QUOTE_OCR_ROWS.filter(row => row.need_lookup !== false);
+            if (!lookupRows.length) {
+                customAlert('Chưa có dòng nào ở trạng thái TRA KHO để áp dụng khớp tên phụ tùng toàn bộ.');
+                return;
+            }
+            const allStrict = lookupRows.every(row => !!row.strict_match);
+            lookupRows.forEach(row => { row.strict_match = !allStrict; });
+            QUOTE_RESULTS = [];
+            renderQuoteOcrRows();
+            rebuildQuoteExtractedPartsFromEditableRows(true);
         };
 
         window.deleteQuoteOcrRow = function(rowId) {
@@ -6268,6 +6880,7 @@
                 totalPrice: 0,
                 quotedPrice: 0,
                 need_lookup: true,
+                strict_match: false,
                 is_labor: false,
                 note: 'Người dùng thêm thủ công',
                 rawLine: '',
@@ -6294,11 +6907,12 @@
                         unit: row.unit || '',
                         index: row.stt || idx + 1,
                         rowId: row.id,
+                        strict_match: !!row.strict_match,
                         source: row.source || 'editable-table'
                     };
                 })
                 .filter(part => {
-                    const key = normalizeQuotePart(part.name);
+                    const key = normalizeQuotePart(part.name) + (part.strict_match ? '|strict' : '|soft');
                     if (!key || seen.has(key)) return false;
                     seen.add(key);
                     return true;
@@ -6331,7 +6945,7 @@
                 return `
                     <div class="quote-part-pill">
                         <span class="truncate">${sanitize(part.name)}</span>
-                        ${original}
+                        ${part.strict_match ? '<small>🎯 Khớp tên phụ tùng</small>' : original}
                     </div>
                 `;
             }).join('');
@@ -6364,24 +6978,29 @@
 
                 const candidateSummary = best ? `
                     <div class="quote-match-name">${sanitize(best.item.ten_phu_tung || 'Không rõ')}</div>
-                    <div class="quote-match-meta">Hiển thị ${row.candidates.length} ứng viên phù hợp / ${row.priceBuckets.length || 1} nhóm giá${row.hiddenCandidateCount ? ` — ẩn ${row.hiddenCandidateCount} ứng viên nhiễu` : ''}</div>
+                    <div class="quote-match-meta">Hiển thị ${row.candidateGroups.length} nhóm khớp / ${row.priceBuckets.length || 1} nhóm giá${row.duplicateCollapsedCount ? ` — gộp ${row.duplicateCollapsedCount} hồ sơ trùng` : ''}${row.hiddenCandidateCount ? ` — ẩn ${row.hiddenCandidateCount} ứng viên nhiễu` : ''}</div>
                     <div class="mt-2 flex flex-wrap gap-1.5">
                         <span class="quote-score-badge ${scoreClass}">${score}% khớp</span>
+                        ${row.part.strict_match ? '<span class="quote-score-badge quote-score-strong">Khớp tên phụ tùng</span>' : ''}
                         ${row.priceBuckets.length > 1 ? '<span class="quote-score-badge quote-score-medium">Nhiều loại giá</span>' : ''}
                     </div>
                     <div class="quote-candidate-list">
-                        ${row.candidates.map(entry => {
-                            const safeId = entry.item?.id ? escapeJsSingle(entry.item.id) : '';
+                        ${row.candidateGroups.map(group => {
+                            const primaryItem = group.items?.[0] || null;
+                            const safeId = primaryItem?.id ? escapeJsSingle(primaryItem.id) : '';
+                            const garagePreview = group.garages.slice(0, 2).join(', ');
+                            const moreGarage = Math.max(0, group.garages.length - 2);
                             return `
-                                <div class="quote-candidate-item">
+                                <div class="quote-candidate-item ${group.count > 1 ? 'has-many-records' : ''}">
                                     <div class="quote-candidate-main">
-                                        <span class="quote-type-pill">${sanitize(classifyQuotePartType(entry.item?.chinh_hang))}</span>
-                                        <strong>${sanitize(entry.item?.ten_phu_tung || 'Không rõ')}</strong>
+                                        <span class="quote-type-pill ${getQuoteTypePillClass(group.type)}">${sanitize(group.type)}</span>
+                                        <strong>${sanitize(group.name)}</strong>
+                                        <span class="quote-record-count-badge">${group.count} hồ sơ</span>
                                     </div>
                                     <div class="quote-candidate-meta">
-                                        <span>${formatVND(entry.price)}</span>
-                                        <span>${Math.round(entry.score * 100)}% khớp</span>
-                                        <span>${sanitize(entry.item?.ten_garage || 'Garage N/A')}</span>
+                                        <span>${formatVND(group.price)}</span>
+                                        <span>${Math.round(group.score * 100)}% khớp</span>
+                                        ${garagePreview ? `<span>${sanitize(garagePreview)}${moreGarage ? ` +${moreGarage}` : ''}</span>` : ''}
                                         ${safeId ? `<button type="button" onclick="showDetail('${safeId}')">Xem</button>` : ''}
                                     </div>
                                 </div>
@@ -6396,10 +7015,15 @@
                             <div class="quote-price-bucket">
                                 <div class="quote-price-bucket-head">
                                     <span>${sanitize(bucket.type)}</span>
-                                    <span>${bucket.count} mẫu</span>
+                                    <span class="quote-price-sample-badge">${bucket.count} mẫu</span>
                                 </div>
-                                <div class="quote-price-bucket-value">${formatQuotePriceRange(bucket)}</div>
-                                <div class="quote-price-bucket-meta">TB: ${formatVND(bucket.avg)}</div>
+                                <div class="quote-price-bucket-value">Giá lặp nhiều nhất: ${formatVND(bucket.mode)}</div>
+                                <div class="quote-price-bucket-meta">${bucket.modeCount} hồ sơ trùng mức giá này${bucket.distinctPriceCount > 1 ? ` • ${bucket.distinctPriceCount} mức giá` : ''}</div>
+                                <div class="quote-price-bucket-stats">
+                                    <div><span>Thấp nhất</span><strong>${formatVND(bucket.min)}</strong></div>
+                                    <div><span>Cao nhất</span><strong>${formatVND(bucket.max)}</strong></div>
+                                    <div><span>Trung bình</span><strong>${formatVND(bucket.avg)}</strong></div>
+                                </div>
                             </div>
                         `).join('')}
                     </div>
@@ -6409,6 +7033,7 @@
                     <tr>
                         <td>
                             <div class="quote-match-name">${sanitize(row.part.name)}</div>
+                            ${row.part.strict_match ? '<div class="quote-strict-badge">🎯 Đang khớp tên phụ tùng</div>' : ''}
                             <div class="quote-match-meta">Dòng OCR ${row.part.index}${row.part.originalName && row.part.originalName !== row.part.name ? ' — Gốc: ' + sanitize(row.part.originalName).slice(0, 70) : (row.part.rawLine ? ' — ' + sanitize(row.part.rawLine).slice(0, 80) : '')}</div>
                             <button type="button" class="quote-row-action" onclick="applyQuotePartToMainSearch('${encodedPart}')">Tra cứu riêng</button>
                         </td>
@@ -6678,6 +7303,7 @@ Tên file: ${fileName}`;
                 })
                 .filter(entry => {
                     if (!entry.price) return false;
+                    if (part.strict_match) return isQuoteExactNameMatch(part.name, entry.item?.ten_phu_tung || '');
                     // Cho phép khớp mềm hơn khi tên gara khác tên kho, nhưng vẫn cần có độ phủ token tối thiểu.
                     return entry.score >= 0.30 || (entry.score >= 0.24 && entry.coverage >= 0.55);
                 })
@@ -6702,7 +7328,7 @@ Tên file: ${fileName}`;
                 unique.push(entry);
             });
 
-            const allCandidates = unique.slice(0, 16);
+            const allCandidates = unique.slice(0, 20);
             const best = allCandidates[0] || null;
 
             let relevantCandidates = allCandidates.slice();
@@ -6717,8 +7343,10 @@ Tên file: ${fileName}`;
                 if (!relevantCandidates.length) relevantCandidates = [best];
             }
 
-            const candidates = relevantCandidates.slice(0, 8);
+            const candidates = relevantCandidates.slice(0, 12);
             const hiddenCandidateCount = Math.max(0, allCandidates.length - candidates.length);
+            const candidateGroups = summarizeQuoteCandidateGroups(candidates);
+            const duplicateCollapsedCount = Math.max(0, candidates.length - candidateGroups.length);
             const priceBuckets = summarizeQuoteCandidatePrices(candidates);
             const closestPriceCandidate = part.quotedPrice && candidates.length
                 ? candidates.reduce((bestEntry, entry) => {
@@ -6729,22 +7357,29 @@ Tên file: ${fileName}`;
             const compareCandidate = closestPriceCandidate || best;
 
             let status = 'danger';
-            let statusText = 'Chưa khớp kho';
+            let statusText = part.strict_match ? 'Không có kết quả khớp tên phụ tùng' : 'Chưa khớp kho';
             let variancePercent = null;
 
             if (best && best.score >= 0.30) {
                 status = best.score >= 0.65 ? 'ok' : 'watch';
-                statusText = priceBuckets.length > 1 ? 'Có nhiều mức giá' : (best.score >= 0.65 ? 'Khớp tốt' : 'Cần kiểm tra tên');
+                statusText = part.strict_match
+                    ? 'Khớp khóa chặt'
+                    : (priceBuckets.length > 1 || candidateGroups.some(group => group.count > 1)
+                        ? 'Có nhiều mức giá'
+                        : (best.score >= 0.65 ? 'Khớp tốt' : 'Cần kiểm tra tên'));
 
                 if (part.quotedPrice && compareCandidate?.price) {
                     variancePercent = Math.round(((part.quotedPrice - compareCandidate.price) / compareCandidate.price) * 100);
                     if (variancePercent > 15) { status = 'danger'; statusText = 'Gara cao hơn kho'; }
                     else if (variancePercent < -20) { status = 'watch'; statusText = 'Gara thấp hơn kho'; }
-                    else if (Math.abs(variancePercent) <= 15 && best.score >= 0.45) { status = priceBuckets.length > 1 ? 'watch' : 'ok'; statusText = priceBuckets.length > 1 ? 'Có nhiều mức giá' : 'Giá phù hợp'; }
+                    else if (Math.abs(variancePercent) <= 15 && best.score >= 0.45) {
+                        status = part.strict_match ? 'ok' : ((priceBuckets.length > 1 || candidateGroups.some(group => group.count > 1)) ? 'watch' : 'ok');
+                        statusText = part.strict_match ? 'Giá phù hợp - khớp tên phụ tùng' : ((priceBuckets.length > 1 || candidateGroups.some(group => group.count > 1)) ? 'Có nhiều mức giá' : 'Giá phù hợp');
+                    }
                 }
             }
 
-            return { part, best, candidates, allCandidates, hiddenCandidateCount, priceBuckets, compareCandidate, status, statusText, variancePercent };
+            return { part, best, candidates, candidateGroups, duplicateCollapsedCount, allCandidates, hiddenCandidateCount, priceBuckets, compareCandidate, status, statusText, variancePercent };
         }
 
         window.runQuotePriceLookup = async function() {
