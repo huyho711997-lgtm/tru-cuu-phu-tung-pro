@@ -2646,6 +2646,142 @@
             text-overflow: ellipsis;
         }
         #quoteFileName.hidden { display: none !important; }
+
+        /* OCR MODE SELECTOR: Chọn chỉ lấy phụ tùng hoặc lấy toàn bộ báo giá trước khi chạy OCR */
+        .quote-ocr-mode-panel {
+            margin: 18px 0 2px;
+            padding: 14px;
+            border-radius: 24px;
+            border: 1px solid rgba(219, 234, 254, 0.92);
+            background:
+                radial-gradient(circle at 0% 0%, rgba(37,99,235,.10), transparent 30%),
+                linear-gradient(135deg, rgba(255,255,255,.96), rgba(248,250,252,.94));
+            box-shadow: 0 18px 36px -30px rgba(15,23,42,.42);
+        }
+        .quote-ocr-mode-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .quote-ocr-mode-kicker {
+            font-size: 9px;
+            font-weight: 1000;
+            text-transform: uppercase;
+            letter-spacing: .16em;
+            color: #2563eb;
+            margin-bottom: 4px;
+        }
+        .quote-ocr-mode-title {
+            font-size: 13px;
+            font-weight: 1000;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: -.01em;
+            line-height: 1.2;
+        }
+        .quote-ocr-mode-note {
+            max-width: 520px;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.55;
+        }
+        .quote-ocr-mode-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .quote-ocr-mode-option {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            min-height: 82px;
+            padding: 13px 14px;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            background: rgba(255,255,255,.86);
+            cursor: pointer;
+            transition: all var(--transition-base) var(--ease-smooth);
+            overflow: hidden;
+        }
+        .quote-ocr-mode-option:hover {
+            border-color: #bfdbfe;
+            transform: translateY(-1px);
+            box-shadow: 0 18px 32px -28px rgba(37,99,235,.65);
+        }
+        .quote-ocr-mode-option.active {
+            border-color: rgba(37,99,235,.42);
+            background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+            box-shadow: 0 18px 34px -28px rgba(37,99,235,.78);
+        }
+        .quote-ocr-mode-option input { display: none; }
+        .quote-ocr-mode-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            color: #2563eb;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+        }
+        .quote-ocr-mode-option.active .quote-ocr-mode-icon {
+            color: #ffffff;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            border-color: transparent;
+            box-shadow: 0 14px 26px -18px rgba(37,99,235,.95);
+        }
+        .quote-ocr-mode-icon svg { width: 20px; height: 20px; }
+        .quote-ocr-mode-name {
+            font-size: 12px;
+            font-weight: 1000;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: -.01em;
+            line-height: 1.2;
+            margin-bottom: 5px;
+        }
+        .quote-ocr-mode-desc {
+            font-size: 10px;
+            font-weight: 800;
+            color: #64748b;
+            line-height: 1.45;
+        }
+        html.dark .quote-ocr-mode-panel {
+            background: rgba(15,23,42,.78) !important;
+            border-color: #334155 !important;
+        }
+        html.dark .quote-ocr-mode-title,
+        html.dark .quote-ocr-mode-name { color: #f8fafc !important; }
+        html.dark .quote-ocr-mode-note,
+        html.dark .quote-ocr-mode-desc { color: #94a3b8 !important; }
+        html.dark .quote-ocr-mode-option {
+            background: rgba(30,41,59,.64) !important;
+            border-color: #334155 !important;
+        }
+        html.dark .quote-ocr-mode-option.active {
+            background: rgba(37,99,235,.16) !important;
+            border-color: rgba(96,165,250,.36) !important;
+        }
+        html.dark .quote-ocr-mode-icon {
+            background: rgba(37,99,235,.14) !important;
+            border-color: rgba(96,165,250,.28) !important;
+            color: #93c5fd !important;
+        }
+        html.dark .quote-ocr-mode-option.active .quote-ocr-mode-icon {
+            background: linear-gradient(135deg, #2563eb, #06b6d4) !important;
+            color: #ffffff !important;
+            border-color: transparent !important;
+        }
+        @media (max-width: 720px) {
+            .quote-ocr-mode-head { flex-direction: column; }
+            .quote-ocr-mode-grid { grid-template-columns: 1fr; }
+        }
         .exec-progress { padding: 2px 4px 0; }
         .quote-progress-track {
             height: 9px;
@@ -5344,6 +5480,17 @@
         #quotePriceSection .quote-upload-modal {
             padding: 24px;
         }
+
+
+        /* FIX: Ưu tiên ẩn đúng các nút Tra kho giá / Làm mới khi chưa có dữ liệu.
+           Các rule .compact-action đang dùng display:inline-flex !important nên Tailwind .hidden bị ghi đè. */
+        #quotePriceSection .compact-action.hidden,
+        #quotePriceSection .quote-primary-btn.compact-action.hidden,
+        #quotePriceSection .quote-secondary-btn.compact-action.hidden,
+        #quotePriceSection #btnRunQuoteLookup.hidden,
+        #quotePriceSection #btnClearQuoteLookup.hidden {
+            display: none !important;
+        }
         #quotePriceSection .quote-upload-backdrop {
             background: rgba(2,6,23,.60);
             backdrop-filter: blur(14px);
@@ -6415,6 +6562,1190 @@
             background: #64748b !important;
             box-shadow: 0 0 0 3px rgba(100,116,139,.18) !important;
         }
+
+        /* ===== HOTFIX V11 - menu gán hạng mục chuẩn đồng bộ hệ thống + tìm kiếm gợi ý ===== */
+        #quotePriceSection .mapping-standard-stack {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        #quotePriceSection .mapping-standard-stack .mapping-select,
+        #quotePriceSection .mapping-standard-stack .mapping-combobox {
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+        #quotePriceSection .mapping-combobox {
+            position: relative;
+            z-index: 20;
+        }
+        #quotePriceSection .mapping-combobox.is-open {
+            z-index: 999999;
+        }
+        #quotePriceSection .mapping-combobox-field {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        #quotePriceSection .mapping-search-input {
+            width: 100% !important;
+            height: 34px !important;
+            min-height: 34px !important;
+            border-radius: 14px !important;
+            border: 1px solid #dbe5f2 !important;
+            background: linear-gradient(180deg, #ffffff, #fbfdff) !important;
+            color: #0f172a !important;
+            box-shadow: 0 12px 28px -26px rgba(15, 23, 42, .46) !important;
+            padding: 0 39px 0 12px !important;
+            font-size: 11.5px !important;
+            font-weight: 900 !important;
+            outline: none !important;
+            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease !important;
+        }
+        #quotePriceSection .mapping-search-input::placeholder {
+            color: #94a3b8 !important;
+            font-weight: 850 !important;
+        }
+        #quotePriceSection .mapping-search-input:focus {
+            border-color: #60a5fa !important;
+            background: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(37,99,235,.09), 0 18px 34px -28px rgba(37,99,235,.72) !important;
+        }
+        #quotePriceSection .mapping-combobox-trigger {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            border: 0;
+            border-radius: 9px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .18s ease;
+        }
+        #quotePriceSection .mapping-combobox-trigger:hover {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        #quotePriceSection .mapping-combobox-trigger svg {
+            width: 14px;
+            height: 14px;
+            transition: transform .18s ease;
+        }
+        #quotePriceSection .mapping-combobox.is-open .mapping-combobox-trigger svg {
+            transform: rotate(180deg);
+        }
+        #quotePriceSection .mapping-suggest-menu {
+            position: absolute;
+            top: calc(100% + 7px);
+            left: 0;
+            right: 0;
+            z-index: 1000000;
+            max-height: 292px;
+            overflow: auto;
+            padding: 8px;
+            border-radius: 18px;
+            border: 1px solid rgba(219, 229, 242, .98);
+            background: rgba(255,255,255,.98);
+            box-shadow: 0 28px 60px -34px rgba(15, 23, 42, .58);
+            backdrop-filter: blur(16px);
+        }
+        #quotePriceSection .mapping-suggest-menu.hidden {
+            display: none !important;
+        }
+        #quotePriceSection .mapping-suggest-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 8px 9px;
+            color: #64748b;
+            font-size: 9px;
+            font-weight: 1000;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            border-bottom: 1px solid #edf2f7;
+            margin-bottom: 6px;
+        }
+        #quotePriceSection .mapping-suggest-head svg {
+            width: 13px;
+            height: 13px;
+            color: #2563eb;
+        }
+        #quotePriceSection .mapping-suggest-item {
+            width: 100%;
+            min-height: 34px;
+            padding: 8px 10px;
+            border: 0;
+            border-radius: 12px;
+            background: transparent;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 900;
+            line-height: 1.35;
+            transition: all .16s ease;
+        }
+        #quotePriceSection .mapping-suggest-item:hover,
+        #quotePriceSection .mapping-suggest-item.active {
+            background: linear-gradient(135deg, #eff6ff, #f8fafc);
+            color: #1d4ed8;
+            transform: translateX(2px);
+        }
+        #quotePriceSection .mapping-suggest-item.is-current {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        #quotePriceSection .mapping-suggest-item.is-clear {
+            color: #64748b;
+            background: #f8fafc;
+            border: 1px dashed #dbe5f2;
+        }
+        #quotePriceSection .mapping-suggest-item.is-custom {
+            background: #fff7ed;
+            color: #9a3412;
+        }
+        #quotePriceSection .mapping-suggest-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        #quotePriceSection .mapping-suggest-score {
+            flex: 0 0 auto;
+            padding: 4px 7px;
+            border-radius: 999px;
+            background: rgba(37,99,235,.10);
+            color: currentColor;
+            font-size: 8px;
+            font-weight: 1000;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+        }
+        #quotePriceSection .mapping-suggest-empty {
+            padding: 12px 10px;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 850;
+            line-height: 1.55;
+        }
+        #quotePriceSection .mapping-standard-stack .mapping-confidence {
+            margin-top: 0 !important;
+            flex: 0 0 auto;
+            white-space: nowrap;
+            align-self: center;
+            line-height: 1 !important;
+            height: 24px;
+            min-height: 24px;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8px !important;
+        }
+        #quotePriceSection .quote-mapping-table td.mapping-main-cell {
+            overflow: visible !important;
+        }
+        @media (max-width: 1180px) {
+            #quotePriceSection .mapping-standard-stack {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 5px;
+            }
+            #quotePriceSection .mapping-standard-stack .mapping-confidence {
+                justify-self: start;
+                height: 22px;
+                min-height: 22px;
+            }
+        }
+        html.dark #quotePriceSection .mapping-search-input {
+            background: #111827 !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+            box-shadow: 0 12px 28px -26px rgba(0,0,0,.85) !important;
+        }
+        html.dark #quotePriceSection .mapping-search-input:focus {
+            border-color: #60a5fa !important;
+            background: #0f172a !important;
+            box-shadow: 0 0 0 4px rgba(96,165,250,.12), 0 18px 34px -28px rgba(37,99,235,.85) !important;
+        }
+        html.dark #quotePriceSection .mapping-combobox-trigger {
+            background: rgba(37,99,235,.16);
+            color: #93c5fd;
+        }
+        html.dark #quotePriceSection .mapping-combobox-trigger:hover {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        html.dark #quotePriceSection .mapping-suggest-menu,
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal {
+            background: rgba(15,23,42,.98);
+            border-color: rgba(51,65,85,.95);
+            box-shadow: 0 28px 60px -34px rgba(0,0,0,.92);
+        }
+        html.dark #quotePriceSection .mapping-suggest-head,
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-head {
+            color: #94a3b8;
+            border-bottom-color: #334155;
+        }
+        html.dark #quotePriceSection .mapping-suggest-item,
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item {
+            color: #e2e8f0;
+        }
+        html.dark #quotePriceSection .mapping-suggest-item:hover,
+        html.dark #quotePriceSection .mapping-suggest-item.active,
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item:hover,
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.active {
+            background: rgba(37,99,235,.18);
+            color: #93c5fd;
+        }
+        html.dark #quotePriceSection .mapping-suggest-item.is-clear,
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.is-clear {
+            color: #94a3b8;
+            background: rgba(30,41,59,.62);
+            border-color: #334155;
+        }
+        html.dark #quotePriceSection .mapping-suggest-item.is-custom,
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.is-custom {
+            background: rgba(245,158,11,.14);
+            color: #fbbf24;
+        }
+
+
+        /* ===== HOTFIX V14 - đưa menu gán hạng mục ra body để thoát mọi khung overflow/stacking context ===== */
+        #quotePriceSection .mapping-suggest-menu,
+        body > .mapping-suggest-menu.quote-mapping-portal {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: auto;
+            width: min(420px, calc(100vw - 16px));
+            max-height: min(340px, calc(100vh - 24px));
+            z-index: 2147483647 !important;
+            overflow: auto !important;
+            overscroll-behavior: contain !important;
+            transform: translateZ(0);
+            isolation: isolate;
+        }
+        #quotePriceSection .mapping-suggest-menu[data-placement="top"],
+        body > .mapping-suggest-menu.quote-mapping-portal[data-placement="top"] {
+            box-shadow: 0 -24px 60px -34px rgba(15, 23, 42, .58), 0 18px 42px -30px rgba(15, 23, 42, .35) !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal.hidden {
+            display: none !important;
+        }
+        #quotePriceSection .mapping-combobox.is-open .mapping-search-input {
+            border-color: #60a5fa !important;
+            background: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(37,99,235,.09), 0 18px 34px -28px rgba(37,99,235,.72) !important;
+        }
+
+
+
+        /* ===== HOTFIX V15 - style portal menu khi đã đưa ra body, tránh icon/menu phóng to ===== */
+        body > .mapping-suggest-menu.quote-mapping-portal {
+            box-sizing: border-box !important;
+            padding: 8px !important;
+            border-radius: 18px !important;
+            border: 1px solid rgba(219, 229, 242, .98) !important;
+            background: rgba(255,255,255,.98) !important;
+            box-shadow: 0 32px 72px -36px rgba(15, 23, 42, .66), 0 12px 28px -24px rgba(37, 99, 235, .45) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            color: #1e293b !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal,
+        body > .mapping-suggest-menu.quote-mapping-portal * {
+            box-sizing: border-box !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-head {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            min-height: 30px !important;
+            padding: 7px 8px 9px !important;
+            margin: 0 0 6px 0 !important;
+            color: #64748b !important;
+            font-size: 9px !important;
+            line-height: 1.2 !important;
+            font-weight: 1000 !important;
+            letter-spacing: .09em !important;
+            text-transform: uppercase !important;
+            border-bottom: 1px solid #edf2f7 !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-head svg {
+            width: 13px !important;
+            height: 13px !important;
+            min-width: 13px !important;
+            max-width: 13px !important;
+            min-height: 13px !important;
+            max-height: 13px !important;
+            flex: 0 0 13px !important;
+            color: #2563eb !important;
+            display: block !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item {
+            width: 100% !important;
+            min-height: 34px !important;
+            padding: 8px 10px !important;
+            margin: 0 !important;
+            border: 0 !important;
+            border-radius: 12px !important;
+            background: transparent !important;
+            color: #1e293b !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 10px !important;
+            text-align: left !important;
+            cursor: pointer !important;
+            font-size: 11px !important;
+            line-height: 1.35 !important;
+            font-weight: 900 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            transition: all .16s ease !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item:hover,
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.active {
+            background: linear-gradient(135deg, #eff6ff, #f8fafc) !important;
+            color: #1d4ed8 !important;
+            transform: translateX(2px) !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.is-current {
+            background: #2563eb !important;
+            color: #ffffff !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.is-clear {
+            color: #64748b !important;
+            background: #f8fafc !important;
+            border: 1px dashed #dbe5f2 !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.is-custom {
+            background: #fff7ed !important;
+            color: #9a3412 !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-name {
+            min-width: 0 !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            display: block !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-score {
+            flex: 0 0 auto !important;
+            padding: 4px 7px !important;
+            border-radius: 999px !important;
+            background: rgba(37,99,235,.10) !important;
+            color: currentColor !important;
+            font-size: 8px !important;
+            line-height: 1 !important;
+            font-weight: 1000 !important;
+            letter-spacing: .06em !important;
+            text-transform: uppercase !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-empty {
+            padding: 12px 10px !important;
+            color: #94a3b8 !important;
+            font-size: 10px !important;
+            line-height: 1.55 !important;
+            font-weight: 850 !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal::-webkit-scrollbar {
+            width: 8px !important;
+        }
+        body > .mapping-suggest-menu.quote-mapping-portal::-webkit-scrollbar-thumb {
+            background: #cbd5e1 !important;
+            border-radius: 999px !important;
+        }
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal {
+            background: rgba(15,23,42,.98) !important;
+            border-color: rgba(51,65,85,.95) !important;
+            color: #e2e8f0 !important;
+            box-shadow: 0 32px 72px -36px rgba(0,0,0,.92) !important;
+        }
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-head {
+            color: #94a3b8 !important;
+            border-bottom-color: #334155 !important;
+        }
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item {
+            color: #e2e8f0 !important;
+        }
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item:hover,
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.active {
+            background: rgba(37,99,235,.18) !important;
+            color: #93c5fd !important;
+        }
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.is-clear {
+            color: #94a3b8 !important;
+            background: rgba(30,41,59,.62) !important;
+            border-color: #334155 !important;
+        }
+        html.dark body > .mapping-suggest-menu.quote-mapping-portal .mapping-suggest-item.is-custom {
+            background: rgba(245,158,11,.14) !important;
+            color: #fbbf24 !important;
+        }
+
+
+
+        /* ===== HOTFIX V12 - auto compact mapping table height =====
+           Thu gọn bảng gán tên phụ tùng khi ít dòng dữ liệu, không để vùng trắng lớn.
+           Khi nhiều dòng, bảng vẫn giữ cuộn nội bộ để thao tác ổn định. */
+        #quotePriceSection .exec-editor-panel {
+            min-height: 0 !important;
+            height: auto !important;
+        }
+        #quotePriceSection .quote-ocr-table-wrap {
+            flex: 0 0 auto !important;
+            min-height: 0 !important;
+            height: auto !important;
+            max-height: min(520px, calc(100vh - 230px)) !important;
+            overflow: auto !important;
+            overscroll-behavior: contain;
+        }
+        #quotePriceSection .quote-ocr-table-wrap .quote-ocr-table {
+            margin-bottom: 0 !important;
+        }
+        #quotePriceSection .quote-ocr-table-wrap:has(#quoteOcrTableBody tr:nth-child(-n+3):last-child) {
+            max-height: none !important;
+        }
+        #quotePriceSection .quote-ocr-table-wrap:has(#quoteOcrTableBody tr:nth-child(-n+5):last-child) {
+            min-height: 0 !important;
+        }
+        #quotePriceSection .quote-ocr-empty {
+            padding: 28px 18px !important;
+        }
+        @media (max-width: 1180px) {
+            #quotePriceSection .exec-editor-panel {
+                min-height: 0 !important;
+            }
+            #quotePriceSection .quote-ocr-table-wrap {
+                max-height: min(480px, calc(100vh - 210px)) !important;
+            }
+        }
+
+
+        /* ===== HOTFIX V16 - premium compact result summary cards =====
+           Làm lại vùng 3 chỉ số trong Kết quả đối chiếu báo giá: gọn hơn, rõ trạng thái hơn,
+           tránh cảm giác 3 ô gradient quá lớn khi chỉ có ít dòng báo giá. */
+        #quotePriceSection .exec-results-panel {
+            overflow: visible !important;
+            padding: 18px 18px 16px !important;
+        }
+        #quotePriceSection .exec-result-head {
+            align-items: center !important;
+            margin-bottom: 12px !important;
+            padding-bottom: 12px !important;
+            border-bottom: 1px solid rgba(219, 229, 242, .92) !important;
+        }
+        #quotePriceSection .exec-result-head .quote-secondary-btn {
+            height: 44px !important;
+            min-width: 92px !important;
+            border-radius: 16px !important;
+            background: linear-gradient(180deg, #ffffff, #f8fafc) !important;
+            color: #334155 !important;
+            box-shadow: 0 14px 28px -24px rgba(15,23,42,.38) !important;
+        }
+        #quotePriceSection .exec-stat-grid {
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 10px !important;
+            margin: 0 0 12px !important;
+            padding: 0 !important;
+        }
+        #quotePriceSection .exec-stat-card {
+            position: relative !important;
+            min-height: 76px !important;
+            padding: 13px 16px !important;
+            border-radius: 20px !important;
+            border: 1px solid rgba(219, 229, 242, .96) !important;
+            background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(248,250,252,.92)) !important;
+            box-shadow: 0 16px 36px -30px rgba(15,23,42,.38) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            gap: 7px !important;
+            isolation: isolate !important;
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease !important;
+        }
+        #quotePriceSection .exec-stat-card:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 22px 42px -32px rgba(15,23,42,.48) !important;
+        }
+        #quotePriceSection .exec-stat-card::before {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 auto 0 0 !important;
+            width: 4px !important;
+            border-radius: 20px 0 0 20px !important;
+            opacity: .95 !important;
+            z-index: -1 !important;
+        }
+        #quotePriceSection .exec-stat-card::after {
+            position: absolute !important;
+            right: 14px !important;
+            top: 50% !important;
+            bottom: auto !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 15px !important;
+            transform: translateY(-50%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 13px !important;
+            line-height: 1 !important;
+            font-weight: 1000 !important;
+            letter-spacing: -.04em !important;
+            opacity: 1 !important;
+            z-index: 0 !important;
+        }
+        #quotePriceSection .exec-stat-card:nth-child(1) {
+            background: radial-gradient(circle at 100% 50%, rgba(37,99,235,.10), transparent 34%), linear-gradient(135deg, #ffffff, #f8fbff) !important;
+        }
+        #quotePriceSection .exec-stat-card:nth-child(1)::before { background: linear-gradient(180deg, #2563eb, #38bdf8) !important; }
+        #quotePriceSection .exec-stat-card:nth-child(1)::after {
+            content: "OCR" !important;
+            color: #1d4ed8 !important;
+            background: #eff6ff !important;
+            border: 1px solid #dbeafe !important;
+        }
+        #quotePriceSection .exec-stat-card:nth-child(2) {
+            background: radial-gradient(circle at 100% 50%, rgba(16,185,129,.12), transparent 34%), linear-gradient(135deg, #ffffff, #f8fffc) !important;
+        }
+        #quotePriceSection .exec-stat-card:nth-child(2)::before { background: linear-gradient(180deg, #059669, #34d399) !important; }
+        #quotePriceSection .exec-stat-card:nth-child(2)::after {
+            content: "✓" !important;
+            color: #047857 !important;
+            background: #dcfce7 !important;
+            border: 1px solid #bbf7d0 !important;
+            font-size: 18px !important;
+        }
+        #quotePriceSection .exec-stat-card:nth-child(3) {
+            background: radial-gradient(circle at 100% 50%, rgba(245,158,11,.12), transparent 34%), linear-gradient(135deg, #ffffff, #fffdfa) !important;
+        }
+        #quotePriceSection .exec-stat-card:nth-child(3)::before { background: linear-gradient(180deg, #f59e0b, #fb7185) !important; }
+        #quotePriceSection .exec-stat-card:nth-child(3)::after {
+            content: "!" !important;
+            color: #b45309 !important;
+            background: #fef3c7 !important;
+            border: 1px solid #fde68a !important;
+            font-size: 18px !important;
+        }
+        #quotePriceSection .exec-stat-label {
+            position: relative !important;
+            z-index: 1 !important;
+            max-width: calc(100% - 54px) !important;
+            color: #64748b !important;
+            font-size: 8.5px !important;
+            line-height: 1.2 !important;
+            font-weight: 1000 !important;
+            letter-spacing: .15em !important;
+            text-transform: uppercase !important;
+            margin: 0 !important;
+        }
+        #quotePriceSection .exec-stat-value {
+            position: relative !important;
+            z-index: 1 !important;
+            max-width: calc(100% - 54px) !important;
+            margin: 0 !important;
+            color: #020617 !important;
+            font-size: 30px !important;
+            line-height: .9 !important;
+            font-weight: 1000 !important;
+            letter-spacing: -.055em !important;
+        }
+        #quotePriceSection #quotePartsList {
+            margin-top: 2px !important;
+        }
+        html.dark #quotePriceSection .exec-result-head {
+            border-bottom-color: rgba(51,65,85,.95) !important;
+        }
+        html.dark #quotePriceSection .exec-stat-card {
+            background: linear-gradient(135deg, rgba(15,23,42,.96), rgba(30,41,59,.80)) !important;
+            border-color: rgba(51,65,85,.95) !important;
+            box-shadow: 0 18px 38px -30px rgba(0,0,0,.9) !important;
+        }
+        html.dark #quotePriceSection .exec-stat-label { color: #94a3b8 !important; }
+        html.dark #quotePriceSection .exec-stat-value { color: #f8fafc !important; }
+        html.dark #quotePriceSection .exec-stat-card:nth-child(1)::after {
+            color: #93c5fd !important;
+            background: rgba(37,99,235,.18) !important;
+            border-color: rgba(96,165,250,.28) !important;
+        }
+        html.dark #quotePriceSection .exec-stat-card:nth-child(2)::after {
+            color: #86efac !important;
+            background: rgba(16,185,129,.16) !important;
+            border-color: rgba(52,211,153,.28) !important;
+        }
+        html.dark #quotePriceSection .exec-stat-card:nth-child(3)::after {
+            color: #fbbf24 !important;
+            background: rgba(245,158,11,.16) !important;
+            border-color: rgba(251,191,36,.28) !important;
+        }
+        @media (max-width: 900px) {
+            #quotePriceSection .exec-stat-grid {
+                grid-template-columns: 1fr !important;
+            }
+            #quotePriceSection .exec-stat-card {
+                min-height: 70px !important;
+            }
+            #quotePriceSection .exec-result-head {
+                align-items: flex-start !important;
+                flex-direction: column !important;
+            }
+            #quotePriceSection .exec-result-head .quote-secondary-btn {
+                width: 100% !important;
+            }
+        }
+
+
+
+
+        /* ===== HOTFIX V17 - result panel polish + clickable filters =====
+           Sửa đường accent trên panel kết quả và biến 3 ô thống kê thành bộ lọc nhanh.
+           Khi bấm Khớp kho giá / Cần kiểm tra, danh sách + bảng kết quả sẽ lọc theo đúng nhóm. */
+        #quotePriceSection .exec-results-panel {
+            position: relative !important;
+            overflow: hidden !important;
+            padding-top: 20px !important;
+        }
+        #quotePriceSection .exec-results-panel::before {
+            display: block !important;
+            content: "" !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 3px !important;
+            border-radius: 28px 28px 0 0 !important;
+            background: linear-gradient(90deg, #2563eb 0%, #06b6d4 50%, #10b981 100%) !important;
+            opacity: 1 !important;
+            z-index: 0 !important;
+            pointer-events: none !important;
+        }
+        #quotePriceSection .exec-results-panel > * {
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        #quotePriceSection .quote-stat-filter-card {
+            cursor: pointer !important;
+            user-select: none !important;
+            outline: none !important;
+        }
+        #quotePriceSection .quote-stat-filter-card:focus-visible {
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12), 0 20px 42px -32px rgba(15,23,42,.50) !important;
+        }
+        #quotePriceSection .quote-stat-filter-card.quote-stat-filter-active {
+            transform: translateY(-1px) !important;
+            border-color: rgba(37, 99, 235, .42) !important;
+            box-shadow: 0 22px 46px -32px rgba(37, 99, 235, .62) !important;
+        }
+        #quotePriceSection .quote-stat-filter-card.quote-stat-filter-active::after {
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.78), 0 12px 24px -18px currentColor !important;
+        }
+        #quotePriceSection .exec-stat-hint {
+            position: relative !important;
+            z-index: 1 !important;
+            max-width: calc(100% - 54px) !important;
+            font-size: 9px !important;
+            line-height: 1 !important;
+            font-weight: 900 !important;
+            color: #94a3b8 !important;
+            text-transform: uppercase !important;
+            letter-spacing: .08em !important;
+            margin-top: -2px !important;
+        }
+        #quotePriceSection .quote-stat-filter-active .exec-stat-hint {
+            color: #2563eb !important;
+        }
+        #quotePriceSection .quote-filter-results-head {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 10px !important;
+            margin: 2px 0 10px !important;
+            padding: 10px 12px !important;
+            border-radius: 16px !important;
+            border: 1px solid rgba(219, 234, 254, .95) !important;
+            background: linear-gradient(135deg, rgba(239,246,255,.92), rgba(248,250,252,.96)) !important;
+        }
+        #quotePriceSection .quote-filter-results-title {
+            min-width: 0 !important;
+            color: #0f172a !important;
+            font-size: 12px !important;
+            line-height: 1.25 !important;
+            font-weight: 1000 !important;
+            letter-spacing: -.02em !important;
+            text-transform: uppercase !important;
+        }
+        #quotePriceSection .quote-filter-results-note {
+            margin-top: 3px !important;
+            color: #64748b !important;
+            font-size: 10px !important;
+            line-height: 1.35 !important;
+            font-weight: 800 !important;
+        }
+        #quotePriceSection .quote-filter-clear-btn {
+            height: 30px !important;
+            padding: 0 10px !important;
+            border-radius: 999px !important;
+            border: 1px solid #bfdbfe !important;
+            background: #ffffff !important;
+            color: #2563eb !important;
+            font-size: 9px !important;
+            font-weight: 1000 !important;
+            text-transform: uppercase !important;
+            letter-spacing: .08em !important;
+            cursor: pointer !important;
+            transition: all .18s ease !important;
+            white-space: nowrap !important;
+        }
+        #quotePriceSection .quote-filter-clear-btn:hover {
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+            color: #ffffff !important;
+        }
+        #quotePriceSection .quote-filtered-list {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+            gap: 8px !important;
+            margin: 0 0 12px !important;
+        }
+        #quotePriceSection .quote-filtered-item {
+            position: relative !important;
+            overflow: hidden !important;
+            border-radius: 16px !important;
+            border: 1px solid rgba(226,232,240,.95) !important;
+            background: rgba(255,255,255,.92) !important;
+            padding: 11px 12px !important;
+            box-shadow: 0 14px 30px -26px rgba(15,23,42,.34) !important;
+        }
+        #quotePriceSection .quote-filtered-item::before {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 auto 0 0 !important;
+            width: 3px !important;
+            background: #94a3b8 !important;
+        }
+        #quotePriceSection .quote-filtered-item.is-matched::before { background: linear-gradient(180deg, #059669, #34d399) !important; }
+        #quotePriceSection .quote-filtered-item.is-warning::before { background: linear-gradient(180deg, #f59e0b, #ef4444) !important; }
+        #quotePriceSection .quote-filtered-name {
+            color: #0f172a !important;
+            font-size: 12px !important;
+            line-height: 1.32 !important;
+            font-weight: 1000 !important;
+            padding-left: 4px !important;
+        }
+        #quotePriceSection .quote-filtered-meta {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            margin-top: 7px !important;
+            padding-left: 4px !important;
+            color: #64748b !important;
+            font-size: 9.5px !important;
+            line-height: 1.25 !important;
+            font-weight: 850 !important;
+        }
+        #quotePriceSection .quote-filtered-actions {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            margin-top: 9px !important;
+            padding-left: 4px !important;
+        }
+        #quotePriceSection .quote-filtered-actions button {
+            height: 28px !important;
+            padding: 0 9px !important;
+            border-radius: 999px !important;
+            border: 1px solid #dbeafe !important;
+            background: #eff6ff !important;
+            color: #1d4ed8 !important;
+            font-size: 9px !important;
+            font-weight: 1000 !important;
+            text-transform: uppercase !important;
+            letter-spacing: .06em !important;
+            cursor: pointer !important;
+        }
+        #quotePriceSection .quote-filtered-actions button:hover {
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+            color: #ffffff !important;
+        }
+        #quotePriceSection .quote-filter-empty {
+            border: 1px dashed #cbd5e1 !important;
+            border-radius: 18px !important;
+            padding: 18px !important;
+            text-align: center !important;
+            color: #94a3b8 !important;
+            font-size: 11px !important;
+            font-weight: 900 !important;
+            text-transform: uppercase !important;
+            letter-spacing: .12em !important;
+            background: rgba(248,250,252,.74) !important;
+            margin-bottom: 12px !important;
+        }
+        html.dark #quotePriceSection .quote-filter-results-head {
+            background: linear-gradient(135deg, rgba(30,41,59,.92), rgba(15,23,42,.96)) !important;
+            border-color: rgba(51,65,85,.95) !important;
+        }
+        html.dark #quotePriceSection .quote-filter-results-title,
+        html.dark #quotePriceSection .quote-filtered-name { color: #f8fafc !important; }
+        html.dark #quotePriceSection .quote-filter-results-note,
+        html.dark #quotePriceSection .quote-filtered-meta,
+        html.dark #quotePriceSection .exec-stat-hint { color: #94a3b8 !important; }
+        html.dark #quotePriceSection .quote-filtered-item,
+        html.dark #quotePriceSection .quote-filter-clear-btn {
+            background: rgba(15,23,42,.86) !important;
+            border-color: rgba(51,65,85,.95) !important;
+        }
+        html.dark #quotePriceSection .quote-filter-empty {
+            background: rgba(15,23,42,.70) !important;
+            border-color: #334155 !important;
+            color: #64748b !important;
+        }
+        @media (max-width: 720px) {
+            #quotePriceSection .quote-filter-results-head {
+                align-items: flex-start !important;
+                flex-direction: column !important;
+            }
+            #quotePriceSection .quote-filter-clear-btn { width: 100% !important; }
+        }
+
+
+        /* ===== HOTFIX V18 - simplify result area, single source of truth =====
+           Giao diện kết quả trước đó bị rối vì vừa có 3 card lớn, vừa có danh sách phụ tùng dạng card,
+           vừa có bảng chi tiết. Bản này chuyển 3 số liệu thành bộ lọc dạng segment nhỏ và dùng bảng
+           kết quả bên dưới làm nơi hiển thị chính khi bấm Khớp kho giá / Cần kiểm tra. */
+        #quotePriceSection .exec-results-panel {
+            padding: 16px 16px 18px !important;
+            overflow: hidden !important;
+            border-radius: 28px !important;
+            background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.94)) !important;
+        }
+        #quotePriceSection .exec-results-panel::before {
+            height: 3px !important;
+            opacity: .95 !important;
+        }
+        #quotePriceSection .exec-result-head {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) auto !important;
+            gap: 14px !important;
+            align-items: center !important;
+            margin: 0 0 10px !important;
+            padding: 0 0 10px !important;
+        }
+        #quotePriceSection .exec-result-head .exec-panel-title {
+            font-size: 18px !important;
+            line-height: 1.18 !important;
+        }
+        #quotePriceSection .exec-result-head .exec-panel-note {
+            margin-top: 4px !important;
+            font-size: 11px !important;
+            line-height: 1.45 !important;
+        }
+        #quotePriceSection .exec-stat-grid {
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: wrap !important;
+            width: fit-content !important;
+            max-width: 100% !important;
+            gap: 6px !important;
+            margin: 0 0 10px !important;
+            padding: 6px !important;
+            border-radius: 999px !important;
+            border: 1px solid rgba(219,229,242,.95) !important;
+            background: rgba(248,250,252,.90) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.80) !important;
+        }
+        #quotePriceSection .exec-stat-card {
+            min-height: 38px !important;
+            height: 38px !important;
+            min-width: 0 !important;
+            padding: 0 13px !important;
+            border-radius: 999px !important;
+            border: 1px solid transparent !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            display: inline-flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            transform: none !important;
+            transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease !important;
+        }
+        #quotePriceSection .exec-stat-card:hover {
+            transform: none !important;
+            background: #ffffff !important;
+            border-color: rgba(191,219,254,.95) !important;
+            box-shadow: 0 10px 22px -20px rgba(37,99,235,.52) !important;
+        }
+        #quotePriceSection .exec-stat-card::before,
+        #quotePriceSection .exec-stat-card::after {
+            display: none !important;
+            content: none !important;
+        }
+        #quotePriceSection .exec-stat-label,
+        #quotePriceSection .exec-stat-value {
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            position: static !important;
+            z-index: auto !important;
+        }
+        #quotePriceSection .exec-stat-label {
+            order: 2 !important;
+            font-size: 10px !important;
+            line-height: 1 !important;
+            font-weight: 1000 !important;
+            letter-spacing: .08em !important;
+            color: #64748b !important;
+            white-space: nowrap !important;
+        }
+        #quotePriceSection .exec-stat-value {
+            order: 1 !important;
+            min-width: 22px !important;
+            height: 22px !important;
+            padding: 0 7px !important;
+            border-radius: 999px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 14px !important;
+            line-height: 1 !important;
+            font-weight: 1000 !important;
+            letter-spacing: -.02em !important;
+            color: #0f172a !important;
+            background: #ffffff !important;
+            border: 1px solid rgba(226,232,240,.95) !important;
+        }
+        #quotePriceSection .exec-stat-hint {
+            display: none !important;
+        }
+        #quotePriceSection .quote-stat-filter-card.quote-stat-filter-active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+            border-color: #2563eb !important;
+            color: #ffffff !important;
+            box-shadow: 0 14px 28px -20px rgba(37,99,235,.78) !important;
+        }
+        #quotePriceSection .quote-stat-filter-active .exec-stat-label {
+            color: #ffffff !important;
+        }
+        #quotePriceSection .quote-stat-filter-active .exec-stat-value {
+            color: #1d4ed8 !important;
+            background: #ffffff !important;
+            border-color: rgba(255,255,255,.62) !important;
+        }
+        #quotePriceSection #quotePartsList {
+            margin: 0 0 8px !important;
+        }
+        #quotePriceSection .quote-results-focusbar,
+        #quotePriceSection .quote-result-ready-card,
+        #quotePriceSection .quote-result-empty-state {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 12px !important;
+            margin: 0 0 8px !important;
+            padding: 10px 12px !important;
+            border-radius: 18px !important;
+            border: 1px solid rgba(219,229,242,.95) !important;
+            background: rgba(255,255,255,.78) !important;
+            box-shadow: 0 12px 28px -26px rgba(15,23,42,.35) !important;
+        }
+        #quotePriceSection .quote-results-focus-main {
+            min-width: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        #quotePriceSection .quote-results-focus-dot {
+            width: 10px !important;
+            height: 10px !important;
+            border-radius: 999px !important;
+            background: #2563eb !important;
+            box-shadow: 0 0 0 5px rgba(37,99,235,.10) !important;
+            flex: 0 0 auto !important;
+        }
+        #quotePriceSection .quote-results-focusbar.is-matched .quote-results-focus-dot {
+            background: #059669 !important;
+            box-shadow: 0 0 0 5px rgba(16,185,129,.12) !important;
+        }
+        #quotePriceSection .quote-results-focusbar.is-warning .quote-results-focus-dot {
+            background: #f59e0b !important;
+            box-shadow: 0 0 0 5px rgba(245,158,11,.14) !important;
+        }
+        #quotePriceSection .quote-results-focus-title,
+        #quotePriceSection .quote-result-ready-title,
+        #quotePriceSection .quote-result-empty-state strong {
+            color: #0f172a !important;
+            font-size: 12px !important;
+            line-height: 1.2 !important;
+            font-weight: 1000 !important;
+            letter-spacing: -.01em !important;
+            text-transform: uppercase !important;
+        }
+        #quotePriceSection .quote-results-focus-note,
+        #quotePriceSection .quote-result-ready-note,
+        #quotePriceSection .quote-result-empty-state span {
+            display: block !important;
+            margin-top: 3px !important;
+            color: #64748b !important;
+            font-size: 10px !important;
+            line-height: 1.35 !important;
+            font-weight: 800 !important;
+        }
+        #quotePriceSection .quote-filter-clear-btn {
+            height: 30px !important;
+            padding: 0 11px !important;
+            flex: 0 0 auto !important;
+        }
+        #quotePriceSection .quote-result-mini-chip-row {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            flex-wrap: wrap !important;
+            gap: 5px !important;
+            max-width: 58% !important;
+        }
+        #quotePriceSection .quote-result-mini-chip {
+            max-width: 180px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            height: 24px !important;
+            padding: 0 9px !important;
+            border-radius: 999px !important;
+            background: #f1f5f9 !important;
+            color: #475569 !important;
+            font-size: 9px !important;
+            font-weight: 900 !important;
+        }
+        #quotePriceSection .quote-result-mini-chip.is-more {
+            color: #2563eb !important;
+            background: #eff6ff !important;
+        }
+        #quotePriceSection .quote-result-empty-icon {
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 15px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background: #eff6ff !important;
+            color: #1d4ed8 !important;
+            font-size: 10px !important;
+            font-weight: 1000 !important;
+            flex: 0 0 auto !important;
+        }
+        #quotePriceSection .quote-result-table-wrap {
+            margin-top: 8px !important;
+            border-radius: 20px !important;
+            overflow: auto !important;
+            border: 1px solid rgba(219,229,242,.95) !important;
+            background: #ffffff !important;
+        }
+        #quotePriceSection .quote-result-table th {
+            padding: 10px 12px !important;
+            font-size: 9px !important;
+            letter-spacing: .12em !important;
+        }
+        #quotePriceSection .quote-result-table td {
+            padding: 12px !important;
+            vertical-align: top !important;
+        }
+        #quotePriceSection .quote-candidate-list,
+        #quotePriceSection .quote-price-bucket-list {
+            margin-top: 8px !important;
+            gap: 6px !important;
+        }
+        #quotePriceSection .quote-candidate-item,
+        #quotePriceSection .quote-price-bucket {
+            border-radius: 14px !important;
+            padding: 9px !important;
+        }
+        html.dark #quotePriceSection .exec-results-panel {
+            background: linear-gradient(180deg, rgba(15,23,42,.96), rgba(2,6,23,.92)) !important;
+        }
+        html.dark #quotePriceSection .exec-stat-grid {
+            background: rgba(15,23,42,.74) !important;
+            border-color: rgba(51,65,85,.95) !important;
+        }
+        html.dark #quotePriceSection .exec-stat-card:hover {
+            background: rgba(30,41,59,.86) !important;
+            border-color: rgba(96,165,250,.30) !important;
+        }
+        html.dark #quotePriceSection .exec-stat-label { color: #94a3b8 !important; }
+        html.dark #quotePriceSection .exec-stat-value {
+            color: #f8fafc !important;
+            background: rgba(30,41,59,.92) !important;
+            border-color: rgba(51,65,85,.95) !important;
+        }
+        html.dark #quotePriceSection .quote-stat-filter-active .exec-stat-label { color: #ffffff !important; }
+        html.dark #quotePriceSection .quote-stat-filter-active .exec-stat-value {
+            color: #1d4ed8 !important;
+            background: #ffffff !important;
+            border-color: rgba(255,255,255,.66) !important;
+        }
+        html.dark #quotePriceSection .quote-results-focusbar,
+        html.dark #quotePriceSection .quote-result-ready-card,
+        html.dark #quotePriceSection .quote-result-empty-state,
+        html.dark #quotePriceSection .quote-result-table-wrap {
+            background: rgba(15,23,42,.78) !important;
+            border-color: rgba(51,65,85,.95) !important;
+        }
+        html.dark #quotePriceSection .quote-results-focus-title,
+        html.dark #quotePriceSection .quote-result-ready-title,
+        html.dark #quotePriceSection .quote-result-empty-state strong { color: #f8fafc !important; }
+        html.dark #quotePriceSection .quote-results-focus-note,
+        html.dark #quotePriceSection .quote-result-ready-note,
+        html.dark #quotePriceSection .quote-result-empty-state span { color: #94a3b8 !important; }
+        html.dark #quotePriceSection .quote-result-mini-chip {
+            background: rgba(30,41,59,.92) !important;
+            color: #cbd5e1 !important;
+        }
+        @media (max-width: 900px) {
+            #quotePriceSection .exec-result-head {
+                grid-template-columns: 1fr !important;
+            }
+            #quotePriceSection .exec-result-head .quote-secondary-btn {
+                width: 100% !important;
+            }
+            #quotePriceSection .exec-stat-grid {
+                width: 100% !important;
+                border-radius: 20px !important;
+            }
+            #quotePriceSection .exec-stat-card {
+                flex: 1 1 100% !important;
+            }
+            #quotePriceSection .quote-results-focusbar,
+            #quotePriceSection .quote-result-ready-card,
+            #quotePriceSection .quote-result-empty-state {
+                align-items: flex-start !important;
+                flex-direction: column !important;
+            }
+            #quotePriceSection .quote-result-mini-chip-row {
+                max-width: 100% !important;
+                justify-content: flex-start !important;
+            }
+        }
+
 </style>
 </head>
 <body class="bg-slate-50 text-slate-700 min-h-screen transition-colors duration-300">
@@ -7066,11 +8397,11 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 7h16M4 12h10m-6 5h12"/></svg>
                                 Xử lý & gán tên chuẩn
                             </button>
-                            <button id="btnRunQuoteLookup" type="button" onclick="runQuotePriceLookup()" class="quote-primary-btn compact-action" disabled>
+                            <button id="btnRunQuoteLookup" type="button" onclick="runQuotePriceLookup()" class="quote-primary-btn compact-action hidden" disabled>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 Tra kho giá
                             </button>
-                            <button type="button" onclick="clearQuotePriceLookup()" class="quote-secondary-btn compact-action">Làm mới</button>
+                            <button type="button" id="btnClearQuoteLookup" onclick="clearQuotePriceLookup()" class="quote-secondary-btn compact-action hidden">Làm mới</button>
                         </div>
                     </div>
 
@@ -7094,6 +8425,39 @@
                                     <div class="quote-source-section-title">Nguồn dữ liệu cần đọc</div>
                                     <div class="quote-source-section-note">Tải <b>báo giá gara</b> và <b>BB giám định</b>. Hệ thống đọc song song, lấy tên phụ tùng từ báo giá rồi gán với hạng mục chuẩn trong biên bản giám định trước khi tra kho.</div>
                                 </div>
+
+                                <div class="quote-ocr-mode-panel" aria-label="Chọn phạm vi OCR báo giá">
+                                    <div class="quote-ocr-mode-head">
+                                        <div>
+                                            <div class="quote-ocr-mode-kicker">OCR scope</div>
+                                            <div class="quote-ocr-mode-title">Phạm vi lấy dữ liệu báo giá</div>
+                                        </div>
+                                        <div id="quoteOcrModeNote" class="quote-ocr-mode-note">Chỉ lấy các dòng phụ tùng/vật tư cần tra kho giá. Công sơn, gò, tháo lắp và tổng cộng sẽ được bỏ qua.</div>
+                                    </div>
+                                    <div class="quote-ocr-mode-grid">
+                                        <label id="quoteOcrModePartsCard" class="quote-ocr-mode-option active">
+                                            <input type="radio" name="quoteOcrMode" value="parts" checked onchange="setQuoteOcrMode('parts')">
+                                            <span class="quote-ocr-mode-icon">
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M9 7h6m-7 4h8m-6 4h4M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
+                                            </span>
+                                            <span>
+                                                <span class="quote-ocr-mode-name">Chỉ lấy phụ tùng</span>
+                                                <span class="quote-ocr-mode-desc">Dùng khi cần tra kho nhanh, chỉ giữ dòng phụ tùng/vật tư thay thế.</span>
+                                            </span>
+                                        </label>
+                                        <label id="quoteOcrModeFullCard" class="quote-ocr-mode-option">
+                                            <input type="radio" name="quoteOcrMode" value="full" onchange="setQuoteOcrMode('full')">
+                                            <span class="quote-ocr-mode-icon">
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M4 6h16M4 10h16M4 14h10M4 18h7"/></svg>
+                                            </span>
+                                            <span>
+                                                <span class="quote-ocr-mode-name">Lấy toàn bộ báo giá</span>
+                                                <span class="quote-ocr-mode-desc">Giữ cả công sửa chữa, sơn/gò/tháo lắp để kiểm tra đầy đủ; chỉ phụ tùng mới được đánh dấu TRA KHO.</span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
                                 <div class="quote-modal-source-grid">
                                     <div class="quote-modal-source-card quote-source-gara">
                                         <input id="quoteFileInput" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.xlsx,.xls,.csv,.txt" class="hidden" onchange="handleQuoteFileUpload(event)">
@@ -7199,10 +8563,22 @@
                         </div>
                         <button type="button" onclick="exportQuotePriceResultsCSV()" class="quote-secondary-btn !h-10 !px-4">Xuất CSV</button>
                     </div>
-                    <div class="exec-stat-grid">
-                        <div class="exec-stat-card"><div class="exec-stat-label">Phụ tùng OCR</div><div id="quotePartCount" class="exec-stat-value">0</div></div>
-                        <div class="exec-stat-card"><div class="exec-stat-label">Khớp kho giá</div><div id="quoteMatchedCount" class="exec-stat-value">0</div></div>
-                        <div class="exec-stat-card"><div class="exec-stat-label">Cần kiểm tra</div><div id="quoteWarningCount" class="exec-stat-value">0</div></div>
+                    <div class="exec-stat-grid" aria-label="Bộ lọc nhanh kết quả đối chiếu">
+                        <div class="exec-stat-card quote-stat-filter-card quote-stat-filter-active" data-quote-filter="all" role="button" tabindex="0" onclick="setQuoteResultFilter('all')" onkeydown="handleQuoteStatKey(event, 'all')" title="Hiển thị toàn bộ phụ tùng OCR">
+                            <div class="exec-stat-label">Phụ tùng OCR</div>
+                            <div id="quotePartCount" class="exec-stat-value">0</div>
+                            <div class="exec-stat-hint">Tất cả</div>
+                        </div>
+                        <div class="exec-stat-card quote-stat-filter-card" data-quote-filter="matched" role="button" tabindex="0" onclick="setQuoteResultFilter('matched')" onkeydown="handleQuoteStatKey(event, 'matched')" title="Chỉ hiển thị phụ tùng đã khớp kho giá">
+                            <div class="exec-stat-label">Khớp kho giá</div>
+                            <div id="quoteMatchedCount" class="exec-stat-value">0</div>
+                            <div class="exec-stat-hint">Bấm để lọc</div>
+                        </div>
+                        <div class="exec-stat-card quote-stat-filter-card" data-quote-filter="warning" role="button" tabindex="0" onclick="setQuoteResultFilter('warning')" onkeydown="handleQuoteStatKey(event, 'warning')" title="Chỉ hiển thị phụ tùng cần kiểm tra">
+                            <div class="exec-stat-label">Cần kiểm tra</div>
+                            <div id="quoteWarningCount" class="exec-stat-value">0</div>
+                            <div class="exec-stat-hint">Bấm để lọc</div>
+                        </div>
                     </div>
                     <div id="quotePartsList">
                         <div class="text-center text-[11px] font-bold text-slate-400 italic py-8">Chưa có phụ tùng được trích xuất</div>
@@ -8828,13 +10204,73 @@
         let CAY_GIA_PHA = {}, NAM_ALL = [], MASTER_DATA = [], CURRENT_PAGE = 1, ITEMS_PER_PAGE = 10;
         let EXACT_SOURCE_CONTEXT = null;
         let PRICE_ANALYSIS = null;
-        let QUOTE_SELECTED_FILE = null, APPRAISAL_SELECTED_FILE = null, APPRAISAL_STANDARD_ITEMS = [], APPRAISAL_LAST_DATA = null, QUOTE_OCR_ROWS = [], QUOTE_EXTRACTED_PARTS = [], QUOTE_RESULTS = [];
+        let QUOTE_SELECTED_FILE = null, APPRAISAL_SELECTED_FILE = null, APPRAISAL_STANDARD_ITEMS = [], APPRAISAL_LAST_DATA = null, QUOTE_OCR_ROWS = [], QUOTE_EXTRACTED_PARTS = [], QUOTE_RESULTS = [], QUOTE_RESULT_VIEW_FILTER = 'all';
         let QUOTE_LAST_GEMINI_JSON = null;
         const GEMINI_DEFAULT_API_KEY = '';
         const GEMINI_QUOTE_MODEL = 'gemini-2.5-flash';
         const GEMINI_FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
         const OCRSPACE_DEFAULT_LANGUAGE = 'vnm';
         const OCRSPACE_DEFAULT_ENGINE = '2';
+        const QUOTE_OCR_MODE_STORAGE_KEY = 'tascoQuoteOcrMode';
+        let QUOTE_OCR_MODE = (() => {
+            try { return localStorage.getItem(QUOTE_OCR_MODE_STORAGE_KEY) === 'full' ? 'full' : 'parts'; }
+            catch (_) { return 'parts'; }
+        })();
+
+
+        function getQuoteOcrMode() {
+            const selected = document.querySelector('input[name="quoteOcrMode"]:checked')?.value;
+            return selected === 'full' ? 'full' : 'parts';
+        }
+
+        function getQuoteOcrModeLabel(mode = getQuoteOcrMode()) {
+            return mode === 'full' ? 'lấy toàn bộ báo giá' : 'chỉ lấy phụ tùng';
+        }
+
+        function updateQuoteOcrModeUi() {
+            const mode = QUOTE_OCR_MODE === 'full' ? 'full' : 'parts';
+            const partsInput = document.querySelector('input[name="quoteOcrMode"][value="parts"]');
+            const fullInput = document.querySelector('input[name="quoteOcrMode"][value="full"]');
+            if (partsInput) partsInput.checked = mode === 'parts';
+            if (fullInput) fullInput.checked = mode === 'full';
+            document.getElementById('quoteOcrModePartsCard')?.classList.toggle('active', mode === 'parts');
+            document.getElementById('quoteOcrModeFullCard')?.classList.toggle('active', mode === 'full');
+            const note = document.getElementById('quoteOcrModeNote');
+            if (note) {
+                note.innerHTML = mode === 'full'
+                    ? 'Lấy toàn bộ dòng hạng mục trong báo giá để kiểm tra đầy đủ. Các dòng công/sơn/gò/tháo lắp được giữ lại nhưng mặc định <b>BỎ QUA</b> khi tra kho.'
+                    : 'Chỉ lấy các dòng phụ tùng/vật tư cần tra kho giá. Công sơn, gò, tháo lắp và tổng cộng sẽ được bỏ qua.';
+            }
+        }
+
+        window.setQuoteOcrMode = function(mode) {
+            QUOTE_OCR_MODE = mode === 'full' ? 'full' : 'parts';
+            try { localStorage.setItem(QUOTE_OCR_MODE_STORAGE_KEY, QUOTE_OCR_MODE); } catch (_) {}
+            updateQuoteOcrModeUi();
+            if (QUOTE_SELECTED_FILE && !QUOTE_OCR_ROWS.length) {
+                setQuoteStatus(`Đã chọn báo giá: ${QUOTE_SELECTED_FILE.name}. Chế độ OCR: ${getQuoteOcrModeLabel(QUOTE_OCR_MODE)}. Bấm “Xử lý & gán tên chuẩn” để bắt đầu.`, 0);
+            }
+        };
+
+        function syncQuoteActionButtons() {
+            const lookupBtn = document.getElementById('btnRunQuoteLookup');
+            const clearBtn = document.getElementById('btnClearQuoteLookup');
+            const hasLookupData = Array.isArray(QUOTE_EXTRACTED_PARTS) && QUOTE_EXTRACTED_PARTS.length > 0;
+            const hasProcessedData = hasLookupData
+                || (Array.isArray(QUOTE_OCR_ROWS) && QUOTE_OCR_ROWS.length > 0)
+                || (Array.isArray(QUOTE_RESULTS) && QUOTE_RESULTS.length > 0)
+                || (Array.isArray(APPRAISAL_STANDARD_ITEMS) && APPRAISAL_STANDARD_ITEMS.length > 0);
+
+            if (lookupBtn) {
+                lookupBtn.classList.toggle('hidden', !hasLookupData);
+                lookupBtn.disabled = !hasLookupData;
+                lookupBtn.style.display = hasLookupData ? '' : 'none';
+            }
+            if (clearBtn) {
+                clearBtn.classList.toggle('hidden', !hasProcessedData);
+                clearBtn.style.display = hasProcessedData ? '' : 'none';
+            }
+        }
 
         async function loadFilters() {
             try {
@@ -10027,11 +11463,12 @@
         }
 
         function updateQuoteStats() {
-            const matched = QUOTE_RESULTS.filter(r => r.best && r.best.score >= 0.30).length;
-            const warnings = QUOTE_RESULTS.filter(r => !r.best || r.best.score < 0.45 || r.status === 'danger' || r.status === 'watch').length;
+            const matched = QUOTE_RESULTS.filter(isQuoteResultMatchedRow).length;
+            const warnings = QUOTE_RESULTS.filter(isQuoteResultWarningRow).length;
             updateTextContent('quotePartCount', formatNumberVN(QUOTE_EXTRACTED_PARTS.length));
             updateTextContent('quoteMatchedCount', formatNumberVN(matched));
             updateTextContent('quoteWarningCount', formatNumberVN(warnings));
+            updateQuoteFilterUI();
         }
 
         function getQuoteVehicleCriteria(preferQuoteSelectors = true) {
@@ -10337,8 +11774,11 @@
             return quoteNumber(row?.totalPrice) || quoteNumber(row?.unitPrice) || quoteNumber(row?.quotedPrice) || 0;
         }
 
-        function buildQuoteOcrRowsFromGeminiData(data) {
-            const items = Array.isArray(data?.items) ? data.items : [];
+        function buildQuoteOcrRowsFromGeminiData(data, mode = getQuoteOcrMode()) {
+            let items = Array.isArray(data?.items) ? data.items : [];
+            if (mode === 'parts') {
+                items = items.filter(item => item?.need_lookup !== false && !isLaborOrServiceQuoteItem(item));
+            }
             return items.map((item, idx) => {
                 const name = String(item?.name || '').replace(/^[-–—:;\s]+|[-–—:;\s]+$/g, '').trim();
                 const labor = isLaborOrServiceQuoteItem(item);
@@ -10435,6 +11875,258 @@
             }).join('');
         }
 
+        function getQuoteMappingBadgeHtml(row) {
+            if (!String(row?.mappedName || '').trim()) return '';
+            const label = row.mappingSource === 'manual' ? 'Gán tay' : 'AI gán';
+            const score = row.mappedScore ? ` • ${Math.round(row.mappedScore * 100)}%` : '';
+            const manualClass = row.mappingSource === 'manual' ? ' manual' : '';
+            return `<div class="mapping-confidence${manualClass}">${sanitize(label + score)}</div>`;
+        }
+
+        function renderQuoteMappingCombobox(row) {
+            const safeId = sanitize(row.id);
+            const value = sanitize(row.mappedName || '');
+            return `
+                <div class="mapping-combobox" id="mappingCombo_${safeId}" data-row-id="${safeId}">
+                    <div class="mapping-combobox-field">
+                        <input
+                            class="mapping-search-input"
+                            id="mappingInput_${safeId}"
+                            value="${value}"
+                            autocomplete="off"
+                            placeholder="Tìm hoặc nhập hạng mục chuẩn"
+                            onfocus="openQuoteMappingSuggest('${safeId}')"
+                            oninput="handleQuoteMappingSearch('${safeId}', this.value)"
+                            onkeydown="handleQuoteMappingKeydown(event, '${safeId}')"
+                        >
+                        <button type="button" class="mapping-combobox-trigger" onclick="toggleQuoteMappingSuggest('${safeId}')" title="Mở gợi ý hạng mục" aria-label="Mở gợi ý hạng mục">
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 8l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </div>
+                    <div id="mappingSuggest_${safeId}" class="mapping-suggest-menu hidden"></div>
+                </div>`;
+        }
+
+        function rankQuoteMappingSuggestions(keyword = '') {
+            const names = getAppraisalItemNameList();
+            const query = String(keyword || '').trim();
+            const qNorm = normalizeQuotePart(query);
+            if (!names.length) return [];
+            if (!qNorm) return names.slice(0, 18).map(name => ({ name, score: 0 }));
+            return names
+                .map(name => {
+                    const nNorm = normalizeQuotePart(name);
+                    let score = calculateQuoteAppraisalMapping(query, name);
+                    if (nNorm === qNorm) score += 1;
+                    else if (nNorm.startsWith(qNorm)) score += 0.45;
+                    else if (nNorm.includes(qNorm)) score += 0.28;
+                    return { name, score };
+                })
+                .filter(item => item.score >= 0.18 || normalizeQuotePart(item.name).includes(qNorm))
+                .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name, 'vi'))
+                .slice(0, 18);
+        }
+
+        function renderQuoteMappingSuggestMenu(rowId, keyword = '') {
+            const menu = document.getElementById(`mappingSuggest_${rowId}`);
+            if (!menu) return;
+            const current = String(keyword || '').trim();
+            const currentKey = normalizeQuotePart(current);
+            const suggestions = rankQuoteMappingSuggestions(current);
+            const hasExact = suggestions.some(item => normalizeQuotePart(item.name) === currentKey);
+            const customAction = current && !hasExact
+                ? `<button type="button" class="mapping-suggest-item is-custom" onclick="selectQuoteMappingSuggestion('${rowId}', decodeURIComponent('${encodeURIComponent(current)}'), true)"><span class="mapping-suggest-name">Dùng tên đang nhập: ${sanitize(current)}</span><span class="mapping-suggest-score">Nhập tay</span></button>`
+                : '';
+            const clearAction = `<button type="button" class="mapping-suggest-item is-clear" onclick="selectQuoteMappingSuggestion('${rowId}', '', true)"><span class="mapping-suggest-name">Chưa gán hạng mục chuẩn</span><span class="mapping-suggest-score">Bỏ gán</span></button>`;
+            const items = suggestions.map(item => {
+                const scoreText = item.score ? `${Math.min(100, Math.round(item.score * 100))}%` : 'Gợi ý';
+                const isCurrent = normalizeQuotePart(item.name) === currentKey ? ' is-current' : '';
+                return `<button type="button" class="mapping-suggest-item${isCurrent}" onclick="selectQuoteMappingSuggestion('${rowId}', decodeURIComponent('${encodeURIComponent(item.name)}'), true)"><span class="mapping-suggest-name">${sanitize(item.name)}</span><span class="mapping-suggest-score">${sanitize(scoreText)}</span></button>`;
+            }).join('');
+            menu.innerHTML = `
+                <div class="mapping-suggest-head">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><path d="M13 13l4 4" stroke-linecap="round"/></svg>
+                    Gõ để tìm nhanh hạng mục từ BB giám định
+                </div>
+                ${clearAction}
+                ${customAction}
+                ${items || '<div class="mapping-suggest-empty">Không có gợi ý phù hợp. Bạn vẫn có thể nhập tay tên hạng mục chuẩn.</div>'}
+            `;
+        }
+
+        let quoteMappingSuggestRaf = null;
+        let quoteMappingViewportBound = false;
+
+        function getOpenQuoteMappingRowId() {
+            const combo = document.querySelector('#quotePriceSection .mapping-combobox.is-open');
+            return combo?.dataset?.rowId || '';
+        }
+
+        function ensureQuoteMappingSuggestPortal(menu) {
+            if (!menu) return null;
+            if (menu.parentElement !== document.body) {
+                menu.classList.add('quote-mapping-portal');
+                document.body.appendChild(menu);
+            } else {
+                menu.classList.add('quote-mapping-portal');
+            }
+            return menu;
+        }
+
+        function positionQuoteMappingSuggestMenu(rowId) {
+            const input = document.getElementById(`mappingInput_${rowId}`);
+            const menu = ensureQuoteMappingSuggestPortal(document.getElementById(`mappingSuggest_${rowId}`));
+            const combo = document.getElementById(`mappingCombo_${rowId}`);
+            if (!combo || !input || !menu || menu.classList.contains('hidden')) return;
+
+            const rect = input.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+
+            const visualViewport = window.visualViewport || null;
+            const viewportLeft = visualViewport ? visualViewport.offsetLeft : 0;
+            const viewportTop = visualViewport ? visualViewport.offsetTop : 0;
+            const viewportW = visualViewport ? visualViewport.width : (window.innerWidth || document.documentElement.clientWidth || 1024);
+            const viewportH = visualViewport ? visualViewport.height : (window.innerHeight || document.documentElement.clientHeight || 768);
+            const gutter = 8;
+            const width = Math.min(Math.max(rect.width, 376), viewportW - gutter * 2);
+            const left = viewportLeft + Math.min(Math.max(gutter, rect.left - viewportLeft), Math.max(gutter, viewportW - width - gutter));
+            const spaceBelow = viewportTop + viewportH - rect.bottom - gutter;
+            const spaceAbove = rect.top - viewportTop - gutter;
+            const desiredHeight = Math.min(menu.scrollHeight || 292, 340);
+            const openUp = spaceBelow < Math.min(desiredHeight, 260) && spaceAbove > spaceBelow;
+            const available = Math.max(140, (openUp ? spaceAbove : spaceBelow) - 7);
+            const maxHeight = Math.min(340, available);
+
+            menu.style.setProperty('position', 'fixed', 'important');
+            menu.style.setProperty('width', `${width}px`, 'important');
+            menu.style.setProperty('left', `${left}px`, 'important');
+            menu.style.setProperty('right', 'auto', 'important');
+            menu.style.setProperty('max-height', `${maxHeight}px`, 'important');
+            menu.dataset.placement = openUp ? 'top' : 'bottom';
+
+            const menuHeight = Math.min(menu.scrollHeight || maxHeight, maxHeight);
+            const rawTop = openUp ? rect.top - menuHeight - 7 : rect.bottom + 7;
+            const top = viewportTop + Math.min(Math.max(gutter, rawTop - viewportTop), Math.max(gutter, viewportH - menuHeight - gutter));
+            menu.style.setProperty('top', `${top}px`, 'important');
+        }
+
+        function scheduleQuoteMappingSuggestPosition(rowId = '') {
+            const targetRowId = rowId || getOpenQuoteMappingRowId();
+            if (!targetRowId) return;
+            if (quoteMappingSuggestRaf) cancelAnimationFrame(quoteMappingSuggestRaf);
+            quoteMappingSuggestRaf = requestAnimationFrame(() => {
+                quoteMappingSuggestRaf = null;
+                positionQuoteMappingSuggestMenu(targetRowId);
+            });
+        }
+
+        function bindQuoteMappingViewportListeners() {
+            if (quoteMappingViewportBound) return;
+            quoteMappingViewportBound = true;
+            window.addEventListener('resize', () => scheduleQuoteMappingSuggestPosition(), { passive: true });
+            window.addEventListener('orientationchange', () => scheduleQuoteMappingSuggestPosition(), { passive: true });
+            document.addEventListener('scroll', () => scheduleQuoteMappingSuggestPosition(), { passive: true, capture: true });
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', () => scheduleQuoteMappingSuggestPosition(), { passive: true });
+                window.visualViewport.addEventListener('scroll', () => scheduleQuoteMappingSuggestPosition(), { passive: true });
+            }
+        }
+
+        function showQuoteMappingSuggest(rowId, keyword = '') {
+            document.querySelectorAll('#quotePriceSection .mapping-combobox.is-open').forEach(box => {
+                if (box.id !== `mappingCombo_${rowId}`) box.classList.remove('is-open');
+            });
+            document.querySelectorAll('.mapping-suggest-menu').forEach(menu => {
+                if (menu.id !== `mappingSuggest_${rowId}`) menu.classList.add('hidden');
+            });
+            const combo = document.getElementById(`mappingCombo_${rowId}`);
+            const menu = document.getElementById(`mappingSuggest_${rowId}`);
+            if (!combo || !menu) return;
+            combo.classList.add('is-open');
+            ensureQuoteMappingSuggestPortal(menu);
+            renderQuoteMappingSuggestMenu(rowId, keyword || '');
+            menu.classList.remove('hidden');
+            bindQuoteMappingViewportListeners();
+            scheduleQuoteMappingSuggestPosition(rowId);
+        }
+
+        window.openQuoteMappingSuggest = function(rowId) {
+            const input = document.getElementById(`mappingInput_${rowId}`);
+            if (!input) return;
+            showQuoteMappingSuggest(rowId, input.value || '');
+        };
+
+        window.toggleQuoteMappingSuggest = function(rowId) {
+            const combo = document.getElementById(`mappingCombo_${rowId}`);
+            const input = document.getElementById(`mappingInput_${rowId}`);
+            const menu = document.getElementById(`mappingSuggest_${rowId}`);
+            if (!combo || !input || !menu) return;
+            if (combo.classList.contains('is-open') && !menu.classList.contains('hidden')) {
+                combo.classList.remove('is-open');
+                menu.classList.add('hidden');
+                return;
+            }
+            input.focus();
+            showQuoteMappingSuggest(rowId, input.value || '');
+        };
+
+        function syncQuoteMappingBadge(rowId) {
+            const row = QUOTE_OCR_ROWS.find(item => item.id === rowId);
+            const target = document.getElementById(`mappingBadge_${rowId}`);
+            if (target) target.innerHTML = getQuoteMappingBadgeHtml(row);
+        }
+
+        window.handleQuoteMappingSearch = function(rowId, value) {
+            const row = QUOTE_OCR_ROWS.find(item => item.id === rowId);
+            if (!row) return;
+            row.mappedName = String(value || '').trimStart();
+            row.mappedScore = row.mappedName ? 1 : 0;
+            row.mappingSource = row.mappedName ? 'manual' : '';
+            if (row.mappedName) row.strict_match = true;
+            QUOTE_RESULTS = [];
+            showQuoteMappingSuggest(rowId, value || '');
+            syncQuoteMappingBadge(rowId);
+            rebuildQuoteExtractedPartsFromEditableRows(false);
+        };
+
+        window.selectQuoteMappingSuggestion = function(rowId, value, manual = true) {
+            const row = QUOTE_OCR_ROWS.find(item => item.id === rowId);
+            if (!row) return;
+            row.mappedName = String(value || '').trim();
+            row.mappedScore = row.mappedName ? 1 : 0;
+            row.mappingSource = row.mappedName ? (manual ? 'manual' : 'ai') : '';
+            if (row.mappedName) row.strict_match = true;
+            const input = document.getElementById(`mappingInput_${rowId}`);
+            const menu = document.getElementById(`mappingSuggest_${rowId}`);
+            const combo = document.getElementById(`mappingCombo_${rowId}`);
+            if (input) input.value = row.mappedName;
+            if (menu) menu.classList.add('hidden');
+            if (combo) combo.classList.remove('is-open');
+            QUOTE_RESULTS = [];
+            syncQuoteMappingBadge(rowId);
+            rebuildQuoteExtractedPartsFromEditableRows(false);
+        };
+
+        window.handleQuoteMappingKeydown = function(event, rowId) {
+            if (event.key === 'Escape') {
+                const menu = document.getElementById(`mappingSuggest_${rowId}`);
+                const combo = document.getElementById(`mappingCombo_${rowId}`);
+                if (menu) menu.classList.add('hidden');
+                if (combo) combo.classList.remove('is-open');
+                event.currentTarget?.blur?.();
+            }
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                selectQuoteMappingSuggestion(rowId, event.currentTarget?.value || '', true);
+            }
+        };
+
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('#quotePriceSection .mapping-combobox') || event.target.closest('.mapping-suggest-menu')) return;
+            document.querySelectorAll('#quotePriceSection .mapping-combobox.is-open').forEach(box => box.classList.remove('is-open'));
+            document.querySelectorAll('.mapping-suggest-menu').forEach(menu => menu.classList.add('hidden'));
+        });
+
         function setQuoteMappingStatus(message = '', type = 'info') {
             const box = document.getElementById('quoteMappingStatusCard');
             if (!box) return;
@@ -10506,10 +12198,13 @@
             const quoteFile = QUOTE_SELECTED_FILE;
             const appraisalFile = APPRAISAL_SELECTED_FILE;
             if (!quoteFile && !appraisalFile) return customAlert('Hãy chọn báo giá gara và/hoặc BB giám định trước khi xử lý.');
+            QUOTE_RESULTS = [];
+            syncQuoteActionButtons();
             const tasks = [];
+            const quoteMode = getQuoteOcrMode();
             if (quoteFile) {
-                setQuoteStatus(`Đang OCR báo giá bằng ${getQuoteAiProviderName()}...`, 8);
-                tasks.push(extractQuoteDataFromFileWithSelectedAI(quoteFile).then(data => ({ type: 'quote', data })).catch(error => ({ type: 'quote', error })));
+                setQuoteStatus(`Đang OCR báo giá bằng ${getQuoteAiProviderName()} — chế độ ${getQuoteOcrModeLabel(quoteMode)}...`, 8);
+                tasks.push(extractQuoteDataFromFileWithSelectedAI(quoteFile, { mode: quoteMode }).then(data => ({ type: 'quote', data, mode: quoteMode })).catch(error => ({ type: 'quote', error })));
             }
             if (appraisalFile) {
                 setAppraisalStatus('Đang đọc BB giám định...', 8);
@@ -10524,8 +12219,12 @@
             if (quoteResult?.data) {
                 QUOTE_LAST_GEMINI_JSON = quoteResult.data;
                 applyQuoteVehicleHints(quoteResult.data);
-                QUOTE_OCR_ROWS = buildQuoteOcrRowsFromGeminiData(quoteResult.data).map(row => ({ ...row, quoteName: row.name, mappedName: row.mappedName || '' }));
-                setQuoteStatus(`Đã OCR ${QUOTE_OCR_ROWS.filter(r => r.need_lookup !== false).length} dòng cần tra từ báo giá.`, 65);
+                QUOTE_OCR_ROWS = buildQuoteOcrRowsFromGeminiData(quoteResult.data, quoteResult.mode || quoteMode).map(row => ({ ...row, quoteName: row.name, mappedName: row.mappedName || '' }));
+                const quoteLookupCount = QUOTE_OCR_ROWS.filter(r => r.need_lookup !== false).length;
+                const quoteAllCount = QUOTE_OCR_ROWS.length;
+                setQuoteStatus((quoteResult.mode || quoteMode) === 'full'
+                    ? `Đã OCR ${quoteAllCount} dòng báo giá, trong đó ${quoteLookupCount} dòng cần tra kho.`
+                    : `Đã OCR ${quoteLookupCount} dòng phụ tùng cần tra từ báo giá.`, 65);
             }
             if (appraisalResult?.data) {
                 APPRAISAL_LAST_DATA = appraisalResult.data;
@@ -10538,6 +12237,7 @@
             renderQuoteOcrRows();
             rebuildQuoteExtractedPartsFromEditableRows(true);
             document.getElementById('btnRunQuoteLookup').disabled = QUOTE_EXTRACTED_PARTS.length === 0;
+            syncQuoteActionButtons();
             setQuoteStatus(QUOTE_EXTRACTED_PARTS.length ? `Sẵn sàng tra kho — ${QUOTE_EXTRACTED_PARTS.length} dòng đã được chuẩn hóa/gán tên.` : 'Chưa có dòng TRA KHO để đối chiếu.', QUOTE_EXTRACTED_PARTS.length ? 100 : 0);
         }
 
@@ -10547,8 +12247,9 @@
             const body = document.getElementById('quoteOcrTableBody');
             if (!body) return;
             if (!QUOTE_OCR_ROWS.length) {
-                body.innerHTML = '<tr><td colspan="7" class="quote-ocr-empty">Chưa có dữ liệu OCR. Tải báo giá và/hoặc BB giám định để hệ thống bóc tách hạng mục.</td></tr>';
+                body.innerHTML = '<tr><td colspan="7" class="quote-ocr-empty">Chưa có dữ liệu OCR. Tải báo giá và/hoặc BB giám định, sau đó bấm nút xử lý để hệ thống bóc tách hạng mục.</td></tr>';
                 updateQuoteStrictAllButton();
+                syncQuoteActionButtons();
                 return;
             }
             body.innerHTML = QUOTE_OCR_ROWS.map((row, idx) => {
@@ -10579,10 +12280,10 @@
                             ${original}${note}
                         </td>
                         <td class="mapping-main-cell">
-                            <select class="mapping-select" onchange="updateQuoteMappedName('${row.id}', this.value)">
-                                ${renderMappingOptions(row.mappedName || '')}
-                            </select>
-                            ${row.mappedName ? `<div class="mapping-confidence ${row.mappingSource === 'manual' ? 'manual' : ''}">${row.mappingSource === 'manual' ? 'Gán tay' : 'AI gán'}${row.mappedScore ? ` • ${Math.round(row.mappedScore * 100)}%` : ''}</div>` : ''}
+                            <div class="mapping-standard-stack">
+                                ${renderQuoteMappingCombobox(row)}
+                                <div id="mappingBadge_${sanitize(row.id)}">${getQuoteMappingBadgeHtml(row)}</div>
+                            </div>
                         </td>
                         <td>
                             <div class="mapping-dual-inputs small">
@@ -10600,6 +12301,7 @@
                 `;
             }).join('');
             updateQuoteStrictAllButton();
+            syncQuoteActionButtons();
         }
 
         window.formatQuoteMoneyInput = function(input, rowId, field) {
@@ -10728,6 +12430,7 @@
                 });
             const btn = document.getElementById('btnRunQuoteLookup');
             if (btn) btn.disabled = QUOTE_EXTRACTED_PARTS.length === 0;
+            syncQuoteActionButtons();
             if (showStatus) {
                 setQuoteStatus(QUOTE_EXTRACTED_PARTS.length ? `Đã cập nhật ${QUOTE_EXTRACTED_PARTS.length} phụ tùng sẽ đưa đi tra kho giá` : 'Chưa có dòng nào ở trạng thái TRA KHO', QUOTE_EXTRACTED_PARTS.length ? 100 : 0);
                 renderQuoteResults();
@@ -10742,22 +12445,114 @@
             return QUOTE_EXTRACTED_PARTS;
         };
 
+        function isQuoteResultMatchedRow(row) {
+            if (!row || !row.best) return false;
+            const score = Number(row.best.score || 0);
+            return score >= 0.45 && row.status !== 'danger' && row.status !== 'watch';
+        }
+
+        function isQuoteResultWarningRow(row) {
+            if (!row) return false;
+            return !isQuoteResultMatchedRow(row);
+        }
+
+        function getQuoteFilterLabel(filter = QUOTE_RESULT_VIEW_FILTER) {
+            if (filter === 'matched') return 'Phụ tùng đã khớp kho giá';
+            if (filter === 'warning') return 'Phụ tùng cần kiểm tra';
+            return 'Toàn bộ phụ tùng OCR';
+        }
+
+        function getQuoteVisibleResultRows() {
+            if (!Array.isArray(QUOTE_RESULTS) || !QUOTE_RESULTS.length) return [];
+            if (QUOTE_RESULT_VIEW_FILTER === 'matched') return QUOTE_RESULTS.filter(isQuoteResultMatchedRow);
+            if (QUOTE_RESULT_VIEW_FILTER === 'warning') return QUOTE_RESULTS.filter(isQuoteResultWarningRow);
+            return QUOTE_RESULTS;
+        }
+
+        function updateQuoteFilterUI() {
+            document.querySelectorAll('#quotePriceSection .quote-stat-filter-card').forEach(card => {
+                const active = (card.dataset.quoteFilter || 'all') === QUOTE_RESULT_VIEW_FILTER;
+                card.classList.toggle('quote-stat-filter-active', active);
+                card.setAttribute('aria-pressed', active ? 'true' : 'false');
+                const hint = card.querySelector('.exec-stat-hint');
+                if (hint) hint.innerText = active ? 'Đang hiển thị' : 'Bấm để lọc';
+            });
+        }
+
+        window.handleQuoteStatKey = function(event, filter) {
+            if (!event || (event.key !== 'Enter' && event.key !== ' ')) return;
+            event.preventDefault();
+            setQuoteResultFilter(filter);
+        };
+
+        window.setQuoteResultFilter = function(filter = 'all') {
+            QUOTE_RESULT_VIEW_FILTER = ['all', 'matched', 'warning'].includes(filter) ? filter : 'all';
+            updateQuoteFilterUI();
+            renderQuoteResults();
+            const list = document.getElementById('quotePartsList');
+            if (list && QUOTE_RESULTS.length) list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        };
+
         function renderQuotePartsList() {
             const box = document.getElementById('quotePartsList');
             if (!box) return;
+
+            updateQuoteFilterUI();
+
             if (!QUOTE_EXTRACTED_PARTS.length) {
-                box.innerHTML = '<div class="text-center text-[11px] font-bold text-slate-400 italic py-8">Chưa có phụ tùng được trích xuất</div>';
-                return;
-            }
-            box.innerHTML = QUOTE_EXTRACTED_PARTS.map(part => {
-                const original = part.originalName && part.originalName !== part.name ? `<small>OCR gốc: ${sanitize(part.originalName)}</small>` : `<small>${part.quotedPrice ? formatVND(part.quotedPrice) : 'Chưa có giá'}</small>`;
-                return `
-                    <div class="quote-part-pill">
-                        <span class="truncate">${sanitize(part.name)}</span>
-                        ${part.strict_match ? '<small>🎯 Khớp tên phụ tùng</small>' : original}
+                box.innerHTML = `
+                    <div class="quote-result-empty-state">
+                        <div class="quote-result-empty-icon">OCR</div>
+                        <div>
+                            <strong>Chưa có phụ tùng được trích xuất</strong>
+                            <span>Tải báo giá hoặc nhập thêm dòng để bắt đầu đối chiếu kho giá.</span>
+                        </div>
                     </div>
                 `;
-            }).join('');
+                return;
+            }
+
+            if (!QUOTE_RESULTS.length) {
+                const previewParts = QUOTE_EXTRACTED_PARTS.slice(0, 6).map(part => `
+                    <span class="quote-result-mini-chip">${sanitize(part.name)}</span>
+                `).join('');
+                const moreCount = Math.max(0, QUOTE_EXTRACTED_PARTS.length - 6);
+                box.innerHTML = `
+                    <div class="quote-result-ready-card">
+                        <div>
+                            <div class="quote-result-ready-title">Đã có ${QUOTE_EXTRACTED_PARTS.length} phụ tùng OCR</div>
+                            <div class="quote-result-ready-note">Bấm <b>Tra kho</b> ở từng dòng hoặc cập nhật danh sách tra để đối chiếu với kho giá.</div>
+                        </div>
+                        <div class="quote-result-mini-chip-row">
+                            ${previewParts}
+                            ${moreCount ? `<span class="quote-result-mini-chip is-more">+${moreCount}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const rows = getQuoteVisibleResultRows();
+            const total = QUOTE_RESULTS.length;
+            const matched = QUOTE_RESULTS.filter(isQuoteResultMatchedRow).length;
+            const warnings = QUOTE_RESULTS.filter(isQuoteResultWarningRow).length;
+            const label = getQuoteFilterLabel();
+            const note = QUOTE_RESULT_VIEW_FILTER === 'all'
+                ? `${total} dòng báo giá • ${matched} khớp kho giá • ${warnings} cần kiểm tra`
+                : `Đang hiển thị ${rows.length}/${total} dòng trong bảng bên dưới`;
+
+            box.innerHTML = `
+                <div class="quote-results-focusbar ${QUOTE_RESULT_VIEW_FILTER === 'matched' ? 'is-matched' : QUOTE_RESULT_VIEW_FILTER === 'warning' ? 'is-warning' : ''}">
+                    <div class="quote-results-focus-main">
+                        <span class="quote-results-focus-dot"></span>
+                        <div>
+                            <div class="quote-results-focus-title">${sanitize(label)}</div>
+                            <div class="quote-results-focus-note">${sanitize(note)}</div>
+                        </div>
+                    </div>
+                    ${QUOTE_RESULT_VIEW_FILTER !== 'all' ? '<button type="button" class="quote-filter-clear-btn" onclick="setQuoteResultFilter(\'all\')">Hiển thị tất cả</button>' : ''}
+                </div>
+            `;
         }
 
         function renderQuoteResults() {
@@ -10771,12 +12566,18 @@
                 if (subtitle) subtitle.innerText = QUOTE_EXTRACTED_PARTS.length ? 'Đã lọc phụ tùng, bấm Tra kho giá để đối chiếu.' : 'Chọn Hãng xe, Dòng xe, Năm SX rồi tải báo giá để bắt đầu.';
                 return;
             }
+            const visibleRows = getQuoteVisibleResultRows();
             if (subtitle) {
                 const criteria = getQuoteVehicleCriteria();
                 const multiPriceCount = QUOTE_RESULTS.filter(r => (r.priceBuckets || []).length > 1).length;
-                subtitle.innerText = `${QUOTE_RESULTS.length} dòng báo giá — ${criteria.hang} / ${criteria.hieus.join(', ')} / ${criteria.nam}${multiPriceCount ? ` — ${multiPriceCount} dòng có nhiều mức giá kho` : ''}`;
+                const filterSuffix = QUOTE_RESULT_VIEW_FILTER === 'all' ? '' : ` — đang lọc: ${getQuoteFilterLabel().toLowerCase()} (${visibleRows.length}/${QUOTE_RESULTS.length})`;
+                subtitle.innerText = `${QUOTE_RESULTS.length} dòng báo giá — ${criteria.hang} / ${criteria.hieus.join(', ')} / ${criteria.nam}${multiPriceCount ? ` — ${multiPriceCount} dòng có nhiều mức giá kho` : ''}${filterSuffix}`;
             }
-            body.innerHTML = QUOTE_RESULTS.map((row) => {
+            if (!visibleRows.length) {
+                body.innerHTML = `<tr><td colspan="5" class="text-center !py-16 !text-slate-300 !font-bold !uppercase !tracking-[0.16em]">Không có phụ tùng trong nhóm ${sanitize(getQuoteFilterLabel()).toLowerCase()}</td></tr>`;
+                return;
+            }
+            body.innerHTML = visibleRows.map((row) => {
                 const best = row.best;
                 const score = best ? Math.round(best.score * 100) : 0;
                 const scoreClass = score >= 70 ? 'quote-score-strong' : score >= 45 ? 'quote-score-medium' : 'quote-score-low';
@@ -10784,17 +12585,19 @@
                 const quotePrice = row.part.quotedPrice ? formatVND(row.part.quotedPrice) : '—';
                 const variance = row.variancePercent === null || row.variancePercent === undefined ? '' : `<div class="quote-match-meta">Lệch ${row.variancePercent > 0 ? '+' : ''}${row.variancePercent}% so với mức gần nhất</div>`;
                 const encodedPart = encodeURIComponent(row.part.name);
+                const candidateGroups = row.candidateGroups || [];
+                const priceBuckets = row.priceBuckets || [];
 
                 const candidateSummary = best ? `
                     <div class="quote-match-name">${sanitize(best.item.ten_phu_tung || 'Không rõ')}</div>
-                    <div class="quote-match-meta">Hiển thị ${row.candidateGroups.length} nhóm khớp / ${row.priceBuckets.length || 1} nhóm giá${row.duplicateCollapsedCount ? ` — gộp ${row.duplicateCollapsedCount} hồ sơ trùng` : ''}${row.hiddenCandidateCount ? ` — ẩn ${row.hiddenCandidateCount} ứng viên nhiễu` : ''}</div>
+                    <div class="quote-match-meta">Hiển thị ${candidateGroups.length} nhóm khớp / ${priceBuckets.length || 1} nhóm giá${row.duplicateCollapsedCount ? ` — gộp ${row.duplicateCollapsedCount} hồ sơ trùng` : ''}${row.hiddenCandidateCount ? ` — ẩn ${row.hiddenCandidateCount} ứng viên nhiễu` : ''}</div>
                     <div class="mt-2 flex flex-wrap gap-1.5">
                         <span class="quote-score-badge ${scoreClass}">${score}% khớp</span>
                         ${row.part.strict_match ? '<span class="quote-score-badge quote-score-strong">Khớp tên phụ tùng</span>' : ''}
-                        ${row.priceBuckets.length > 1 ? '<span class="quote-score-badge quote-score-medium">Nhiều loại giá</span>' : ''}
+                        ${priceBuckets.length > 1 ? '<span class="quote-score-badge quote-score-medium">Nhiều loại giá</span>' : ''}
                     </div>
                     <div class="quote-candidate-list">
-                        ${row.candidateGroups.map(group => {
+                        ${candidateGroups.map(group => {
                             const primaryItem = group.items?.[0] || null;
                             const safeId = primaryItem?.id ? escapeJsSingle(primaryItem.id) : '';
                             const garagePreview = group.garages.slice(0, 2).join(', ');
@@ -10818,9 +12621,9 @@
                     </div>
                 ` : '<span class="quote-score-badge quote-score-low">Chưa tìm thấy</span>';
 
-                const priceBucketHtml = row.priceBuckets?.length ? `
+                const priceBucketHtml = priceBuckets.length ? `
                     <div class="quote-price-bucket-list">
-                        ${row.priceBuckets.map(bucket => `
+                        ${priceBuckets.map(bucket => `
                             <div class="quote-price-bucket">
                                 <div class="quote-price-bucket-head">
                                     <span>${sanitize(bucket.type)}</span>
@@ -10889,9 +12692,17 @@
             throw new Error('Gemini trả về dữ liệu không đúng định dạng JSON.');
         }
 
-        function buildGeminiQuotePrompt(fileName = '') {
+        function buildGeminiQuotePrompt(fileName = '', mode = getQuoteOcrMode()) {
+            const fullMode = mode === 'full';
+            const scopeInstruction = fullMode
+                ? `- PHẠM VI OCR: LẤY TOÀN BỘ các dòng hạng mục chi tiết trong báo giá, gồm phụ tùng, vật tư, công sửa chữa, công sơn/gò/tháo lắp nếu có. Vẫn loại bỏ dòng tổng cộng, VAT, bằng chữ, chữ ký, ngày tháng và thông tin công ty.
+- Với dòng phụ tùng/vật tư thay thế đặt need_lookup=true. Với dòng công sửa chữa, sơn, gò, tháo lắp hoặc dịch vụ đặt is_labor=true và need_lookup=false.`
+                : `- PHẠM VI OCR: CHỈ LẤY các dòng PHỤ TÙNG/VẬT TƯ thay thế cần tra kho giá. Không đưa công sửa chữa, công sơn/gò/tháo lắp/dịch vụ vào items.
+- Mọi item trả về ở chế độ này phải là phụ tùng/vật tư cần tra kho, need_lookup=true và is_labor=false.`;
             return `Bạn là hệ thống OCR và bóc tách báo giá sửa chữa ô tô cho giám định bảo hiểm tại Việt Nam.
-Nhiệm vụ: đọc file báo giá gara, trích xuất chính xác bảng hạng mục và chỉ đánh dấu các PHỤ TÙNG cần tra kho giá.
+Nhiệm vụ: đọc file báo giá gara, trích xuất chính xác bảng hạng mục theo phạm vi người dùng chọn.
+
+${scopeInstruction}
 
 Yêu cầu rất quan trọng:
 - Chỉ trả về JSON hợp lệ, không markdown, không giải thích.
@@ -11023,10 +12834,10 @@ Tên file: ${fileName}`;
             throw new Error('Gemini đang quá tải sau nhiều lần thử. Hãy bấm xử lý lại sau ít phút, hoặc nhập thêm API key dự phòng trong cài đặt Gemini. Chi tiết: ' + (lastError?.message || lastError || 'không rõ'));
         }
 
-        async function callGeminiQuoteExtraction({ file = null, text = '' }) {
+        async function callGeminiQuoteExtraction({ file = null, text = '', mode = getQuoteOcrMode() }) {
             if (!getQuoteGeminiKeys().length) throw new Error('Chưa có Gemini API Key. Hãy bấm nút cài đặt Gemini để nhập key mới.');
 
-            const parts = [{ text: buildGeminiQuotePrompt(file?.name || 'dữ liệu báo giá') }];
+            const parts = [{ text: buildGeminiQuotePrompt(file?.name || 'dữ liệu báo giá', mode) }];
             if (file) {
                 const name = (file.name || '').toLowerCase();
                 const mimeType = file.type || (name.endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
@@ -11222,7 +13033,7 @@ ${text}` });
             return chunks;
         }
 
-        function parseOcrSpaceChunkToItem(chunk, fallbackIndex = 1) {
+        function parseOcrSpaceChunkToItem(chunk, fallbackIndex = 1, mode = getQuoteOcrMode()) {
             const raw = (chunk?.lines || []).join(' ');
             const prices = parseOcrSpacePriceList(raw);
             const hasPrice = prices.length > 0;
@@ -11245,7 +13056,9 @@ ${text}` });
                 .trim();
 
             if (!name || name.length < 3) return null;
-            if (!hasPrice && !hasQuotePartKeyword(name) && chunk?.section !== 'parts') return null;
+            const fullMode = mode === 'full';
+            if (!fullMode && (!hasPrice && !hasQuotePartKeyword(name) && chunk?.section !== 'parts')) return null;
+            if (fullMode && !hasPrice && !hasQuotePartKeyword(name) && chunk?.section !== 'parts' && chunk?.section !== 'labor') return null;
 
             const sttNumber = Number(String(chunk?.sttRaw || '').replace(/[^\d]/g, '')) || fallbackIndex;
             const unitPrice = prices.length >= 2 ? prices[prices.length - 2] : (prices[0] || 0);
@@ -11263,15 +13076,17 @@ ${text}` });
             };
 
             const labor = isLaborOrServiceQuoteItem(item) || chunk?.section === 'labor';
-            item.is_labor = labor;
-            item.need_lookup = !labor;
-            if (chunk?.section !== 'parts' && !hasQuotePartKeyword(name) && !labor) {
-                item.note = 'OCR.Space smart parser — kiểm tra lại tên/phân loại';
+            const isPartLike = hasQuotePartKeyword(name) || chunk?.section === 'parts';
+            item.is_labor = labor || (!isPartLike && mode === 'full');
+            item.need_lookup = isPartLike && !labor;
+            if (mode === 'parts' && item.need_lookup === false) return null;
+            if (chunk?.section !== 'parts' && !isPartLike && !labor) {
+                item.note = mode === 'full' ? 'OCR.Space full parser — dòng không phải phụ tùng, mặc định bỏ qua tra kho' : 'OCR.Space smart parser — kiểm tra lại tên/phân loại';
             }
             return item;
         }
 
-        function parseOcrSpaceQuoteTextToData(text = '', fileName = '') {
+        function parseOcrSpaceQuoteTextToData(text = '', fileName = '', mode = getQuoteOcrMode()) {
             const lines = String(text || '')
                 .split(/\r?\n/)
                 .map(cleanOcrSpaceLine)
@@ -11282,7 +13097,7 @@ ${text}` });
             const seen = new Set();
 
             chunks.forEach((chunk, index) => {
-                const item = parseOcrSpaceChunkToItem(chunk, index + 1);
+                const item = parseOcrSpaceChunkToItem(chunk, index + 1, mode);
                 if (!item) return;
                 const key = `${normalizeQuotePart(item.name)}|${item.total_price || item.unit_price || 0}|${item.stt}`;
                 if (seen.has(key)) return;
@@ -11295,7 +13110,7 @@ ${text}` });
                 lines.forEach((line, index) => {
                     if (isOcrSpaceHeaderOrFooter(line)) return;
                     if (!parseOcrSpacePriceList(line).length || !hasQuotePartKeyword(line)) return;
-                    const item = parseOcrSpaceChunkToItem({ sttRaw: '', lines: [line], section: 'parts' }, index + 1);
+                    const item = parseOcrSpaceChunkToItem({ sttRaw: '', lines: [line], section: 'parts' }, index + 1, mode);
                     if (item) items.push(item);
                 });
             }
@@ -11311,6 +13126,7 @@ ${text}` });
                 summary: { subtotal: 0, vat: 0, total: 0 },
                 raw_ocr_text: text,
                 source: 'ocrspace',
+                extraction_mode: mode === 'full' ? 'full_quote' : 'parts_only',
                 file_name: fileName,
                 ocr_quality: { line_count: lines.length, chunk_count: chunks.length, item_count: items.length }
             };
@@ -11323,7 +13139,8 @@ ${text}` });
             return lookup * 5 + items.length * 2 + priced + Math.min(10, Math.round((data?.raw_ocr_text || '').length / 600));
         }
 
-        async function runOcrSpaceSmartAttempts(file) {
+        async function runOcrSpaceSmartAttempts(file, options = {}) {
+            const mode = options.mode || getQuoteOcrMode();
             const selected = getQuoteOcrSpaceEngine();
             const engines = [selected, selected === '2' ? '3' : '2', '1'].filter((v, i, arr) => v && arr.indexOf(v) === i);
             let best = null;
@@ -11334,7 +13151,7 @@ ${text}` });
                     const engine = engines[i];
                     const result = await callOcrSpaceApi(file, { engine });
                     setQuoteStatus(`OCR.Space: đang tách bảng từ Engine ${engine}...`, 62 + i * 8);
-                    const data = parseOcrSpaceQuoteTextToData(result.text, file.name || '');
+                    const data = parseOcrSpaceQuoteTextToData(result.text, file.name || '', mode);
                     data.ocr_engine = engine;
                     data.ocr_raw = result.raw;
                     const score = scoreOcrSpaceQuoteData(data);
@@ -11357,24 +13174,25 @@ ${text}` });
             return best.data;
         }
 
-        async function extractQuoteDataFromFileWithOcrSpace(file) {
+        async function extractQuoteDataFromFileWithOcrSpace(file, options = {}) {
+            const mode = options.mode || getQuoteOcrMode();
             const name = (file.name || '').toLowerCase();
             if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
                 setQuoteStatus('OCR.Space mode: đang đọc Excel bằng smart parser...', 12);
                 const sheetText = await extractTextFromSpreadsheet(file);
-                return parseOcrSpaceQuoteTextToData(sheetText, file.name || '');
+                return parseOcrSpaceQuoteTextToData(sheetText, file.name || '', mode);
             }
             if (name.endsWith('.csv') || name.endsWith('.txt') || (file.type || '').toLowerCase().startsWith('text/')) {
                 setQuoteStatus('OCR.Space mode: đang đọc text bằng smart parser...', 12);
-                return parseOcrSpaceQuoteTextToData(await file.text(), file.name || '');
+                return parseOcrSpaceQuoteTextToData(await file.text(), file.name || '', mode);
             }
-            return runOcrSpaceSmartAttempts(file);
+            return runOcrSpaceSmartAttempts(file, { mode });
         }
 
-        async function extractQuoteDataFromFileWithSelectedAI(file) {
+        async function extractQuoteDataFromFileWithSelectedAI(file, options = {}) {
             return getQuoteAiProvider() === 'ocrspace'
-                ? extractQuoteDataFromFileWithOcrSpace(file)
-                : extractQuoteDataFromFileWithGemini(file);
+                ? extractQuoteDataFromFileWithOcrSpace(file, options)
+                : extractQuoteDataFromFileWithGemini(file, options);
         }
 
         function handleQuoteAiError(error) {
@@ -11630,33 +13448,21 @@ ${text}` });
             const file = event.target.files?.[0];
             if (!file) return;
             APPRAISAL_SELECTED_FILE = file;
+            APPRAISAL_STANDARD_ITEMS = [];
+            APPRAISAL_LAST_DATA = null;
+            QUOTE_RESULTS = [];
+
             const fileNameEl = document.getElementById('appraisalFileName');
             if (fileNameEl) { fileNameEl.innerText = file.name; fileNameEl.classList.remove('hidden'); }
-            try {
-                setAppraisalStatus('Đang xử lý biên bản giám định...', 5);
-                const data = await extractAppraisalDataFromFile(file);
-                const rows = normalizeAppraisalItemsToRows(data);
-                if (!rows.length) {
-                    setAppraisalStatus('Gemini chưa tìm thấy phụ tùng đề xuất thay thế trong BB giám định.', 100);
-                    customAlert('Không tìm thấy phụ tùng đề xuất thay thế. Hãy kiểm tra lại file hoặc dùng ảnh/PDF rõ hơn.');
-                    return;
-                }
-                applyQuoteVehicleHints({ vehicle_brand_hint: data.vehicle_brand_hint || '', vehicle_model_hint: data.vehicle_model_hint || '', manufacture_year_hint: data.manufacture_year_hint || data.year || '' });
-                APPRAISAL_LAST_DATA = data;
-                APPRAISAL_STANDARD_ITEMS = rows;
-                QUOTE_RESULTS = [];
-                renderAppraisalSummary(data, rows);
-                autoMapQuoteRowsWithAppraisalItems(false);
-                renderQuoteOcrRows();
-                rebuildQuoteExtractedPartsFromEditableRows(true);
-                document.getElementById('btnRunQuoteLookup').disabled = QUOTE_EXTRACTED_PARTS.length === 0;
-                setAppraisalStatus(`Hoàn tất — đã lấy ${rows.length} hạng mục chuẩn từ BB giám định.`, 100);
-                customAlert(`Đã lấy ${rows.length} hạng mục chuẩn từ biên bản giám định. Hệ thống đã thử gán với báo giá nếu có.`, 'success');
-            } catch (error) {
-                console.error('Lỗi đọc BB giám định:', error);
-                setAppraisalStatus('Lỗi xử lý biên bản giám định', 0);
-                customAlert('Không xử lý được biên bản giám định: ' + handleGeminiApiError(error));
-            } finally { event.target.value = ''; }
+            document.getElementById('appraisalSummaryCard')?.classList.remove('show');
+
+            // Không chạy OCR ngay khi chọn file. Người dùng chủ động bấm nút xử lý.
+            setAppraisalStatus(`Đã chọn BB giám định: ${file.name}. Bấm “Xử lý song song & gán tên chuẩn” để đọc dữ liệu.`, 0);
+            setQuoteMappingStatus('Đã nhận file BB giám định. Chưa chạy OCR/Gemini cho đến khi bấm nút xử lý.', 'info');
+            renderQuoteOcrRows();
+            rebuildQuoteExtractedPartsFromEditableRows(false);
+            renderQuoteResults();
+            syncQuoteActionButtons();
         };
 
         async function extractTextFromSpreadsheet(file) {
@@ -11674,21 +13480,22 @@ ${text}` });
             return rows.join('\n');
         }
 
-        async function extractQuoteDataFromFileWithGemini(file) {
+        async function extractQuoteDataFromFileWithGemini(file, options = {}) {
+            const mode = options.mode || getQuoteOcrMode();
             const name = (file.name || '').toLowerCase();
             const type = (file.type || '').toLowerCase();
             if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
                 setQuoteStatus('Đang đọc Excel rồi gửi Gemini bóc tách phụ tùng...', 15);
                 const sheetText = await extractTextFromSpreadsheet(file);
-                return callGeminiQuoteExtraction({ text: sheetText });
+                return callGeminiQuoteExtraction({ text: sheetText, mode });
             }
             if (name.endsWith('.csv') || name.endsWith('.txt') || type.startsWith('text/')) {
                 setQuoteStatus('Đang gửi dữ liệu text sang Gemini bóc tách phụ tùng...', 15);
-                return callGeminiQuoteExtraction({ text: await file.text() });
+                return callGeminiQuoteExtraction({ text: await file.text(), mode });
             }
             if (type.includes('pdf') || name.endsWith('.pdf') || type.startsWith('image/') || /\.(png|jpe?g|webp)$/i.test(name)) {
                 setQuoteStatus('Đang gửi ảnh/PDF sang Gemini 2.5 Flash để OCR...', 18);
-                return callGeminiQuoteExtraction({ file });
+                return callGeminiQuoteExtraction({ file, mode });
             }
             throw new Error('Định dạng file chưa được hỗ trợ. Hãy dùng ảnh, PDF, Excel, CSV hoặc TXT.');
         }
@@ -11756,27 +13563,16 @@ ${text}` });
             QUOTE_RESULTS = [];
             QUOTE_EXTRACTED_PARTS = [];
             QUOTE_LAST_GEMINI_JSON = null;
+
             const fileNameEl = document.getElementById('quoteFileName');
             if (fileNameEl) { fileNameEl.innerText = file.name; fileNameEl.classList.remove('hidden'); }
-            document.getElementById('btnRunQuoteLookup').disabled = true;
+
+            // Không chạy OCR ngay khi tải báo giá lên. Người dùng chủ động bấm nút xử lý.
+            setQuoteStatus(`Đã chọn báo giá: ${file.name}. Chế độ OCR: ${getQuoteOcrModeLabel()}. Chưa chạy OCR. Bấm “Xử lý & gán tên chuẩn” để bắt đầu.`, 0);
+            setQuoteMappingStatus('Đã nhận file báo giá. Dữ liệu OCR chưa được tạo nên nút Tra kho giá và Làm mới sẽ được ẩn.', 'info');
+            renderQuoteOcrRows();
             renderQuoteResults();
-            try {
-                setQuoteStatus(`Đang xử lý báo giá bằng ${getQuoteAiProviderName()}...`, 5);
-                const geminiData = await extractQuoteDataFromFileWithSelectedAI(file);
-                QUOTE_LAST_GEMINI_JSON = geminiData;
-                applyQuoteVehicleHints(geminiData);
-                QUOTE_OCR_ROWS = buildQuoteOcrRowsFromGeminiData(geminiData).map(row => ({ ...row, quoteName: row.name, mappedName: row.mappedName || '', mappedScore: row.mappedScore || 0, mappingSource: row.mappingSource || '' }));
-                autoMapQuoteRowsWithAppraisalItems(false);
-                renderQuoteOcrRows();
-                rebuildQuoteExtractedPartsFromEditableRows(false);
-                document.getElementById('btnRunQuoteLookup').disabled = QUOTE_EXTRACTED_PARTS.length === 0;
-                setQuoteStatus(QUOTE_EXTRACTED_PARTS.length ? `${getQuoteAiProviderName()} OCR hoàn tất — đã lọc ${QUOTE_EXTRACTED_PARTS.length} phụ tùng cần tra. Bạn có thể sửa trực tiếp trong bảng dòng OCR trước khi tra kho.` : `${getQuoteAiProviderName()} đã đọc báo giá nhưng chưa thấy phụ tùng cần tra. Kiểm tra bảng dòng OCR, đổi trạng thái TRA KHO hoặc chỉnh dữ liệu rồi bấm Cập nhật danh sách tra.`, 100);
-                renderQuoteResults();
-            } catch (error) {
-                console.error('Lỗi AI OCR báo giá:', error);
-                setQuoteStatus(`Lỗi xử lý báo giá bằng ${getQuoteAiProviderName()}`, 0);
-                customAlert(`Không xử lý được báo giá bằng ${getQuoteAiProviderName()}: ` + handleQuoteAiError(error));
-            }
+            syncQuoteActionButtons();
         };
 
         async function fetchQuoteWarehouseData(criteria) {
@@ -11928,6 +13724,7 @@ ${text}` });
                 customAlert('Không tra được kho giá theo báo giá: ' + error.message);
             } finally {
                 if (btn) { btn.disabled = QUOTE_EXTRACTED_PARTS.length === 0; btn.innerText = 'Tra kho giá'; }
+                syncQuoteActionButtons();
             }
         };
 
@@ -11968,6 +13765,7 @@ ${text}` });
             setQuoteStatus('Sẵn sàng nhận báo giá', 0);
             setAppraisalStatus('Sẵn sàng nhận biên bản giám định', 0);
             renderQuoteResults();
+            syncQuoteActionButtons();
         };
 
         window.exportQuotePriceResultsCSV = function() {
@@ -12942,7 +14740,9 @@ ${text}` });
                 const el = document.getElementById(id);
                 if (el) observer.observe(el, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['class'] });
             });
+            updateQuoteOcrModeUi();
             syncQuoteUploadDockStatus();
+            syncQuoteActionButtons();
         });
 </script>
 </body>
