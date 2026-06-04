@@ -4001,19 +4001,7 @@
         }
         .topbar-btn-nav { min-width: 190px; }
         .topbar-btn-ghost { min-width: 120px; }
-        .topbar-btn-accent {
-            border-color: #fb923c;
-            background: linear-gradient(135deg, #f59e0b, #f97316);
-            color: #ffffff;
-            box-shadow: 0 16px 30px -22px rgba(249,115,22,.56);
-        }
-        .topbar-btn-accent:hover {
-            color: #ffffff;
-            border-color: #fb923c;
-            box-shadow: 0 18px 34px -24px rgba(249,115,22,.66);
-            filter: saturate(1.04);
-        }
-        .topbar-btn.active,
+.topbar-btn.active,
         .header-module-btn.active {
             background: linear-gradient(135deg, #0f172a, #2563eb) !important;
             color: #ffffff !important;
@@ -4062,12 +4050,7 @@
             color: #93c5fd !important;
             border-color: #60a5fa !important;
         }
-        html.dark .topbar-btn-accent {
-            background: linear-gradient(135deg, #f59e0b, #ea580c) !important;
-            border-color: #fb923c !important;
-            color: #ffffff !important;
-        }
-        html.dark .topbar-user-panel .w-9.h-9 { background: rgba(37,99,235,.18) !important; color: #93c5fd !important; }
+html.dark .topbar-user-panel .w-9.h-9 { background: rgba(37,99,235,.18) !important; color: #93c5fd !important; }
         html.dark .topbar-user-icon-btn { color: #94a3b8; }
         @media (max-width: 1480px) {
             .topbar-btn-nav { min-width: 172px; }
@@ -7879,13 +7862,6 @@
                     </svg>
                     GÓP Ý
                 </button>
-
-                <button onclick="openDonateModal()" class="topbar-btn topbar-btn-accent">
-                    <svg class="w-4 h-4 text-white animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    DONATE
-                </button>
                 <button onclick="toggleTheme()" class="theme-toggle-btn topbar-icon-btn shadow-sm" title="Chuyển chế độ sáng/tối">
                     <svg id="sunIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                     <svg id="moonIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -8067,34 +8043,46 @@
 
                             <input id="importExcelInput" type="file" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleImportExcelFile(event)">
                             <button onclick="document.getElementById('importExcelInput').click()" class="w-full h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">
-                                1. Chọn file Excel
+                                1. Chọn file dữ liệu tổng hợp
                             </button>
 
+                            <input id="importVcxInput" type="file" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleImportVcxScopeFile(event)">
+                            <button onclick="document.getElementById('importVcxInput').click()" class="mt-3 w-full h-12 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 transition-all">
+                                2. Chọn file danh sách VCX
+                            </button>
+                            <div id="importVcxStatus" class="mt-3 rounded-2xl border border-emerald-100 dark:border-emerald-900/60 bg-emerald-50/60 dark:bg-emerald-900/10 px-4 py-3 text-[11px] font-bold text-emerald-700 dark:text-emerald-300 leading-relaxed">
+                                Chức năng riêng biệt: chọn file danh sách VCX để preview và cập nhật trực tiếp các hồ sơ đã có trong Firestore, không cần file dữ liệu tổng hợp.
+                            </div>
+
                             <div class="mt-5 space-y-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 leading-relaxed">
-                                <p>Khóa chống trùng: <b class="text-blue-600">so_hsbt + ten_phu_tung</b>.</p>
-                                <p>Cột bắt buộc: <b>Số HSBT, Tên phụ tùng, Hãng xe, Hiệu xe/Dòng xe, Chính hãng/Loại hàng, Duyệt - Tiền phụ tùng/Giá duyệt, Ngày báo giá, Tên Garage</b>.</p><p>Cột <b>Năm SX</b> và <b>Tỉnh thành</b> là tùy chọn; nếu file không có hoặc năm rỗng vẫn import được.</p>
+                                <p>Khóa chống trùng khi import dữ liệu tổng hợp: <b class="text-blue-600">so_hsbt + ten_phu_tung</b>.</p>
+                                <p><b class="text-emerald-600">Import/Cập nhật VCX riêng biệt:</b> chọn file VCX độc lập. Nếu file có đủ Số HSBT + Tên phụ tùng, hệ thống giữ nguyên từng dòng và cập nhật theo key <b>so_hsbt + ten_phu_tung</b>. Nếu file chỉ có danh sách Số HSBT, hệ thống chỉ cập nhật nhãn VCX cho dữ liệu đã có.</p>
+                                <p><b>Import tổng hợp:</b> nếu chọn cả file dữ liệu tổng hợp + file VCX, dòng có Số HSBT nằm trong file VCX sẽ được gắn <b>VCX</b>, dòng còn lại trong file tổng hợp gắn <b>TNDS</b>.</p>
+                                <p>Cột bắt buộc của file tổng hợp: <b>Số HSBT, Tên phụ tùng, Hãng xe, Hiệu xe/Dòng xe, Chính hãng/Loại hàng, Duyệt - Tiền phụ tùng/Giá duyệt, Ngày báo giá, Tên Garage</b>.</p>
                             </div>
 
                             <div class="mt-5 border-t border-slate-200 dark:border-slate-700 pt-5">
                                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Khi có dòng trùng</label>
                                 <div class="space-y-2">
-                                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"><input type="radio" name="importDuplicateMode" value="skip" checked class="w-4 h-4"> Bỏ qua dòng trùng</label>
-                                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"><input type="radio" name="importDuplicateMode" value="update" class="w-4 h-4"> Ghi đè dữ liệu cũ</label>
+                                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"><input type="radio" name="importDuplicateMode" value="update" checked class="w-4 h-4"> Cập nhật/merge dữ liệu cũ <span class="text-emerald-600 font-black">khuyến nghị</span></label>
+                                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"><input type="radio" name="importDuplicateMode" value="skip" class="w-4 h-4"> Bỏ qua dòng trùng, chỉ cập nhật nhãn VCX/TNDS</label>
                                     <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer"><input type="radio" name="importDuplicateMode" value="keep" class="w-4 h-4"> Thêm tất cả, đánh dấu dup.</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="lg:col-span-8 space-y-4">
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
                                 <div class="rounded-2xl border border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-900"><div class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Tổng dòng</div><div id="importTotalRows" class="text-2xl font-black text-slate-900 dark:text-white mt-1">0</div></div>
                                 <div class="rounded-2xl border border-emerald-200 dark:border-emerald-900/60 p-4 bg-emerald-50/40 dark:bg-emerald-900/10"><div class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Dòng sạch</div><div id="importCleanRows" class="text-2xl font-black text-emerald-600 mt-1">0</div></div>
                                 <div class="rounded-2xl border border-red-200 dark:border-red-900/60 p-4 bg-red-50/40 dark:bg-red-900/10"><div class="text-[9px] font-black text-red-500 uppercase tracking-widest">Trùng</div><div id="importDupRows" class="text-2xl font-black text-red-500 mt-1">0</div></div>
                                 <div class="rounded-2xl border border-amber-200 dark:border-amber-900/60 p-4 bg-amber-50/40 dark:bg-amber-900/10"><div class="text-[9px] font-black text-amber-600 uppercase tracking-widest">Lỗi cột</div><div id="importInvalidRows" class="text-2xl font-black text-amber-600 mt-1">0</div></div>
+                                <div class="rounded-2xl border border-blue-200 dark:border-blue-900/60 p-4 bg-blue-50/40 dark:bg-blue-900/10"><div class="text-[9px] font-black text-blue-600 uppercase tracking-widest">VCX</div><div id="importVcxRows" class="text-2xl font-black text-blue-600 mt-1">0</div></div>
+                                <div class="rounded-2xl border border-cyan-200 dark:border-cyan-900/60 p-4 bg-cyan-50/40 dark:bg-cyan-900/10"><div class="text-[9px] font-black text-cyan-600 uppercase tracking-widest">TNDS</div><div id="importTndsRows" class="text-2xl font-black text-cyan-600 mt-1">0</div></div>
                             </div>
 
                             <div id="importStatus" class="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-xs font-bold text-slate-500 dark:text-slate-400">
-                                Chưa chọn file. Hệ thống sẽ preview tối đa 200 dòng đầu trước khi import.
+                                Chưa chọn file dữ liệu tổng hợp. Hệ thống sẽ preview tối đa 200 dòng đầu trước khi import.
                             </div>
 
                             <div class="overflow-auto max-h-[520px] rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
@@ -8106,11 +8094,12 @@
                                             <th class="px-4 py-3">Tên phụ tùng</th>
                                             <th class="px-4 py-3">Xe</th>
                                             <th class="px-4 py-3">Giá duyệt</th>
+                                            <th class="px-4 py-3">Phạm vi BH</th>
                                             <th class="px-4 py-3">Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody id="importPreviewBody">
-                                        <tr><td colspan="6" class="px-4 py-10 text-center text-slate-300 font-black uppercase tracking-widest">Chưa có dữ liệu preview</td></tr>
+                                        <tr><td colspan="7" class="px-4 py-10 text-center text-slate-300 font-black uppercase tracking-widest">Chưa có dữ liệu preview</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -8118,7 +8107,7 @@
                             <div class="flex flex-col md:flex-row gap-3 justify-end">
                                 <button id="btnClearImport" onclick="clearImportExcelState()" class="h-12 px-5 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300 text-xs font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Xóa preview</button>
                                 <button id="btnRunImport" onclick="runExcelImportToFirestore()" disabled class="h-12 px-6 rounded-2xl bg-slate-300 dark:bg-slate-700 text-white text-xs font-black uppercase tracking-widest cursor-not-allowed transition-all">
-                                    5. Batch write lên Firestore
+                                    3. Import + cập nhật Firestore
                                 </button>
                             </div>
                         </div>
@@ -8763,14 +8752,14 @@
                 <table class="data-table w-full text-sm text-left">
                     <thead>
                         <tr>
-                            <th>Phụ tùng</th><th>Loại hàng</th><th>Thông tin xe</th>
+                            <th>Phụ tùng</th><th>Loại hàng</th><th>Phạm vi BH</th><th>Thông tin xe</th>
                             <th>Garage báo giá</th><th>Ngày báo giá</th>
                             <th>Xác thực</th><th class="text-right">Đơn giá</th>
                         </tr>
                     </thead>
                     <tbody id="resultsTableBody">
                         <tr>
-                            <td colspan="7" class="px-6 py-40 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">
+                            <td colspan="8" class="px-6 py-40 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">
                                 Sẵn sàng tra cứu
                             </td>
                         </tr>
@@ -9161,113 +9150,6 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
                     Gửi ý kiến
                 </button>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="modalDonate" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="relative bg-slate-900 rounded-[3rem] border border-white/10 flex flex-col md:flex-row w-full max-w-4xl mx-auto min-h-[540px] shadow-2xl overflow-hidden animate-[fadeIn_0.3s_ease-out]">
-            <!-- Close Button (X) top right -->
-            <button type="button" onclick="closeModal('modalDonate')" class="absolute top-6 right-6 z-50 w-9 h-9 rounded-full bg-white/5 text-white/40 hover:bg-white/10 hover:text-white flex items-center justify-center transition-all border border-white/10">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
-
-            <!-- Left Column: QR Area (White Background) -->
-            <div class="w-full md:w-[400px] bg-white p-8 flex flex-col items-center justify-center relative border-b md:border-b-0 md:border-r border-slate-100">
-                <div class="absolute top-8 left-8 flex items-center gap-1.5">
-                    <div class="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>
-                    <p class="text-[12px] font-black text-slate-800 tracking-wider">Viet<span class="text-blue-600">QR</span></p>
-                </div>
-                
-                <div class="bg-slate-50 p-2 rounded-[2.5rem] border border-slate-100/50 shadow-inner flex items-center justify-center mt-6">
-                    <img id="donateQR" src="" class="w-72 h-auto relative z-10" alt="QR Code">
-                </div>
-                
-                <div class="mt-6 text-center">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Quét mã bằng App Ngân hàng</p>
-                    <p class="text-[9px] font-bold text-slate-300 italic">Hỗ trợ chuyển khoản nhanh 24/7</p>
-                </div>
-            </div>
-
-            <!-- Right Column: Details & Settings (Dark Background) -->
-            <div class="flex-1 p-8 md:p-12 relative flex flex-col justify-between bg-slate-900 text-white">
-                <div>
-                    <!-- Header -->
-                    <div class="flex items-center justify-between mb-8">
-                        <div class="w-20 h-10 bg-white rounded-xl p-1.5 flex items-center justify-center border border-slate-200">
-                            <img src="https://api.vietqr.io/img/VIB.png" class="max-w-full max-h-full object-contain" alt="VIB Logo">
-                        </div>
-                        <div class="text-right pr-4">
-                            <h3 class="text-white text-xl font-black tracking-tight uppercase leading-none mb-1.5">PAYMENT <span class="text-blue-400">VOUCHER</span></h3>
-                            <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] opacity-80" id="donateRef">REF: DONATE</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-                        <!-- Select Amount Quick Buttons -->
-                        <div>
-                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3">Chọn nhanh số tiền ủng hộ</p>
-                            <div class="relative bg-white/5 p-1 rounded-2xl flex gap-1 border border-white/5">
-                                <button type="button" onclick="selectDonateAmount(20000, this)" class="flex-1 py-2 text-xs font-black text-slate-400 hover:text-white rounded-xl transition-all duration-200 select-amount-btn">20K</button>
-                                <button type="button" onclick="selectDonateAmount(50000, this)" class="flex-1 py-2 text-xs font-black text-white bg-white/10 rounded-xl shadow-sm border border-white/10 transition-all duration-200 select-amount-btn">50K</button>
-                                <button type="button" onclick="selectDonateAmount(100000, this)" class="flex-1 py-2 text-xs font-black text-slate-400 hover:text-white rounded-xl transition-all duration-200 select-amount-btn">100K</button>
-                                <button type="button" onclick="selectDonateAmount('custom', this)" class="flex-1 py-2 text-xs font-black text-slate-400 hover:text-white rounded-xl transition-all duration-200 select-amount-btn">KHÁC</button>
-                            </div>
-                        </div>
-
-                        <!-- Custom Amount Input -->
-                        <div id="customAmountContainer" class="hidden transition-all duration-300">
-                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Nhập số tiền tự chọn (VND)</p>
-                            <div class="relative">
-                                <input type="number" id="customAmountInput" placeholder="Ví dụ: 200000" oninput="onCustomAmountChange()" class="w-full h-11 bg-white/5 border border-white/10 rounded-xl px-4 pr-10 text-xs font-bold text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-slate-500 uppercase">đ</span>
-                            </div>
-                        </div>
-
-                        <!-- Amount Display -->
-                        <div class="pb-6 border-b border-white/10">
-                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Số tiền quyên góp</p>
-                            <div class="flex items-baseline gap-2">
-                                <span class="text-4xl font-black text-white tracking-tighter" id="displayAmount">50.000</span>
-                                <span class="text-lg font-black text-emerald-400 uppercase tracking-wider">VND</span>
-                            </div>
-                        </div>
-
-                        <!-- Details Grid -->
-                        <div class="grid grid-cols-2 gap-x-6 gap-y-4">
-                            <div class="text-left">
-                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Người thụ hưởng</p>
-                                <p class="text-xs font-black text-slate-100 uppercase tracking-tight">HỒ QUANG HUY</p>
-                            </div>
-                            <div class="text-left">
-                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Số tài khoản & Ngân hàng</p>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-black text-blue-400 font-mono tracking-tight cursor-pointer" onclick="copyToClipboard('917828538', this)" title="Click để sao chép">917828538</span>
-                                    <button type="button" onclick="copyToClipboard('917828538', this)" class="p-1 bg-white/5 hover:bg-white/10 text-white rounded-lg flex items-center justify-center transition-all border border-white/5 shadow-sm" title="Sao chép số tài khoản">
-                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                                    </button>
-                                </div>
-                                <p class="text-[9px] font-bold text-slate-500 mt-0.5 uppercase tracking-widest">VIB Bank</p>
-                            </div>
-                        </div>
-
-                        <!-- Message Input -->
-                        <div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-left transition-all hover:bg-white/[0.08]">
-                            <p class="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Nội dung chuyển khoản (Có thể sửa)</p>
-                            <input type="text" id="donateMessageInput" value="" oninput="onDonateMessageChange()" class="w-full bg-transparent border-none text-[13px] font-bold text-slate-100 italic outline-none focus:ring-0 p-0" spellcheck="false">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="mt-8 flex items-center justify-between border-t border-white/5 pt-4 opacity-60">
-                    <div class="flex items-center gap-2">
-                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Verified Secure Transaction</p>
-                    </div>
-                    <p class="text-[9px] font-black text-slate-500 tracking-[0.3em] uppercase">TASCO-DLK SYSTEM</p>
-                </div>
             </div>
         </div>
     </div>
@@ -11002,7 +10884,7 @@
             document.querySelectorAll('#listHang .dropdown-item').forEach(item => item.style.display = 'flex');
             MASTER_DATA = []; CURRENT_PAGE = 1;
             EXACT_SOURCE_CONTEXT = null;
-            document.getElementById('resultsTableBody').innerHTML = '<tr><td colspan="7" class="px-6 py-40 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Sẵn sàng tra cứu</td></tr>';
+            document.getElementById('resultsTableBody').innerHTML = '<tr><td colspan="8" class="px-6 py-40 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Sẵn sàng tra cứu</td></tr>';
             document.getElementById('statCount').innerText = "0 kết quả";
             document.getElementById('priceSummaryBox')?.classList.add('hidden');
             document.getElementById('priceAnalysisBox')?.classList.add('hidden');
@@ -11378,7 +11260,7 @@
             updateExactPartFilterBanner();
 
             if (MASTER_DATA.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="7" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Không tìm thấy phụ tùng khớp bộ lọc</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="8" class="px-6 py-20 text-center text-slate-300 font-bold uppercase italic text-xs tracking-[0.2em]">Không tìm thấy phụ tùng khớp bộ lọc</td></tr>';
                 updatePaginationUI(0); return;
             }
             MASTER_DATA.slice(startIndex, startIndex + ITEMS_PER_PAGE).forEach(item => {
@@ -11391,9 +11273,10 @@
                 const safeHang = sanitize(item.hang_xe);
                 const safeHieu = sanitize(item.hieu_xe);
                 const safeGarage = sanitize(item.ten_garage || 'KHÁC');
-                const safeTinh = sanitize(item.tinh_thanh || 'Toàn quốc');
+                const safeTinh = sanitize(getItemProvince(item) || 'Toàn quốc');
                 const safeNgay = sanitize(ngay);
                 const safeItemIdForJs = String(item.id || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                const scopeBadge = buildScopeBadge(getItemInsuranceScope(item));
 
                 tableBody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition-all cursor-pointer">
@@ -11408,6 +11291,7 @@
                             </button>
                         </td>
                         <td class="px-6 py-4" onclick="showDetail('${item.id}')">${badge}</td>
+                        <td class="px-6 py-4" onclick="showDetail('${item.id}')">${scopeBadge}</td>
                         <td class="px-6 py-4" onclick="showDetail('${item.id}')">
                             <div class="text-[11px] font-black text-slate-700">${safeHang} ${safeHieu}</div>
                             <div class="text-[9px] text-slate-400 font-bold uppercase">Năm: ${sanitize(item.nam_sx || '0')}</div>
@@ -12602,10 +12486,12 @@
                             const safeId = primaryItem?.id ? escapeJsSingle(primaryItem.id) : '';
                             const garagePreview = group.garages.slice(0, 2).join(', ');
                             const moreGarage = Math.max(0, group.garages.length - 2);
+                            const groupScopeBadge = buildScopeBadge(getGroupInsuranceScope(group));
                             return `
                                 <div class="quote-candidate-item ${group.count > 1 ? 'has-many-records' : ''}">
                                     <div class="quote-candidate-main">
                                         <span class="quote-type-pill ${getQuoteTypePillClass(group.type)}">${sanitize(group.type)}</span>
+                                        ${groupScopeBadge}
                                         <strong>${sanitize(group.name)}</strong>
                                         <span class="quote-record-count-badge">${group.count} hồ sơ</span>
                                     </div>
@@ -13893,7 +13779,8 @@ ${text}` });
                 { l: "Đơn giá", v: new Intl.NumberFormat('vi-VN').format(item.gia_duyet || 0) + " VNĐ", c: "text-green-600 font-bold text-lg" },
                 { l: "Ngày báo giá", v: sanitize(item.ngay_bao_gia) },
                 { l: "Garage báo giá", v: sanitize(item.ten_garage) },
-                { l: "Tỉnh thành / Loại hình", v: `${sanitize(item.tinh_thanh || 'N/A')} / ${sanitize(item.loai_hinh || 'Gara')}` }
+                { l: "Phạm vi bảo hiểm", v: sanitize(item.pham_vi_bao_hiem || item.loai_bao_hiem || 'Chưa gắn') },
+                { l: "Tỉnh thành / Loại hình", v: `${sanitize(getItemProvince(item) || 'N/A')} / ${sanitize(getItemBusinessType(item) || 'Gara')}` }
             ];
             if (item.verified && item.verification_note) {
                 fields.push({ l: "Ghi chú từ cộng đồng", v: sanitize(item.verification_note), c: "col-span-2 bg-green-50 dark:bg-green-900/20 p-4 rounded-2xl border border-green-100 text-green-700 italic" });
@@ -13908,20 +13795,25 @@ ${text}` });
         };
 
         // ============================================================
-        // IMPORT EXCEL → FIRESTORE — CHỐNG TRÙNG LẶP BẰNG duplicate_key
+        // IMPORT EXCEL → FIRESTORE — CHỐNG TRÙNG + GẮN PHẠM VI VCX/TNDS
         // ============================================================
         let IMPORT_ROWS = [];
         let IMPORT_EXISTING_MAP = new Map();
+        let IMPORT_VCX_CLAIM_SET = new Set();
+        let IMPORT_VCX_CLAIM_RAW_MAP = new Map();
+        let IMPORT_VCX_FILE_NAME = '';
+        let IMPORT_VCX_ONLY_ROWS = [];
+        let IMPORT_VCX_STANDALONE_DATA_MODE = false;
 
         const IMPORT_REQUIRED_FIELDS = [
             'so_hsbt', 'ten_phu_tung', 'hang_xe', 'hieu_xe',
             'chinh_hang', 'gia_duyet', 'ngay_bao_gia', 'ten_garage'
         ];
         const IMPORT_PREVIEW_LIMIT = 200;
-        const IMPORT_OPTIONAL_FIELDS = ['tinh_thanh', 'loai_hinh'];
+        const IMPORT_OPTIONAL_FIELDS = ['tinh_thanh', 'loai_hinh', 'pham_vi_bao_hiem'];
 
         const IMPORT_FIELD_ALIASES = {
-            so_hsbt: ['so_hsbt', 'số hsbt', 'so hsbt', 'số hồ sơ', 'so ho so', 'mã hồ sơ', 'ma ho so', 'hsbt'],
+            so_hsbt: ['so_hsbt', 'số hsbt', 'so hsbt', 'số hồ sơ', 'so ho so', 'mã hồ sơ', 'ma ho so', 'hsbt', 'claim no', 'claim number', 'số claim', 'so claim'],
             ten_phu_tung: ['ten_phu_tung', 'tên phụ tùng', 'ten phu tung', 'phụ tùng', 'phu tung', 'tên vật tư', 'ten vat tu', 'tên phụ tùng/vật tư'],
             hang_xe: ['hang_xe', 'hãng xe', 'hang xe'],
             hieu_xe: ['hieu_xe', 'hiệu xe', 'hieu xe', 'dòng xe', 'dong xe', 'model xe', 'mẫu xe', 'mau xe'],
@@ -13931,8 +13823,9 @@ ${text}` });
             gia_duyet: ['gia_duyet', 'giá duyệt', 'gia duyet', 'duyệt - tiền phụ tùng', 'duyet tien phu tung', 'duyệt tiền phụ tùng', 'trình - tiền phụ tùng', 'trinh tien phu tung', 'đơn giá garage', 'don gia garage', 'đơn giá', 'don gia', 'giá', 'gia'],
             ngay_bao_gia: ['ngay_bao_gia', 'ngày báo giá', 'ngay bao gia', 'ngày bg', 'ngay bg'],
             ten_garage: ['ten_garage', 'tên garage', 'ten garage', 'garage', 'gara', 'tên gara', 'ten gara', 'đơn vị báo giá', 'don vi bao gia'],
-            tinh_thanh: ['tinh_thanh', 'tỉnh thành', 'tinh thanh', 'tỉnh/tp', 'tinh/tp', 'địa phương', 'dia phuong'],
-            loai_hinh: ['loai_hinh', 'loại hình', 'loai hinh']
+            tinh_thanh: ['tinh_thanh', 'tỉnh thành', 'tinh thanh', 'tỉnh/tp', 'tinh/tp', 'địa phương', 'dia phuong', 'tỉnh garage', 'tinh garage', 'tỉnh gara', 'tinh gara', 'tỉnh garage/gara', 'tinh garage/gara', 'tỉnh báo giá', 'tinh bao gia'],
+            loai_hinh: ['loai_hinh', 'loại hình', 'loai hinh'],
+            pham_vi_bao_hiem: ['pham_vi_bao_hiem', 'phạm vi bảo hiểm', 'pham vi bao hiem', 'loại bảo hiểm', 'loai bao hiem', 'nhóm bảo hiểm', 'nhom bao hiem', 'vcx/tnds', 'vcx', 'tnds']
         };
 
         function normalizeHeaderName(value) {
@@ -13955,6 +13848,16 @@ ${text}` });
                 .replace(/[^a-z0-9]+/g, ' ')
                 .trim()
                 .replace(/\s+/g, ' ');
+        }
+
+        function normalizeClaimScopeKey(value) {
+            return String(value || '')
+                .trim()
+                .toUpperCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/Đ/g, 'D')
+                .replace(/[^A-Z0-9]+/g, '');
         }
 
         function makeDuplicateKey(soHsbt, tenPhuTung) {
@@ -14026,6 +13929,14 @@ ${text}` });
             return 'Thay thế';
         }
 
+        function normalizeInsuranceScope(value) {
+            const raw = normalizeKeyValue(value);
+            if (!raw) return '';
+            if (raw.includes('vcx') || raw.includes('vat chat') || raw.includes('than vo') || raw.includes('tu nguyen')) return 'VCX';
+            if (raw.includes('tnds') || raw.includes('trach nhiem dan su') || raw.includes('dan su')) return 'TNDS';
+            return '';
+        }
+
         function buildHeaderMap(sampleRow) {
             const headerMap = {};
             Object.keys(sampleRow || {}).forEach(originalKey => {
@@ -14042,9 +13953,70 @@ ${text}` });
             return originalKey ? row[originalKey] : '';
         }
 
+        function extractClaimNumberFromRow(row, headerMap = {}) {
+            const mappedValue = readField(row, headerMap, 'so_hsbt');
+            if (mappedValue) return String(mappedValue).trim();
+
+            const values = Object.values(row || {}).map(value => String(value || '').trim()).filter(Boolean);
+            const likely = values.find(value => {
+                const normalized = normalizeClaimScopeKey(value);
+                return normalized.length >= 5 && /\d/.test(normalized);
+            });
+            return likely || '';
+        }
+
+        function buildInsuranceScopePayload(scope, source = 'vcx_import_flow') {
+            const normalizedScope = normalizeInsuranceScope(scope) || scope;
+            return {
+                pham_vi_bao_hiem: normalizedScope,
+                loai_bao_hiem: normalizedScope,
+                is_vcx: normalizedScope === 'VCX',
+                is_tnds: normalizedScope === 'TNDS',
+                insurance_scope_source: source,
+                insurance_scope_updatedAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            };
+        }
+
+        function applyInsuranceScopeToRow(item) {
+            const claimKey = normalizeClaimScopeKey(item.so_hsbt);
+            const explicitScope = normalizeInsuranceScope(item.pham_vi_bao_hiem || item.loai_bao_hiem);
+            let scope = explicitScope;
+            let source = explicitScope ? 'excel_column' : '';
+
+            if (IMPORT_VCX_CLAIM_SET.size && claimKey) {
+                scope = IMPORT_VCX_CLAIM_SET.has(claimKey) ? 'VCX' : 'TNDS';
+                source = 'vcx_claim_file';
+            }
+
+            if (scope) {
+                item.pham_vi_bao_hiem = scope;
+                item.loai_bao_hiem = scope;
+                item.is_vcx = scope === 'VCX';
+                item.is_tnds = scope === 'TNDS';
+                item.insurance_scope_source = source;
+                item._scope_matched_vcx = scope === 'VCX';
+            } else {
+                item.pham_vi_bao_hiem = '';
+                item.loai_bao_hiem = '';
+                item.is_vcx = false;
+                item.is_tnds = false;
+                item.insurance_scope_source = '';
+                item._scope_matched_vcx = false;
+            }
+            return item;
+        }
+
+        function applyInsuranceScopeToImportRows() {
+            IMPORT_ROWS.forEach(row => applyInsuranceScopeToRow(row));
+        }
+
         function normalizeImportRow(row, headerMap, rowIndex) {
+            const explicitScope = normalizeInsuranceScope(readField(row, headerMap, 'pham_vi_bao_hiem'));
             const item = {
                 so_hsbt: String(readField(row, headerMap, 'so_hsbt') || '').trim(),
+                normalized_so_hsbt: normalizeClaimScopeKey(readField(row, headerMap, 'so_hsbt')),
+                claim_scope_key: normalizeClaimScopeKey(readField(row, headerMap, 'so_hsbt')),
                 ten_phu_tung: String(readField(row, headerMap, 'ten_phu_tung') || '').trim(),
                 hang_xe: String(readField(row, headerMap, 'hang_xe') || '').trim().toUpperCase(),
                 hieu_xe: String(readField(row, headerMap, 'hieu_xe') || '').trim().toUpperCase(),
@@ -14054,7 +14026,9 @@ ${text}` });
                 ngay_bao_gia: excelDateToDisplay(readField(row, headerMap, 'ngay_bao_gia')),
                 ten_garage: String(readField(row, headerMap, 'ten_garage') || '').trim(),
                 tinh_thanh: String(readField(row, headerMap, 'tinh_thanh') || '').trim(),
-                loai_hinh: String(readField(row, headerMap, 'loai_hinh') || '').trim() || 'Gara',
+                loai_hinh: String(readField(row, headerMap, 'loai_hinh') || '').trim(),
+                pham_vi_bao_hiem: explicitScope,
+                loai_bao_hiem: explicitScope,
                 verified: false,
                 import_source: 'excel_admin',
                 import_row_index: rowIndex,
@@ -14062,10 +14036,21 @@ ${text}` });
                 updatedAt: serverTimestamp()
             };
 
+            applyInsuranceScopeToRow(item);
             item.duplicate_key = makeDuplicateKey(item.so_hsbt, item.ten_phu_tung);
             item.import_doc_id = hashDuplicateKey(item.duplicate_key);
             item._invalid = IMPORT_REQUIRED_FIELDS.filter(field => !item[field]);
             return item;
+        }
+
+        function removeEmptyOptionalImportFields(payload) {
+            const cleaned = { ...payload };
+            // Không để file VCX/full import ghi đè các dữ liệu mô tả đang có bằng rỗng/default.
+            // Ví dụ file chỉ dùng để gắn VCX nhưng thiếu cột Tỉnh garage/Loại hình thì không được làm mất dữ liệu cũ.
+            ['tinh_thanh', 'loai_hinh'].forEach(field => {
+                if (String(cleaned[field] || '').trim() === '') delete cleaned[field];
+            });
+            return cleaned;
         }
 
         async function findExistingImportRows(rows) {
@@ -14094,13 +14079,76 @@ ${text}` });
             return existing;
         }
 
+        function isVcxOnlyImportMode() {
+            return !IMPORT_ROWS.length && IMPORT_VCX_ONLY_ROWS.length > 0;
+        }
+
+        function isVcxStandaloneDataMode() {
+            return IMPORT_VCX_STANDALONE_DATA_MODE && IMPORT_ROWS.length > 0;
+        }
+
         function setImportButtonEnabled(enabled) {
             const btn = document.getElementById('btnRunImport');
             if (!btn) return;
             btn.disabled = !enabled;
+            if (isVcxStandaloneDataMode()) {
+                btn.innerText = 'Import/Cập nhật VCX từ file này';
+            } else {
+                btn.innerText = isVcxOnlyImportMode() ? 'Cập nhật VCX từ file này' : '3. Import + cập nhật Firestore';
+            }
             btn.className = enabled
                 ? 'h-12 px-6 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all'
                 : 'h-12 px-6 rounded-2xl bg-slate-300 dark:bg-slate-700 text-white text-xs font-black uppercase tracking-widest cursor-not-allowed transition-all';
+        }
+
+        function setVcxImportStatus(message) {
+            const el = document.getElementById('importVcxStatus');
+            if (el) el.innerText = message;
+        }
+
+        function getItemProvince(item = {}) {
+            return String(
+                item.tinh_thanh ||
+                item.tinh_garage ||
+                item.tinh_gara ||
+                item.tinh_bao_gia ||
+                item.dia_phuong ||
+                ''
+            ).trim();
+        }
+
+        function getItemBusinessType(item = {}) {
+            return String(
+                item.loai_hinh ||
+                item.loai_hinh_gara ||
+                item.loai_hinh_garage ||
+                ''
+            ).trim();
+        }
+
+        function getItemInsuranceScope(item = {}) {
+            const directScope = normalizeInsuranceScope(item.pham_vi_bao_hiem || item.loai_bao_hiem || item.insurance_scope);
+            if (directScope) return directScope;
+            if (item.is_vcx === true || item.is_vcx === 'true' || item._scope_matched_vcx === true) return 'VCX';
+            if (item.is_tnds === true || item.is_tnds === 'true') return 'TNDS';
+            return '';
+        }
+
+        function getGroupInsuranceScope(group = {}) {
+            const items = Array.isArray(group.items) ? group.items : [];
+            const scopes = items.map(getItemInsuranceScope).filter(Boolean);
+            if (!scopes.length) return '';
+            if (scopes.every(scope => scope === 'VCX')) return 'VCX';
+            if (scopes.every(scope => scope === 'TNDS')) return 'TNDS';
+            return 'MIXED';
+        }
+
+        function buildScopeBadge(scope) {
+            const normalizedScope = normalizeInsuranceScope(scope) || String(scope || '').toUpperCase();
+            if (normalizedScope === 'VCX') return '<span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-200 font-black text-[10px] uppercase tracking-wide">VCX</span>';
+            if (normalizedScope === 'TNDS') return '<span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-200 font-black text-[10px] uppercase tracking-wide">TNDS</span>';
+            if (normalizedScope === 'MIXED') return '<span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-200 font-black text-[10px] uppercase tracking-wide">VCX/TNDS</span>';
+            return '<span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 font-black text-[10px] uppercase tracking-wide">Chưa gắn</span>';
         }
 
         function renderImportPreview() {
@@ -14109,51 +14157,376 @@ ${text}` });
             const cleanEl = document.getElementById('importCleanRows');
             const dupEl = document.getElementById('importDupRows');
             const invalidEl = document.getElementById('importInvalidRows');
+            const vcxEl = document.getElementById('importVcxRows');
+            const tndsEl = document.getElementById('importTndsRows');
 
-            const duplicateCount = IMPORT_ROWS.filter(row => row._duplicate && !row._invalid?.length).length;
-            const invalidCount = IMPORT_ROWS.filter(row => row._invalid?.length).length;
-            const cleanCount = IMPORT_ROWS.filter(row => !row._duplicate && !row._invalid?.length).length;
+            const isVcxOnly = isVcxOnlyImportMode();
+            const rowsForPreview = IMPORT_ROWS.length ? IMPORT_ROWS : IMPORT_VCX_ONLY_ROWS;
+            const duplicateCount = isVcxOnly ? 0 : IMPORT_ROWS.filter(row => row._duplicate && !row._invalid?.length).length;
+            const invalidCount = isVcxOnly ? 0 : IMPORT_ROWS.filter(row => row._invalid?.length).length;
+            const cleanCount = isVcxOnly ? IMPORT_VCX_ONLY_ROWS.length : IMPORT_ROWS.filter(row => !row._duplicate && !row._invalid?.length).length;
+            const vcxCount = rowsForPreview.filter(row => row.pham_vi_bao_hiem === 'VCX' && !row._invalid?.length).length;
+            const tndsCount = rowsForPreview.filter(row => row.pham_vi_bao_hiem === 'TNDS' && !row._invalid?.length).length;
 
-            totalEl.innerText = IMPORT_ROWS.length;
-            cleanEl.innerText = Math.max(cleanCount, 0);
-            dupEl.innerText = duplicateCount;
-            invalidEl.innerText = invalidCount;
+            if (totalEl) totalEl.innerText = rowsForPreview.length;
+            if (cleanEl) cleanEl.innerText = Math.max(cleanCount, 0);
+            if (dupEl) dupEl.innerText = duplicateCount;
+            if (invalidEl) invalidEl.innerText = invalidCount;
+            if (vcxEl) vcxEl.innerText = vcxCount;
+            if (tndsEl) tndsEl.innerText = tndsCount;
 
-            if (!IMPORT_ROWS.length) {
-                body.innerHTML = '<tr><td colspan="6" class="px-4 py-10 text-center text-slate-300 font-black uppercase tracking-widest">Chưa có dữ liệu preview</td></tr>';
+            if (!rowsForPreview.length) {
+                body.innerHTML = '<tr><td colspan="7" class="px-4 py-10 text-center text-slate-300 font-black uppercase tracking-widest">Chưa có dữ liệu preview</td></tr>';
                 setImportButtonEnabled(false);
                 return;
             }
 
-            const visibleRows = IMPORT_ROWS.slice(0, IMPORT_PREVIEW_LIMIT);
+            const visibleRows = rowsForPreview.slice(0, IMPORT_PREVIEW_LIMIT);
             body.innerHTML = visibleRows.map((row, idx) => {
-                const status = row._invalid?.length
-                    ? `<span class="px-2 py-1 rounded-lg bg-amber-100 text-amber-700 font-black">Thiếu: ${sanitize(row._invalid.join(', '))}</span>`
-                    : row._duplicate
-                        ? '<span class="px-2 py-1 rounded-lg bg-red-100 text-red-600 font-black">Trùng Firestore</span>'
-                        : '<span class="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-700 font-black">Sạch</span>';
+                const status = isVcxOnly
+                    ? '<span class="px-2 py-1 rounded-lg bg-blue-100 text-blue-700 font-black">Chờ cập nhật VCX</span>'
+                    : row._invalid?.length
+                        ? `<span class="px-2 py-1 rounded-lg bg-amber-100 text-amber-700 font-black">Thiếu: ${sanitize(row._invalid.join(', '))}</span>`
+                        : row._duplicate
+                            ? '<span class="px-2 py-1 rounded-lg bg-red-100 text-red-600 font-black">Trùng Firestore</span>'
+                            : '<span class="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-700 font-black">Sạch</span>';
+                const partName = isVcxOnly ? 'CẬP NHẬT TOÀN BỘ PHỤ TÙNG THUỘC HỒ SƠ' : row.ten_phu_tung;
+                const vehicleText = isVcxOnly ? 'Không yêu cầu file tổng hợp' : `${sanitize(row.hang_xe)} ${sanitize(row.hieu_xe)} — ${sanitize(row.nam_sx || 'Chưa rõ')}`;
+                const priceText = isVcxOnly ? '—' : new Intl.NumberFormat('vi-VN').format(row.gia_duyet || 0);
                 return `
                     <tr class="border-t border-slate-100 dark:border-slate-800">
                         <td class="px-4 py-3 font-black text-slate-400">${idx + 1}</td>
                         <td class="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">${sanitize(row.so_hsbt)}</td>
-                        <td class="px-4 py-3 font-black text-slate-900 dark:text-white uppercase">${sanitize(row.ten_phu_tung)}</td>
-                        <td class="px-4 py-3 font-bold text-slate-600 dark:text-slate-300">${sanitize(row.hang_xe)} ${sanitize(row.hieu_xe)} — ${sanitize(row.nam_sx || 'Chưa rõ')}</td>
-                        <td class="px-4 py-3 font-black text-blue-600">${new Intl.NumberFormat('vi-VN').format(row.gia_duyet || 0)}</td>
+                        <td class="px-4 py-3 font-black text-slate-900 dark:text-white uppercase">${sanitize(partName)}</td>
+                        <td class="px-4 py-3 font-bold text-slate-600 dark:text-slate-300">${vehicleText}</td>
+                        <td class="px-4 py-3 font-black text-blue-600">${priceText}</td>
+                        <td class="px-4 py-3">${buildScopeBadge(row.pham_vi_bao_hiem)}</td>
                         <td class="px-4 py-3">${status}</td>
                     </tr>`;
             }).join('');
 
-            if (IMPORT_ROWS.length > IMPORT_PREVIEW_LIMIT) {
+            if (rowsForPreview.length > IMPORT_PREVIEW_LIMIT) {
                 body.innerHTML += `
                     <tr class="border-t border-slate-100 dark:border-slate-800">
-                        <td colspan="6" class="px-4 py-4 text-center text-slate-400 font-black uppercase tracking-widest">
-                            Đang hiển thị ${IMPORT_PREVIEW_LIMIT}/${IMPORT_ROWS.length} dòng. Khi import, hệ thống vẫn ghi toàn bộ dòng hợp lệ.
+                        <td colspan="7" class="px-4 py-4 text-center text-slate-400 font-black uppercase tracking-widest">
+                            Đang hiển thị ${IMPORT_PREVIEW_LIMIT}/${rowsForPreview.length} dòng. Khi cập nhật, hệ thống vẫn xử lý toàn bộ dòng hợp lệ.
                         </td>
                     </tr>`;
             }
 
-            setImportButtonEnabled(IMPORT_ROWS.some(row => !row._invalid?.length));
+            setImportButtonEnabled(isVcxOnly || IMPORT_ROWS.some(row => !row._invalid?.length));
         }
+
+        function isLikelyVcxClaimValue(value, options = {}) {
+            if (value instanceof Date) return false;
+
+            const raw = String(value || '').trim();
+            if (!raw) return false;
+
+            const normalized = normalizeClaimScopeKey(raw);
+            if (!normalized || !/\d/.test(normalized)) return false;
+            if (/^(STT|NO|SO|HSBT|SOHSBT|SOHOSO|MAHOSO|CLAIM|CLAIMNO|CLAIMNUMBER)$/.test(normalized)) return false;
+
+            // Loại các ô chắc chắn không phải mã hồ sơ.
+            if (/^\d{4}[-/]\d{1,2}[-/]\d{1,2}/.test(raw)) return false;
+            if (/^\d{1,2}[-/]\d{1,2}[-/]\d{2,4}/.test(raw)) return false;
+            if (/^\d{4}[-/]\d{1,2}[-/]\d{1,2}\s+\d{1,2}:\d{2}/.test(raw)) return false;
+
+            // Nếu đang đọc từ cột header Số HSBT/Số hồ sơ đã xác định rõ,
+            // chấp nhận cả mã hồ sơ dạng số thuần để không bỏ sót dữ liệu nội bộ.
+            if (options.trustedHsbtColumn) {
+                if (normalized.length < 4) return false;
+                return true;
+            }
+
+            // Khi không có header rõ ràng, chỉ nhận dạng mã hồ sơ rất đặc trưng.
+            // Không dùng fallback chữ+số quá rộng vì sẽ nhận nhầm hiệu xe, ngày, giá tiền.
+            const upperRaw = raw.toUpperCase();
+            if (/(HSBT|XCG|CLAIM)/.test(upperRaw)) return true;
+            if (/H[ỒO]\s*S[ƠO]|MA\s*H[ỒO]\s*S[ƠO]/i.test(raw)) return true;
+            if (/^[A-Z]{2,}\/[A-Z]{2,}\/\d{4}\/\d{4,}$/i.test(raw)) return true;
+
+            return false;
+        }
+
+        function addVcxClaimCandidateToMap(claimRawMap, value, options = {}) {
+            if (!isLikelyVcxClaimValue(value, options)) return false;
+            const rawClaim = String(value || '').trim();
+            const normalizedClaim = normalizeClaimScopeKey(rawClaim);
+            if (!normalizedClaim) return false;
+            claimRawMap.set(normalizedClaim, rawClaim);
+            return true;
+        }
+
+        function getSheetMatrixRows(sheet) {
+            return XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: true });
+        }
+
+        function findHsbtColumnInMatrix(matrixRows) {
+            const soHsbtAliases = IMPORT_FIELD_ALIASES.so_hsbt.map(normalizeHeaderName);
+            const compactAliases = new Set(soHsbtAliases.map(value => value.replace(/\s+/g, '')));
+            const maxHeaderScanRows = Math.min(matrixRows.length, 20);
+
+            for (let rowIndex = 0; rowIndex < maxHeaderScanRows; rowIndex++) {
+                const row = matrixRows[rowIndex] || [];
+                for (let colIndex = 0; colIndex < row.length; colIndex++) {
+                    const cellValue = row[colIndex];
+                    // Dữ liệu thật như HSBT/XCG/2025/... không được coi là header, nếu không file 1 cột sẽ mất dòng đầu.
+                    if (isLikelyVcxClaimValue(cellValue)) continue;
+
+                    const normalizedHeader = normalizeHeaderName(cellValue);
+                    const compactHeader = normalizedHeader.replace(/\s+/g, '');
+                    const isExactAlias = soHsbtAliases.includes(normalizedHeader) || compactAliases.has(compactHeader);
+                    const isSoftAlias = compactHeader.includes('hsbt') || compactHeader.includes('sohoso') || compactHeader.includes('mahoso') || compactHeader.includes('claimnumber') || compactHeader.includes('claimno');
+                    if (!isExactAlias && !isSoftAlias) continue;
+
+                    // Kiểm tra nhanh vài dòng dưới header để tránh bắt nhầm tiêu đề phụ.
+                    let validBelow = 0;
+                    let filledBelow = 0;
+                    for (let r = rowIndex + 1; r < Math.min(matrixRows.length, rowIndex + 31); r++) {
+                        const cell = matrixRows[r]?.[colIndex];
+                        if (String(cell || '').trim() !== '') filledBelow++;
+                        if (isLikelyVcxClaimValue(cell, { trustedHsbtColumn: true })) validBelow++;
+                    }
+                    if (filledBelow === 0 || validBelow > 0) return { rowIndex, colIndex };
+                }
+            }
+            return null;
+        }
+
+        function findBestClaimColumnInMatrix(matrixRows) {
+            const columnStats = new Map();
+            matrixRows.forEach((row, rowIndex) => {
+                (row || []).forEach((cell, colIndex) => {
+                    const raw = String(cell || '').trim();
+                    if (!raw) return;
+                    if (!columnStats.has(colIndex)) columnStats.set(colIndex, { filled: 0, hits: 0, firstHitRow: rowIndex });
+                    const stat = columnStats.get(colIndex);
+                    stat.filled++;
+                    if (isLikelyVcxClaimValue(cell)) {
+                        stat.hits++;
+                        stat.firstHitRow = Math.min(stat.firstHitRow, rowIndex);
+                    }
+                });
+            });
+
+            const candidates = [...columnStats.entries()]
+                .filter(([, stat]) => stat.hits > 0 && stat.hits / Math.max(stat.filled, 1) >= 0.45)
+                .sort((a, b) => b[1].hits - a[1].hits || a[0] - b[0]);
+            return candidates.length ? candidates[0][0] : null;
+        }
+
+        function getDominantSingleColumnIndex(matrixRows) {
+            const nonEmptyRows = matrixRows
+                .map(row => (row || []).map((cell, colIndex) => ({ cell, colIndex })).filter(item => String(item.cell || '').trim() !== ''))
+                .filter(items => items.length);
+            if (!nonEmptyRows.length) return null;
+
+            // File danh sách VCX đúng dạng riêng biệt thường chỉ có 1 cột mã hồ sơ.
+            const rowsWithOneValue = nonEmptyRows.filter(items => items.length === 1);
+            if (rowsWithOneValue.length >= Math.max(1, Math.floor(nonEmptyRows.length * 0.8))) {
+                const counts = new Map();
+                rowsWithOneValue.forEach(items => counts.set(items[0].colIndex, (counts.get(items[0].colIndex) || 0) + 1));
+                return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+            }
+            return null;
+        }
+
+        function forceVcxScopeOnRow(item, source = 'vcx_standalone_file') {
+            const claimKey = normalizeClaimScopeKey(item.so_hsbt || item.normalized_so_hsbt || item.claim_scope_key);
+            item.normalized_so_hsbt = claimKey;
+            item.claim_scope_key = claimKey;
+            item.pham_vi_bao_hiem = 'VCX';
+            item.loai_bao_hiem = 'VCX';
+            item.is_vcx = true;
+            item.is_tnds = false;
+            item.insurance_scope_source = source;
+            item._scope_matched_vcx = true;
+            return item;
+        }
+
+        function rebuildVcxOnlyRowsFromClaimMap() {
+            IMPORT_VCX_ONLY_ROWS = [...IMPORT_VCX_CLAIM_RAW_MAP.entries()].map(([normalizedClaim, rawClaim], idx) => ({
+                so_hsbt: String(rawClaim || normalizedClaim || '').trim(),
+                normalized_so_hsbt: normalizedClaim,
+                claim_scope_key: normalizedClaim,
+                ten_phu_tung: 'Cập nhật toàn bộ phụ tùng thuộc hồ sơ',
+                hang_xe: '',
+                hieu_xe: '',
+                nam_sx: 0,
+                gia_duyet: 0,
+                pham_vi_bao_hiem: 'VCX',
+                loai_bao_hiem: 'VCX',
+                is_vcx: true,
+                is_tnds: false,
+                _invalid: [],
+                _duplicate: false,
+                _vcx_only: true,
+                import_row_index: idx + 1
+            }));
+        }
+
+        function parseStandaloneVcxDataRowsFromWorkbook(workbook) {
+            const parsedRows = [];
+            const claimRawMap = new Map();
+            let globalRowIndex = 2;
+
+            workbook.SheetNames.forEach(sheetName => {
+                const sheet = workbook.Sheets[sheetName];
+                const objectRows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: true });
+                if (!objectRows.length) return;
+
+                const headerMap = buildHeaderMap(objectRows[0]);
+                // Chỉ coi là file dữ liệu VCX đầy đủ khi có cả Số HSBT và Tên phụ tùng.
+                // Nếu file chỉ là danh sách hồ sơ 1 cột thì không đi nhánh này.
+                if (!headerMap.so_hsbt || !headerMap.ten_phu_tung) return;
+
+                objectRows.forEach(row => {
+                    const soHsbt = String(readField(row, headerMap, 'so_hsbt') || '').trim();
+                    const tenPhuTung = String(readField(row, headerMap, 'ten_phu_tung') || '').trim();
+                    if (!soHsbt && !tenPhuTung) return;
+
+                    const item = normalizeImportRow(row, headerMap, globalRowIndex++);
+                    forceVcxScopeOnRow(item, 'vcx_standalone_file');
+                    item.import_source = 'excel_vcx_standalone';
+                    item._vcx_standalone = true;
+                    item._invalid = IMPORT_REQUIRED_FIELDS.filter(field => !item[field]);
+                    item.duplicate_key = makeDuplicateKey(item.so_hsbt, item.ten_phu_tung);
+                    item.import_doc_id = hashDuplicateKey(item.duplicate_key);
+                    parsedRows.push(item);
+                    addVcxClaimCandidateToMap(claimRawMap, item.so_hsbt, { trustedHsbtColumn: true });
+                });
+            });
+
+            return { rows: parsedRows, claimRawMap };
+        }
+
+        function rebuildVcxClaimSetFromWorkbook(workbook) {
+            const claimRawMap = new Map();
+
+            workbook.SheetNames.forEach(sheetName => {
+                const sheet = workbook.Sheets[sheetName];
+                const matrixRows = getSheetMatrixRows(sheet);
+                const hsbtColumn = findHsbtColumnInMatrix(matrixRows);
+
+                // Ưu tiên tuyệt đối cột Số HSBT/Số hồ sơ nếu file có header rõ ràng.
+                // Đây là key duy nhất để cập nhật các dòng đã có trong LichSuBaoGia.
+                if (hsbtColumn) {
+                    matrixRows.slice(hsbtColumn.rowIndex + 1).forEach(row => {
+                        addVcxClaimCandidateToMap(claimRawMap, row?.[hsbtColumn.colIndex], { trustedHsbtColumn: true });
+                    });
+                    return;
+                }
+
+                // File VCX không header nhưng vẫn có nhiều cột: tự tìm cột có tỷ lệ ô giống mã hồ sơ cao nhất.
+                // Tuyệt đối không quét toàn bộ sheet để tránh lấy nhầm ngày, hiệu xe, giá duyệt.
+                const bestClaimColumn = findBestClaimColumnInMatrix(matrixRows);
+                if (bestClaimColumn !== null) {
+                    matrixRows.forEach(row => addVcxClaimCandidateToMap(claimRawMap, row?.[bestClaimColumn]));
+                    return;
+                }
+
+                // File danh sách VCX không header đúng dạng riêng biệt thường chỉ có 1 cột mã hồ sơ.
+                const singleColumnIndex = getDominantSingleColumnIndex(matrixRows);
+                if (singleColumnIndex !== null) {
+                    matrixRows.forEach(row => addVcxClaimCandidateToMap(claimRawMap, row?.[singleColumnIndex]));
+                    return;
+                }
+
+                // Fallback cuối: SheetJS object rows, chỉ lấy nếu tự nhận diện được field so_hsbt.
+                const objectRows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: true });
+                if (!objectRows.length) return;
+                const headerMap = buildHeaderMap(objectRows[0]);
+                if (!headerMap.so_hsbt) return;
+                objectRows.forEach(row => addVcxClaimCandidateToMap(claimRawMap, readField(row, headerMap, 'so_hsbt'), { trustedHsbtColumn: true }));
+            });
+
+            return claimRawMap;
+        }
+
+        window.handleImportVcxScopeFile = async function(event) {
+            const file = event.target.files?.[0];
+            const status = document.getElementById('importStatus');
+            if (!file) return;
+            if (!window.XLSX) return customAlert('Chưa tải được thư viện SheetJS. Vui lòng kiểm tra kết nối CDN.');
+
+            try {
+                setVcxImportStatus('Đang đọc file VCX...');
+                setImportButtonEnabled(false);
+                const buffer = await file.arrayBuffer();
+                const workbook = XLSX.read(buffer, { type: 'array', cellDates: true });
+
+                IMPORT_VCX_FILE_NAME = file.name || '';
+                IMPORT_VCX_STANDALONE_DATA_MODE = false;
+                IMPORT_ROWS = [];
+                IMPORT_EXISTING_MAP = new Map();
+
+                // Nhánh 1: file VCX có đủ dữ liệu từng dòng phụ tùng.
+                // Khi có Số HSBT + Tên phụ tùng, phải giữ nguyên số dòng file và import/update theo key so_hsbt + ten_phu_tung.
+                const standaloneData = parseStandaloneVcxDataRowsFromWorkbook(workbook);
+                if (standaloneData.rows.length) {
+                    IMPORT_ROWS = standaloneData.rows;
+                    IMPORT_VCX_ONLY_ROWS = [];
+                    IMPORT_VCX_CLAIM_RAW_MAP = standaloneData.claimRawMap;
+                    IMPORT_VCX_CLAIM_SET = new Set(IMPORT_VCX_CLAIM_RAW_MAP.keys());
+                    IMPORT_VCX_STANDALONE_DATA_MODE = true;
+
+                    IMPORT_EXISTING_MAP = await findExistingImportRows(IMPORT_ROWS);
+                    IMPORT_ROWS.forEach(row => row._duplicate = IMPORT_EXISTING_MAP.has(row.duplicate_key));
+
+                    renderImportPreview();
+                    const validRows = IMPORT_ROWS.filter(row => !row._invalid?.length).length;
+                    const duplicateRows = IMPORT_ROWS.filter(row => row._duplicate && !row._invalid?.length).length;
+                    if (status) {
+                        status.innerText = `Đã đọc ${IMPORT_ROWS.length} dòng dữ liệu VCX từ file "${file.name}". Đây là luồng riêng: import/cập nhật theo key so_hsbt + ten_phu_tung, không cần file dữ liệu tổng hợp. Hợp lệ ${validRows}, trùng ${duplicateRows}.`;
+                    }
+                    setVcxImportStatus(`Đã nhận ${IMPORT_ROWS.length} dòng dữ liệu VCX từ file "${file.name}". Key cập nhật: Số HSBT + Tên phụ tùng.`);
+                    return;
+                }
+
+                // Nhánh 2: file chỉ là danh sách hồ sơ VCX, không có tên phụ tùng.
+                // Chế độ này chỉ cập nhật nhãn VCX cho các dòng đã có trong Firestore theo Số HSBT.
+                IMPORT_VCX_CLAIM_RAW_MAP = rebuildVcxClaimSetFromWorkbook(workbook);
+                IMPORT_VCX_CLAIM_SET = new Set(IMPORT_VCX_CLAIM_RAW_MAP.keys());
+                rebuildVcxOnlyRowsFromClaimMap();
+
+                if (!IMPORT_VCX_CLAIM_SET.size) {
+                    IMPORT_VCX_CLAIM_RAW_MAP = new Map();
+                    IMPORT_VCX_CLAIM_SET = new Set();
+                    IMPORT_VCX_ONLY_ROWS = [];
+                    IMPORT_VCX_FILE_NAME = '';
+                    IMPORT_VCX_STANDALONE_DATA_MODE = false;
+                    renderImportPreview();
+                    setVcxImportStatus('Không tìm thấy Số HSBT trong file VCX. Hãy kiểm tra lại cột Số HSBT/Số hồ sơ hoặc file 1 cột danh sách mã hồ sơ.');
+                    return customAlert('File VCX chưa nhận diện được Số HSBT.');
+                }
+
+                applyInsuranceScopeToImportRows();
+                renderImportPreview();
+
+                if (!IMPORT_ROWS.length && status) {
+                    status.innerText = `Đã đọc ${IMPORT_VCX_ONLY_ROWS.length} hồ sơ VCX từ file "${file.name}". Đây là file danh sách hồ sơ: bấm “Cập nhật VCX từ file này” để cập nhật các dòng đã có trong Firestore, không cần file dữ liệu tổng hợp.`;
+                } else if (status) {
+                    const vcxCount = IMPORT_ROWS.filter(row => row.pham_vi_bao_hiem === 'VCX' && !row._invalid?.length).length;
+                    const tndsCount = IMPORT_ROWS.filter(row => row.pham_vi_bao_hiem === 'TNDS' && !row._invalid?.length).length;
+                    status.innerText = `Đã nhận file VCX và gắn lại preview dữ liệu tổng hợp: VCX ${vcxCount}, TNDS ${tndsCount}.`;
+                }
+
+                setVcxImportStatus(`Đã nhận ${IMPORT_VCX_CLAIM_SET.size} hồ sơ VCX từ file "${file.name}". Có thể cập nhật độc lập hoặc dùng kèm file tổng hợp.`);
+            } catch (error) {
+                console.error('VCX scope file parse error:', error);
+                IMPORT_ROWS = [];
+                IMPORT_EXISTING_MAP = new Map();
+                IMPORT_VCX_CLAIM_RAW_MAP = new Map();
+                IMPORT_VCX_CLAIM_SET = new Set();
+                IMPORT_VCX_ONLY_ROWS = [];
+                IMPORT_VCX_FILE_NAME = '';
+                IMPORT_VCX_STANDALONE_DATA_MODE = false;
+                renderImportPreview();
+                setVcxImportStatus('Lỗi đọc file VCX: ' + error.message);
+                customAlert('Lỗi đọc file VCX: ' + error.message);
+            }
+        };
 
         window.handleImportExcelFile = async function(event) {
             const file = event.target.files?.[0];
@@ -14164,6 +14537,7 @@ ${text}` });
             try {
                 status.innerText = 'Đang đọc Excel và kiểm tra trùng lặp Firestore...';
                 setImportButtonEnabled(false);
+                IMPORT_VCX_STANDALONE_DATA_MODE = false;
 
                 const buffer = await file.arrayBuffer();
                 const workbook = XLSX.read(buffer, { type: 'array', cellDates: true });
@@ -14172,39 +14546,54 @@ ${text}` });
                 const rawRows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: true });
 
                 if (!rawRows.length) {
-                    clearImportExcelState();
+                    clearImportExcelState({ keepVcxScope: true });
                     return customAlert('File Excel không có dữ liệu.');
                 }
 
                 const headerMap = buildHeaderMap(rawRows[0]);
                 const missingColumns = IMPORT_REQUIRED_FIELDS.filter(field => !headerMap[field]);
                 if (missingColumns.length) {
-                    clearImportExcelState();
+                    clearImportExcelState({ keepVcxScope: true });
                     const message = 'File Excel thiếu cột bắt buộc hoặc chưa nhận diện được tên cột: ' + missingColumns.join(', ');
                     status.innerText = message;
                     return customAlert(message);
                 }
 
                 IMPORT_ROWS = rawRows.map((row, idx) => normalizeImportRow(row, headerMap, idx + 2));
+                applyInsuranceScopeToImportRows();
                 IMPORT_EXISTING_MAP = await findExistingImportRows(IMPORT_ROWS);
                 IMPORT_ROWS.forEach(row => row._duplicate = IMPORT_EXISTING_MAP.has(row.duplicate_key));
 
                 renderImportPreview();
-                status.innerText = `Đã đọc ${IMPORT_ROWS.length} dòng từ sheet "${firstSheetName}". Đang preview ${Math.min(IMPORT_ROWS.length, IMPORT_PREVIEW_LIMIT)} dòng đầu; khi import sẽ ghi toàn bộ dòng hợp lệ.`;
+                const vcxCount = IMPORT_ROWS.filter(row => row.pham_vi_bao_hiem === 'VCX' && !row._invalid?.length).length;
+                const tndsCount = IMPORT_ROWS.filter(row => row.pham_vi_bao_hiem === 'TNDS' && !row._invalid?.length).length;
+                const scopeText = IMPORT_VCX_CLAIM_SET.size ? ` Đã gắn phạm vi: VCX ${vcxCount}, TNDS ${tndsCount}.` : ' Chưa chọn file VCX nên chỉ dùng cột phạm vi nếu file có sẵn.';
+                status.innerText = `Đã đọc ${IMPORT_ROWS.length} dòng từ sheet "${firstSheetName}". Đang preview ${Math.min(IMPORT_ROWS.length, IMPORT_PREVIEW_LIMIT)} dòng đầu; khi import sẽ ghi toàn bộ dòng hợp lệ.${scopeText}`;
             } catch (error) {
                 console.error('Import Excel parse error:', error);
-                clearImportExcelState();
+                clearImportExcelState({ keepVcxScope: true });
                 customAlert('Lỗi đọc file Excel: ' + error.message);
             }
         };
 
-        window.clearImportExcelState = function() {
+        window.clearImportExcelState = function(options = {}) {
+            const keepVcxScope = !!options.keepVcxScope;
             IMPORT_ROWS = [];
             IMPORT_EXISTING_MAP = new Map();
+            IMPORT_VCX_STANDALONE_DATA_MODE = false;
             const input = document.getElementById('importExcelInput');
             if (input) input.value = '';
             const status = document.getElementById('importStatus');
-            if (status) status.innerText = 'Chưa chọn file. Hệ thống sẽ preview tối đa 200 dòng đầu trước khi import.';
+            if (status) status.innerText = 'Chưa chọn file dữ liệu tổng hợp. Hệ thống sẽ preview tối đa 200 dòng đầu trước khi import.';
+            if (!keepVcxScope) {
+                IMPORT_VCX_CLAIM_SET = new Set();
+                IMPORT_VCX_CLAIM_RAW_MAP = new Map();
+                IMPORT_VCX_ONLY_ROWS = [];
+                IMPORT_VCX_FILE_NAME = '';
+                const vcxInput = document.getElementById('importVcxInput');
+                if (vcxInput) vcxInput.value = '';
+                setVcxImportStatus('Chức năng riêng biệt: chọn file danh sách VCX để preview và cập nhật trực tiếp các hồ sơ đã có trong Firestore, không cần file dữ liệu tổng hợp.');
+            }
             renderImportPreview();
         };
 
@@ -14231,8 +14620,6 @@ ${text}` });
             }, { merge: true });
         }
 
-
-
         async function refreshDataAfterImportSuccess(rowsToWrite) {
             await updateFilterMetadataAfterImport(rowsToWrite);
             await loadFilters();
@@ -14242,9 +14629,155 @@ ${text}` });
             await searchData({ silent: true, skipLog: true });
         }
 
+        function buildScopeRowsByClaim(rows) {
+            const scopeRows = new Map();
+            rows.forEach(row => {
+                const key = normalizeClaimScopeKey(row.so_hsbt);
+                const scope = normalizeInsuranceScope(row.pham_vi_bao_hiem);
+                if (!key || !scope) return;
+                if (!scopeRows.has(key)) scopeRows.set(key, { so_hsbt: row.so_hsbt, scope });
+            });
+            return scopeRows;
+        }
+
+        async function findDocsByClaimScopeKeys(scopeRows) {
+            const docsById = new Map();
+            const rawClaims = [...new Set([...scopeRows.values()].map(item => item.so_hsbt).filter(Boolean))];
+            const normalizedClaims = [...new Set([...scopeRows.keys()].filter(Boolean))];
+
+            // Match chính: dữ liệu cũ đang lưu so_hsbt dạng text nguyên bản.
+            for (const claimChunk of chunkArray(rawClaims, 30)) {
+                const snap = await getDocs(query(collection(db, 'LichSuBaoGia'), where('so_hsbt', 'in', claimChunk)));
+                snap.forEach(docSnap => docsById.set(docSnap.id, docSnap));
+            }
+
+            // Match bổ sung: dữ liệu mới sau bản này có normalized_so_hsbt để chống lệch hoa/thường/ký tự phân cách.
+            for (const claimChunk of chunkArray(normalizedClaims, 30)) {
+                try {
+                    const snap = await getDocs(query(collection(db, 'LichSuBaoGia'), where('normalized_so_hsbt', 'in', claimChunk)));
+                    snap.forEach(docSnap => docsById.set(docSnap.id, docSnap));
+                } catch (error) {
+                    console.warn('Không thể query normalized_so_hsbt, bỏ qua fallback normalized:', error);
+                }
+            }
+
+            // Fallback tương thích nếu trước đây từng lưu bằng tên key khác.
+            for (const claimChunk of chunkArray(normalizedClaims, 30)) {
+                try {
+                    const snap = await getDocs(query(collection(db, 'LichSuBaoGia'), where('claim_scope_key', 'in', claimChunk)));
+                    snap.forEach(docSnap => docsById.set(docSnap.id, docSnap));
+                } catch (error) {
+                    console.warn('Không thể query claim_scope_key, bỏ qua fallback claim_scope_key:', error);
+                }
+            }
+
+            return [...docsById.values()];
+        }
+
+        async function updateInsuranceScopeForExistingImportClaims(rows) {
+            const scopeRows = buildScopeRowsByClaim(rows);
+            if (!scopeRows.size) return 0;
+            const docs = await findDocsByClaimScopeKeys(scopeRows);
+            let updatedDocs = 0;
+
+            for (const docsChunk of chunkArray(docs, 450)) {
+                const batch = writeBatch(db);
+                let pending = 0;
+                docsChunk.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const claimKey = normalizeClaimScopeKey(data.so_hsbt || data.normalized_so_hsbt || data.claim_scope_key);
+                    const scopeInfo = scopeRows.get(claimKey);
+                    if (!scopeInfo?.scope) return;
+                    batch.set(docSnap.ref, {
+                        ...buildInsuranceScopePayload(scopeInfo.scope, 'vcx_import_flow'),
+                        normalized_so_hsbt: claimKey,
+                        claim_scope_key: claimKey
+                    }, { merge: true });
+                    pending++;
+                    updatedDocs++;
+                });
+                if (pending) await batch.commit();
+            }
+            return updatedDocs;
+        }
+
+        async function updateExistingVcxClaimsFromScopeFile() {
+            if (!IMPORT_VCX_CLAIM_RAW_MAP.size) return 0;
+            const scopeRows = new Map();
+            IMPORT_VCX_CLAIM_RAW_MAP.forEach((rawClaim, normalizedClaim) => {
+                if (!normalizedClaim) return;
+                scopeRows.set(normalizedClaim, { so_hsbt: rawClaim, scope: 'VCX' });
+            });
+
+            const docs = await findDocsByClaimScopeKeys(scopeRows);
+            let updatedDocs = 0;
+
+            for (const docsChunk of chunkArray(docs, 450)) {
+                const batch = writeBatch(db);
+                let pending = 0;
+                docsChunk.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const claimKey = normalizeClaimScopeKey(data.so_hsbt || data.normalized_so_hsbt || data.claim_scope_key);
+                    if (!scopeRows.has(claimKey)) return;
+                    batch.set(docSnap.ref, {
+                        ...buildInsuranceScopePayload('VCX', 'vcx_claim_file'),
+                        normalized_so_hsbt: claimKey,
+                        claim_scope_key: claimKey
+                    }, { merge: true });
+                    pending++;
+                    updatedDocs++;
+                });
+                if (pending) await batch.commit();
+            }
+            return updatedDocs;
+        }
+
+        async function runVcxScopeOnlyUpdate() {
+            if (!IMPORT_VCX_CLAIM_SET.size) return customAlert('Bạn chưa chọn file danh sách VCX.');
+            const btn = document.getElementById('btnRunImport');
+            const status = document.getElementById('importStatus');
+            customConfirm(`Xác nhận cập nhật phạm vi VCX cho ${IMPORT_VCX_CLAIM_SET.size} hồ sơ trong file "${IMPORT_VCX_FILE_NAME || 'VCX'}"?\n\nLuồng này không cần file dữ liệu tổng hợp và không tạo dòng phụ tùng mới.`, async () => {
+                const oldText = btn?.innerText || '';
+                try {
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.innerText = 'ĐANG CẬP NHẬT VCX...';
+                    }
+                    if (status) status.innerText = 'Đang tìm các dòng LichSuBaoGia có Số HSBT trùng file VCX và cập nhật phạm vi bảo hiểm...';
+
+                    const vcxExistingUpdated = await updateExistingVcxClaimsFromScopeFile();
+
+                    if (status) status.innerText = 'Đã cập nhật VCX. Đang làm mới dữ liệu tra cứu...';
+                    await loadFilters();
+                    CURRENT_PAGE = 1;
+                    await searchData({ silent: true, skipLog: true });
+
+                    await addDoc(collection(db, 'user_logs'), {
+                        email: currentUserProfile?.email || '',
+                        action: 'Cập nhật phạm vi VCX độc lập',
+                        details: `vcxFile=${IMPORT_VCX_FILE_NAME || 'none'}, vcxClaims=${IMPORT_VCX_CLAIM_SET.size}, updatedDocs=${vcxExistingUpdated}`,
+                        timestamp: serverTimestamp()
+                    });
+
+                    if (status) status.innerText = `Hoàn tất cập nhật VCX độc lập: nhận ${IMPORT_VCX_CLAIM_SET.size} hồ sơ từ file, cập nhật ${vcxExistingUpdated} dòng dữ liệu đã có trong Firestore.`;
+                    customAlert(`Cập nhật VCX hoàn tất!\nHồ sơ VCX trong file: ${IMPORT_VCX_CLAIM_SET.size}\nDòng dữ liệu đã cập nhật trong Firestore: ${vcxExistingUpdated}`, 'success');
+                } catch (error) {
+                    console.error('VCX only update error:', error);
+                    if (status) status.innerText = 'Cập nhật VCX thất bại: ' + error.message;
+                    customAlert('Lỗi cập nhật VCX: ' + error.message);
+                } finally {
+                    if (btn) btn.innerText = oldText;
+                    setImportButtonEnabled(true);
+                }
+            });
+        }
+
         window.runExcelImportToFirestore = async function() {
-            if (!IMPORT_ROWS.length) return customAlert('Bạn chưa chọn file Excel.');
-            const mode = document.querySelector('input[name="importDuplicateMode"]:checked')?.value || 'skip';
+            if (!IMPORT_ROWS.length) {
+                if (IMPORT_VCX_CLAIM_SET.size) return runVcxScopeOnlyUpdate();
+                return customAlert('Bạn chưa chọn file Excel dữ liệu tổng hợp hoặc file danh sách VCX.');
+            }
+            const mode = document.querySelector('input[name="importDuplicateMode"]:checked')?.value || 'update';
             const validRows = IMPORT_ROWS.filter(row => !row._invalid?.length);
             if (!validRows.length) return customAlert('Không có dòng hợp lệ để import.');
 
@@ -14253,9 +14786,16 @@ ${text}` });
                 return mode === 'update' || mode === 'keep';
             });
 
-            if (!rowsToWrite.length) return customAlert('Tất cả dòng hợp lệ đều bị trùng và bạn đang chọn chế độ bỏ qua.');
+            const vcxCount = validRows.filter(row => row.pham_vi_bao_hiem === 'VCX').length;
+            const tndsCount = validRows.filter(row => row.pham_vi_bao_hiem === 'TNDS').length;
+            const duplicateSkippedCount = validRows.length - rowsToWrite.length;
+            const scopeNote = IMPORT_VCX_CLAIM_SET.size
+                ? `\nGắn phạm vi: VCX ${vcxCount}, TNDS ${tndsCount}.\nĐồng thời cập nhật nhãn VCX/TNDS cho các dòng đã có theo Số HSBT.`
+                : '\nChưa chọn file VCX; hệ thống chỉ ghi phạm vi bảo hiểm nếu file tổng hợp có cột tương ứng.';
 
-            customConfirm(`Xác nhận import ${rowsToWrite.length} dòng vào Firestore?\nChế độ xử lý trùng: ${mode.toUpperCase()}`, async () => {
+            if (!rowsToWrite.length && !IMPORT_VCX_CLAIM_SET.size) return customAlert('Tất cả dòng hợp lệ đều bị trùng và bạn đang chọn chế độ bỏ qua.');
+
+            customConfirm(`Xác nhận xử lý ${validRows.length} dòng hợp lệ?\nDòng ghi dữ liệu: ${rowsToWrite.length}\nDòng trùng chỉ cập nhật nhãn: ${duplicateSkippedCount}\nChế độ xử lý trùng: ${mode.toUpperCase()}${scopeNote}`, async () => {
                 const btn = document.getElementById('btnRunImport');
                 const status = document.getElementById('importStatus');
                 const oldText = btn.innerText;
@@ -14263,16 +14803,18 @@ ${text}` });
                 btn.innerText = 'ĐANG GHI DỮ LIỆU...';
                 status.innerText = 'Đang batch write lên Firestore, vui lòng không tắt trình duyệt...';
 
-                let created = 0, updated = 0, duplicated = 0, skipped = 0;
+                let created = 0, updated = 0, duplicated = 0, skipped = 0, scopeUpdated = 0, vcxExistingUpdated = 0;
                 try {
                     for (const chunk of chunkArray(rowsToWrite, 450)) {
                         const batch = writeBatch(db);
 
                         chunk.forEach(row => {
                             const existing = IMPORT_EXISTING_MAP.get(row.duplicate_key);
-                            const cleanRow = { ...row };
+                            let cleanRow = { ...row };
                             delete cleanRow._invalid;
                             delete cleanRow._duplicate;
+                            delete cleanRow._scope_matched_vcx;
+                            cleanRow = removeEmptyOptionalImportFields(cleanRow);
 
                             if (existing && mode === 'update') {
                                 batch.set(existing.ref, cleanRow, { merge: true });
@@ -14304,18 +14846,22 @@ ${text}` });
                     }
 
                     skipped = validRows.length - rowsToWrite.length;
+                    status.innerText = 'Đã ghi dữ liệu. Đang cập nhật nhãn VCX/TNDS cho các hồ sơ đã tồn tại...';
+                    scopeUpdated = await updateInsuranceScopeForExistingImportClaims(validRows);
+                    vcxExistingUpdated = await updateExistingVcxClaimsFromScopeFile();
+
                     status.innerText = 'Đã ghi xong. Đang làm mới bộ lọc, bảng tra cứu và trạng thái import...';
-                    await refreshDataAfterImportSuccess(rowsToWrite);
+                    await refreshDataAfterImportSuccess(rowsToWrite.length ? rowsToWrite : validRows);
 
                     await addDoc(collection(db, 'user_logs'), {
                         email: currentUserProfile?.email || '',
-                        action: 'Import Excel',
-                        details: `created=${created}, updated=${updated}, duplicated=${duplicated}, skipped=${skipped}`,
+                        action: 'Import Excel VCX/TNDS',
+                        details: `created=${created}, updated=${updated}, duplicated=${duplicated}, skipped=${skipped}, scopeUpdated=${scopeUpdated}, vcxExistingUpdated=${vcxExistingUpdated}, vcxRows=${vcxCount}, tndsRows=${tndsCount}, vcxFile=${IMPORT_VCX_FILE_NAME || 'none'}`,
                         timestamp: serverTimestamp()
                     });
 
-                    status.innerText = `Hoàn tất: thêm mới ${created}, ghi đè ${updated}, thêm bản dup ${duplicated}, bỏ qua ${skipped}.`;
-                    customAlert(`Import thành công!\nThêm mới: ${created}\nGhi đè: ${updated}\nThêm bản dup: ${duplicated}\nBỏ qua: ${skipped}`, 'success');
+                    status.innerText = `Hoàn tất: thêm mới ${created}, cập nhật ${updated}, thêm bản dup ${duplicated}, bỏ qua ghi dữ liệu ${skipped}, cập nhật nhãn ${scopeUpdated + vcxExistingUpdated}.`;
+                    customAlert(`Import thành công!\nThêm mới: ${created}\nCập nhật/merge: ${updated}\nThêm bản dup: ${duplicated}\nBỏ qua ghi dữ liệu: ${skipped}\nDòng VCX trong preview: ${vcxCount}\nDòng TNDS trong preview: ${tndsCount}\nLượt cập nhật nhãn VCX/TNDS: ${scopeUpdated + vcxExistingUpdated}`, 'success');
                 } catch (error) {
                     console.error('Import Excel commit error:', error);
                     status.innerText = 'Import thất bại: ' + error.message;
@@ -14327,144 +14873,17 @@ ${text}` });
             });
         };
 
+
         // KHỞI ĐỘNG CƠ SỞ DỮ LIỆU BỘ LỌC
         loadFilters();
         // ============================================================
-        // LOGIC XỬ LÝ FEEDBACK & DONATE
+        // LOGIC XỬ LÝ FEEDBACK
         // ============================================================
 
         window.openFeedbackModal = function() {
             document.getElementById('feedbackContent').value = '';
             document.getElementById('feedbackType').selectedIndex = 0;
             openModal('modalFeedback');
-        };
-
-        let currentDonateAmount = 50000;
-
-        window.openDonateModal = function() {
-            currentDonateAmount = 50000; // Reset to 50k default
-            
-            // Set default message with user profile email prefix
-            const userEmail = currentUserProfile ? currentUserProfile.email.split('@')[0] : 'user';
-            const cleanEmail = userEmail.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-            const defaultMsg = `TASCO DLK ${cleanEmail}`;
-            
-            const msgInput = document.getElementById('donateMessageInput');
-            if (msgInput) msgInput.value = defaultMsg;
-
-            const customContainer = document.getElementById('customAmountContainer');
-            if (customContainer) customContainer.classList.add('hidden');
-            const customInput = document.getElementById('customAmountInput');
-            if (customInput) customInput.value = '';
-            
-            // Set active class to 50k button, remove from others
-            updateDonateButtons(50000);
-            updateDonateQR();
-            openModal('modalDonate');
-        };
-
-        window.selectDonateAmount = function(amount, btnElement) {
-            const customContainer = document.getElementById('customAmountContainer');
-            
-            if (amount === 'custom') {
-                if (customContainer) customContainer.classList.remove('hidden');
-                const customInput = document.getElementById('customAmountInput');
-                if (customInput) {
-                    customInput.value = '';
-                    customInput.focus();
-                }
-                currentDonateAmount = 0; // Custom amount starts at 0 or empty
-                updateDonateQR();
-            } else {
-                if (customContainer) customContainer.classList.add('hidden');
-                currentDonateAmount = amount;
-                updateDonateQR();
-            }
-            
-            // Update active states of button
-            document.querySelectorAll('#modalDonate .select-amount-btn').forEach(btn => {
-                btn.className = "flex-1 py-2 text-xs font-black text-slate-400 hover:text-white rounded-xl transition-all duration-200 select-amount-btn";
-            });
-            if (btnElement) {
-                btnElement.className = "flex-1 py-2 text-xs font-black text-white bg-white/10 rounded-xl shadow-sm border border-white/10 transition-all duration-200 select-amount-btn";
-            }
-        };
-
-        function updateDonateButtons(activeAmount) {
-            document.querySelectorAll('#modalDonate .select-amount-btn').forEach(btn => {
-                const isMatch = btn.getAttribute('onclick').includes(activeAmount);
-                if (isMatch) {
-                    btn.className = "flex-1 py-2 text-xs font-black text-white bg-white/10 rounded-xl shadow-sm border border-white/10 transition-all duration-200 select-amount-btn";
-                } else {
-                    btn.className = "flex-1 py-2 text-xs font-black text-slate-400 hover:text-white rounded-xl transition-all duration-200 select-amount-btn";
-                }
-            });
-        }
-
-        window.onCustomAmountChange = function() {
-            const customInput = document.getElementById('customAmountInput');
-            const inputVal = customInput ? parseInt(customInput.value) : 0;
-            currentDonateAmount = isNaN(inputVal) || inputVal <= 0 ? 0 : inputVal;
-            updateDonateQR();
-        };
-
-        window.onDonateMessageChange = function() {
-            updateDonateQR();
-        };
-
-        function updateDonateQR() {
-            const msgInput = document.getElementById('donateMessageInput');
-            const addInfo = msgInput ? msgInput.value.trim() : 'TASCO DLK';
-            
-            // Generate standard VietQR with print.png layout to match screenshot structure
-            const qrUrl = `https://img.vietqr.io/image/VIB-917828538-print.png?amount=${currentDonateAmount}&addInfo=${encodeURIComponent(addInfo)}&accountName=HO%20QUANG%20HUY`;
-            const qrImg = document.getElementById('donateQR');
-            if (qrImg) qrImg.src = qrUrl;
-
-            // Format dynamic currency display
-            const displayEl = document.getElementById('displayAmount');
-            if (displayEl) {
-                displayEl.innerText = currentDonateAmount.toLocaleString('vi-VN');
-            }
-
-            // Update Voucher Reference
-            const refEl = document.getElementById('donateRef');
-            if (refEl) {
-                refEl.innerText = `REF: ${addInfo.toUpperCase()}`;
-            }
-        }
-
-        window.copyToClipboard = function(text, btn) {
-            navigator.clipboard.writeText(text).then(() => {
-                const originalHtml = btn.innerHTML;
-                btn.innerHTML = `<svg class="w-3.5 h-3.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
-                btn.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500/30');
-                btn.classList.remove('bg-white/10');
-                
-                // Hiển thị thông báo Toast siêu premium qua SweetAlert2
-                Swal.fire({
-                    toast: true,
-                    position: 'top',
-                    icon: 'success',
-                    title: 'Đã sao chép số tài khoản!',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    timerProgressBar: false,
-                    background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff',
-                    color: document.documentElement.classList.contains('dark') ? '#f8fafc' : '#0f172a',
-                    customClass: {
-                        popup: 'custom-rounded compact-modal'
-                    }
-                });
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalHtml;
-                    btn.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500/30');
-                    btn.classList.add('bg-white/10');
-                }, 2000);
-            }).catch(err => {
-                console.error('Cannot copy text: ', err);
-            });
         };
 
         document.getElementById('btnSubmitFeedback').onclick = async () => {
