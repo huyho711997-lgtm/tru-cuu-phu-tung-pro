@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TT247 – Hệ thống Quản lý và Tra cứu Lịch trực Giám định Toàn quốc</title>
+  
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --tt-blue-primary: #0f4c81;
+      --tt-blue-dark: #0a3258;
+      --tt-blue-light: #e8f1f8;
+      --tt-accent: #f59e0b;
+      --tt-danger: #dc2626;
+      --tt-success: #16a34a;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1e293b;
+    }
+
+    /* Navbar */
+    .navbar-tt247 {
+      background-color: var(--tt-blue-primary);
+      border-bottom: 3px solid var(--tt-accent);
+    }
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .nav-link {
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85) !important;
+      transition: all 0.2s ease;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: #ffffff !important;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+    }
+
+    /* Card & UI components */
+    .card {
+      border: none;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      border-radius: 10px;
+    }
+    .card-lookup-header {
+      background: linear-gradient(135deg, var(--tt-blue-primary), var(--tt-blue-dark));
+      color: #ffffff;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    /* Callout & Results */
+    .on-call-card {
+      border-left: 6px solid var(--tt-blue-primary);
+      background-color: #ffffff;
+    }
+    .btn-tel {
+      background-color: var(--tt-success);
+      color: #ffffff;
+      font-weight: 700;
+    }
+    .btn-tel:hover {
+      background-color: #15803d;
+      color: #ffffff;
+    }
+
+    .badge-field {
+      background-color: #ea580c;
+      color: #ffffff;
+    }
+    .badge-detailed {
+      background-color: #2563eb;
+      color: #ffffff;
+    }
+
+    .toast-container-custom {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1090;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR TOÀN CỤC -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-tt247 sticky-top shadow-sm">
+    <div class="container-fluid px-md-4">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#lookup">
+        <i data-lucide="shield-alert"></i> TT247 DISPATCH
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="nav-links">
+          <li class="nav-item">
+            <a class="nav-link active" href="#lookup"><i data-lucide="search" class="me-1"></i> Tra Cứu Trực</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#rules"><i data-lucide="sliders" class="me-1"></i> Quy Tắc Lịch Trực</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#overrides"><i data-lucide="repeat" class="me-1"></i> Đổi Ca & Nghỉ Phép</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#dispatch-history"><i data-lucide="history" class="me-1"></i> Nhật Ký Điều Phối</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#seeder"><i data-lucide="database" class="me-1"></i> Khởi Tạo Dữ Liệu</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2" id="nav-user-area">
+          <button class="btn btn-outline-light btn-sm" id="btn-config-firebase" title="Cấu hình Firebase">
+            <i data-lucide="settings" class="me-1"></i> Cấu hình kết nối
+          </button>
+          <div id="user-badge-container"></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTAINER CHÍNH -->
+  <main class="container-fluid py-4 px-md-4">
+    <div id="alert-container"></div>
+    <div id="app-viewport">
+      <!-- Vùng render của SPA Router -->
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <div class="mt-2 text-muted">Đang kết nối hệ thống TT247...</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL CẤU HÌNH FIREBASE TẠI CHỖ -->
+  <div class="modal fade" id="firebaseConfigModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title d-flex align-items-center gap-2">
+            <i data-lucide="key"></i> Cấu Hình Firebase Web SDK
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="small text-muted">
+            Dán đối tượng cấu hình Firebase từ Firebase Console của bạn. Dữ liệu sẽ được lưu an toàn vào <code>localStorage</code> của trình duyệt.
+          </p>
+          <div class="mb-3">
+            <label class="form-label fw-bold">JSON Firebase Config</label>
+            <textarea class="form-control font-monospace" id="txt-firebase-json" rows="8" placeholder='{
+  "apiKey": "AIzaSy...",
+  "authDomain": "your-app.firebaseapp.com",
+  "projectId": "your-app",
+  "storageBucket": "your-app.appspot.com",
+  "messagingSenderId": "...",
+  "appId": "..."
+}'></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" id="btn-save-firebase-config">Lưu & Khởi Động Lại</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST THÔNG BÁO -->
+  <div class="toast-container toast-container-custom" id="toast-container"></div>
+
+  <!-- FIREBASE VÀ TOÀN BỘ LOGIC ỨNG DỤNG (ES MODULES) -->
+  <script type="module">
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { 
+      getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { 
+      getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, 
+      query, where, orderBy, limit, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // ==========================================
+    // 1. CẤU HÌNH FIREBASE KHỞI CHẠY
+    // ==========================================
+    const DEFAULT_CONFIG = {
+      apiKey: "AIzaSyDummyKey_Replace_With_Your_Firebase_Config",
+      authDomain: "tt247-production.firebaseapp.com",
+      projectId: "tt247-production",
+      storageBucket: "tt247-production.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdef123456"
+    };
+
+    let activeConfig = DEFAULT_CONFIG;
+    const stored = localStorage.getItem("tt247_firebase_config");
+    if (stored) {
+      try { activeConfig = JSON.parse(stored); } catch (e) { console.error(e); }
+    }
+
+    let app, auth, db;
+    let isFirebaseReady = false;
+
+    try {
+      app = initializeApp(activeConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+      isFirebaseReady = true;
+    } catch (err) {
+      console.warn("Chưa cấu hình Firebase hoặc cấu hình không hợp lệ:", err);
+    }
+
+    // ==========================================
+    // 2. HELPER TOAST VÀ THÔNG BÁO
+    // ==========================================
+    window.showToast = function(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toastEl = document.createElement('div');
+      toastEl.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'primary'} border-0 show mb-2`;
+      toastEl.setAttribute('role', 'alert');
+      toastEl.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">${message}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      `;
+      container.appendChild(toastEl);
+      setTimeout(() => { toastEl.remove(); }, 4000);
+    };
+
+    // ==========================================
+    // 3. AUTH SERVICE & PHÂN QUYỀN RBAC
+    // ==========================================
+    const authService = {
+      currentUser: null,
+      userProfile: null,
+
+      async init() {
+        if (!isFirebaseReady) return;
+        return new Promise((resolve) => {
+          onAuthStateChanged(auth, async (user) => {
+            this.currentUser = user;
+            if (user) {
+              await this.loadProfile(user.uid);
+            } else {
+              this.userProfile = null;
+            }
+            this.updateUI();
+            resolve(this.userProfile);
+          });
+        });
+      },
+
+      async loadProfile(uid) {
+        try {
+          const docSnap = await getDoc(doc(db, "users", uid));
+          if (docSnap.exists()) {
+            this.userProfile = { uid, ...docSnap.data() };
+          } else {
+            // Mặc định cho tài khoản mới đăng nhập lần đầu
+            this.userProfile = {
+              uid,
+              email: this.currentUser.email,
+              role: 'tt247_operator',
+              assignedZoneIds: ['ZONE_HN_01']
+            };
+          }
+        } catch (e) {
+          console.error("Lỗi đọc hồ sơ user:", e);
+        }
+      },
+
+      async login(email, password) {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        await this.loadProfile(cred.user.uid);
+        this.updateUI();
+        return this.userProfile;
+      },
+
+      async logout() {
+        await signOut(auth);
+        this.currentUser = null;
+        this.userProfile = null;
+        this.updateUI();
+      },
+
+      hasRole(roles) {
+        if (!this.userProfile) return false;
+        if (this.userProfile.role === 'sys_admin') return true;
+        return roles.includes(this.userProfile.role);
+      },
+
+      updateUI() {
+        const container = document.getElementById('user-badge-container');
+        if (this.currentUser) {
+          container.innerHTML = `
+            <div class="dropdown">
+              <button class="btn btn-light btn-sm dropdown-toggle fw-bold" data-bs-toggle="dropdown">
+                <i data-lucide="user-check" class="me-1"></i> ${this.currentUser.email.split('@')[0]} (${this.userProfile?.role || 'user'})
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li><h6 class="dropdown-header">Vai trò: ${this.userProfile?.role}</h6></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item text-danger" id="btn-do-logout"><i data-lucide="log-out" class="me-1"></i> Đăng xuất</button></li>
+              </ul>
+            </div>
+          `;
+          document.getElementById('btn-do-logout')?.addEventListener('click', () => this.logout());
+        } else {
+          container.innerHTML = `
+            <a href="#login" class="btn btn-warning btn-sm fw-bold">
+              <i data-lucide="log-in" class="me-1"></i> Đăng nhập
+            </a>
+          `;
+        }
+        lucide.createIcons();
+      }
+    };
+
+    // ==========================================
+    // 4. DATABASE SERVICE (FIRESTORE)
+    // ==========================================
+    const dbService = {
+      async getAdministrativeAreas(parentCode = 'ROOT') {
+        const q = query(collection(db, "administrativeAreas"), where("parentCode", "==", parentCode));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      },
+
+      async getZoneByAreaCoverage(taskType, provinceCode, wardCode) {
+        const covRef = collection(db, "zoneCoverage");
+        
+        // 1. Tìm cấu hình chi tiết theo Phường/Xã trước
+        if (wardCode && wardCode !== '*') {
+          const qWard = query(
+            covRef, 
+            where("provinceCode", "==", provinceCode), 
+            where("wardCode", "==", wardCode),
+            where("isActive", "==", true)
+          );
+          const snapWard = await getDocs(qWard);
+          const matched = snapWard.docs.find(d => {
+            const t = d.data().taskType;
+            return t === taskType || t === 'both';
+          });
+          if (matched) {
+            const zoneDoc = await getDoc(doc(db, "zones", matched.data().zoneId));
+            return zoneDoc.exists() ? { zoneId: zoneDoc.id, ...zoneDoc.data() } : null;
+          }
+        }
+
+        // 2. Tìm cấu hình bao trùm toàn Tỉnh/Thành
+        const qProv = query(
+          covRef,
+          where("provinceCode", "==", provinceCode),
+          where("wardCode", "==", "*"),
+          where("isActive", "==", true)
+        );
+        const snapProv = await getDocs(qProv);
+        const matchedProv = snapProv.docs.find(d => {
+          const t = d.data().taskType;
+          return t === taskType || t === 'both';
+        });
+
+        if (matchedProv) {
+          const zoneDoc = await getDoc(doc(db, "zones", matchedProv.data().zoneId));
+          return zoneDoc.exists() ? { zoneId: zoneDoc.id, ...zoneDoc.data() } : null;
+        }
+
+        return null;
+      },
+
+      async searchGarages(term, provinceCode = null) {
+        const snap = await getDocs(collection(db, "garages"));
+        let list = snap.docs.map(d => ({ garageId: d.id, ...d.data() }));
+        if (provinceCode) list = list.filter(g => g.provinceCode === provinceCode);
+        if (term) {
+          const lower = term.toLowerCase();
+          list = list.filter(g => (g.name || '').toLowerCase().includes(lower) || (g.code || '').toLowerCase().includes(lower));
+        }
+        return list;
+      },
+
+      async getGarageAssignment(garageId) {
+        const snap = await getDoc(doc(db, "garageAssignments", garageId));
+        return snap.exists() ? snap.data() : null;
+      },
+
+      async getInspectorById(inspectorId) {
+        if (!inspectorId) return null;
+        const snap = await getDoc(doc(db, "inspectors", inspectorId));
+        return snap.exists() ? { inspectorId: snap.id, ...snap.data() } : null;
+      },
+
+      async getInspectorsByZone(zoneId) {
+        const q = query(collection(db, "inspectors"), where("zoneId", "==", zoneId), where("isActive", "==", true));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ inspectorId: d.id, ...d.data() }));
+      },
+
+      async getActiveRulesForZone(zoneId, taskType, dateStr) {
+        const q = query(
+          collection(db, "scheduleRules"),
+          where("zoneId", "==", zoneId),
+          where("status", "==", "published"),
+          where("effectiveFrom", "<=", dateStr)
+        );
+        const snap = await getDocs(q);
+        return snap.docs
+          .map(d => ({ ruleId: d.id, ...d.data() }))
+          .filter(r => (r.taskType === taskType || r.taskType === 'both') && (!r.effectiveTo || r.effectiveTo >= dateStr));
+      },
+
+      async findActiveOverride({ originalInspectorId, dateStr, timeStr, taskType, zoneId }) {
+        const q = query(
+          collection(db, "scheduleOverrides"),
+          where("zoneId", "==", zoneId),
+          where("originalInspectorId", "==", originalInspectorId),
+          where("dateStr", "==", dateStr),
+          where("status", "==", "approved")
+        );
+        const snap = await getDocs(q);
+        return snap.docs
+          .map(d => ({ overrideId: d.id, ...d.data() }))
+          .find(o => (!o.taskType || o.taskType === taskType) && 
+                     (!o.startTime || (timeStr >= o.startTime && timeStr <= o.endTime)));
+      },
+
+      async checkInspectorOnLeave(inspectorId, dateStr, timeStr) {
+        const q = query(
+          collection(db, "leaves"),
+          where("inspectorId", "==", inspectorId),
+          where("status", "==", "approved"),
+          where("fromDate", "<=", dateStr),
+          where("toDate", ">=", dateStr)
+        );
+        const snap = await getDocs(q);
+        return !snap.empty;
+      },
+
+      async createDispatchRecord(data) {
+        return await addDoc(collection(db, "dispatchRecords"), {
+          ...data,
+          createdAt: serverTimestamp()
+        });
+      },
+
+      async getDispatchHistory(limitCount = 20) {
+        const q = query(collection(db, "dispatchRecords"), orderBy("createdAt", "desc"), limit(limitCount));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      }
+    };
+
+    // ==========================================
+    // 5. SCHEDULE RESOLUTION ENGINE (THUẬT TOÁN 8 BƯỚC)
+    // ==========================================
+    class ScheduleEngine {
+      constructor(dbInstance) {
+        this.db = dbInstance;
+      }
+
+      async resolveOnCall(params) {
+        const { taskType, provinceCode, wardCode, garageId, searchDateTime } = params;
+        const res = {
+          success: false,
+          zone: null,
+          primary: null,
+          backup: null,
+          zoneLead: null,
+          source: null,
+          shiftTime: "Cả ngày",
+          warnings: [],
+          error: null
+        };
+
+        try {
+          // BƯỚC 1: Chuẩn hóa thời gian (UTC+7)
+          const dateStr = this.formatDate(searchDateTime);
+          const timeStr = this.formatTime(searchDateTime);
+
+          // BƯỚC 2: Tìm Zone quản lý theo phạm vi địa bàn
+          const zone = await this.db.getZoneByAreaCoverage(taskType, provinceCode, wardCode);
+          if (!zone) {
+            res.error = "NO_ZONE_COVERAGE";
+            res.warnings.push("Địa bàn này chưa được phân công cho Zone nào quản lý.");
+            return res;
+          }
+          res.zone = zone;
+          res.zoneLead = { name: zone.leadName, phone: zone.leadPhone, id: zone.leadInspectorId };
+
+          // BƯỚC 3: Nếu là Giám định chi tiết có chọn Gara -> Kiểm tra GĐV cố định Gara
+          if (taskType === 'detailed' && garageId) {
+            const assignment = await this.db.getGarageAssignment(garageId);
+            if (assignment && assignment.isActive) {
+              const basePrimary = await this.db.getInspectorById(assignment.primaryInspectorId);
+              const baseBackup = assignment.backupInspectorId ? await this.db.getInspectorById(assignment.backupInspectorId) : null;
+              
+              // Kiểm tra xem GĐV cố định có nghỉ phép hoặc đổi ca không
+              const evaluatedPrimary = await this.checkLeaveAndOverride(basePrimary, dateStr, timeStr, taskType, zone.zoneId);
+
+              res.success = true;
+              res.source = evaluatedPrimary.isOverridden ? 'TRỰC THAY (GARA CỐ ĐỊNH)' : 'GARA CỐ ĐỊNH';
+              res.primary = evaluatedPrimary.inspector;
+              res.backup = baseBackup;
+              res.warnings.push(...evaluatedPrimary.warnings);
+              return res;
+            }
+          }
+
+          // BƯỚC 4: Truy xuất Quy tắc lịch trực (Schedule Rules) của Zone
+          const rules = await this.db.getActiveRulesForZone(zone.zoneId, taskType, dateStr);
+          if (!rules || rules.length === 0) {
+            res.error = "NO_SCHEDULE_RULE";
+            res.warnings.push(`Zone ${zone.name} chưa công bố quy tắc trực cho ngày ${dateStr}.`);
+            return res;
+          }
+
+          // BƯỚC 5: Lọc quy tắc phù hợp nhất theo mức ưu tiên và khung giờ
+          const matchedRule = this.selectBestMatchingRule(rules, timeStr, wardCode);
+          if (!matchedRule) {
+            res.error = "NO_MATCHING_RULE";
+            res.warnings.push("Không có ca trực nào bao quát khung giờ tra cứu.");
+            return res;
+          }
+
+          // BƯỚC 6: Tính toán nhân sự trực theo loại mô hình (Chẵn/lẻ, Chu kỳ, Thứ)
+          const roster = this.evaluateRoster(matchedRule, dateStr);
+          if (!roster || !roster.primaryId) {
+            res.error = "EMPTY_ROSTER";
+            res.warnings.push("Quy tắc trực tồn tại nhưng chưa cấu hình nhân sự.");
+            return res;
+          }
+
+          const rawPrimary = await this.db.getInspectorById(roster.primaryId);
+          const rawBackup = roster.backupId ? await this.db.getInspectorById(roster.backupId) : null;
+
+          // BƯỚC 7: Áp dụng Nghỉ phép & Phân công trực thay (Overrides & Leaves)
+          const finalPrimary = await this.checkLeaveAndOverride(rawPrimary, dateStr, timeStr, taskType, zone.zoneId);
+          let finalBackup = rawBackup;
+          if (rawBackup) {
+            const backupCheck = await this.checkLeaveAndOverride(rawBackup, dateStr, timeStr, taskType, zone.zoneId);
+            finalBackup = backupCheck.inspector;
+          }
+
+          // BƯỚC 8: Trả về kết quả
+          res.success = true;
+          res.source = finalPrimary.isOverridden ? 'TRỰC THAY' : 'LỊCH TRỰC ZONE';
+          res.primary = finalPrimary.inspector;
+          res.backup = finalBackup;
+          res.shiftTime = `${matchedRule.timeSlot.start} - ${matchedRule.timeSlot.end}${matchedRule.timeSlot.isOvernight ? ' (Qua đêm)' : ''}`;
+          res.warnings.push(...finalPrimary.warnings);
+
+          return res;
+
+        } catch (e) {
+          console.error("Lỗi ScheduleEngine:", e);
+          res.error = "ENGINE_EXCEPTION";
+          res.warnings.push(e.message);
+          return res;
+        }
+      }
+
+      async checkLeaveAndOverride(inspector, dateStr, timeStr, taskType, zoneId) {
+        const warnings = [];
+        if (!inspector) return { inspector: null, isOverridden: false, warnings: ["Không tìm thấy hồ sơ GĐV."] };
+
+        // 1. Kiểm tra trực thay
+        const override = await this.db.findActiveOverride({
+          originalInspectorId: inspector.inspectorId,
+          dateStr,
+          timeStr,
+          taskType,
+          zoneId
+        });
+
+        if (override) {
+          const rep = await this.db.getInspectorById(override.replacementInspectorId);
+          warnings.push(`GĐV ${inspector.fullName} đã bàn giao trực cho ${rep?.fullName || 'GĐV khác'} (Lý do: ${override.reason}).`);
+          return { inspector: rep, isOverridden: true, warnings };
+        }
+
+        // 2. Kiểm tra nghỉ phép
+        const onLeave = await this.db.checkInspectorOnLeave(inspector.inspectorId, dateStr, timeStr);
+        if (onLeave) {
+          warnings.push(`CẢNH BÁO: GĐV ${inspector.fullName} đang NGHỈ PHÉP nhưng chưa có người nhận trực thay!`);
+        }
+
+        return { inspector, isOverridden: false, warnings };
+      }
+
+      evaluateRoster(rule, dateStr) {
+        const { ruleType, rosterConfig, cycleAnchorDate, cycleLength } = rule;
+        const targetDate = new Date(dateStr + "T00:00:00");
+        const dayOfMonth = targetDate.getDate();
+
+        if (ruleType === 'even_odd') {
+          const isOdd = dayOfMonth % 2 !== 0;
+          return isOdd ? rosterConfig.odd : rosterConfig.even;
+        }
+
+        if (ruleType === 'continuous_cycle') {
+          const anchor = new Date((cycleAnchorDate || dateStr) + "T00:00:00");
+          const diffDays = Math.floor((targetDate.getTime() - anchor.getTime()) / (86400000));
+          const idx = ((diffDays % cycleLength) + cycleLength) % cycleLength;
+          return rosterConfig.cycles ? rosterConfig.cycles[idx] : rosterConfig.odd;
+        }
+
+        if (ruleType === 'day_of_week') {
+          const dow = targetDate.getDay();
+          return rosterConfig.weekly ? rosterConfig.weekly[dow] : rosterConfig.odd;
+        }
+
+        return rosterConfig.default || rosterConfig.odd;
+      }
+
+      selectBestMatchingRule(rules, timeStr, wardCode) {
+        const sorted = [...rules].sort((a, b) => (b.priority || 0) - (a.priority || 0));
+        for (const r of sorted) {
+          if (this.isWithinTimeSlot(timeStr, r.timeSlot)) {
+            if (r.wardCode && r.wardCode !== '*' && r.wardCode !== wardCode) continue;
+            return r;
+          }
+        }
+        return null;
+      }
+
+      isWithinTimeSlot(timeStr, slot) {
+        if (!slot) return true;
+        const { start, end, isOvernight } = slot;
+        if (!isOvernight) {
+          return timeStr >= start && timeStr <= end;
+        } else {
+          return timeStr >= start || timeStr <= end;
+        }
+      }
+
+      formatDate(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      formatTime(d) {
+        const h = String(d.getHours()).padStart(2, '0');
+        const m = String(d.getMinutes()).padStart(2, '0');
+        return `${h}:${m}`;
+      }
+    }
+
+    const scheduleEngine = new ScheduleEngine(dbService);
+
+    // ==========================================
+    // 6. SPA VIEWS CONTROLLER
+    // ==========================================
+    const views = {
+      // ----------------------------------------
+      // VIEW 1: MÀN HÌNH TRA CỨU TỐC ĐỘ CAO (TT247)
+      // ----------------------------------------
+      async renderLookup(container) {
+        let provinces = [];
+        try {
+          provinces = await dbService.getAdministrativeAreas('ROOT');
+        } catch (e) {
+          console.warn(e);
+        }
+
+        container.innerHTML = `
+          <div class="row g-3">
+            <div class="col-lg-5">
+              <div class="card shadow-sm">
+                <div class="card-header card-lookup-header py-3">
+                  <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+                    <i data-lucide="phone-forwarded"></i> Tra Cứu Trực Giám Định
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <form id="form-lookup">
+                    <!-- 1. Loại công việc -->
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">1. Loại hình sự cố</label>
+                      <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="taskType" id="type-field" value="field" checked>
+                        <label class="btn btn-outline-danger fw-bold" for="type-field">
+                          <i data-lucide="map-pin" class="me-1"></i> Hiện Trường
+                        </label>
+                        <input type="radio" class="btn-check" name="taskType" id="type-detailed" value="detailed">
+                        <label class="btn btn-outline-primary fw-bold" for="type-detailed">
+                          <i data-lucide="wrench" class="me-1"></i> Chi Tiết / Gara
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- 2. Tỉnh / Thành phố -->
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">2. Tỉnh / Thành phố</label>
+                      <select class="form-select form-select-lg" id="lookup-province" required>
+                        <option value="">-- Chọn Tỉnh / Thành Phố --</option>
+                        ${provinces.map(p => `<option value="${p.areaCode}">${p.name}</option>`).join('')}
+                      </select>
+                    </div>
+
+                    <!-- 3. Quận / Huyện / Xã / Phường -->
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">3. Xã / Phường / Huyện</label>
+                      <select class="form-select" id="lookup-ward">
+                        <option value="*">-- Toàn tỉnh / Chưa rõ chi tiết --</option>
+                      </select>
+                    </div>
+
+                    <!-- 4. Ô tìm kiếm Gara (Chỉ hiện khi chọn Chi tiết) -->
+                    <div class="mb-3 d-none" id="box-garage-search">
+                      <label class="form-label fw-bold text-primary">4. Gara sửa chữa chỉ định</label>
+                      <input type="text" class="form-control" id="input-garage-search" placeholder="Gõ tên gara (VD: Toyota Mỹ Đình)...">
+                      <input type="hidden" id="selected-garage-id" value="">
+                      <div id="garage-search-dropdown" class="list-group mt-1"></div>
+                    </div>
+
+                    <!-- 5. Thời điểm sự cố -->
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">5. Thời điểm tra cứu</label>
+                      <div class="row g-2">
+                        <div class="col-7">
+                          <select class="form-select" id="select-time-mode">
+                            <option value="now" selected>Thời điểm hiện tại</option>
+                            <option value="custom">Chọn ngày & giờ khác</option>
+                          </select>
+                        </div>
+                        <div class="col-5">
+                          <input type="datetime-local" class="form-control d-none" id="input-custom-datetime">
+                        </div>
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 shadow fw-bold mt-2" id="btn-submit-lookup">
+                      <i data-lucide="search" class="me-1"></i> TRA CỨU NGAY (ENTER)
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- CỘT KẾT QUẢ VÀ ĐIỀU PHỐI -->
+            <div class="col-lg-7">
+              <div id="result-placeholder" class="alert alert-secondary text-center py-5">
+                <i data-lucide="shield-search" class="text-muted mb-2" style="width: 48px; height: 48px;"></i>
+                <h5 class="fw-bold">Sẵn sàng tra cứu</h5>
+                <p class="text-muted mb-0">Chọn địa bàn để xác định Giám định viên trực chính, dự phòng và SĐT ưu tiên.</p>
+              </div>
+
+              <div id="result-content" class="d-none"></div>
+            </div>
+          </div>
+        `;
+
+        lucide.createIcons();
+
+        // Sự kiện chuyển loại công việc
+        const rads = container.querySelectorAll('input[name="taskType"]');
+        const boxGarage = container.querySelector('#box-garage-search');
+        rads.forEach(r => {
+          r.addEventListener('change', (e) => {
+            if (e.target.value === 'detailed') {
+              boxGarage.classList.remove('d-none');
+            } else {
+              boxGarage.classList.add('d-none');
+              container.querySelector('#selected-garage-id').value = '';
+              container.querySelector('#input-garage-search').value = '';
+            }
+          });
+        });
+
+        // Thay đổi Tỉnh/Thành -> Load Xã/Phường
+        const selProv = container.querySelector('#lookup-province');
+        const selWard = container.querySelector('#lookup-ward');
+        selProv.addEventListener('change', async (e) => {
+          const val = e.target.value;
+          selWard.innerHTML = '<option value="*">-- Toàn tỉnh / Chưa rõ chi tiết --</option>';
+          if (val) {
+            try {
+              const wards = await dbService.getAdministrativeAreas(val);
+              wards.forEach(w => {
+                selWard.innerHTML += `<option value="${w.areaCode}">${w.name}</option>`;
+              });
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        });
+
+        // Tìm kiếm Gara thời gian thực
+        const inputGarage = container.querySelector('#input-garage-search');
+        const dropGarage = container.querySelector('#garage-search-dropdown');
+        inputGarage.addEventListener('input', async (e) => {
+          const queryTerm = e.target.value.trim();
+          if (queryTerm.length < 2) {
+            dropGarage.innerHTML = '';
+            return;
+          }
+          const garages = await dbService.searchGarages(queryTerm, selProv.value || null);
+          dropGarage.innerHTML = garages.map(g => `
+            <button type="button" class="list-group-item list-group-item-action py-2" data-id="${g.garageId}">
+              <div class="fw-bold">${g.name}</div>
+              <small class="text-muted">${g.address || ''}</small>
+            </button>
+          `).join('');
+
+          dropGarage.querySelectorAll('button').forEach(b => {
+            b.addEventListener('click', () => {
+              container.querySelector('#selected-garage-id').value = b.dataset.id;
+              inputGarage.value = b.querySelector('.fw-bold').innerText;
+              dropGarage.innerHTML = '';
+            });
+          });
+        });
+
+        // Chọn giờ tùy chọn
+        const timeMode = container.querySelector('#select-time-mode');
+        const customDt = container.querySelector('#input-custom-datetime');
+        timeMode.addEventListener('change', (e) => {
+          if (e.target.value === 'custom') {
+            customDt.classList.remove('d-none');
+          } else {
+            customDt.classList.add('d-none');
+          }
+        });
+
+        // Form Submit
+        container.querySelector('#form-lookup').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const taskType = container.querySelector('input[name="taskType"]:checked').value;
+          const provinceCode = selProv.value;
+          const wardCode = selWard.value;
+          const garageId = container.querySelector('#selected-garage-id').value;
+
+          let searchDateTime = new Date();
+          if (timeMode.value === 'custom' && customDt.value) {
+            searchDateTime = new Date(customDt.value);
+          }
+
+          const resPlaceholder = container.querySelector('#result-placeholder');
+          const resContent = container.querySelector('#result-content');
+
+          resPlaceholder.classList.add('d-none');
+          resContent.classList.remove('d-none');
+          resContent.innerHTML = `
+            <div class="card p-5 text-center shadow-sm">
+              <div class="spinner-border text-primary mx-auto mb-2" role="status"></div>
+              <div>Đang giải thuật toán lịch trực TT247...</div>
+            </div>
+          `;
+
+          const result = await scheduleEngine.resolveOnCall({
+            taskType,
+            provinceCode,
+            wardCode,
+            garageId,
+            searchDateTime
+          });
+
+          this.renderResultCard(resContent, result, { taskType, provinceCode, wardCode, garageId });
+        });
+      },
+
+      renderResultCard(container, res, queryMeta) {
+        if (!res.success) {
+          container.innerHTML = `
+            <div class="card border-danger shadow-sm">
+              <div class="card-header bg-danger text-white fw-bold">
+                <i data-lucide="alert-octagon" class="me-1"></i> KHÔNG THỂ XÁC ĐỊNH NGƯỜI TRỰC
+              </div>
+              <div class="card-body">
+                <h5 class="text-danger fw-bold">${res.error}</h5>
+                <ul class="mb-3">${res.warnings.map(w => `<li class="text-danger">${w}</li>`).join('')}</ul>
+                ${res.zoneLead ? `
+                  <div class="alert alert-warning">
+                    <strong>Đầu mối liên hệ khẩn cấp:</strong> Vui lòng gọi trực tiếp Trưởng Zone:
+                    <h4 class="mt-2 text-dark">${res.zoneLead.name} - <a href="tel:${res.zoneLead.phone}" class="fw-bold">${res.zoneLead.phone}</a></h4>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        const { primary, backup, zone, source, warnings, shiftTime } = res;
+
+        container.innerHTML = `
+          <div class="card on-call-card shadow-sm mb-3">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <span class="badge bg-primary mb-1">${zone.name}</span>
+                  <span class="badge ${source.includes('GARA') ? 'bg-success' : 'bg-info text-dark'}">${source}</span>
+                </div>
+                <span class="text-muted small">Ca trực: <strong>${shiftTime}</strong></span>
+              </div>
+
+              <!-- THÔNG TIN GĐV TRỰC CHÍNH -->
+              <div class="p-3 bg-light rounded-3 mb-3 border">
+                <div class="text-muted small fw-bold text-uppercase">Giám định viên trực chính</div>
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-2 gap-2">
+                  <div>
+                    <h2 class="mb-0 text-primary fw-bold">${primary.fullName}</h2>
+                    <div class="text-muted small">Mã: <strong>${primary.empCode || 'N/A'}</strong> | Đơn vị: ${zone.name}</div>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <a href="tel:${primary.phone}" class="btn btn-tel btn-lg shadow-sm">
+                      <i data-lucide="phone-call" class="me-1"></i> GỌI: ${primary.phone}
+                    </a>
+                    <button class="btn btn-outline-secondary" id="btn-copy-phone" title="Sao chép SĐT">
+                      <i data-lucide="copy"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DỰ PHÒNG & TRƯỞNG ZONE -->
+              <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                  <div class="p-2 border rounded">
+                    <div class="small text-muted">Giám định viên dự phòng:</div>
+                    ${backup ? `
+                      <div class="fw-bold">${backup.fullName} - <a href="tel:${backup.phone}">${backup.phone}</a></div>
+                    ` : '<div class="text-muted fst-italic">Không có dự phòng</div>'}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="p-2 border rounded">
+                    <div class="small text-muted">Trưởng Zone hỗ trợ:</div>
+                    <div class="fw-bold">${zone.leadName} - <a href="tel:${zone.leadPhone}">${zone.leadPhone}</a></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CẢNH BÁO NẾU CÓ -->
+              ${warnings.length > 0 ? `
+                <div class="alert alert-warning py-2 mb-3">
+                  <small class="fw-bold"><i data-lucide="alert-triangle" class="me-1"></i> Lưu ý phân công:</small>
+                  <ul class="mb-0 small">${warnings.map(w => `<li>${w}</li>`).join('')}</ul>
+                </div>
+              ` : ''}
+
+              <!-- GHI NHẬN ĐIỀU PHỐI TT247 -->
+              <hr>
+              <h6 class="fw-bold d-flex align-items-center gap-1">
+                <i data-lucide="clipboard-edit"></i> Nhật ký chuyển thông tin cho GĐV
+              </h6>
+              <div class="row g-2 mt-1">
+                <div class="col-md-4">
+                  <input type="text" class="form-control form-control-sm" id="rec-case-code" placeholder="Mã vụ việc / Biển số xe" required>
+                </div>
+                <div class="col-md-4">
+                  <input type="text" class="form-control form-control-sm" id="rec-customer-phone" placeholder="Số điện thoại khách hàng" required>
+                </div>
+                <div class="col-md-4">
+                  <select class="form-select form-select-sm" id="rec-call-status">
+                    <option value="connected">Đã kết nối GĐV</option>
+                    <option value="busy">GĐV bận, chuyển dự phòng</option>
+                    <option value="unreachable">Không nghe máy / Ngoài vùng</option>
+                  </select>
+                </div>
+                <div class="col-12 mt-2">
+                  <input type="text" class="form-control form-control-sm" id="rec-notes" placeholder="Ghi chú thêm về hiện trường hoặc yêu cầu của khách hàng...">
+                </div>
+                <div class="col-12 mt-2 text-end">
+                  <button class="btn btn-dark btn-sm fw-bold" id="btn-save-record">
+                    <i data-lucide="save" class="me-1"></i> Lưu nhật ký điều phối
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        `;
+
+        lucide.createIcons();
+
+        // Sao chép SĐT
+        container.querySelector('#btn-copy-phone').addEventListener('click', () => {
+          navigator.clipboard.writeText(primary.phone);
+          showToast(`Đã sao chép SĐT ${primary.phone}`, 'success');
+        });
+
+        // Ghi nhật ký
+        container.querySelector('#btn-save-record').addEventListener('click', async () => {
+          const caseCode = container.querySelector('#rec-case-code').value.trim();
+          const customerPhone = container.querySelector('#rec-customer-phone').value.trim();
+          const callStatus = container.querySelector('#rec-call-status').value;
+          const notes = container.querySelector('#rec-notes').value.trim();
+
+          if (!caseCode || !customerPhone) {
+            alert("Vui lòng điền Biển số/Mã vụ việc và SĐT Khách hàng!");
+            return;
+          }
+
+          try {
+            await dbService.createDispatchRecord({
+              caseCode,
+              customerPhone,
+              callStatus,
+              notes,
+              taskType: queryMeta.taskType,
+              assignedInspectorId: primary.inspectorId,
+              inspectorName: primary.fullName,
+              assignedZoneId: zone.zoneId,
+              zoneName: zone.name,
+              operatorEmail: authService.currentUser?.email || 'operator@tt247.vn'
+            });
+
+            showToast("Đã lưu nhật ký điều phối thành công!", "success");
+            container.querySelector('#rec-case-code').value = '';
+            container.querySelector('#rec-customer-phone').value = '';
+            container.querySelector('#rec-notes').value = '';
+          } catch (err) {
+            alert("Lỗi khi lưu: " + err.message);
+          }
+        });
+      },
+
+      // ----------------------------------------
+      // VIEW 2: BỘ TẠO QUY TẮC LỊCH TRỰC (RULE BUILDER)
+      // ----------------------------------------
+      async renderRuleBuilder(container) {
+        const zoneId = authService.userProfile?.assignedZoneIds?.[0] || 'ZONE_HN_01';
+        let inspectors = [];
+        try {
+          inspectors = await dbService.getInspectorsByZone(zoneId);
+        } catch (e) { console.warn(e); }
+
+        container.innerHTML = `
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white py-3">
+                  <h5 class="mb-0 d-flex align-items-center gap-2">
+                    <i data-lucide="sliders"></i> Thiết Lập Quy Tắc Lịch Trực – ${zoneId}
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <form id="form-rule-builder">
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Tên quy tắc</label>
+                      <input type="text" class="form-control" id="rb-name" placeholder="VD: Phân ban luân phiên Chẵn/Lẻ Tháng 10/2026" required>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Loại hình giám định</label>
+                        <select class="form-select" id="rb-task-type">
+                          <option value="both">Cả Hiện trường & Chi tiết</option>
+                          <option value="field">Chỉ Giám định Hiện trường</option>
+                          <option value="detailed">Chỉ Giám định Chi tiết</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Kiểu luân phiên</label>
+                        <select class="form-select" id="rb-rule-type">
+                          <option value="even_odd">Ngày Chẵn / Ngày Lẻ</option>
+                          <option value="day_of_week">Theo Thứ trong tuần</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Khung giờ -->
+                    <div class="card p-3 bg-light mb-3">
+                      <h6 class="fw-bold mb-2">Khung giờ ca trực</h6>
+                      <div class="row g-2">
+                        <div class="col-md-4">
+                          <label class="small text-muted">Bắt đầu</label>
+                          <input type="time" class="form-control" id="rb-time-start" value="08:00" required>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="small text-muted">Kết thúc</label>
+                          <input type="time" class="form-control" id="rb-time-end" value="17:00" required>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                          <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="rb-is-overnight">
+                            <label class="form-check-label" for="rb-is-overnight">Ca qua đêm (vắt qua 0h)</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Phân bổ nhân sự -->
+                    <div class="card p-3 border-primary mb-3">
+                      <h6 class="fw-bold text-primary mb-2">Phân công Giám định viên</h6>
+                      <div class="row g-2 mb-2">
+                        <div class="col-md-6">
+                          <label class="small fw-bold">Trực Chính (Ngày Lẻ):</label>
+                          <select class="form-select" id="rb-odd-primary">
+                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode})</option>`).join('')}
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="small fw-bold">Dự Phòng (Ngày Lẻ):</label>
+                          <select class="form-select" id="rb-odd-backup">
+                            <option value="">-- Không có --</option>
+                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="row g-2">
+                        <div class="col-md-6">
+                          <label class="small fw-bold">Trực Chính (Ngày Chẵn):</label>
+                          <select class="form-select" id="rb-even-primary">
+                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode})</option>`).join('')}
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="small fw-bold">Dự Phòng (Ngày Chẵn):</label>
+                          <select class="form-select" id="rb-even-backup">
+                            <option value="">-- Không có --</option>
+                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Hiệu lực từ ngày</label>
+                        <input type="date" class="form-control" id="rb-eff-from" value="2026-01-01" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold">Mức ưu tiên (Priority)</label>
+                        <input type="number" class="form-control" id="rb-priority" value="50" min="1" max="100">
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
+                      <i data-lucide="check-circle" class="me-1"></i> CÔNG BỐ QUY TẮC LỊCH TRỰC
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        lucide.createIcons();
+
+        container.querySelector('#form-rule-builder').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const ruleDoc = {
+            zoneId,
+            name: container.querySelector('#rb-name').value.trim(),
+            taskType: container.querySelector('#rb-task-type').value,
+            ruleType: container.querySelector('#rb-rule-type').value,
+            priority: parseInt(container.querySelector('#rb-priority').value, 10),
+            effectiveFrom: container.querySelector('#rb-eff-from').value,
+            status: 'published',
+            timeSlot: {
+              start: container.querySelector('#rb-time-start').value,
+              end: container.querySelector('#rb-time-end').value,
+              isOvernight: container.querySelector('#rb-is-overnight').checked
+            },
+            rosterConfig: {
+              odd: {
+                primaryId: container.querySelector('#rb-odd-primary').value,
+                backupId: container.querySelector('#rb-odd-backup').value || null
+              },
+              even: {
+                primaryId: container.querySelector('#rb-even-primary').value,
+                backupId: container.querySelector('#rb-even-backup').value || null
+              }
+            },
+            createdAt: serverTimestamp()
+          };
+
+          try {
+            await addDoc(collection(db, "scheduleRules"), ruleDoc);
+            showToast("Đã công bố quy tắc thành công!", "success");
+            window.location.hash = "#lookup";
+          } catch (err) {
+            alert("Lỗi khi tạo quy tắc: " + err.message);
+          }
+        });
+      },
+
+      // ----------------------------------------
+      // VIEW 3: ĐỔI CA & NGHỈ PHÉP
+      // ----------------------------------------
+      async renderOverrides(container) {
+        const zoneId = authService.userProfile?.assignedZoneIds?.[0] || 'ZONE_HN_01';
+        let inspectors = [];
+        try {
+          inspectors = await dbService.getInspectorsByZone(zoneId);
+        } catch (e) { console.warn(e); }
+
+        container.innerHTML = `
+          <div class="row g-4">
+            <!-- ĐỔI CA / TRỰC THAY -->
+            <div class="col-lg-6">
+              <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                  <h5 class="mb-0 d-flex align-items-center gap-2">
+                    <i data-lucide="repeat"></i> Đăng Ký Trực Thay / Đổi Ca
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <form id="form-override">
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Người trực gốc (Cần bàn giao)</label>
+                      <select class="form-select" id="ov-original" required>
+                        ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode})</option>`).join('')}
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Người nhận trực thay</label>
+                      <select class="form-select" id="ov-replacement" required>
+                        ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode})</option>`).join('')}
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Ngày áp dụng</label>
+                      <input type="date" class="form-control" id="ov-date" required>
+                    </div>
+                    <div class="row g-2 mb-3">
+                      <div class="col-6">
+                        <label class="small text-muted">Từ giờ (tùy chọn)</label>
+                        <input type="time" class="form-control" id="ov-start" value="08:00">
+                      </div>
+                      <div class="col-6">
+                        <label class="small text-muted">Đến giờ (tùy chọn)</label>
+                        <input type="time" class="form-control" id="ov-end" value="17:00">
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Lý do</label>
+                      <textarea class="form-control" id="ov-reason" rows="2" placeholder="VD: Bận hỗ trợ hiện trường xe tải hoặc việc cá nhân" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+                      <i data-lucide="check" class="me-1"></i> XÁC NHẬN TRỰC THAY NGAY
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- NGHỈ PHÉP -->
+            <div class="col-lg-6">
+              <div class="card shadow-sm border-0">
+                <div class="card-header bg-danger text-white py-3">
+                  <h5 class="mb-0 d-flex align-items-center gap-2">
+                    <i data-lucide="calendar-x"></i> Đăng Ký Nghỉ Phép GĐV
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <form id="form-leave">
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Giám định viên</label>
+                      <select class="form-select" id="lv-inspector" required>
+                        ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode})</option>`).join('')}
+                      </select>
+                    </div>
+                    <div class="row g-2 mb-3">
+                      <div class="col-6">
+                        <label class="small text-muted">Từ ngày</label>
+                        <input type="date" class="form-control" id="lv-from" required>
+                      </div>
+                      <div class="col-6">
+                        <label class="small text-muted">Đến ngày</label>
+                        <input type="date" class="form-control" id="lv-to" required>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Lý do nghỉ phép</label>
+                      <textarea class="form-control" id="lv-reason" rows="2" placeholder="VD: Nghỉ phép thường niên"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100 fw-bold py-2">
+                      <i data-lucide="user-x" class="me-1"></i> DUYỆT NGHỈ PHÉP
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        lucide.createIcons();
+
+        // Gửi Đổi Ca
+        container.querySelector('#form-override').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const orig = container.querySelector('#ov-original').value;
+          const rep = container.querySelector('#ov-replacement').value;
+          if (orig === rep) {
+            alert("Người trực thay không thể trùng với người trực gốc!");
+            return;
+          }
+
+          try {
+            await addDoc(collection(db, "scheduleOverrides"), {
+              zoneId,
+              originalInspectorId: orig,
+              replacementInspectorId: rep,
+              dateStr: container.querySelector('#ov-date').value,
+              startTime: container.querySelector('#ov-start').value,
+              endTime: container.querySelector('#ov-end').value,
+              reason: container.querySelector('#ov-reason').value,
+              status: 'approved',
+              createdAt: serverTimestamp()
+            });
+            showToast("Đã duyệt bàn giao trực thay thành công!", "success");
+          } catch (err) {
+            alert("Lỗi: " + err.message);
+          }
+        });
+
+        // Gửi Nghỉ Phép
+        container.querySelector('#form-leave').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          try {
+            await addDoc(collection(db, "leaves"), {
+              inspectorId: container.querySelector('#lv-inspector').value,
+              fromDate: container.querySelector('#lv-from').value,
+              toDate: container.querySelector('#lv-to').value,
+              reason: container.querySelector('#lv-reason').value,
+              status: 'approved',
+              createdAt: serverTimestamp()
+            });
+            showToast("Đã ghi nhận nghỉ phép thành công!", "success");
+          } catch (err) {
+            alert("Lỗi: " + err.message);
+          }
+        });
+      },
+
+      // ----------------------------------------
+      // VIEW 4: NHẬT KÝ ĐIỀU PHỐI (DISPATCH HISTORY)
+      // ----------------------------------------
+      async renderDispatchHistory(container) {
+        container.innerHTML = `
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white py-3">
+              <h5 class="mb-0 d-flex align-items-center gap-2">
+                <i data-lucide="history"></i> Nhật Ký Điều Phối Chuyển Thông Tin Toàn Quốc
+              </h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Thời gian</th>
+                      <th>Mã vụ việc / Biển số</th>
+                      <th>SĐT Khách hàng</th>
+                      <th>GĐV tiếp nhận</th>
+                      <th>Zone</th>
+                      <th>Trạng thái gọi</th>
+                      <th>Ghi chú</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbl-dispatch-body">
+                    <tr><td colspan="7" class="text-center py-4"><span class="spinner-border spinner-border-sm"></span> Đang tải nhật ký...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+
+        try {
+          const list = await dbService.getDispatchHistory(30);
+          const tbody = container.querySelector('#tbl-dispatch-body');
+          if (list.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">Chưa có bản ghi điều phối nào.</td></tr>`;
+            return;
+          }
+          tbody.innerHTML = list.map(item => {
+            const timeStr = item.createdAt?.toDate ? item.createdAt.toDate().toLocaleString('vi-VN') : 'Vừa xong';
+            let badgeClass = 'bg-success';
+            let statusText = 'Đã kết nối';
+            if (item.callStatus === 'busy') { badgeClass = 'bg-warning text-dark'; statusText = 'Bận'; }
+            if (item.callStatus === 'unreachable') { badgeClass = 'bg-danger'; statusText = 'Không nghe'; }
+
+            return `
+              <tr>
+                <td class="small">${timeStr}</td>
+                <td><strong class="text-primary">${item.caseCode}</strong></td>
+                <td><a href="tel:${item.customerPhone}">${item.customerPhone}</a></td>
+                <td><strong>${item.inspectorName || item.assignedInspectorId}</strong></td>
+                <td><span class="badge bg-secondary">${item.zoneName || item.assignedZoneId}</span></td>
+                <td><span class="badge ${badgeClass}">${statusText}</span></td>
+                <td class="small text-muted">${item.notes || ''}</td>
+              </tr>
+            `;
+          }).join('');
+        } catch (err) {
+          console.error(err);
+        }
+      },
+
+      // ----------------------------------------
+      // VIEW 5: SEEDER (DỮ LIỆU DEMO CHUẨN ĐỂ TEST NGAY)
+      // ----------------------------------------
+      renderSeeder(container) {
+        container.innerHTML = `
+          <div class="row">
+            <div class="col-lg-6 mx-auto">
+              <div class="card shadow-sm p-4 border-0">
+                <h4 class="fw-bold d-flex align-items-center gap-2 text-primary">
+                  <i data-lucide="database"></i> Khởi Tạo Dữ Liệu Kiểm Thử TT247
+                </h4>
+                <p class="text-muted small">
+                  Thao tác này sẽ ghi đè các bản ghi mẫu vào Firebase Firestore của bạn để bạn có thể thử nghiệm ngay lập tức các tính năng mà không phải nhập dữ liệu thủ công:
+                </p>
+                <ul class="small text-muted">
+                  <li><strong>Tỉnh thành:</strong> Hà Nội (Cầu Giấy, Thanh Xuân), TP.HCM (Quận 1), Đắk Lắk (Buôn Ma Thuột).</li>
+                  <li><strong>Zone:</strong> Zone Hà Nội Trung Tâm (0901234567) & Zone Sài Gòn 01.</li>
+                  <li><strong>Giám định viên:</strong> Lê Tuấn Vũ (GDV001), Phạm Đức Anh (GDV002), Trần Đình Trọng (GDV003).</li>
+                  <li><strong>Gara cố định:</strong> Toyota Mỹ Đình (Cầu Giấy, Hà Nội) - Gán cố định cho GĐV Lê Tuấn Vũ.</li>
+                  <li><strong>Quy tắc luân phiên:</strong> Ngày Lẻ (Vũ trực, Đức Anh dự phòng) - Ngày Chẵn (Đức Anh trực, Vũ dự phòng).</li>
+                </ul>
+
+                <button class="btn btn-warning btn-lg fw-bold py-3 mt-3 shadow" id="btn-run-seeder">
+                  <i data-lucide="play" class="me-1"></i> NẠP DỮ LIỆU DEMO VÀO FIRESTORE
+                </button>
+                <div id="seeder-progress" class="mt-3"></div>
+              </div>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+
+        container.querySelector('#btn-run-seeder').addEventListener('click', async () => {
+          const prog = container.querySelector('#seeder-progress');
+          prog.innerHTML = `<div class="alert alert-info"><span class="spinner-border spinner-border-sm me-2"></span> Đang nạp dữ liệu vào Firestore...</div>`;
+
+          try {
+            // 1. Administrative areas
+            const areas = [
+              { areaCode: 'HN', name: 'Hà Nội', type: 'province', parentCode: 'ROOT' },
+              { areaCode: 'HN_CG', name: 'Cầu Giấy', type: 'ward', parentCode: 'HN' },
+              { areaCode: 'HN_TX', name: 'Thanh Xuân', type: 'ward', parentCode: 'HN' },
+              { areaCode: 'SG', name: 'TP. Hồ Chí Minh', type: 'province', parentCode: 'ROOT' },
+              { areaCode: 'SG_Q1', name: 'Quận 1', type: 'ward', parentCode: 'SG' },
+              { areaCode: 'DL', name: 'Đắk Lắk', type: 'province', parentCode: 'ROOT' },
+              { areaCode: 'DL_BMT', name: 'TP. Buôn Ma Thuột', type: 'ward', parentCode: 'DL' }
+            ];
+            for (const a of areas) await setDoc(doc(db, "administrativeAreas", a.areaCode), a);
+
+            // 2. Zones
+            const zones = [
+              {
+                zoneId: 'ZONE_HN_01',
+                code: 'ZONE_HN_01',
+                name: 'Zone Hà Nội Trung Tâm',
+                leadInspectorId: 'INS_LEAD_HN',
+                leadName: 'Nguyễn Văn Minh (Trưởng Zone HN)',
+                leadPhone: '0901234567',
+                status: 'active'
+              },
+              {
+                zoneId: 'ZONE_SG_01',
+                code: 'ZONE_SG_01',
+                name: 'Zone Sài Gòn 01',
+                leadInspectorId: 'INS_LEAD_SG',
+                leadName: 'Trần Hoàng Long (Trưởng Zone SG)',
+                leadPhone: '0909888999',
+                status: 'active'
+              }
+            ];
+            for (const z of zones) await setDoc(doc(db, "zones", z.zoneId), z);
+
+            // 3. Zone Coverage
+            const coverages = [
+              { id: 'COV_HN', zoneId: 'ZONE_HN_01', provinceCode: 'HN', wardCode: '*', taskType: 'both', isActive: true },
+              { id: 'COV_SG', zoneId: 'ZONE_SG_01', provinceCode: 'SG', wardCode: '*', taskType: 'both', isActive: true }
+            ];
+            for (const c of coverages) await setDoc(doc(db, "zoneCoverage", c.id), c);
+
+            // 4. Inspectors
+            const inspectors = [
+              { inspectorId: 'INS_HN_01', empCode: 'GDV001', fullName: 'Lê Tuấn Vũ', phone: '0912333444', zoneId: 'ZONE_HN_01', isActive: true },
+              { inspectorId: 'INS_HN_02', empCode: 'GDV002', fullName: 'Phạm Đức Anh', phone: '0912555666', zoneId: 'ZONE_HN_01', isActive: true },
+              { inspectorId: 'INS_SG_01', empCode: 'GDV003', fullName: 'Trần Đình Trọng', phone: '0988777111', zoneId: 'ZONE_SG_01', isActive: true }
+            ];
+            for (const i of inspectors) await setDoc(doc(db, "inspectors", i.inspectorId), i);
+
+            // 5. Garages & Assignments
+            const garage = {
+              garageId: 'GARA_TOYOTA_MYDINH',
+              code: 'GAR_MD_01',
+              name: 'Toyota Mỹ Đình',
+              address: '15 Phạm Hùng, Cầu Giấy, Hà Nội',
+              provinceCode: 'HN',
+              wardCode: 'HN_CG',
+              phone: '02437686666',
+              zoneId: 'ZONE_HN_01'
+            };
+            await setDoc(doc(db, "garages", garage.garageId), garage);
+            await setDoc(doc(db, "garageAssignments", garage.garageId), {
+              garageId: garage.garageId,
+              primaryInspectorId: 'INS_HN_01',
+              backupInspectorId: 'INS_HN_02',
+              isActive: true,
+              priority: 100
+            });
+
+            // 6. Schedule Rule (Even/Odd)
+            const sampleRule = {
+              ruleId: 'RULE_HN_SAMPLE',
+              zoneId: 'ZONE_HN_01',
+              name: 'Quy tắc Luân phiên Chẵn Lẻ Hà Nội',
+              taskType: 'both',
+              ruleType: 'even_odd',
+              priority: 50,
+              effectiveFrom: '2026-01-01',
+              status: 'published',
+              timeSlot: { start: '00:00', end: '23:59', isOvernight: false },
+              rosterConfig: {
+                odd: { primaryId: 'INS_HN_01', backupId: 'INS_HN_02' },
+                even: { primaryId: 'INS_HN_02', backupId: 'INS_HN_01' }
+              }
+            };
+            await setDoc(doc(db, "scheduleRules", sampleRule.ruleId), sampleRule);
+
+            prog.innerHTML = `
+              <div class="alert alert-success">
+                <strong>Thành công!</strong> Đã khởi tạo hoàn tất dữ liệu kiểm thử. 
+                <br>Hãy chuyển về tab <strong>Tra Cứu Trực</strong> để bắt đầu thử nghiệm.
+              </div>
+            `;
+          } catch (err) {
+            prog.innerHTML = `<div class="alert alert-danger">Lỗi nạp dữ liệu: ${err.message}</div>`;
+          }
+        });
+      },
+
+      // ----------------------------------------
+      // VIEW 6: ĐĂNG NHẬP HỆ THỐNG
+      // ----------------------------------------
+      renderLogin(container) {
+        container.innerHTML = `
+          <div class="row">
+            <div class="col-md-5 col-lg-4 mx-auto">
+              <div class="card shadow-sm p-4 border-0">
+                <div class="text-center mb-3">
+                  <div class="p-3 bg-light rounded-circle d-inline-block text-primary mb-2">
+                    <i data-lucide="shield-check" style="width: 36px; height: 36px;"></i>
+                  </div>
+                  <h4 class="fw-bold">Đăng Nhập TT247</h4>
+                  <p class="text-muted small">Dành cho Trưởng TT, Tổng đài viên và Trưởng Zone</p>
+                </div>
+                <form id="form-do-login">
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Email</label>
+                    <input type="email" class="form-control" id="login-email" placeholder="admin@tt247.vn" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Mật khẩu</label>
+                    <input type="password" class="form-control" id="login-password" placeholder="••••••••" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow">
+                    ĐĂNG NHẬP
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+
+        container.querySelector('#form-do-login').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = container.querySelector('#login-email').value;
+          const pass = container.querySelector('#login-password').value;
+          try {
+            await authService.login(email, pass);
+            showToast("Đăng nhập thành công!", "success");
+            window.location.hash = "#lookup";
+          } catch (err) {
+            alert("Đăng nhập thất bại: " + err.message);
+          }
+        });
+      }
+    };
+
+    // ==========================================
+    // 7. CLIENT-SIDE HASH ROUTER
+    // ==========================================
+    class AppRouter {
+      constructor() {
+        this.viewport = document.getElementById('app-viewport');
+      }
+
+      async handleRoute() {
+        const hash = window.location.hash || '#lookup';
+
+        // Cập nhật trạng thái active trên navbar
+        document.querySelectorAll('#nav-links .nav-link').forEach(link => {
+          if (link.getAttribute('href') === hash) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+
+        // Báo lỗi nếu Firebase chưa cấu hình
+        if (!isFirebaseReady && hash !== '#seeder') {
+          this.viewport.innerHTML = `
+            <div class="card p-4 mx-auto text-center" style="max-width: 600px;">
+              <i data-lucide="database-zap" class="text-warning mx-auto mb-2" style="width: 48px; height: 48px;"></i>
+              <h4 class="fw-bold">Chưa kết nối Firebase Database</h4>
+              <p class="text-muted">Vui lòng bấm nút <strong>"Cấu hình kết nối"</strong> ở góc trên bên phải để nhập Firebase Config, sau đó bấm lưu để sử dụng ứng dụng.</p>
+              <div>
+                <button class="btn btn-primary" onclick="document.getElementById('btn-config-firebase').click()">
+                  Nhập Firebase Config Ngay
+                </button>
+              </div>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        switch (hash) {
+          case '#lookup':
+            await views.renderLookup(this.viewport);
+            break;
+          case '#rules':
+            await views.renderRuleBuilder(this.viewport);
+            break;
+          case '#overrides':
+            await views.renderOverrides(this.viewport);
+            break;
+          case '#dispatch-history':
+            await views.renderDispatchHistory(this.viewport);
+            break;
+          case '#seeder':
+            views.renderSeeder(this.viewport);
+            break;
+          case '#login':
+            views.renderLogin(this.viewport);
+            break;
+          default:
+            this.viewport.innerHTML = `<div class="alert alert-warning">Trang không tồn tại (404).</div>`;
+        }
+      }
+    }
+
+    const router = new AppRouter();
+
+    // ==========================================
+    // 8. KHỞI TẠO TOÀN HỆ THỐNG
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', async () => {
+      // 1. Gắn sự kiện modal Firebase Config
+      const modalEl = document.getElementById('firebaseConfigModal');
+      const configModal = new bootstrap.Modal(modalEl);
+      document.getElementById('btn-config-firebase').addEventListener('click', () => {
+        document.getElementById('txt-firebase-json').value = localStorage.getItem("tt247_firebase_config") || JSON.stringify(DEFAULT_CONFIG, null, 2);
+        configModal.show();
+      });
+
+      document.getElementById('btn-save-firebase-config').addEventListener('click', () => {
+        try {
+          const val = document.getElementById('txt-firebase-json').value;
+          JSON.parse(val); // kiểm tra cú pháp JSON hợp lệ
+          localStorage.setItem("tt247_firebase_config", val);
+          location.reload();
+        } catch (e) {
+          alert("Chuỗi JSON cấu hình Firebase không hợp lệ! Vui lòng kiểm tra lại.");
+        }
+      });
+
+      // 2. Khởi tạo Auth State
+      await authService.init();
+
+      // 3. Khởi tạo Router
+      window.addEventListener('hashchange', () => router.handleRoute());
+      router.handleRoute();
+
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
