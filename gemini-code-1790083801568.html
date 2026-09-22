@@ -12,136 +12,295 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --tt-blue-primary: #0f4c81;
-      --tt-blue-dark: #0a3258;
-      --tt-blue-light: #e8f1f8;
+      --tt-blue-primary: #2563eb;
+      --tt-blue-dark: #1e3a8a;
+      --tt-blue-light: #eff6ff;
       --tt-accent: #f59e0b;
-      --tt-danger: #dc2626;
-      --tt-success: #16a34a;
+      --tt-danger: #ef4444;
+      --tt-success: #10b981;
+      --tt-surface: #ffffff;
+      --tt-bg: #f8fafc;
+      --tt-text-main: #0f172a;
+      --tt-text-muted: #64748b;
+      --sidebar-width: 280px;
     }
 
     body {
-      background-color: #f1f5f9;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      color: #1e293b;
+      background-color: var(--tt-bg);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--tt-text-main);
+      display: flex;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
     }
 
-    /* Navbar */
-    .navbar-tt247 {
-      background-color: var(--tt-blue-primary);
-      border-bottom: 3px solid var(--tt-accent);
+    /* Sidebar Layout */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-right: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 1040;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
     }
-    .navbar-brand {
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: margin-left 0.3s ease;
+    }
+
+    /* Navbar / Brand */
+    .sidebar-brand {
+      padding: 24px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      font-size: 1.25rem;
+      color: var(--tt-blue-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
     }
+
+    /* Navigation Links */
+    .sidebar-nav {
+      padding: 24px 16px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    
     .nav-link {
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.85) !important;
-      transition: all 0.2s ease;
+      font-weight: 600;
+      color: var(--tt-text-muted) !important;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.25s ease;
+      text-decoration: none;
     }
-    .nav-link:hover, .nav-link.active {
+    
+    .nav-link:hover {
+      background-color: var(--tt-blue-light);
+      color: var(--tt-blue-primary) !important;
+      transform: translateX(4px);
+    }
+    
+    .nav-link.active {
+      background: linear-gradient(135deg, var(--tt-blue-primary), #3b82f6);
       color: #ffffff !important;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     }
 
-    /* Card & UI components */
+    /* Sidebar Footer (User Area) */
+    .sidebar-footer {
+      padding: 24px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    /* Mobile Header */
+    .mobile-header {
+      display: none;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      padding: 16px 24px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
+
+    @media (max-width: 991.98px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.show {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0;
+      }
+      .mobile-header {
+        display: flex;
+      }
+      /* Overlay for mobile sidebar */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(4px);
+        z-index: 1035;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .sidebar-overlay.show {
+        display: block;
+        opacity: 1;
+      }
+    }
+
+    /* Premium UI Components */
     .card {
-      border: none;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.9) !important;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 10px 32px rgba(15, 23, 42, 0.04);
+      border-radius: 20px;
+      overflow: hidden;
     }
+    
     .card-lookup-header {
-      background: linear-gradient(135deg, var(--tt-blue-primary), var(--tt-blue-dark));
+      background: linear-gradient(135deg, var(--tt-blue-primary), #60a5fa);
       color: #ffffff;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
+      padding: 20px 24px;
+      border-bottom: none;
     }
 
-    /* Callout & Results */
     .on-call-card {
       border-left: 6px solid var(--tt-blue-primary);
-      background-color: #ffffff;
     }
+
+    .btn {
+      border-radius: 12px;
+      font-weight: 600;
+      padding: 10px 20px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--tt-blue-primary), #3b82f6);
+      border: none;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+      color: #fff;
+    }
+
     .btn-tel {
-      background-color: var(--tt-success);
+      background: linear-gradient(135deg, var(--tt-success), #34d399);
+      border: none;
       color: #ffffff;
-      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
     }
     .btn-tel:hover {
-      background-color: #15803d;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
       color: #ffffff;
     }
 
-    .badge-field {
-      background-color: #ea580c;
-      color: #ffffff;
+    .form-control, .form-select {
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 12px 16px;
+      background-color: var(--tt-bg);
+      transition: all 0.2s ease;
     }
-    .badge-detailed {
-      background-color: #2563eb;
-      color: #ffffff;
+    .form-control:focus, .form-select:focus {
+      background-color: #ffffff;
+      border-color: var(--tt-blue-primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Badges */
+    .badge {
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-weight: 600;
     }
 
     .toast-container-custom {
       position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1090;
+      top: 24px;
+      right: 24px;
+      z-index: 1100;
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR TOÀN CỤC -->
-  <nav class="navbar navbar-expand-lg navbar-dark navbar-tt247 sticky-top shadow-sm">
-    <div class="container-fluid px-md-4">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="#lookup">
-        <i data-lucide="shield-alert"></i> TT247 DISPATCH
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="nav-links">
-          <li class="nav-item">
-            <a class="nav-link active" href="#lookup"><i data-lucide="search" class="me-1"></i> Tra Cứu Trực</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#rules"><i data-lucide="sliders" class="me-1"></i> Quy Tắc Lịch Trực</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#overrides"><i data-lucide="repeat" class="me-1"></i> Đổi Ca & Nghỉ Phép</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#dispatch-history"><i data-lucide="history" class="me-1"></i> Nhật Ký Điều Phối</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#seeder"><i data-lucide="database" class="me-1"></i> Khởi Tạo Dữ Liệu</a>
-          </li>
-        </ul>
+  <!-- SIDEBAR (LEFT) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div style="background: linear-gradient(135deg, var(--tt-blue-primary), #60a5fa); padding: 8px; border-radius: 12px; color: white; display: flex;">
+        <i data-lucide="shield-alert"></i>
+      </div>
+      TT247 PRO
+    </div>
 
-        <div class="d-flex align-items-center gap-2" id="nav-user-area">
-          <button class="btn btn-outline-light btn-sm" id="btn-config-firebase" title="Cấu hình Firebase">
-            <i data-lucide="settings" class="me-1"></i> Cấu hình kết nối
-          </button>
-          <div id="user-badge-container"></div>
-        </div>
+    <div class="sidebar-nav">
+      <div id="nav-links">
+        <a class="nav-link active" href="#lookup"><i data-lucide="search"></i> Tra Cứu Trực</a>
+        <a class="nav-link" href="#rules"><i data-lucide="sliders"></i> Quy Tắc Lịch Trực</a>
+        <a class="nav-link" href="#overrides"><i data-lucide="repeat"></i> Đổi Ca & Nghỉ Phép</a>
+        <a class="nav-link" href="#dispatch-history"><i data-lucide="history"></i> Nhật Ký Điều Phối</a>
+        <a class="nav-link" href="#seeder"><i data-lucide="database"></i> Khởi Tạo Dữ Liệu</a>
       </div>
     </div>
-  </nav>
 
-  <!-- CONTAINER CHÍNH -->
-  <main class="container-fluid py-4 px-md-4">
-    <div id="alert-container"></div>
-    <div id="app-viewport">
-      <!-- Vùng render của SPA Router -->
-      <div class="text-center py-5">
-        <div class="spinner-border text-primary" role="status"></div>
-        <div class="mt-2 text-muted">Đang kết nối hệ thống TT247...</div>
+    <div class="sidebar-footer">
+      <button class="btn btn-light w-100 mb-3 text-start d-flex justify-content-between align-items-center" id="btn-config-firebase" title="Cấu hình Firebase">
+        <span><i data-lucide="settings" class="me-2 text-muted"></i> Cấu hình</span>
+        <i data-lucide="chevron-right" class="text-muted" style="width: 16px; height: 16px;"></i>
+      </button>
+      <div id="user-badge-container"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT (RIGHT) -->
+  <main class="main-content">
+    
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+      <div class="fw-bold text-primary d-flex align-items-center gap-2">
+        <i data-lucide="shield-alert"></i> TT247 PRO
+      </div>
+      <button class="btn btn-light rounded-circle p-2" id="btnMobileToggle">
+        <i data-lucide="menu"></i>
+      </button>
+    </header>
+
+    <!-- Page Content -->
+    <div class="container-fluid py-4 px-md-5">
+      <div id="alert-container"></div>
+      <div id="app-viewport">
+        <!-- Vùng render của SPA Router -->
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <div class="mt-3 fw-bold text-muted">Đang tải trải nghiệm Premium...</div>
+        </div>
       </div>
     </div>
   </main>
@@ -182,6 +341,31 @@
 
   <!-- TOAST THÔNG BÁO -->
   <div class="toast-container toast-container-custom" id="toast-container"></div>
+
+    <!-- UI SCRIPT -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnToggle = document.getElementById('btnMobileToggle');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const navLinks = document.querySelectorAll('.nav-link');
+
+      function toggleSidebar() {
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+      }
+
+      if (btnToggle) btnToggle.addEventListener('click', toggleSidebar);
+      if (overlay) overlay.addEventListener('click', toggleSidebar);
+      
+      // Close sidebar on mobile when a link is clicked
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth < 992) toggleSidebar();
+        });
+      });
+    });
+  </script>
 
   <!-- FIREBASE VÀ TOÀN BỘ LOGIC ỨNG DỤNG (ES MODULES) -->
   <script type="module">
