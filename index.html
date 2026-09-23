@@ -1114,6 +1114,7 @@
         <a class="nav-link" href="#overrides"><i data-lucide="repeat"></i> Đổi Ca & Nghỉ Phép</a>
         <a class="nav-link" href="#dispatch-history"><i data-lucide="history"></i> Nhật Ký Điều Phối</a>
         <a class="nav-link" href="#coverage"><i data-lucide="map-pinned"></i> Phân Bổ Địa Bàn</a>
+        <a class="nav-link" href="#administrative-areas"><i data-lucide="map"></i> Quản Lý Quận / Xã</a>
         <a class="nav-link" href="#personnel"><i data-lucide="users"></i> Quản Lý Nhân Sự</a>
       </div>
 
@@ -1964,6 +1965,35 @@
             parentCode: parentCode,
             type: 'district'
           }));
+        }
+      },
+
+      async saveAdministrativeArea(areaData) {
+        if (!areaData || !areaData.areaCode) throw new Error("Mã địa bàn không được để trống!");
+        const id = areaData.areaCode.trim();
+        await setDoc(doc(db, "administrativeAreas", id), {
+          id: id,
+          areaCode: id,
+          name: areaData.name.trim(),
+          parentCode: areaData.parentCode || 'ROOT',
+          type: areaData.type || 'district',
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+        return id;
+      },
+
+      async deleteAdministrativeArea(areaCode) {
+        if (!areaCode) throw new Error("Mã địa bàn không hợp lệ!");
+        await deleteDoc(doc(db, "administrativeAreas", areaCode.trim()));
+      },
+
+      async getAllCustomAdministrativeAreas() {
+        try {
+          const snap = await getDocs(collection(db, "administrativeAreas"));
+          return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch (e) {
+          console.warn("Lỗi đọc administrativeAreas:", e);
+          return [];
         }
       },
 
@@ -6145,6 +6175,680 @@ const scheduleEngine = new ScheduleEngine(dbService);
             lucide.createIcons();
           }
         });
+      },
+
+// ----------------------------------------
+      // 8. QUẢN LÝ PHƯỜNG XÃ & QUẬN HUYỆN
+      // ----------------------------------------
+      async renderAdministrativeAreas(container) {
+        let provinces = [];
+        let customAreas = [];
+
+        try {
+          provinces = await dbService.getAdministrativeAreas('ROOT');
+          customAreas = await dbService.getAllCustomAdministrativeAreas();
+        } catch (e) {
+          console.warn("Lỗi tải dữ liệu địa bàn:", e);
+        }
+
+        // Tỉnh/Thành map để tra cứu tên nhanh
+        const provMap = new Map();
+        provinces.forEach(p => provMap.set(p.areaCode, p.name));
+
+        // State quản lý bộ lọc
+        let selectedProvince = 'ALL';
+        let selectedType = 'ALL';
+        let searchKeyword = '';
+        let displayLimit = 60;
+
+        // Modal bootstrap instance
+        let modalEl = null;
+        let bsModal = null;
+
+        // Helper loại bỏ dấu tiếng Việt để tìm kiếm
+        const removeVietnameseTones = (str) => {
+          if (!str) return '';
+          return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D')
+            .toLowerCase()
+            .trim();
+        };
+
+        container.innerHTML = `
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge-soft badge-soft-blue"><i data-lucide="map" style="width: 14px;"></i> DANH MỤC HÀNH CHÍNH</span>
+                <span class="badge-soft badge-soft-slate">Phiên bản Quốc gia 2026</span>
+              </div>
+              <h3 class="fw-bold mb-1" style="color: var(--text-main); font-size: 24px;">Quản Lý Phường Xã & Quận Huyện</h3>
+              <p class="text-muted mb-0 small">Tra cứu, thêm mới, phân cấp và quản lý danh mục đơn vị hành chính 63 Tỉnh Thành trên toàn quốc</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-outline-secondary px-3 py-2 fw-semibold" id="btn-refresh-areas" style="border-radius: 12px;">
+                <i data-lucide="refresh-cw" class="me-1" style="width: 16px;"></i> Làm Mới
+              </button>
+              <button class="btn btn-primary-action px-3 py-2 fw-bold" id="btn-open-create-area" style="border-radius: 12px;">
+                <i data-lucide="plus-circle" class="me-1" style="width: 18px;"></i> Thêm Địa Bàn Mới
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI THỐNG KÊ ĐỊA BÀN -->
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+              <div class="kpi-card-metric">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="text-muted small fw-bold text-uppercase">Tỉnh / Thành</span>
+                  <div class="metric-icon-box" style="background: #eff6ff; color: #2563eb; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="globe" style="width: 18px;"></i>
+                  </div>
+                </div>
+                <h3 class="fw-bold text-dark mb-0">${provinces.length || 63}</h3>
+                <small class="text-muted">Đơn vị hành chính cấp 1</small>
+              </div>
+            </div>
+            <div class="col-6 col-lg-3">
+              <div class="kpi-card-metric">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="text-muted small fw-bold text-uppercase">Quận / Huyện / TX</span>
+                  <div class="metric-icon-box" style="background: #ecfdf5; color: #059669; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="map-pin" style="width: 18px;"></i>
+                  </div>
+                </div>
+                <h3 class="fw-bold text-dark mb-0" id="kpi-total-districts">704</h3>
+                <small class="text-muted">Đơn vị hành chính cấp 2</small>
+              </div>
+            </div>
+            <div class="col-6 col-lg-3">
+              <div class="kpi-card-metric">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="text-muted small fw-bold text-uppercase">Phường / Xã / TT</span>
+                  <div class="metric-icon-box" style="background: #f5f3ff; color: #7c3aed; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="compass" style="width: 18px;"></i>
+                  </div>
+                </div>
+                <h3 class="fw-bold text-dark mb-0" id="kpi-total-wards">--</h3>
+                <small class="text-muted">Đơn vị hành chính cấp 3</small>
+              </div>
+            </div>
+            <div class="col-6 col-lg-3">
+              <div class="kpi-card-metric">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="text-muted small fw-bold text-uppercase">Tùy Chỉnh (Cloud)</span>
+                  <div class="metric-icon-box" style="background: #fffbeb; color: #d97706; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="cloud" style="width: 18px;"></i>
+                  </div>
+                </div>
+                <h3 class="fw-bold text-dark mb-0" id="kpi-total-cloud">${customAreas.length}</h3>
+                <small class="text-muted">Đã lưu trên Firestore</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- BỘ LỌC ĐA NĂNG -->
+          <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px;">
+            <div class="card-body p-4">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                  <label class="form-label small fw-bold text-uppercase" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
+                    1. Lọc theo Tỉnh / Thành phố
+                  </label>
+                  <select class="form-select" id="admin-filter-province" style="min-height: 48px; border-radius: 12px; font-weight: 600; font-size: 13.5px;">
+                    <option value="ALL">-- Tất cả 63 Tỉnh Thành --</option>
+                    ${provinces.map(p => `<option value="${p.areaCode}">${p.name} (${p.areaCode})</option>`).join('')}
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold text-uppercase" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
+                    2. Phân cấp loại hình
+                  </label>
+                  <select class="form-select" id="admin-filter-type" style="min-height: 48px; border-radius: 12px; font-weight: 600; font-size: 13.5px;">
+                    <option value="ALL">Tất cả cấp bậc</option>
+                    <option value="district">Quận / Huyện / Thị xã / TP</option>
+                    <option value="ward">Phường / Xã / Thị trấn</option>
+                  </select>
+                </div>
+                <div class="col-md-5">
+                  <label class="form-label small fw-bold text-uppercase" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
+                    3. Tìm kiếm nhanh theo tên hoặc mã
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0" style="border-radius: 12px 0 0 12px; border-color: #e2e8f0;">
+                      <i data-lucide="search" style="width: 17px; color: #94a3b8;"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" id="admin-filter-search" placeholder="Gõ tên (VD: Tân Lợi, Buôn Ma Thuột, Hoàn Kiếm)..." style="min-height: 48px; border-radius: 0 12px 12px 0; border-color: #e2e8f0; font-size: 13.5px;">
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-primary rounded-pill px-2.5 py-1.5" id="badge-total-match">0 đơn vị</span>
+                  <small class="text-muted" id="label-filter-context">Đang lọc danh sách</small>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-secondary" id="btn-reset-filters">
+                    <i data-lucide="rotate-ccw" style="width: 13px;"></i> Đặt lại bộ lọc
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BẢNG DANH MỤC ĐỊA BÀN HÀNH CHÍNH -->
+          <div class="card border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0" style="min-width: 780px;">
+                <thead style="background: #f8fafc; border-bottom: 1.5px solid #e2e8f0;">
+                  <tr>
+                    <th class="py-3 px-4 text-uppercase small fw-bold" style="color: #64748b; font-size: 11.5px; width: 140px;">Mã Địa Bàn</th>
+                    <th class="py-3 px-3 text-uppercase small fw-bold" style="color: #64748b; font-size: 11.5px;">Tên Đơn Vị Hành Chính</th>
+                    <th class="py-3 px-3 text-uppercase small fw-bold" style="color: #64748b; font-size: 11.5px; width: 190px;">Phân Cấp</th>
+                    <th class="py-3 px-3 text-uppercase small fw-bold" style="color: #64748b; font-size: 11.5px; width: 180px;">Trực Thuộc</th>
+                    <th class="py-3 px-3 text-uppercase small fw-bold" style="color: #64748b; font-size: 11.5px; width: 140px;">Nguồn Dữ Liệu</th>
+                    <th class="py-3 px-4 text-uppercase small fw-bold text-end" style="color: #64748b; font-size: 11.5px; width: 150px;">Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-areas-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="admin-empty-state" class="text-center p-5 d-none">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">
+                <i data-lucide="map-pin-off" style="width: 26px; color: #94a3b8;"></i>
+              </div>
+              <h6 class="fw-bold text-dark mb-1">Không tìm thấy đơn vị hành chính nào</h6>
+              <p class="text-muted small mb-3">Thử kiểm tra lại từ khóa tìm kiếm hoặc chọn tỉnh thành khác</p>
+              <button class="btn btn-sm btn-primary-action px-3 py-2 fw-semibold" id="btn-empty-add-area" style="border-radius: 10px;">
+                <i data-lucide="plus" style="width: 14px;"></i> Thêm Địa Bàn Này Ngay
+              </button>
+            </div>
+
+            <!-- Footer Pagination / Xem thêm -->
+            <div class="p-3 border-top bg-light d-flex justify-content-between align-items-center flex-wrap gap-2" id="admin-pagination-box">
+              <span class="small text-muted" id="admin-showing-text">Đang hiển thị 0 / 0 đơn vị</span>
+              <button class="btn btn-sm btn-white border px-3 py-1.5 fw-semibold shadow-sm" id="btn-load-more-areas" style="border-radius: 8px;">
+                Xem thêm 50 đơn vị <i data-lucide="chevron-down" style="width: 14px;"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- MODAL THÊM / SỬA ĐƠN VỊ HÀNH CHÍNH -->
+          <div class="modal fade" id="modalAdminArea" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content" style="border-radius: 18px; border: none; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);">
+                <div class="modal-header px-4 pt-4 pb-3 border-bottom-0">
+                  <div class="d-flex align-items-center gap-3">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center;">
+                      <i data-lucide="map-pin-plus" style="width: 22px;"></i>
+                    </div>
+                    <div>
+                      <h5 class="modal-title fw-bold" id="modal-area-title" style="color: #0f172a;">Thêm Đơn Vị Hành Chính Mới</h5>
+                      <small class="text-muted">Lưu vào cơ sở dữ liệu để phục vụ điều phối lịch trực</small>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body px-4 py-3">
+                  <form id="form-admin-area">
+                    <input type="hidden" id="form-area-original-id" value="">
+
+                    <!-- 1. Tỉnh / Thành phố -->
+                    <div class="mb-3">
+                      <label class="form-label small fw-bold text-uppercase" style="color: #475569;">1. Thuộc Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                      <select class="form-select" id="form-area-province" required style="min-height: 48px; border-radius: 12px; font-weight: 600;">
+                        ${provinces.map(p => `<option value="${p.areaCode}">${p.name} (${p.areaCode})</option>`).join('')}
+                      </select>
+                    </div>
+
+                    <!-- 2. Cấp phân loại -->
+                    <div class="mb-3">
+                      <label class="form-label small fw-bold text-uppercase" style="color: #475569;">2. Phân cấp đơn vị hành chính <span class="text-danger">*</span></label>
+                      <div class="segmented-control" style="padding: 5px; border-radius: 12px;">
+                        <input type="radio" name="areaTypeRadio" id="area-type-district" value="district" checked>
+                        <label for="area-type-district" style="padding: 8px 12px; font-size: 13px; font-weight: 600; border-radius: 8px;">
+                          <i data-lucide="map-pin" style="width: 15px;"></i> Quận / Huyện / TX
+                        </label>
+                        <input type="radio" name="areaTypeRadio" id="area-type-ward" value="ward">
+                        <label for="area-type-ward" style="padding: 8px 12px; font-size: 13px; font-weight: 600; border-radius: 8px;">
+                          <i data-lucide="compass" style="width: 15px;"></i> Phường / Xã / TT
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- 3. Tên đơn vị hành chính -->
+                    <div class="mb-3">
+                      <label class="form-label small fw-bold text-uppercase" style="color: #475569;">3. Tên đơn vị hành chính <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="form-area-name" required placeholder="VD: Phường Tân Lợi, Xã Hòa Thắng, Quận Hoàn Kiếm..." style="min-height: 48px; border-radius: 12px; font-weight: 600;">
+                    </div>
+
+                    <!-- 4. Mã địa bàn -->
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="form-label small fw-bold text-uppercase mb-0" style="color: #475569;">4. Mã địa bàn <span class="text-danger">*</span></label>
+                        <button type="button" class="btn btn-link btn-sm text-primary p-0 text-decoration-none fw-bold" id="btn-auto-gen-code">
+                          <i data-lucide="sparkles" style="width: 12px;"></i> Tự sinh mã
+                        </button>
+                      </div>
+                      <input type="text" class="form-control font-monospace" id="form-area-code" required placeholder="VD: DL_TANLOI, HN_01..." style="min-height: 48px; border-radius: 12px; font-weight: 700; text-transform: uppercase;">
+                      <small class="text-muted" style="font-size: 11.5px;">Mã định danh duy nhất trên hệ thống (không dấu, viết hoa)</small>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                      <button type="button" class="btn btn-light px-4 py-2.5 fw-semibold" data-bs-dismiss="modal" style="border-radius: 12px;">Hủy bỏ</button>
+                      <button type="submit" class="btn btn-primary-action px-4 py-2.5 fw-bold" id="btn-save-area" style="border-radius: 12px;">
+                        <i data-lucide="check" class="me-1" style="width: 16px;"></i> Lưu Địa Bàn
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        lucide.createIcons();
+
+        // Khởi tạo Bootstrap modal
+        modalEl = container.querySelector('#modalAdminArea');
+        if (modalEl && typeof bootstrap !== 'undefined') {
+          bsModal = new bootstrap.Modal(modalEl);
+        }
+
+        // Tạo danh sách tổng hợp tất cả địa bàn
+        const buildMasterList = () => {
+          const map = new Map();
+          const targetProvinces = selectedProvince === 'ALL' ? provinces : provinces.filter(p => p.areaCode === selectedProvince);
+
+          // 1. Thêm các quận/huyện chuẩn từ DEFAULT_DISTRICTS_MAP
+          targetProvinces.forEach(p => {
+            const defaultNames = (typeof DEFAULT_DISTRICTS_MAP !== 'undefined' && DEFAULT_DISTRICTS_MAP[p.areaCode]) || [];
+            defaultNames.forEach((name, idx) => {
+              const code = `${p.areaCode}_D${String(idx + 1).padStart(2, '0')}`;
+              map.set(code, {
+                areaCode: code,
+                name: name,
+                parentCode: p.areaCode,
+                provinceName: p.name,
+                type: 'district',
+                isCustom: false
+              });
+            });
+          });
+
+          // 2. Hợp nhất các địa bàn lưu từ Firestore
+          customAreas.forEach(ca => {
+            if (ca.parentCode === 'ROOT') return;
+            if (selectedProvince !== 'ALL' && ca.parentCode !== selectedProvince) return;
+            const code = ca.areaCode || ca.id;
+            const provName = provMap.get(ca.parentCode) || ca.parentCode;
+
+            // Kiểm tra xem có trùng tên với đơn vị chuẩn nào không
+            const existingKey = Array.from(map.keys()).find(k => {
+              const item = map.get(k);
+              return item.parentCode === ca.parentCode && item.name.trim().toLowerCase() === (ca.name || '').trim().toLowerCase();
+            });
+
+            if (existingKey) {
+              const existing = map.get(existingKey);
+              map.set(existingKey, {
+                ...existing,
+                ...ca,
+                areaCode: ca.areaCode || existing.areaCode,
+                provinceName: provName,
+                isCustom: true
+              });
+            } else {
+              map.set(code, {
+                areaCode: code,
+                name: ca.name || 'Chưa đặt tên',
+                parentCode: ca.parentCode,
+                provinceName: provName,
+                type: ca.type || 'ward',
+                isCustom: true
+              });
+            }
+          });
+
+          return Array.from(map.values());
+        };
+
+        // Render Table & Thống kê
+        const renderTable = () => {
+          const allItems = buildMasterList();
+          const rawKw = searchKeyword.trim().toLowerCase();
+          const normKw = removeVietnameseTones(searchKeyword);
+
+          // Lọc danh sách theo type và keyword
+          const filtered = allItems.filter(item => {
+            if (selectedType !== 'ALL' && item.type !== selectedType) return false;
+            if (!normKw) return true;
+            const normName = removeVietnameseTones(item.name);
+            const normCode = removeVietnameseTones(item.areaCode);
+            const normProv = removeVietnameseTones(item.provinceName || '');
+            return normName.includes(normKw) || normCode.includes(normKw) || normProv.includes(normKw);
+          });
+
+          // Cập nhật KPI
+          const districtCount = allItems.filter(i => i.type === 'district').length;
+          const wardCount = allItems.filter(i => i.type === 'ward').length;
+          const kpiDistricts = container.querySelector('#kpi-total-districts');
+          const kpiWards = container.querySelector('#kpi-total-wards');
+          const kpiCloud = container.querySelector('#kpi-total-cloud');
+          if (kpiDistricts) kpiDistricts.textContent = districtCount;
+          if (kpiWards) kpiWards.textContent = wardCount;
+          if (kpiCloud) kpiCloud.textContent = customAreas.length;
+
+          // Cập nhật thông tin match
+          const badgeMatch = container.querySelector('#badge-total-match');
+          const labelContext = container.querySelector('#label-filter-context');
+          if (badgeMatch) badgeMatch.textContent = `${filtered.length} đơn vị`;
+          if (labelContext) {
+            const provLabel = selectedProvince === 'ALL' ? 'Toàn quốc' : (provMap.get(selectedProvince) || selectedProvince);
+            labelContext.textContent = `Hiển thị đơn vị thuộc: ${provLabel}`;
+          }
+
+          const tbody = container.querySelector('#admin-areas-tbody');
+          const emptyState = container.querySelector('#admin-empty-state');
+          const paginationBox = container.querySelector('#admin-pagination-box');
+          const showingText = container.querySelector('#admin-showing-text');
+          const btnLoadMore = container.querySelector('#btn-load-more-areas');
+
+          if (filtered.length === 0) {
+            tbody.innerHTML = '';
+            emptyState.classList.remove('d-none');
+            paginationBox.classList.add('d-none');
+            return;
+          }
+
+          emptyState.classList.add('d-none');
+          paginationBox.classList.remove('d-none');
+
+          const displayItems = filtered.slice(0, displayLimit);
+          if (showingText) showingText.textContent = `Đang hiển thị ${displayItems.length} / ${filtered.length} đơn vị`;
+
+          if (btnLoadMore) {
+            if (displayLimit >= filtered.length) {
+              btnLoadMore.classList.add('d-none');
+            } else {
+              btnLoadMore.classList.remove('d-none');
+            }
+          }
+
+          tbody.innerHTML = displayItems.map(item => `
+            <tr>
+              <td class="py-3 px-4">
+                <span class="badge bg-light text-dark font-monospace border px-2.5 py-1.5" style="font-size: 12px; letter-spacing: 0.02em;">
+                  ${item.areaCode}
+                </span>
+              </td>
+              <td class="py-3 px-3">
+                <div class="d-flex align-items-center gap-2.5">
+                  <div style="width: 32px; height: 32px; border-radius: 8px; background: ${item.type === 'ward' ? '#f5f3ff' : '#eff6ff'}; color: ${item.type === 'ward' ? '#7c3aed' : '#2563eb'}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i data-lucide="${item.type === 'ward' ? 'compass' : 'map-pin'}" style="width: 16px;"></i>
+                  </div>
+                  <div>
+                    <span class="fw-bold text-dark d-block" style="font-size: 14px;">${item.name}</span>
+                    ${item.isCustom ? '<span class="text-success small" style="font-size: 11px;">(Đã lưu trên Cloud)</span>' : ''}
+                  </div>
+                </div>
+              </td>
+              <td class="py-3 px-3">
+                ${item.type === 'ward' 
+                  ? `<span class="badge-soft badge-soft-purple fw-bold"><i data-lucide="compass" style="width: 13px;"></i> Phường / Xã</span>`
+                  : `<span class="badge-soft badge-soft-blue fw-bold"><i data-lucide="map-pin" style="width: 13px;"></i> Quận / Huyện / TX</span>`
+                }
+              </td>
+              <td class="py-3 px-3">
+                <span class="badge-soft badge-soft-slate fw-semibold">
+                  <i data-lucide="building" style="width: 12px;"></i> ${item.provinceName || item.parentCode}
+                </span>
+              </td>
+              <td class="py-3 px-3">
+                ${item.isCustom 
+                  ? `<span class="badge-soft badge-soft-green fw-bold"><i data-lucide="cloud" style="width: 12px;"></i> Cloud DB</span>`
+                  : `<span class="badge-soft badge-soft-slate"><i data-lucide="shield-check" style="width: 12px;"></i> Chuẩn</span>`
+                }
+              </td>
+              <td class="py-3 px-4 text-end">
+                <div class="d-inline-flex align-items-center gap-1">
+                  <button type="button" class="btn btn-sm btn-light p-1.5 text-primary btn-edit-area" data-code="${item.areaCode}" data-name="${item.name}" data-parent="${item.parentCode}" data-type="${item.type}" title="Chỉnh sửa đơn vị">
+                    <i data-lucide="pencil" style="width: 15px;"></i>
+                  </button>
+                  ${item.type === 'district' ? `
+                    <button type="button" class="btn btn-sm btn-light p-1.5 text-success btn-add-sub-ward" data-parent="${item.parentCode}" data-dname="${item.name}" title="Thêm Phường/Xã con">
+                      <i data-lucide="plus" style="width: 15px;"></i>
+                    </button>
+                  ` : ''}
+                  ${item.isCustom ? `
+                    <button type="button" class="btn btn-sm btn-light p-1.5 text-danger btn-delete-area" data-code="${item.areaCode}" data-name="${item.name}" title="Xóa khỏi Cloud">
+                      <i data-lucide="trash-2" style="width: 15px;"></i>
+                    </button>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          `).join('');
+
+          lucide.createIcons();
+        };
+
+        // Gắn sự kiện bộ lọc
+        const selProv = container.querySelector('#admin-filter-province');
+        const selType = container.querySelector('#admin-filter-type');
+        const inputSearch = container.querySelector('#admin-filter-search');
+        const btnReset = container.querySelector('#btn-reset-filters');
+        const btnLoadMore = container.querySelector('#btn-load-more-areas');
+
+        selProv.addEventListener('change', (e) => {
+          selectedProvince = e.target.value;
+          displayLimit = 60;
+          renderTable();
+        });
+
+        selType.addEventListener('change', (e) => {
+          selectedType = e.target.value;
+          displayLimit = 60;
+          renderTable();
+        });
+
+        inputSearch.addEventListener('input', (e) => {
+          searchKeyword = e.target.value;
+          displayLimit = 60;
+          renderTable();
+        });
+
+        btnReset.addEventListener('click', () => {
+          selectedProvince = 'ALL';
+          selectedType = 'ALL';
+          searchKeyword = '';
+          displayLimit = 60;
+          selProv.value = 'ALL';
+          selType.value = 'ALL';
+          inputSearch.value = '';
+          renderTable();
+        });
+
+        btnLoadMore.addEventListener('click', () => {
+          displayLimit += 60;
+          renderTable();
+        });
+
+        container.querySelector('#btn-refresh-areas').addEventListener('click', async () => {
+          showToast('Đang làm mới dữ liệu địa bàn...', 'info');
+          try {
+            customAreas = await dbService.getAllCustomAdministrativeAreas();
+            renderTable();
+            showToast('Đã làm mới dữ liệu!', 'success');
+          } catch (err) {
+            showToast('Lỗi tải lại: ' + err.message, 'error');
+          }
+        });
+
+        // Xử lý Modal Thêm / Sửa
+        const modalTitle = container.querySelector('#modal-area-title');
+        const formOrigId = container.querySelector('#form-area-original-id');
+        const formProv = container.querySelector('#form-area-province');
+        const formName = container.querySelector('#form-area-name');
+        const formCode = container.querySelector('#form-area-code');
+        const radDistrict = container.querySelector('#area-type-district');
+        const radWard = container.querySelector('#area-type-ward');
+        const btnAutoGen = container.querySelector('#btn-auto-gen-code');
+
+        const openCreateModal = (presetProv = null, presetType = 'district', presetPrefix = '') => {
+          formOrigId.value = '';
+          modalTitle.textContent = 'Thêm Đơn Vị Hành Chính Mới';
+          if (presetProv && presetProv !== 'ALL') {
+            formProv.value = presetProv;
+          } else if (selectedProvince !== 'ALL') {
+            formProv.value = selectedProvince;
+          } else {
+            formProv.value = provinces[0]?.areaCode || 'DL';
+          }
+
+          if (presetType === 'ward') {
+            radWard.checked = true;
+          } else {
+            radDistrict.checked = true;
+          }
+
+          formName.value = '';
+          formCode.value = '';
+          if (bsModal) bsModal.show();
+          setTimeout(() => formName.focus(), 200);
+        };
+
+        container.querySelector('#btn-open-create-area').addEventListener('click', () => {
+          openCreateModal();
+        });
+
+        const btnEmptyAdd = container.querySelector('#btn-empty-add-area');
+        if (btnEmptyAdd) {
+          btnEmptyAdd.addEventListener('click', () => {
+            openCreateModal(selectedProvince, selectedType !== 'ALL' ? selectedType : 'district');
+            if (searchKeyword.trim()) {
+              formName.value = searchKeyword.trim();
+              autoGenerateCode();
+            }
+          });
+        }
+
+        // Tự động sinh mã địa bàn
+        const autoGenerateCode = () => {
+          const name = formName.value.trim();
+          const pCode = formProv.value;
+          if (!name) return;
+          const cleanName = removeVietnameseTones(name)
+            .toUpperCase()
+            .replace(/^(QUAN|HUYEN|THI XA|TP|THANH PHO|PHUONG|XA|THI TRAN)\s+/i, '')
+            .replace(/[^A-Z0-9]/g, '_')
+            .replace(/_+/g, '_')
+            .replace(/^_|_$/g, '');
+          formCode.value = `${pCode}_${cleanName || 'AREA'}`;
+        };
+
+        btnAutoGen.addEventListener('click', autoGenerateCode);
+        formName.addEventListener('blur', () => {
+          if (!formCode.value.trim()) autoGenerateCode();
+        });
+
+        // Click trên bảng: Sửa, Xóa, Thêm con
+        container.querySelector('#admin-areas-tbody').addEventListener('click', async (e) => {
+          const btnEdit = e.target.closest('.btn-edit-area');
+          if (btnEdit) {
+            const code = btnEdit.dataset.code;
+            const name = btnEdit.dataset.name;
+            const parent = btnEdit.dataset.parent;
+            const type = btnEdit.dataset.type;
+
+            formOrigId.value = code;
+            modalTitle.textContent = `Chỉnh Sửa Đơn Vị: ${name}`;
+            formProv.value = parent;
+            formName.value = name;
+            formCode.value = code;
+
+            if (type === 'ward') {
+              radWard.checked = true;
+            } else {
+              radDistrict.checked = true;
+            }
+
+            if (bsModal) bsModal.show();
+            return;
+          }
+
+          const btnAddSub = e.target.closest('.btn-add-sub-ward');
+          if (btnAddSub) {
+            const parent = btnAddSub.dataset.parent;
+            openCreateModal(parent, 'ward');
+            return;
+          }
+
+          const btnDel = e.target.closest('.btn-delete-area');
+          if (btnDel) {
+            const code = btnDel.dataset.code;
+            const name = btnDel.dataset.name;
+            if (confirm(`Bạn có chắc chắn muốn xóa đơn vị hành chính "${name}" (${code}) khỏi cơ sở dữ liệu?`)) {
+              try {
+                await dbService.deleteAdministrativeArea(code);
+                showToast(`Đã xóa đơn vị "${name}" thành công!`, 'success');
+                customAreas = await dbService.getAllCustomAdministrativeAreas();
+                renderTable();
+              } catch (err) {
+                showToast('Lỗi khi xóa: ' + err.message, 'error');
+              }
+            }
+          }
+        });
+
+        // Submit Form Thêm / Sửa
+        container.querySelector('#form-admin-area').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const btnSave = container.querySelector('#btn-save-area');
+          const origHtml = btnSave.innerHTML;
+          btnSave.disabled = true;
+          btnSave.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang lưu...`;
+
+          const areaCode = formCode.value.trim().toUpperCase();
+          const name = formName.value.trim();
+          const parentCode = formProv.value;
+          const type = container.querySelector('input[name="areaTypeRadio"]:checked').value;
+
+          try {
+            await dbService.saveAdministrativeArea({
+              areaCode,
+              name,
+              parentCode,
+              type
+            });
+
+            showToast(`Đã lưu thành công đơn vị "${name}"!`, 'success');
+            if (bsModal) bsModal.hide();
+
+            // Cập nhật lại dữ liệu
+            customAreas = await dbService.getAllCustomAdministrativeAreas();
+            selectedProvince = parentCode;
+            selProv.value = parentCode;
+            renderTable();
+          } catch (err) {
+            showToast('Lỗi khi lưu: ' + err.message, 'error');
+          } finally {
+            btnSave.disabled = false;
+            btnSave.innerHTML = origHtml;
+            lucide.createIcons();
+          }
+        });
+
+        // Initial render
+        renderTable();
       }
     };
 
@@ -6198,6 +6902,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
             break;
           case '#coverage':
             await views.renderCoverage(this.viewport);
+            break;
+          case '#administrative-areas':
+            await views.renderAdministrativeAreas(this.viewport);
             break;
           case '#overrides':
             await views.renderOverrides(this.viewport);
