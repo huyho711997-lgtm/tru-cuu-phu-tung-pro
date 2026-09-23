@@ -729,7 +729,7 @@
       getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { 
-      getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, 
+      getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, 
       query, where, orderBy, limit, serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -902,6 +902,16 @@
       async updateInspector(id, data) {
         await updateDoc(doc(db, "inspectors", id), data);
       },
+      async updateZone(id, data) {
+        await updateDoc(doc(db, "zones", id), data);
+      },
+      async deleteZone(id) {
+        await deleteDoc(doc(db, "zones", id));
+      },
+      async deleteInspector(id) {
+        await deleteDoc(doc(db, "inspectors", id));
+      },
+
 
       async getAdministrativeAreas(parentCode = 'ROOT') {
         const q = query(collection(db, "administrativeAreas"), where("parentCode", "==", parentCode));
@@ -1253,6 +1263,31 @@
           console.warn(e);
         }
 
+        let allPersonnel = [];
+        zones.forEach(z => {
+          allPersonnel.push({
+            type: 'ZONE_LEAD',
+            id: z.zoneId,
+            empCode: z.code || 'ZL-' + z.zoneId.slice(-4),
+            name: z.leadName,
+            phone: z.leadPhone,
+            zoneName: z.name,
+            raw: z
+          });
+        });
+        inspectors.forEach(i => {
+          const z = zones.find(x => x.zoneId === i.zoneId);
+          allPersonnel.push({
+            type: 'INSPECTOR',
+            id: i.inspectorId,
+            empCode: i.empCode,
+            name: i.fullName,
+            phone: i.phone,
+            zoneName: z ? z.name : '-',
+            raw: i
+          });
+        });
+
         container.innerHTML = `
           <div class="row">
             <div class="col-12">
@@ -1260,10 +1295,10 @@
                 <div class="card-header-clean d-flex justify-content-between align-items-center">
                   <h6 class="fw-bold mb-0">Danh sách Nhân Sự Toàn Quốc</h6>
                   <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-sm fw-bold d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCreateZone">
+                    <button class="btn btn-outline-primary btn-sm fw-bold d-flex align-items-center gap-1" id="btn-open-create-zone">
                       <i data-lucide="plus-circle" style="width: 16px;"></i> Tạo Trưởng Zone
                     </button>
-                    <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCreateInspector">
+                    <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-1" id="btn-open-create-inspector">
                       <i data-lucide="user-plus" style="width: 16px;"></i> Tạo Nhân Sự
                     </button>
                   </div>
@@ -1273,27 +1308,31 @@
                     <table class="table table-modern mb-0">
                       <thead>
                         <tr>
+                          <th>Vai Trò</th>
                           <th>Mã NV</th>
-                          <th>Giám Định Viên</th>
+                          <th>Họ và Tên</th>
                           <th>SĐT</th>
-                          <th>Thuộc Zone / Trưởng Zone</th>
-                          <th>Trạng Thái</th>
+                          <th>Quản lý / Thuộc Zone</th>
+                          <th class="text-end">Thao Tác</th>
                         </tr>
                       </thead>
                       <tbody>
-                        ${inspectors.map(ins => {
-                          const z = zones.find(x => x.zoneId === ins.zoneId);
-                          return `
-                            <tr>
-                              <td>${ins.empCode || '-'}</td>
-                              <td class="fw-bold text-primary">${ins.fullName}</td>
-                              <td>${ins.phone}</td>
-                              <td>${z ? `<span class="badge-soft badge-soft-blue">${z.name}</span><br><small class="text-muted">QL: ${z.leadName}</small>` : '-'}</td>
-                              <td><span class="badge-soft badge-soft-green">Đang HĐ</span></td>
-                            </tr>
-                          `;
-                        }).join('')}
-                        ${inspectors.length === 0 ? '<tr><td colspan="5" class="text-center py-4 text-muted">Chưa có dữ liệu nhân sự</td></tr>' : ''}
+                        ${allPersonnel.map(p => `
+                          <tr>
+                            <td><span class="badge ${p.type === 'ZONE_LEAD' ? 'bg-danger' : 'bg-primary'}">${p.type === 'ZONE_LEAD' ? 'Trưởng Zone' : 'Giám định viên'}</span></td>
+                            <td>${p.empCode}</td>
+                            <td class="fw-bold ${p.type === 'ZONE_LEAD' ? 'text-danger' : 'text-primary'}">${p.name}</td>
+                            <td>${p.phone}</td>
+                            <td><span class="badge-soft badge-soft-blue">${p.zoneName}</span></td>
+                            <td>
+                              <div class="d-flex gap-2 justify-content-end">
+                                <button class="btn btn-sm btn-light border btn-edit" data-type="${p.type}" data-id="${p.id}" title="Chỉnh sửa"><i data-lucide="edit" style="width:14px; color: #2563eb"></i></button>
+                                <button class="btn btn-sm btn-light border btn-delete" data-type="${p.type}" data-id="${p.id}" title="Xóa"><i data-lucide="trash-2" style="width:14px; color: #dc2626"></i></button>
+                              </div>
+                            </td>
+                          </tr>
+                        `).join('')}
+                        ${allPersonnel.length === 0 ? '<tr><td colspan="6" class="text-center py-4 text-muted">Chưa có dữ liệu nhân sự</td></tr>' : ''}
                       </tbody>
                     </table>
                   </div>
@@ -1302,19 +1341,20 @@
             </div>
           </div>
 
-          <!-- MODAL TẠO GIÁM ĐỊNH VIÊN -->
+          <!-- MODAL TẠO/SỬA GIÁM ĐỊNH VIÊN -->
           <div class="modal fade" id="modalCreateInspector" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-light">
-                  <h6 class="modal-title fw-bold">Tạo Giám Định Viên & Phân Vùng</h6>
+                  <h6 class="modal-title fw-bold" id="ins-modal-title">Tạo Giám Định Viên Mới</h6>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <form id="form-create-inspector">
+                    <input type="hidden" id="edit-ins-id">
                     <div class="mb-3">
-                      <label class="field-label">Mã NV</label>
-                      <input type="text" class="form-control" id="ins-emp-code" required placeholder="VD: GDV004">
+                      <label class="field-label">Mã NV (Tự động cấp)</label>
+                      <input type="text" class="form-control bg-light" id="ins-emp-code" readonly placeholder="Ví dụ: GDV-1234">
                     </div>
                     <div class="mb-3">
                       <label class="field-label">Họ và Tên</label>
@@ -1331,26 +1371,31 @@
                         ${zones.map(z => `<option value="${z.zoneId}">${z.name} (Quản lý: ${z.leadName})</option>`).join('')}
                       </select>
                     </div>
-                    <button type="submit" class="btn btn-primary-action w-100 fw-bold mt-2">Tạo & Phân Công</button>
+                    <button type="submit" class="btn btn-primary-action w-100 fw-bold mt-2" id="btn-submit-ins">Tạo Nhân Sự</button>
                   </form>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- MODAL TẠO ZONE -->
+          <!-- MODAL TẠO/SỬA ZONE -->
           <div class="modal fade" id="modalCreateZone" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-light">
-                  <h6 class="modal-title fw-bold">Tạo Zone / Trưởng Zone Mới</h6>
+                  <h6 class="modal-title fw-bold" id="zone-modal-title">Tạo Zone / Trưởng Zone Mới</h6>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <form id="form-create-zone">
+                    <input type="hidden" id="edit-zone-id">
                     <div class="mb-3">
                       <label class="field-label">Tên Zone</label>
                       <input type="text" class="form-control" id="zone-name" required placeholder="VD: Zone Miền Trung">
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Mã Trưởng Zone (Tự động)</label>
+                      <input type="text" class="form-control bg-light" id="zone-lead-code" readonly placeholder="Hệ thống tự động cấp">
                     </div>
                     <div class="mb-3">
                       <label class="field-label">Tên Trưởng Zone</label>
@@ -1360,7 +1405,7 @@
                       <label class="field-label">SĐT Trưởng Zone</label>
                       <input type="text" class="form-control" id="zone-lead-phone" required>
                     </div>
-                    <button type="submit" class="btn btn-primary-action w-100 fw-bold mt-2">Tạo Zone</button>
+                    <button type="submit" class="btn btn-primary-action w-100 fw-bold mt-2" id="btn-submit-zone">Tạo Zone</button>
                   </form>
                 </div>
               </div>
@@ -1368,6 +1413,83 @@
           </div>
         `;
         lucide.createIcons();
+        
+        // Cấp phát Bootstrap Modals
+        const modalIns = new bootstrap.Modal(document.getElementById('modalCreateInspector'));
+        const modalZone = new bootstrap.Modal(document.getElementById('modalCreateZone'));
+
+        // Xử lý mở Modal tạo Nhân sự
+        container.querySelector('#btn-open-create-inspector').addEventListener('click', () => {
+          document.getElementById('form-create-inspector').reset();
+          document.getElementById('edit-ins-id').value = '';
+          document.getElementById('ins-emp-code').value = 'GDV-' + Math.floor(1000 + Math.random() * 9000);
+          document.getElementById('ins-modal-title').innerText = 'Tạo Giám Định Viên Mới';
+          document.getElementById('btn-submit-ins').innerText = 'Tạo Nhân Sự';
+          modalIns.show();
+        });
+
+        // Xử lý mở Modal tạo Zone
+        container.querySelector('#btn-open-create-zone').addEventListener('click', () => {
+          document.getElementById('form-create-zone').reset();
+          document.getElementById('edit-zone-id').value = '';
+          document.getElementById('zone-lead-code').value = 'ZL-' + Math.floor(1000 + Math.random() * 9000);
+          document.getElementById('zone-modal-title').innerText = 'Tạo Zone / Trưởng Zone Mới';
+          document.getElementById('btn-submit-zone').innerText = 'Tạo Zone';
+          modalZone.show();
+        });
+
+        // Xử lý nút Sửa
+        container.querySelectorAll('.btn-edit').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const btnEl = e.currentTarget;
+            const type = btnEl.dataset.type;
+            const id = btnEl.dataset.id;
+            const person = allPersonnel.find(p => p.id === id);
+            
+            if (type === 'INSPECTOR') {
+              document.getElementById('edit-ins-id').value = id;
+              document.getElementById('ins-emp-code').value = person.empCode;
+              document.getElementById('ins-name').value = person.name;
+              document.getElementById('ins-phone').value = person.phone;
+              document.getElementById('ins-zone').value = person.raw.zoneId;
+              document.getElementById('ins-modal-title').innerText = 'Chỉnh sửa Giám Định Viên';
+              document.getElementById('btn-submit-ins').innerText = 'Lưu Thay Đổi';
+              modalIns.show();
+            } else if (type === 'ZONE_LEAD') {
+              document.getElementById('edit-zone-id').value = id;
+              document.getElementById('zone-name').value = person.raw.name;
+              document.getElementById('zone-lead-code').value = person.empCode;
+              document.getElementById('zone-lead-name').value = person.name;
+              document.getElementById('zone-lead-phone').value = person.phone;
+              document.getElementById('zone-modal-title').innerText = 'Chỉnh sửa Zone / Trưởng Zone';
+              document.getElementById('btn-submit-zone').innerText = 'Lưu Thay Đổi';
+              modalZone.show();
+            }
+          });
+        });
+
+        // Xử lý nút Xóa
+        container.querySelectorAll('.btn-delete').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const btnEl = e.currentTarget;
+            const type = btnEl.dataset.type;
+            const id = btnEl.dataset.id;
+            
+            if (confirm("Bạn có chắc chắn muốn xóa nhân sự này không? Hành động không thể hoàn tác!")) {
+              try {
+                if (type === 'INSPECTOR') {
+                  await dbService.deleteInspector(id);
+                } else {
+                  await dbService.deleteZone(id);
+                }
+                showToast("Đã xóa thành công!", "success");
+                router.handleRoute(); // reload
+              } catch (err) {
+                alert("Lỗi khi xóa: " + err.message);
+              }
+            }
+          });
+        });
 
         // Xử lý submit Giám định viên
         container.querySelector('#form-create-inspector').addEventListener('submit', async (e) => {
@@ -1375,19 +1497,24 @@
           const btn = e.target.querySelector('button');
           btn.disabled = true;
           try {
-            await dbService.createInspector({
+            const editId = container.querySelector('#edit-ins-id').value;
+            const data = {
               empCode: container.querySelector('#ins-emp-code').value.trim(),
               fullName: container.querySelector('#ins-name').value.trim(),
               phone: container.querySelector('#ins-phone').value.trim(),
               zoneId: container.querySelector('#ins-zone').value,
               isActive: true
-            });
-            showToast('Tạo giám định viên thành công', 'success');
+            };
             
-            const modalEl = document.getElementById('modalCreateInspector');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if(modalInstance) modalInstance.hide();
+            if (editId) {
+              await dbService.updateInspector(editId, data);
+              showToast('Cập nhật thành công', 'success');
+            } else {
+              await dbService.createInspector(data);
+              showToast('Tạo giám định viên thành công', 'success');
+            }
             
+            modalIns.hide();
             document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
             document.body.classList.remove('modal-open');
             document.body.style = '';
@@ -1405,22 +1532,25 @@
           const btn = e.target.querySelector('button');
           btn.disabled = true;
           try {
-            const zName = container.querySelector('#zone-name').value.trim();
-            const zoneId = 'ZONE_' + Date.now();
-            await dbService.createZone({
-              zoneId: zoneId,
-              code: zoneId,
-              name: zName,
+            const editId = container.querySelector('#edit-zone-id').value;
+            const data = {
+              code: container.querySelector('#zone-lead-code').value.trim(),
+              name: container.querySelector('#zone-name').value.trim(),
               leadName: container.querySelector('#zone-lead-name').value.trim(),
               leadPhone: container.querySelector('#zone-lead-phone').value.trim(),
               status: 'active'
-            });
-            showToast('Tạo Zone thành công', 'success');
+            };
             
-            const modalEl = document.getElementById('modalCreateZone');
-            const modalInstance = bootstrap.Modal.getInstance(modalEl);
-            if(modalInstance) modalInstance.hide();
-
+            if (editId) {
+              await dbService.updateZone(editId, data);
+              showToast('Cập nhật Zone thành công', 'success');
+            } else {
+              data.zoneId = 'ZONE_' + Date.now();
+              await dbService.createZone(data);
+              showToast('Tạo Zone thành công', 'success');
+            }
+            
+            modalZone.hide();
             document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
             document.body.classList.remove('modal-open');
             document.body.style = '';
@@ -1432,7 +1562,6 @@
           }
         });
       },
-      
       // ----------------------------------------
       async renderLookup(container) {
         let provinces = [];
