@@ -2414,12 +2414,32 @@ const scheduleEngine = new ScheduleEngine(dbService);
                   </div>
 
                   <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <div class="d-flex align-items-center bg-light border rounded-3 px-3 py-1 gap-2" style="background: #f8fafc; border-color: var(--border-medium) !important; height: 40px;">
-                      <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
-                      <span class="fw-bold text-muted text-nowrap" style="font-size: 11.5px; letter-spacing: 0.05em;">KHU VỰC:</span>
-                      <select class="form-select border-0 bg-transparent fw-bold text-primary p-0 shadow-none" id="sel-active-zone" style="min-width: 190px; font-size: 13.5px; cursor: pointer;">
-                        ${zones.map(z => `<option value="${z.zoneId}" ${z.zoneId === currentZoneId ? 'selected' : ''}>${z.name}</option>`).join('')}
-                      </select>
+                    <!-- CUSTOM LUXURY ZONE DROPDOWN -->
+                    <div class="dropdown">
+                      <button class="btn btn-white border shadow-sm dropdown-toggle d-flex align-items-center gap-2 px-3 py-1 fw-semibold text-dark" type="button" id="btn-zone-dropdown" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 10px; background: #ffffff; min-width: 220px; height: 42px; border-color: var(--border-medium) !important;">
+                        <div style="width: 28px; height: 28px; border-radius: 8px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                          <i data-lucide="map-pin" style="width: 15px; height: 15px;"></i>
+                        </div>
+                        <div class="text-start flex-grow-1" style="line-height: 1.2;">
+                          <small class="text-muted d-block fw-bold" style="font-size: 10px; letter-spacing: 0.04em;">KHU VỰC QUẢN LÝ</small>
+                          <span class="fw-bold text-primary" id="selected-zone-display" style="font-size: 13.5px;">${zones.find(z => z.zoneId === currentZoneId)?.name || 'Chọn Zone'}</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="text-muted ms-1" style="width: 14px; height: 14px;"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2 mt-2" aria-labelledby="btn-zone-dropdown" style="border-radius: 12px; min-width: 240px; z-index: 1050;">
+                        <li class="dropdown-header text-uppercase fw-bold text-muted px-3 py-2" style="font-size: 11px;">Chọn Zone Điều Hành</li>
+                        ${zones.map(z => `
+                          <li>
+                            <a class="dropdown-item d-flex align-items-center justify-content-between p-2 rounded-2 ${z.zoneId === currentZoneId ? 'active bg-primary text-white fw-bold' : 'text-dark'}" href="javascript:void(0)" data-zone-id="${z.zoneId}" style="font-size: 13px;">
+                              <span class="d-flex align-items-center gap-2">
+                                <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
+                                ${z.name}
+                              </span>
+                              ${z.zoneId === currentZoneId ? '<i data-lucide="check" style="width: 14px; height: 14px;"></i>' : ''}
+                            </a>
+                          </li>
+                        `).join('')}
+                      </ul>
                     </div>
 
                     <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-2 px-3 py-2 shadow-sm text-nowrap" id="btn-open-create-rule" style="border-radius: var(--radius-md); font-size: 13px;">
@@ -2782,12 +2802,35 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
         renderRulesList();
 
-        // Chuyển đổi Zone
-        container.querySelector('#sel-active-zone').addEventListener('change', async (e) => {
-          currentZoneId = e.target.value;
-          await loadZoneData(currentZoneId);
-          container.querySelector('#badge-rules-count').innerText = `${rules.length} quy tắc`;
-          renderRulesList();
+        // Chuyển đổi Zone (Custom Luxury Dropdown)
+        container.querySelectorAll('[data-zone-id]').forEach(item => {
+          item.addEventListener('click', async (e) => {
+            const newZoneId = e.currentTarget.dataset.zoneId;
+            if (newZoneId === currentZoneId) return;
+            currentZoneId = newZoneId;
+            
+            const selectedZoneName = zones.find(z => z.zoneId === currentZoneId)?.name || 'Chọn Zone';
+            const displayEl = container.querySelector('#selected-zone-display');
+            if (displayEl) displayEl.innerText = selectedZoneName;
+
+            // Cập nhật trạng thái active trong dropdown
+            container.querySelectorAll('[data-zone-id]').forEach(el => {
+              const isCur = el.dataset.zoneId === currentZoneId;
+              el.className = `dropdown-item d-flex align-items-center justify-content-between p-2 rounded-2 ${isCur ? 'active bg-primary text-white fw-bold' : 'text-dark'}`;
+              el.innerHTML = `
+                <span class="d-flex align-items-center gap-2">
+                  <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
+                  ${zones.find(z => z.zoneId === el.dataset.zoneId)?.name || ''}
+                </span>
+                ${isCur ? '<i data-lucide="check" style="width: 14px; height: 14px;"></i>' : ''}
+              `;
+            });
+            lucide.createIcons();
+
+            await loadZoneData(currentZoneId);
+            container.querySelector('#badge-rules-count').innerText = `${rules.length} quy tắc`;
+            renderRulesList();
+          });
         });
 
         // Xử lý chuyển tab template trong Modal
