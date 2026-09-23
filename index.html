@@ -1104,6 +1104,19 @@
         return snap.docs.map(d => ({ inspectorId: d.id, ...d.data() }));
       },
 
+      async getAllRulesByZone(zoneId) {
+        const q = query(collection(db, "scheduleRules"), where("zoneId", "==", zoneId));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ ruleId: d.id, ...d.data() }));
+      },
+      async createScheduleRule(data) {
+        if (!data.ruleId) data.ruleId = 'RULE_' + Date.now();
+        await setDoc(doc(db, "scheduleRules", data.ruleId), data);
+      },
+      async deleteScheduleRule(ruleId) {
+        await deleteDoc(doc(db, "scheduleRules", ruleId));
+      },
+
       async getActiveRulesForZone(zoneId, taskType, dateStr) {
         const q = query(
           collection(db, "scheduleRules"),
@@ -1205,6 +1218,28 @@
               // Kiểm tra xem GĐV cố định có nghỉ phép hoặc đổi ca không
               const evaluatedPrimary = await this.checkLeaveAndOverride(basePrimary, dateStr, timeStr, taskType, zone.zoneId);
 
+              // NGUYÊN TẮC: Nếu GĐV cố định nghỉ phép mà không có người trực thay hợp lệ:
+              const isPrimaryOnLeave = evaluatedPrimary.warnings.some(w => w.includes('NGHỈ PHÉP nhưng chưa có người nhận trực thay'));
+              if (isPrimaryOnLeave) {
+                if (baseBackup) {
+                  const backupCheck = await this.checkLeaveAndOverride(baseBackup, dateStr, timeStr, taskType, zone.zoneId);
+                  if (!backupCheck.warnings.some(w => w.includes('NGHỈ PHÉP'))) {
+                    res.success = true;
+                    res.source = 'GARA CỐ ĐỊNH (DỰ PHÒNG)';
+                    res.primary = backupCheck.inspector;
+                    res.backup = null;
+                    res.warnings.push(...evaluatedPrimary.warnings, ...backupCheck.warnings);
+                    return res;
+                  }
+                }
+                // Báo thiếu nhân sự và chuyển cho Trưởng Zone, KHÔNG tự ý chuyển sang GĐV khác
+                res.success = false;
+                res.error = "GARA_STAFF_ON_LEAVE";
+                res.warnings.push(`CẢNH BÁO KHẨN: GĐV phụ trách Gara (${basePrimary?.fullName || 'N/A'}) đang nghỉ phép và chưa có người trực thay!`);
+                res.warnings.push("Hệ thống không tự ý chuyển sang GĐV khác. Vui lòng liên hệ Trưởng Zone xử lý điều phối.");
+                return res;
+              }
+
               res.success = true;
               res.source = evaluatedPrimary.isOverridden ? 'TRỰC THAY (GARA CỐ ĐỊNH)' : 'GARA CỐ ĐỊNH';
               res.primary = evaluatedPrimary.inspector;
@@ -1223,18 +1258,18 @@
           }
 
           // BƯỚC 5: Lọc quy tắc phù hợp nhất theo mức ưu tiên và khung giờ
-          const matchedRule = this.selectBestMatchingRule(rules, timeStr, wardCode);
+          const matchedRule = this.selectBestMatchingRule(rules, timeStr, wardCode, dateStr);
           if (!matchedRule) {
             res.error = "NO_MATCHING_RULE";
             res.warnings.push("Không có ca trực nào bao quát khung giờ tra cứu.");
             return res;
           }
 
-          // BƯỚC 6: Tính toán nhân sự trực theo loại mô hình (Chẵn/lẻ, Chu kỳ, Thứ)
-          const roster = this.evaluateRoster(matchedRule, dateStr);
+          // BƯỚC 6: Tính toán nhân sự trực theo loại mô hình (Chẵn/lẻ, Chu kỳ, Thứ, Ngày lễ...)
+          const roster = this.evaluateRoster(matchedRule, dateStr, taskType);
           if (!roster || !roster.primaryId) {
             res.error = "EMPTY_ROSTER";
-            res.warnings.push("Quy tắc trực tồn tại nhưng chưa cấu hình nhân sự.");
+            res.warnings.push("Quy tắc trực tồn tại nhưng chưa cấu hình nhân sự cho ca này.");
             return res;
           }
 
@@ -1251,10 +1286,10 @@
 
           // BƯỚC 8: Trả về kết quả
           res.success = true;
-          res.source = finalPrimary.isOverridden ? 'TRỰC THAY' : 'LỊCH TRỰC ZONE';
+          res.source = finalPrimary.isOverridden ? 'TRỰC THAY' : (matchedRule.name || 'LỊCH TRỰC ZONE');
           res.primary = finalPrimary.inspector;
           res.backup = finalBackup;
-          res.shiftTime = `${matchedRule.timeSlot.start} - ${matchedRule.timeSlot.end}${matchedRule.timeSlot.isOvernight ? ' (Qua đêm)' : ''}`;
+          res.shiftTime = `${matchedRule.timeSlot?.start || '00:00'} - ${matchedRule.timeSlot?.end || '23:59'}${matchedRule.timeSlot?.isOvernight ? ' (Qua đêm)' : ''}`;
           res.warnings.push(...finalPrimary.warnings);
 
           return res;
@@ -1295,36 +1330,65 @@
         return { inspector, isOverridden: false, warnings };
       }
 
-      evaluateRoster(rule, dateStr) {
-        const { ruleType, rosterConfig, cycleAnchorDate, cycleLength } = rule;
+      evaluateRoster(rule, dateStr, taskType = 'field') {
+        const { ruleType, rosterConfig, cycleAnchorDate, cycleLength, specificDate } = rule;
         const targetDate = new Date(dateStr + "T00:00:00");
         const dayOfMonth = targetDate.getDate();
 
-        if (ruleType === 'even_odd') {
+        let selectedSlot = null;
+
+        // 1. Ngày cụ thể (Lễ / Sự kiện)
+        if (ruleType === 'specific_date') {
+          if (specificDate === dateStr) {
+            selectedSlot = rosterConfig.slot;
+          }
+        } 
+        // 2. Chẵn / Lẻ theo ngày trong tháng (1, 2, 3...)
+        else if (ruleType === 'even_odd') {
           const isOdd = dayOfMonth % 2 !== 0;
-          return isOdd ? rosterConfig.odd : rosterConfig.even;
-        }
-
-        if (ruleType === 'continuous_cycle') {
-          const anchor = new Date((cycleAnchorDate || dateStr) + "T00:00:00");
+          selectedSlot = isOdd ? rosterConfig.odd : rosterConfig.even;
+        } 
+        // 3. Luân phiên liên tục không ngắt quãng (Continuous Cycle)
+        else if (ruleType === 'continuous_cycle') {
+          const anchor = new Date((cycleAnchorDate || '2026-01-01') + "T00:00:00");
           const diffDays = Math.floor((targetDate.getTime() - anchor.getTime()) / (86400000));
-          const idx = ((diffDays % cycleLength) + cycleLength) % cycleLength;
-          return rosterConfig.cycles ? rosterConfig.cycles[idx] : rosterConfig.odd;
-        }
-
-        if (ruleType === 'day_of_week') {
+          const length = cycleLength || (rosterConfig.cycles ? rosterConfig.cycles.length : 2);
+          const idx = ((diffDays % length) + length) % length;
+          selectedSlot = rosterConfig.cycles ? rosterConfig.cycles[idx] : (idx === 0 ? rosterConfig.odd : rosterConfig.even);
+        } 
+        // 4. Theo thứ trong tuần (0: CN, 1: T2, 2: T3, ...)
+        else if (ruleType === 'day_of_week') {
           const dow = targetDate.getDay();
-          return rosterConfig.weekly ? rosterConfig.weekly[dow] : rosterConfig.odd;
+          selectedSlot = rosterConfig.weekly ? rosterConfig.weekly[dow] : rosterConfig.odd;
+        }
+        // 5. Theo địa bàn cụ thể
+        else if (ruleType === 'ward_assignment') {
+          selectedSlot = rosterConfig.assignment;
         }
 
-        return rosterConfig.default || rosterConfig.odd;
+        if (!selectedSlot) selectedSlot = rosterConfig.default || rosterConfig.odd || rosterConfig;
+
+        // Hỗ trợ song song cả 2 công việc (Hiện trường vs Chi tiết) trong 1 quy tắc
+        if (selectedSlot && (selectedSlot.field || selectedSlot.detailed)) {
+          if (taskType === 'field' && selectedSlot.field) return selectedSlot.field;
+          if (taskType === 'detailed' && selectedSlot.detailed) return selectedSlot.detailed;
+        }
+
+        return selectedSlot;
       }
 
-      selectBestMatchingRule(rules, timeStr, wardCode) {
+      selectBestMatchingRule(rules, timeStr, wardCode, dateStr) {
+        // Thứ tự ưu tiên: Ngày cụ thể (100) > Địa bàn cụ thể (80) > Thứ trong tuần (60) > Chẵn lẻ / Chu kỳ (50)
         const sorted = [...rules].sort((a, b) => (b.priority || 0) - (a.priority || 0));
         for (const r of sorted) {
+          // Kiểm tra ngày cụ thể nếu là rule lễ/sự kiện
+          if (r.ruleType === 'specific_date' && r.specificDate !== dateStr) continue;
+
+          // Kiểm tra địa bàn
+          if (r.wardCode && r.wardCode !== '*' && r.wardCode !== wardCode) continue;
+
+          // Kiểm tra khung giờ
           if (this.isWithinTimeSlot(timeStr, r.timeSlot)) {
-            if (r.wardCode && r.wardCode !== '*' && r.wardCode !== wardCode) continue;
             return r;
           }
         }
@@ -1354,8 +1418,7 @@
         return `${h}:${m}`;
       }
     }
-
-    const scheduleEngine = new ScheduleEngine(dbService);
+const scheduleEngine = new ScheduleEngine(dbService);
 
     // ==========================================
     // 6. SPA VIEWS CONTROLLER
@@ -2298,171 +2361,563 @@
       // VIEW 2: BỘ TẠO QUY TẮC LỊCH TRỰC (RULE BUILDER)
       // ----------------------------------------
       async renderRuleBuilder(container) {
-        const zoneId = authService.userProfile?.assignedZoneIds?.[0] || 'ZONE_HN_01';
-        let inspectors = [];
+        let zones = [];
         try {
-          inspectors = await dbService.getInspectorsByZone(zoneId);
+          zones = await dbService.getAllZones();
         } catch (e) { console.warn(e); }
 
+        let currentZoneId = zones[0]?.zoneId || 'ZONE_HN_01';
+        let inspectors = [];
+        let rules = [];
+        let wards = [];
+        let garages = [];
+
+        async function loadZoneData(zid) {
+          try {
+            inspectors = await dbService.getInspectorsByZone(zid);
+            rules = await dbService.getAllRulesByZone(zid);
+            
+            // Lấy danh sách địa bàn phường/xã của Tỉnh trực thuộc Zone
+            const zoneDoc = zones.find(z => z.zoneId === zid);
+            if (zoneDoc) {
+              // Tìm coverage để biết tỉnh
+              const snapCov = await getDocs(query(collection(db, "zoneCoverage"), where("zoneId", "==", zid)));
+              const covDocs = snapCov.docs.map(d => d.data());
+              const provCode = covDocs[0]?.provinceCode || 'HN';
+              wards = await dbService.getAdministrativeAreas(provCode);
+              garages = await dbService.searchGarages('', provCode);
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
+        await loadZoneData(currentZoneId);
+
         container.innerHTML = `
-          <div class="row">
-            <div class="col-lg-8 mx-auto">
+          <div class="row g-4">
+            <!-- TOP CONTROLS & ZONE SELECTOR -->
+            <div class="col-12">
               <div class="card shadow-sm border-0">
-                <div class="card-header-clean">
+                <div class="card-header-clean py-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
                   <div class="d-flex align-items-center gap-3">
-                    <div class="header-icon-box amber">
-                      <i data-lucide="sliders" style="width: 20px; height: 20px;"></i>
+                    <div class="header-icon-box" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309; width: 44px; height: 44px; flex-shrink: 0;">
+                      <i data-lucide="sliders" style="width: 22px; height: 22px;"></i>
                     </div>
                     <div>
-                      <h6 class="fw-bold mb-0" style="font-size: 15px;">Thiết Lập Quy Tắc Lịch Trực</h6>
-                      <small class="text-muted">Đang cấu hình cho: <strong>${zoneId}</strong></small>
+                      <div class="d-flex align-items-center gap-2">
+                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 16.5px;">Thiết Lập Quy Tắc Lịch Trực</h5>
+                        <span class="badge-soft badge-soft-amber fw-bold" id="badge-rules-count">${rules.length} quy tắc</span>
+                      </div>
+                      <small class="text-muted" style="font-size: 12.5px;">Bộ quy tắc chuẩn hóa phân công ca trực tự động theo mẫu kết hợp</small>
                     </div>
                   </div>
+
+                  <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="field-label mb-0 text-nowrap">Đang cấu hình:</span>
+                      <select class="form-select form-select-sm fw-bold text-primary" id="sel-active-zone" style="min-width: 220px; height: 38px; border-radius: 8px;">
+                        ${zones.map(z => `<option value="${z.zoneId}" ${z.zoneId === currentZoneId ? 'selected' : ''}>📍 ${z.name}</option>`).join('')}
+                      </select>
+                    </div>
+
+                    <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-2 px-3 py-2 shadow-sm text-nowrap" id="btn-open-create-rule" style="border-radius: var(--radius-md); font-size: 13px;">
+                      <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Tạo Quy Tắc Mới
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DANH SÁCH CÁC QUY TẮC ĐANG ÁP DỤNG -->
+            <div class="col-12">
+              <div class="card shadow-sm border-0">
+                <div class="card-header-clean py-3 px-4 d-flex justify-content-between align-items-center">
+                  <h6 class="fw-bold mb-0 text-dark" style="font-size: 14.5px;">Các Quy Tắc Lịch Trực Của Zone</h6>
+                  <small class="text-muted">Áp dụng theo thứ tự ưu tiên (Priority cao áp dụng trước)</small>
                 </div>
 
-                <div class="card-body p-4">
-                  <form id="form-rule-builder">
-                    <div class="mb-3">
-                      <label class="field-label">Tên quy tắc</label>
-                      <input type="text" class="form-control" id="rb-name" placeholder="VD: Phân ban luân phiên Chẵn/Lẻ Tháng 10/2026" required>
-                    </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-modern mb-0 align-middle">
+                      <thead>
+                        <tr>
+                          <th style="width: 80px;">Ưu Tiên</th>
+                          <th>Tên Quy Tắc</th>
+                          <th>Mẫu Quy Tắc</th>
+                          <th>Loại Công Việc</th>
+                          <th>Khung Giờ</th>
+                          <th>Phân Công Trực</th>
+                          <th>Hiệu Lực</th>
+                          <th class="text-end" style="width: 100px;">Thao Tác</th>
+                        </tr>
+                      </thead>
+                      <tbody id="rules-tbody">
+                        <!-- Render via JS -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                    <div class="row g-3 mb-3">
-                      <div class="col-md-6">
-                        <label class="field-label">Loại hình giám định</label>
-                        <select class="form-select" id="rb-task-type">
-                          <option value="both">Cả Hiện trường & Chi tiết</option>
-                          <option value="field">Chỉ Giám định Hiện trường</option>
-                          <option value="detailed">Chỉ Giám định Chi tiết</option>
+          <!-- MODAL THIẾT LẬP QUY TẮC MỚI (MODAL TOÀN DIỆN VỚI 5 MẪU CHUẨN) -->
+          <div class="modal fade" id="modalCreateRule" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg);">
+                <div class="modal-header py-3 px-4 border-bottom" style="background: #f8fafc;">
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="header-icon-box" style="width: 32px; height: 32px; background: #fef3c7; color: #b45309;">
+                      <i data-lucide="calendar-check-2" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <h6 class="modal-title fw-bold text-dark mb-0">Thêm Mới Quy Tắc Phân Công Lịch Trực</h6>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4">
+                  <form id="form-create-rule">
+                    <!-- 1. TÊN QUY TẮC & MẪU QUY TẮC -->
+                    <div class="row g-3 mb-4">
+                      <div class="col-md-7">
+                        <label class="field-label">Tên Quy Tắc <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="rule-name" required placeholder="VD: Luân phiên Chẵn/Lẻ 2 GĐV Hiện trường & Chi tiết">
+                      </div>
+                      <div class="col-md-5">
+                        <label class="field-label">Chọn Mẫu Quy Tắc Chuẩn <span class="text-danger">*</span></label>
+                        <select class="form-select fw-bold text-primary" id="rule-template-type" required>
+                          <option value="even_odd" selected>1. Luân phiên Chẵn / Lẻ & Chu kỳ</option>
+                          <option value="day_of_week">2. Theo Thứ trong tuần (T2 - CN)</option>
+                          <option value="ward_assignment">3. Theo Địa bàn cụ thể (Xã/Phường)</option>
+                          <option value="specific_date">4. Ngày cụ thể (Lễ / Sự kiện)</option>
                         </select>
                       </div>
-                      <div class="col-md-6">
-                        <label class="field-label">Kiểu luân phiên</label>
-                        <select class="form-select" id="rb-rule-type">
-                          <option value="even_odd">Ngày Chẵn / Ngày Lẻ</option>
-                          <option value="day_of_week">Theo Thứ trong tuần</option>
-                        </select>
-                      </div>
                     </div>
 
-                    <!-- Khung giờ -->
-                    <div class="p-3 bg-light rounded-3 mb-3 border">
-                      <label class="field-label mb-2">Khung giờ ca trực</label>
-                      <div class="row g-2">
-                        <div class="col-md-4">
-                          <label class="small text-muted">Bắt đầu</label>
-                          <input type="time" class="form-control" id="rb-time-start" value="08:00" required>
-                        </div>
-                        <div class="col-md-4">
-                          <label class="small text-muted">Kết thúc</label>
-                          <input type="time" class="form-control" id="rb-time-end" value="17:00" required>
-                        </div>
-                        <div class="col-md-4 d-flex align-items-end">
-                          <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="rb-is-overnight">
-                            <label class="form-check-label small fw-semibold" for="rb-is-overnight">Ca qua đêm (vắt qua 0h)</label>
+                    <!-- 2. KHU VỰC CẤU HÌNH ĐẶC THÙ THEO TỪNG MẪU -->
+
+                    <!-- MẪU 1: CHẴN / LẺ & CHU KỲ LIÊN TỤC -->
+                    <div id="box-template-even-odd" class="p-3 rounded-3 mb-4 border" style="background: #f8fafc;">
+                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px;">
+                        <i data-lucide="repeat" style="width: 16px; color: var(--primary);"></i> Cấu hình Luân phiên 2 Giám định viên (Hiện trường & Chi tiết)
+                      </h6>
+
+                      <div class="mb-3">
+                        <label class="field-label">Phương thức tính luân phiên:</label>
+                        <div class="d-flex gap-4">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="cycleMode" id="cycle-mode-month" value="even_odd" checked>
+                            <label class="form-check-label fw-semibold" for="cycle-mode-month">
+                              Theo ngày trong tháng (Ngày 1, 3, 5... là Lẻ; 2, 4, 6... là Chẵn)
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="cycleMode" id="cycle-mode-continuous" value="continuous_cycle">
+                            <label class="form-check-label fw-semibold" for="cycle-mode-continuous">
+                              Luân phiên liên tục không ngắt quãng (Không gián đoạn khi chuyển tháng)
+                            </label>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    <!-- Phân bổ nhân sự -->
-                    <div class="p-3 rounded-3 mb-3 border" style="background: #eff6ff; border-color: #bfdbfe !important;">
-                      <label class="field-label text-primary mb-2">Phân công Giám định viên theo ca</label>
-                      <div class="row g-2 mb-2">
+                      <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                          <label class="small fw-bold">Trực Chính (Ngày Lẻ):</label>
-                          <select class="form-select" id="rb-odd-primary">
-                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode})</option>`).join('')}
-                          </select>
+                          <div class="p-3 bg-white rounded-3 border">
+                            <span class="field-label text-primary">Nhân sự A (Lẻ / Ngày 1)</span>
+                            <select class="form-select" id="ins-user-a" required>
+                              ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode || 'GDV'})</option>`).join('')}
+                            </select>
+                            <small class="text-muted mt-1 d-block">Trực <strong>Hiện trường</strong> ngày Lẻ, <strong>Chi tiết</strong> ngày Chẵn</small>
+                          </div>
                         </div>
                         <div class="col-md-6">
-                          <label class="small fw-bold">Dự Phòng (Ngày Lẻ):</label>
-                          <select class="form-select" id="rb-odd-backup">
-                            <option value="">-- Không có --</option>
-                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
-                          </select>
+                          <div class="p-3 bg-white rounded-3 border">
+                            <span class="field-label text-success">Nhân sự B (Chẵn / Ngày 2)</span>
+                            <select class="form-select" id="ins-user-b" required>
+                              ${inspectors.map((i, idx) => `<option value="${i.inspectorId}" ${idx === 1 ? 'selected' : ''}>${i.fullName} (${i.empCode || 'GDV'})</option>`).join('')}
+                            </select>
+                            <small class="text-muted mt-1 d-block">Trực <strong>Chi tiết</strong> ngày Lẻ, <strong>Hiện trường</strong> ngày Chẵn</small>
+                          </div>
                         </div>
                       </div>
 
+                      <!-- BẢNG LIVE PREVIEW SINH LỊCH -->
+                      <div class="bg-white p-3 rounded-3 border">
+                        <span class="field-label text-muted mb-2">Mô phỏng lịch tự động sinh cả tháng (Preview):</span>
+                        <div class="table-responsive">
+                          <table class="table table-sm table-bordered text-center mb-0" style="font-size: 12.5px;">
+                            <thead class="table-light">
+                              <tr>
+                                <th>Thời gian</th>
+                                <th>Hiện Trường</th>
+                                <th>Chi Tiết / Gara</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><strong>Ngày 1 (Lẻ)</strong></td>
+                                <td class="text-primary fw-bold" id="prev-d1-f">Nhân sự A</td>
+                                <td class="text-success fw-bold" id="prev-d1-d">Nhân sự B</td>
+                              </tr>
+                              <tr>
+                                <td><strong>Ngày 2 (Chẵn)</strong></td>
+                                <td class="text-success fw-bold" id="prev-d2-f">Nhân sự B</td>
+                                <td class="text-primary fw-bold" id="prev-d2-d">Nhân sự A</td>
+                              </tr>
+                              <tr>
+                                <td><strong>Ngày 3 (Lẻ)</strong></td>
+                                <td class="text-primary fw-bold" id="prev-d3-f">Nhân sự A</td>
+                                <td class="text-success fw-bold" id="prev-d3-d">Nhân sự B</td>
+                              </tr>
+                              <tr>
+                                <td><strong>Ngày 4 (Chẵn)</strong></td>
+                                <td class="text-success fw-bold" id="prev-d4-f">Nhân sự B</td>
+                                <td class="text-primary fw-bold" id="prev-d4-d">Nhân sự A</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- MẪU 2: THEO THỨ TRONG TUẦN -->
+                    <div id="box-template-dow" class="p-3 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
+                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px;">
+                        <i data-lucide="calendar" style="width: 16px; color: var(--primary);"></i> Phân công nhân sự theo từng Thứ trong tuần
+                      </h6>
                       <div class="row g-2">
+                        ${['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'].map((day, idx) => {
+                          const dow = (idx + 1) % 7;
+                          return `
+                            <div class="col-md-6">
+                              <div class="p-2 bg-white rounded border d-flex align-items-center justify-content-between gap-2">
+                                <span class="fw-bold text-dark text-nowrap" style="font-size: 13px; width: 80px;">${day}:</span>
+                                <select class="form-select form-select-sm sel-dow-inspector" data-dow="${dow}">
+                                  ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
+                                </select>
+                              </div>
+                            </div>
+                          `;
+                        }).join('')}
+                      </div>
+                    </div>
+
+                    <!-- MẪU 3: THEO ĐỊA BÀN CỤ THỂ -->
+                    <div id="box-template-ward" class="p-3 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
+                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px;">
+                        <i data-lucide="map-pin" style="width: 16px; color: var(--primary);"></i> Phân công theo Địa bàn Phường/Xã cụ thể
+                      </h6>
+                      <div class="row g-3">
                         <div class="col-md-6">
-                          <label class="small fw-bold">Trực Chính (Ngày Chẵn):</label>
-                          <select class="form-select" id="rb-even-primary">
-                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode})</option>`).join('')}
+                          <label class="field-label">Chọn Xã / Phường <span class="text-danger">*</span></label>
+                          <select class="form-select" id="ward-select">
+                            ${wards.map(w => `<option value="${w.areaCode}">${w.name}</option>`).join('')}
+                            ${wards.length === 0 ? '<option value="*">Toàn bộ địa bàn</option>' : ''}
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <label class="small fw-bold">Dự Phòng (Ngày Chẵn):</label>
-                          <select class="form-select" id="rb-even-backup">
-                            <option value="">-- Không có --</option>
+                          <label class="field-label">GĐV Phụ Trách Chính <span class="text-danger">*</span></label>
+                          <select class="form-select" id="ward-primary-ins">
                             ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
                           </select>
                         </div>
                       </div>
                     </div>
 
-                    <div class="row g-2 mb-4">
-                      <div class="col-md-6">
-                        <label class="field-label">Hiệu lực từ ngày</label>
-                        <input type="date" class="form-control" id="rb-eff-from" value="2026-01-01" required>
-                      </div>
-                      <div class="col-md-6">
-                        <label class="field-label">Mức ưu tiên (Priority)</label>
-                        <input type="number" class="form-control" id="rb-priority" value="50" min="1" max="100">
+                    <!-- MẪU 4: NGÀY CỤ THỂ (LỄ / SỰ KIỆN) -->
+                    <div id="box-template-date" class="p-3 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
+                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px;">
+                        <i data-lucide="star" style="width: 16px; color: #e11d48;"></i> Phân công ca trực Ngày Lễ hoặc Sự kiện đặc biệt
+                      </h6>
+                      <div class="row g-3">
+                        <div class="col-md-6">
+                          <label class="field-label">Chọn ngày diễn ra sự kiện <span class="text-danger">*</span></label>
+                          <input type="date" class="form-control" id="spec-date-input" value="2026-04-30">
+                        </div>
+                        <div class="col-md-6">
+                          <label class="field-label">GĐV Trực Chính Ngày Lễ <span class="text-danger">*</span></label>
+                          <select class="form-select" id="spec-primary-ins">
+                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
+                          </select>
+                        </div>
                       </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary-action w-100 py-3 fw-bold">
-                      <i data-lucide="check-circle" class="me-1"></i> CÔNG BỐ QUY TẮC LỊCH TRỰC
-                    </button>
+                    <!-- 3. KHUNG GIỜ VÀ HIỆU LỰC CHUNG -->
+                    <div class="p-3 bg-light rounded-3 mb-3 border">
+                      <label class="field-label mb-2">Khung giờ ca trực & Mức ưu tiên</label>
+                      <div class="row g-3">
+                        <div class="col-md-3">
+                          <label class="small text-muted">Bắt đầu</label>
+                          <input type="time" class="form-control" id="rule-start-time" value="00:00" required>
+                        </div>
+                        <div class="col-md-3">
+                          <label class="small text-muted">Kết thúc</label>
+                          <input type="time" class="form-control" id="rule-end-time" value="23:59" required>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                          <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="rule-is-overnight">
+                            <label class="form-check-label small fw-semibold" for="rule-is-overnight">Ca qua đêm</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <label class="small text-muted">Ưu tiên (1 - 100)</label>
+                          <input type="number" class="form-control" id="rule-priority" value="50" min="1" max="100">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                      <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy bỏ</button>
+                      <button type="submit" class="btn btn-primary-action fw-bold px-4" id="btn-submit-rule">Công Bố Quy Tắc</button>
+                    </div>
                   </form>
                 </div>
               </div>
             </div>
           </div>
         `;
-
+        
         lucide.createIcons();
 
-        container.querySelector('#form-rule-builder').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const ruleDoc = {
-            zoneId,
-            name: container.querySelector('#rb-name').value.trim(),
-            taskType: container.querySelector('#rb-task-type').value,
-            ruleType: container.querySelector('#rb-rule-type').value,
-            priority: parseInt(container.querySelector('#rb-priority').value, 10),
-            effectiveFrom: container.querySelector('#rb-eff-from').value,
-            status: 'published',
-            timeSlot: {
-              start: container.querySelector('#rb-time-start').value,
-              end: container.querySelector('#rb-time-end').value,
-              isOvernight: container.querySelector('#rb-is-overnight').checked
-            },
-            rosterConfig: {
-              odd: {
-                primaryId: container.querySelector('#rb-odd-primary').value,
-                backupId: container.querySelector('#rb-odd-backup').value || null
-              },
-              even: {
-                primaryId: container.querySelector('#rb-even-primary').value,
-                backupId: container.querySelector('#rb-even-backup').value || null
+        // Hàm render danh sách quy tắc
+        const renderRulesList = () => {
+          const tbody = container.querySelector('#rules-tbody');
+          if (rules.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center py-5 text-muted">Chưa có quy tắc lịch trực nào cho Zone này. Vui lòng bấm "Tạo Quy Tắc Mới" để thiết lập.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = rules.map(r => {
+            let templateBadge = '<span class="badge-soft badge-soft-blue">Chẵn / Lẻ</span>';
+            let summaryDesc = '';
+
+            if (r.ruleType === 'even_odd') {
+              templateBadge = '<span class="badge-soft badge-soft-blue"><i data-lucide="repeat" style="width:12px"></i> Chẵn / Lẻ</span>';
+              summaryDesc = 'Luân phiên A/B Hiện trường & Chi tiết';
+            } else if (r.ruleType === 'continuous_cycle') {
+              templateBadge = '<span class="badge-soft badge-soft-green"><i data-lucide="refresh-cw" style="width:12px"></i> Luân phiên liên tục</span>';
+              summaryDesc = 'Chu kỳ không gián đoạn chuyển tháng';
+            } else if (r.ruleType === 'day_of_week') {
+              templateBadge = '<span class="badge-soft badge-soft-amber"><i data-lucide="calendar" style="width:12px"></i> Theo Thứ (T2-CN)</span>';
+              summaryDesc = 'Phân bổ theo ngày trong tuần';
+            } else if (r.ruleType === 'ward_assignment') {
+              templateBadge = '<span class="badge-soft badge-soft-slate"><i data-lucide="map-pin" style="width:12px"></i> Địa bàn cụ thể</span>';
+              summaryDesc = `Xã/Phường: ${r.wardCode || '*'}`;
+            } else if (r.ruleType === 'specific_date') {
+              templateBadge = '<span class="badge-soft badge-soft-rose"><i data-lucide="star" style="width:12px"></i> Ngày cụ thể</span>';
+              summaryDesc = `Sự kiện ngày: ${r.specificDate}`;
+            }
+
+            const timeStr = `${r.timeSlot?.start || '00:00'} - ${r.timeSlot?.end || '23:59'}${r.timeSlot?.isOvernight ? ' (Qua đêm)' : ''}`;
+
+            return `
+              <tr>
+                <td><span class="badge bg-secondary">${r.priority || 50}</span></td>
+                <td><strong class="text-dark">${r.name}</strong></td>
+                <td>${templateBadge}</td>
+                <td><span class="badge-soft badge-soft-slate">${r.taskType === 'both' ? 'Hiện trường & Chi tiết' : (r.taskType === 'field' ? 'Hiện trường' : 'Chi tiết')}</span></td>
+                <td class="small text-muted">${timeStr}</td>
+                <td><small class="fw-semibold text-dark">${summaryDesc}</small></td>
+                <td class="small text-muted">${r.effectiveFrom || '2026-01-01'}</td>
+                <td>
+                  <div class="d-flex gap-1 justify-content-end">
+                    <button class="btn btn-sm btn-light border btn-delete-rule p-2" data-id="${r.ruleId}" data-name="${r.name}" title="Xóa quy tắc" style="border-radius: 8px;">
+                      <i data-lucide="trash-2" style="width: 14px; height: 14px; color: #dc2626;"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join('');
+
+          lucide.createIcons();
+        };
+
+        renderRulesList();
+
+        // Chuyển đổi Zone
+        container.querySelector('#sel-active-zone').addEventListener('change', async (e) => {
+          currentZoneId = e.target.value;
+          await loadZoneData(currentZoneId);
+          container.querySelector('#badge-rules-count').innerText = `${rules.length} quy tắc`;
+          renderRulesList();
+        });
+
+        // Xử lý chuyển tab template trong Modal
+        const selTemplate = container.querySelector('#rule-template-type');
+        const boxEvenOdd = container.querySelector('#box-template-even-odd');
+        const boxDow = container.querySelector('#box-template-dow');
+        const boxWard = container.querySelector('#box-template-ward');
+        const boxDate = container.querySelector('#box-template-date');
+        const priorityInput = container.querySelector('#rule-priority');
+
+        selTemplate.addEventListener('change', (e) => {
+          const val = e.target.value;
+          boxEvenOdd.classList.add('d-none');
+          boxDow.classList.add('d-none');
+          boxWard.classList.add('d-none');
+          boxDate.classList.add('d-none');
+
+          if (val === 'even_odd') {
+            boxEvenOdd.classList.remove('d-none');
+            priorityInput.value = '50';
+          } else if (val === 'day_of_week') {
+            boxDow.classList.remove('d-none');
+            priorityInput.value = '60';
+          } else if (val === 'ward_assignment') {
+            boxWard.classList.remove('d-none');
+            priorityInput.value = '80';
+          } else if (val === 'specific_date') {
+            boxDate.classList.remove('d-none');
+            priorityInput.value = '100';
+          }
+        });
+
+        // Cập nhật Live Preview cho Mẫu 1
+        const updatePreview = () => {
+          const nameA = container.querySelector('#ins-user-a option:checked')?.text || 'Nhân sự A';
+          const nameB = container.querySelector('#ins-user-b option:checked')?.text || 'Nhân sự B';
+          container.querySelector('#prev-d1-f').innerText = nameA;
+          container.querySelector('#prev-d1-d').innerText = nameB;
+          container.querySelector('#prev-d2-f').innerText = nameB;
+          container.querySelector('#prev-d2-d').innerText = nameA;
+          container.querySelector('#prev-d3-f').innerText = nameA;
+          container.querySelector('#prev-d3-d').innerText = nameB;
+          container.querySelector('#prev-d4-f').innerText = nameB;
+          container.querySelector('#prev-d4-d').innerText = nameA;
+        };
+
+        container.querySelector('#ins-user-a').addEventListener('change', updatePreview);
+        container.querySelector('#ins-user-b').addEventListener('change', updatePreview);
+        updatePreview();
+
+        // Mở Modal
+        const ruleModal = new bootstrap.Modal(document.getElementById('modalCreateRule'));
+        container.querySelector('#btn-open-create-rule').addEventListener('click', () => {
+          ruleModal.show();
+        });
+
+        // Xóa quy tắc bằng custom confirm
+        container.querySelector('#rules-tbody').addEventListener('click', (e) => {
+          const delBtn = e.target.closest('.btn-delete-rule');
+          if (delBtn) {
+            const rid = delBtn.dataset.id;
+            const rname = delBtn.dataset.name;
+
+            showConfirm({
+              title: 'Xác nhận xóa quy tắc',
+              message: `Bạn có chắc chắn muốn xóa quy tắc "${rname}" không? Lịch trực của Zone sẽ thay đổi ngay sau khi xóa!`,
+              confirmText: 'Xóa ngay',
+              type: 'danger',
+              onConfirm: async () => {
+                try {
+                  await dbService.deleteScheduleRule(rid);
+                  showToast(`Đã xóa thành công quy tắc "${rname}"!`, 'success');
+                  await loadZoneData(currentZoneId);
+                  container.querySelector('#badge-rules-count').innerText = `${rules.length} quy tắc`;
+                  renderRulesList();
+                } catch (err) {
+                  showToast('Lỗi khi xóa: ' + err.message, 'error');
+                }
               }
-            },
-            createdAt: serverTimestamp()
-          };
+            });
+          }
+        });
+
+        // Submit tạo quy tắc mới
+        container.querySelector('#form-create-rule').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const btn = e.target.querySelector('#btn-submit-rule');
+          btn.disabled = true;
 
           try {
-            await addDoc(collection(db, "scheduleRules"), ruleDoc);
-            showToast("Đã công bố quy tắc thành công!", "success");
-            window.location.hash = "#lookup";
+            const templateVal = selTemplate.value;
+            const ruleName = container.querySelector('#rule-name').value.trim();
+            const startTime = container.querySelector('#rule-start-time').value;
+            const endTime = container.querySelector('#rule-end-time').value;
+            const isOvernight = container.querySelector('#rule-is-overnight').checked;
+            const priority = parseInt(priorityInput.value, 10) || 50;
+
+            let ruleDoc = {
+              ruleId: 'RULE_' + Date.now(),
+              zoneId: currentZoneId,
+              name: ruleName,
+              status: 'published',
+              priority,
+              effectiveFrom: '2026-01-01',
+              timeSlot: {
+                start: startTime,
+                end: endTime,
+                isOvernight
+              }
+            };
+
+            if (templateVal === 'even_odd') {
+              const cycleMode = container.querySelector('input[name="cycleMode"]:checked').value;
+              const insA = container.querySelector('#ins-user-a').value;
+              const insB = container.querySelector('#ins-user-b').value;
+
+              ruleDoc.ruleType = cycleMode;
+              ruleDoc.taskType = 'both';
+              ruleDoc.cycleAnchorDate = '2026-01-01';
+              ruleDoc.cycleLength = 2;
+              ruleDoc.rosterConfig = {
+                odd: {
+                  field: { primaryId: insA, backupId: insB },
+                  detailed: { primaryId: insB, backupId: insA }
+                },
+                even: {
+                  field: { primaryId: insB, backupId: insA },
+                  detailed: { primaryId: insA, backupId: insB }
+                }
+              };
+            } else if (templateVal === 'day_of_week') {
+              ruleDoc.ruleType = 'day_of_week';
+              ruleDoc.taskType = 'both';
+              const weekly = {};
+              container.querySelectorAll('.sel-dow-inspector').forEach(sel => {
+                const dow = parseInt(sel.dataset.dow, 10);
+                weekly[dow] = { primaryId: sel.value, backupId: null };
+              });
+              ruleDoc.rosterConfig = { weekly };
+            } else if (templateVal === 'ward_assignment') {
+              const wardCode = container.querySelector('#ward-select').value;
+              const insPrimary = container.querySelector('#ward-primary-ins').value;
+              ruleDoc.ruleType = 'ward_assignment';
+              ruleDoc.taskType = 'both';
+              ruleDoc.wardCode = wardCode;
+              ruleDoc.rosterConfig = {
+                assignment: { primaryId: insPrimary, backupId: null }
+              };
+            } else if (templateVal === 'specific_date') {
+              const specDate = container.querySelector('#spec-date-input').value;
+              const insPrimary = container.querySelector('#spec-primary-ins').value;
+              ruleDoc.ruleType = 'specific_date';
+              ruleDoc.taskType = 'both';
+              ruleDoc.specificDate = specDate;
+              ruleDoc.priority = 100; // Ưu tiên cao nhất
+              ruleDoc.rosterConfig = {
+                slot: { primaryId: insPrimary, backupId: null }
+              };
+            }
+
+            await dbService.createScheduleRule(ruleDoc);
+            showToast('Công bố quy tắc lịch trực thành công!', 'success');
+            ruleModal.hide();
+
+            await loadZoneData(currentZoneId);
+            container.querySelector('#badge-rules-count').innerText = `${rules.length} quy tắc`;
+            renderRulesList();
           } catch (err) {
-            alert("Lỗi khi tạo quy tắc: " + err.message);
+            showToast('Lỗi tạo quy tắc: ' + err.message, 'error');
+          } finally {
+            btn.disabled = false;
           }
         });
       },
-
       // ----------------------------------------
       // VIEW 3: ĐỔI CA & NGHỈ PHÉP
       // ----------------------------------------
