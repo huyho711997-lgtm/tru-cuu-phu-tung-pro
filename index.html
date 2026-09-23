@@ -993,6 +993,73 @@
       }
     };
 
+    // Danh sách 63 Tỉnh/Thành phố chuẩn toàn quốc
+    const DEFAULT_PROVINCES = [
+      { areaCode: 'HN', name: 'Hà Nội', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'SG', name: 'TP. Hồ Chí Minh', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DL', name: 'Đắk Lắk', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DN', name: 'Đà Nẵng', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HP', name: 'Hải Phòng', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'CT', name: 'Cần Thơ', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BD', name: 'Bình Dương', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DNA', name: 'Đồng Nai', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'KH', name: 'Khánh Hòa', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'GL', name: 'Gia Lai', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LD', name: 'Lâm Đồng', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'VT', name: 'Bà Rịa - Vũng Tàu', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'AG', name: 'An Giang', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BG', name: 'Bắc Giang', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BK', name: 'Bắc Kạn', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BL', name: 'Bạc Liêu', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BN', name: 'Bắc Ninh', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BT', name: 'Bến Tre', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BDH', name: 'Bình Định', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BP', name: 'Bình Phước', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BTH', name: 'Bình Thuận', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'CM', name: 'Cà Mau', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'CB', name: 'Cao Bằng', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DKN', name: 'Đắk Nông', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DB', name: 'Điện Biên', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DT', name: 'Đồng Tháp', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HG', name: 'Hà Giang', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HNM', name: 'Hà Nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HT', name: 'Hà Tĩnh', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HD', name: 'Hải Dương', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HGI', name: 'Hậu Giang', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HB', name: 'Hòa Bình', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HY', name: 'Hưng Yên', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'KG', name: 'Kiên Giang', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'KT', name: 'Kon Tum', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LC', name: 'Lai Châu', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LS', name: 'Lạng Sơn', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LCA', name: 'Lào Cai', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LA', name: 'Long An', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'ND', name: 'Nam Định', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'NA', name: 'Nghệ An', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'NB', name: 'Ninh Bình', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'NT', name: 'Ninh Thuận', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'PT', name: 'Phú Thọ', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'PY', name: 'Phú Yên', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QB', name: 'Quảng Bình', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QNM', name: 'Quảng Nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QNG', name: 'Quảng Ngãi', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QN', name: 'Quảng Ninh', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QT', name: 'Quảng Trị', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'ST', name: 'Sóc Trăng', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'SL', name: 'Sơn La', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TN', name: 'Tây Ninh', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TB', name: 'Thái Bình', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TNG', name: 'Thái Nguyên', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TH', name: 'Thanh Hóa', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TTH', name: 'Thừa Thiên Huế', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TG', name: 'Tiền Giang', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TV', name: 'Trà Vinh', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TQ', name: 'Tuyên Quang', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'VL', name: 'Vĩnh Long', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'VP', name: 'Vĩnh Phúc', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'YB', name: 'Yên Bái', type: 'province', parentCode: 'ROOT' }
+    ];
+
     // ==========================================
     // 4. DATABASE SERVICE (FIRESTORE)
     // ==========================================
@@ -1026,51 +1093,150 @@
         await deleteDoc(doc(db, "inspectors", id));
       },
 
-
       async getAdministrativeAreas(parentCode = 'ROOT') {
-        const q = query(collection(db, "administrativeAreas"), where("parentCode", "==", parentCode));
-        const snap = await getDocs(q);
-        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        try {
+          const q = query(collection(db, "administrativeAreas"), where("parentCode", "==", parentCode));
+          const snap = await getDocs(q);
+          const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          if (parentCode === 'ROOT') {
+            // Hợp nhất dữ liệu Firestore với danh sách chuẩn để luôn đầy đủ 63 tỉnh
+            const map = new Map();
+            DEFAULT_PROVINCES.forEach(p => map.set(p.areaCode, p));
+            list.forEach(p => map.set(p.areaCode, { ...map.get(p.areaCode), ...p }));
+            return Array.from(map.values());
+          }
+          return list;
+        } catch (e) {
+          console.warn("Lỗi getAdministrativeAreas, dùng fallback chuẩn:", e);
+          if (parentCode === 'ROOT') return DEFAULT_PROVINCES;
+          return [];
+        }
+      },
+
+      async syncZoneCoverage(zoneId, provinceCode) {
+        if (!zoneId || !provinceCode) return;
+        try {
+          const covId = `COV_${zoneId}_${provinceCode}`;
+          await setDoc(doc(db, "zoneCoverage", covId), {
+            id: covId,
+            zoneId: zoneId,
+            provinceCode: provinceCode,
+            wardCode: '*',
+            taskType: 'both',
+            isActive: true
+          }, { merge: true });
+        } catch (err) {
+          console.warn("Không thể lưu zoneCoverage:", err);
+        }
       },
 
       async getZoneByAreaCoverage(taskType, provinceCode, wardCode) {
         const covRef = collection(db, "zoneCoverage");
         
-        // 1. Tìm cấu hình chi tiết theo Phường/Xã trước
+        // 1. Tìm cấu hình chi tiết theo Phường/Xã trước trong zoneCoverage
         if (wardCode && wardCode !== '*') {
-          const qWard = query(
-            covRef, 
-            where("provinceCode", "==", provinceCode), 
-            where("wardCode", "==", wardCode),
-            where("isActive", "==", true)
-          );
-          const snapWard = await getDocs(qWard);
-          const matched = snapWard.docs.find(d => {
-            const t = d.data().taskType;
-            return t === taskType || t === 'both';
-          });
-          if (matched) {
-            const zoneDoc = await getDoc(doc(db, "zones", matched.data().zoneId));
-            return zoneDoc.exists() ? { zoneId: zoneDoc.id, ...zoneDoc.data() } : null;
+          try {
+            const qWard = query(
+              covRef, 
+              where("provinceCode", "==", provinceCode), 
+              where("wardCode", "==", wardCode),
+              where("isActive", "==", true)
+            );
+            const snapWard = await getDocs(qWard);
+            const matched = snapWard.docs.find(d => {
+              const t = d.data().taskType;
+              return t === taskType || t === 'both';
+            });
+            if (matched) {
+              const zoneDoc = await getDoc(doc(db, "zones", matched.data().zoneId));
+              if (zoneDoc.exists()) return { zoneId: zoneDoc.id, ...zoneDoc.data() };
+            }
+          } catch (e) {
+            console.warn("Lỗi tra cứu zoneCoverage ward:", e);
           }
         }
 
-        // 2. Tìm cấu hình bao trùm toàn Tỉnh/Thành
-        const qProv = query(
-          covRef,
-          where("provinceCode", "==", provinceCode),
-          where("wardCode", "==", "*"),
-          where("isActive", "==", true)
-        );
-        const snapProv = await getDocs(qProv);
-        const matchedProv = snapProv.docs.find(d => {
-          const t = d.data().taskType;
-          return t === taskType || t === 'both';
-        });
+        // 2. Tìm cấu hình bao trùm toàn Tỉnh/Thành trong zoneCoverage
+        try {
+          const qProv = query(
+            covRef,
+            where("provinceCode", "==", provinceCode),
+            where("wardCode", "==", "*"),
+            where("isActive", "==", true)
+          );
+          const snapProv = await getDocs(qProv);
+          const matchedProv = snapProv.docs.find(d => {
+            const t = d.data().taskType;
+            return t === taskType || t === 'both';
+          });
 
-        if (matchedProv) {
-          const zoneDoc = await getDoc(doc(db, "zones", matchedProv.data().zoneId));
-          return zoneDoc.exists() ? { zoneId: zoneDoc.id, ...zoneDoc.data() } : null;
+          if (matchedProv) {
+            const zoneDoc = await getDoc(doc(db, "zones", matchedProv.data().zoneId));
+            if (zoneDoc.exists()) return { zoneId: zoneDoc.id, ...zoneDoc.data() };
+          }
+        } catch (e) {
+          console.warn("Lỗi tra cứu zoneCoverage prov:", e);
+        }
+
+        // 3. THUẬT TOÁN ĐỐI SOÁT ZONE THÔNG MINH (SMART ZONE RESOLVER & AUTO-SYNC):
+        // Xử lý hoàn hảo khi Zone đã tạo nhưng chưa gắn bản ghi coverage
+        try {
+          const allZones = await this.getAllZones();
+          if (!allZones || allZones.length === 0) return null;
+
+          // Lấy danh sách Tỉnh/Thành để đối soát tên địa bàn
+          const adminAreas = await this.getAdministrativeAreas('ROOT');
+          const provObj = adminAreas.find(a => a.areaCode === provinceCode);
+          const provName = provObj?.name || '';
+
+          // Chuẩn hóa chuỗi tiếng Việt (bỏ dấu, lowercase, bỏ khoảng trắng/ký tự đặc biệt)
+          const cleanStr = (s) => (s || '').toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d").replace(/[^a-z0-9]/g, "");
+
+          const targetProvClean = cleanStr(provName);
+          const targetCodeClean = cleanStr(provinceCode);
+
+          // 3a. Khớp theo trường provinceCode / provinceCodes lưu trực tiếp trên Zone
+          let matchedZone = allZones.find(z => 
+            z.provinceCode === provinceCode || 
+            (Array.isArray(z.provinceCodes) && z.provinceCodes.includes(provinceCode))
+          );
+
+          // 3b. Khớp theo Tên Zone (ví dụ: Zone tên "Zone Đắk Lắk" chứa chữ "Đắk Lắk")
+          if (!matchedZone && targetProvClean) {
+            matchedZone = allZones.find(z => {
+              const zoneNameClean = cleanStr(z.name);
+              return zoneNameClean.includes(targetProvClean) || targetProvClean.includes(zoneNameClean);
+            });
+          }
+
+          // 3c. Khớp theo Mã Zone (ví dụ: mã "ZONE_DL", "DL"...)
+          if (!matchedZone && targetCodeClean) {
+            matchedZone = allZones.find(z => {
+              const zoneCodeClean = cleanStr(z.code || z.zoneId);
+              return zoneCodeClean.includes(targetCodeClean);
+            });
+          }
+
+          // 3d. Fallback: Nếu chỉ có 1 Zone duy nhất trong toàn hệ thống -> Gán cho Zone đó
+          if (!matchedZone && allZones.length === 1) {
+            matchedZone = allZones[0];
+          }
+
+          // Nếu tìm thấy Zone phù hợp: Tự động lưu bản ghi coverage & cập nhật Zone để tối ưu cho các lần sau!
+          if (matchedZone) {
+            await this.syncZoneCoverage(matchedZone.zoneId, provinceCode);
+            if (!matchedZone.provinceCode) {
+              await updateDoc(doc(db, "zones", matchedZone.zoneId), {
+                provinceCode: provinceCode,
+                provinceName: provName || provinceCode
+              }).catch(() => {});
+            }
+            return matchedZone;
+          }
+        } catch (errFallback) {
+          console.error("Lỗi Smart Zone Matching:", errFallback);
         }
 
         return null;
@@ -1118,16 +1284,24 @@
       },
 
       async getActiveRulesForZone(zoneId, taskType, dateStr) {
-        const q = query(
-          collection(db, "scheduleRules"),
-          where("zoneId", "==", zoneId),
-          where("status", "==", "published"),
-          where("effectiveFrom", "<=", dateStr)
-        );
-        const snap = await getDocs(q);
-        return snap.docs
-          .map(d => ({ ruleId: d.id, ...d.data() }))
-          .filter(r => (r.taskType === taskType || r.taskType === 'both') && (!r.effectiveTo || r.effectiveTo >= dateStr));
+        try {
+          const q = query(
+            collection(db, "scheduleRules"),
+            where("zoneId", "==", zoneId)
+          );
+          const snap = await getDocs(q);
+          return snap.docs
+            .map(d => ({ ruleId: d.id, ...d.data() }))
+            .filter(r => 
+              (r.status === 'published' || !r.status) &&
+              (!r.effectiveFrom || r.effectiveFrom <= dateStr) &&
+              (!r.effectiveTo || r.effectiveTo >= dateStr) &&
+              (r.taskType === taskType || r.taskType === 'both')
+            );
+        } catch (e) {
+          console.error("Lỗi getActiveRulesForZone:", e);
+          return [];
+        }
       },
 
       async findActiveOverride({ originalInspectorId, dateStr, timeStr, taskType, zoneId }) {
@@ -1146,15 +1320,22 @@
       },
 
       async checkInspectorOnLeave(inspectorId, dateStr, timeStr) {
-        const q = query(
-          collection(db, "leaves"),
-          where("inspectorId", "==", inspectorId),
-          where("status", "==", "approved"),
-          where("fromDate", "<=", dateStr),
-          where("toDate", ">=", dateStr)
-        );
-        const snap = await getDocs(q);
-        return !snap.empty;
+        try {
+          const q = query(
+            collection(db, "leaves"),
+            where("inspectorId", "==", inspectorId)
+          );
+          const snap = await getDocs(q);
+          return snap.docs.some(d => {
+            const data = d.data();
+            return data.status === 'approved' &&
+              (!data.fromDate || data.fromDate <= dateStr) &&
+              (!data.toDate || data.toDate >= dateStr);
+          });
+        } catch (e) {
+          console.error("Lỗi checkInspectorOnLeave:", e);
+          return false;
+        }
       },
 
       async createDispatchRecord(data) {
@@ -1275,6 +1456,12 @@
 
           const rawPrimary = await this.db.getInspectorById(roster.primaryId);
           const rawBackup = roster.backupId ? await this.db.getInspectorById(roster.backupId) : null;
+
+          if (!rawPrimary) {
+            res.error = "INSPECTOR_NOT_FOUND";
+            res.warnings.push(`Không tìm thấy hồ sơ Giám định viên được phân công trong quy tắc (ID: ${roster.primaryId}). Vui lòng kiểm tra lại cấu hình quy tắc hoặc danh sách nhân sự.`);
+            return res;
+          }
 
           // BƯỚC 7: Áp dụng Nghỉ phép & Phân công trực thay (Overrides & Leaves)
           const finalPrimary = await this.checkLeaveAndOverride(rawPrimary, dateStr, timeStr, taskType, zone.zoneId);
@@ -1433,9 +1620,11 @@ const scheduleEngine = new ScheduleEngine(dbService);
       async renderPersonnel(container) {
         let zones = [];
         let inspectors = [];
+        let provinces = [];
         try {
           zones = await dbService.getAllZones();
           inspectors = await dbService.getAllInspectors();
+          provinces = await dbService.getAdministrativeAreas('ROOT');
         } catch (e) {
           console.warn(e);
         }
@@ -1450,6 +1639,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
             phone: z.leadPhone,
             zoneId: z.zoneId,
             zoneName: z.name,
+            provinceName: z.provinceName || (provinces.find(p => p.areaCode === z.provinceCode)?.name),
             raw: z
           });
         });
@@ -1666,6 +1856,14 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       <input type="text" class="form-control" id="zone-name" required placeholder="VD: Zone Miền Trung, Zone Hà Nội...">
                     </div>
                     <div class="mb-3">
+                      <label class="field-label">Tỉnh / Thành Phố Quản Lý <span class="text-danger">*</span></label>
+                      <select class="form-select" id="zone-province" required>
+                        <option value="">-- Chọn Tỉnh / Thành Phố Phụ Trách --</option>
+                        ${provinces.map(p => `<option value="${p.areaCode}">${p.name}</option>`).join('')}
+                      </select>
+                      <small class="text-muted" style="font-size: 11px;">Zone sẽ quản lý địa bàn tỉnh này để tự động phân ca và tra cứu trực.</small>
+                    </div>
+                    <div class="mb-3">
                       <label class="field-label">Họ và Tên Trưởng Zone <span class="text-danger">*</span></label>
                       <input type="text" class="form-control" id="zone-lead-name" required placeholder="Nhập tên Trưởng Zone...">
                     </div>
@@ -1745,7 +1943,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 : `<span class="badge-soft badge-soft-blue fw-bold" style="white-space: nowrap;"><i data-lucide="user" style="width: 13px;"></i> Giám định viên</span>`;
 
               const zoneDetail = isLead
-                ? `<span class="badge-soft badge-soft-slate" style="white-space: nowrap;"><i data-lucide="map-pin" style="width: 12px;"></i> ${p.zoneName}</span>`
+                ? `<span class="badge-soft badge-soft-slate" style="white-space: nowrap;"><i data-lucide="map-pin" style="width: 12px;"></i> ${p.zoneName}</span>${p.provinceName ? `<br><small class="text-muted text-nowrap" style="font-size: 11px;">Địa bàn: <strong class="text-dark">${p.provinceName}</strong></small>` : ''}`
                 : `<span class="badge-soft badge-soft-slate mb-1" style="white-space: nowrap;"><i data-lucide="map-pin" style="width: 12px;"></i> ${p.zoneName}</span>${p.leadName ? `<br><small class="text-muted text-nowrap" style="font-size: 11.5px;">QL: <strong class="text-dark">${p.leadName}</strong></small>` : ''}`;
 
               return `
@@ -1824,6 +2022,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
         container.querySelector('#btn-open-create-zone').addEventListener('click', () => {
           document.getElementById('form-create-zone').reset();
           document.getElementById('edit-zone-id').value = '';
+          const provEl = document.getElementById('zone-province');
+          if (provEl) provEl.value = '';
           document.getElementById('zone-lead-code').value = 'ZL-' + Math.floor(1000 + Math.random() * 9000);
           document.getElementById('zone-modal-title').innerText = 'Tạo Zone / Trưởng Zone Mới';
           document.getElementById('btn-submit-zone').innerText = 'Tạo Zone';
@@ -1853,6 +2053,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
               document.getElementById('zone-lead-code').value = person.empCode;
               document.getElementById('zone-lead-name').value = person.name;
               document.getElementById('zone-lead-phone').value = person.phone;
+              const provEl = document.getElementById('zone-province');
+              if (provEl) provEl.value = person.raw.provinceCode || '';
               document.getElementById('zone-modal-title').innerText = 'Chỉnh sửa Zone / Trưởng Zone';
               document.getElementById('btn-submit-zone').innerText = 'Lưu Thay Đổi';
               modalZone.show();
@@ -1931,23 +2133,33 @@ const scheduleEngine = new ScheduleEngine(dbService);
           btn.disabled = true;
           try {
             const editId = container.querySelector('#edit-zone-id').value;
+            const provinceCode = container.querySelector('#zone-province').value;
+            const provinceName = container.querySelector('#zone-province').selectedOptions[0]?.text || '';
             const data = {
               code: container.querySelector('#zone-lead-code').value.trim(),
               name: container.querySelector('#zone-name').value.trim(),
               leadName: container.querySelector('#zone-lead-name').value.trim(),
               leadPhone: container.querySelector('#zone-lead-phone').value.trim(),
+              provinceCode: provinceCode,
+              provinceName: provinceName,
               status: 'active'
             };
             
+            let targetZoneId = editId;
             if (editId) {
               await dbService.updateZone(editId, data);
               showToast('Cập nhật Zone thành công', 'success');
             } else {
-              data.zoneId = 'ZONE_' + Date.now();
+              targetZoneId = 'ZONE_' + Date.now();
+              data.zoneId = targetZoneId;
               await dbService.createZone(data);
               showToast('Tạo Zone thành công', 'success');
             }
             
+            if (provinceCode) {
+              await dbService.syncZoneCoverage(targetZoneId, provinceCode);
+            }
+
             modalZone.hide();
             document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
             document.body.classList.remove('modal-open');
@@ -2380,10 +2592,20 @@ const scheduleEngine = new ScheduleEngine(dbService);
             // Lấy danh sách địa bàn phường/xã của Tỉnh trực thuộc Zone
             const zoneDoc = zones.find(z => z.zoneId === zid);
             if (zoneDoc) {
-              // Tìm coverage để biết tỉnh
-              const snapCov = await getDocs(query(collection(db, "zoneCoverage"), where("zoneId", "==", zid)));
-              const covDocs = snapCov.docs.map(d => d.data());
-              const provCode = covDocs[0]?.provinceCode || 'HN';
+              let provCode = zoneDoc.provinceCode;
+              if (!provCode) {
+                const snapCov = await getDocs(query(collection(db, "zoneCoverage"), where("zoneId", "==", zid)));
+                const covDocs = snapCov.docs.map(d => d.data());
+                provCode = covDocs[0]?.provinceCode;
+              }
+              if (!provCode && zoneDoc.name) {
+                const adminAreas = await dbService.getAdministrativeAreas('ROOT');
+                const clean = (s) => (s || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/[^a-z0-9]/g, "");
+                const normZone = clean(zoneDoc.name);
+                const matchedArea = adminAreas.find(a => normZone.includes(clean(a.name)));
+                if (matchedArea) provCode = matchedArea.areaCode;
+              }
+              provCode = provCode || 'HN';
               wards = await dbService.getAdministrativeAreas(provCode);
               garages = await dbService.searchGarages('', provCode);
             }
