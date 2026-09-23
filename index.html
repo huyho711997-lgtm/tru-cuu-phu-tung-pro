@@ -440,6 +440,269 @@
       outline: none;
     }
 
+    /* =====================================================
+       LUXURY CUSTOM SELECT & DROPDOWNS (FINTECH / APPLE AESTHETIC)
+       ===================================================== */
+    .custom-select-luxury {
+      position: relative;
+      width: 100%;
+      user-select: none;
+    }
+
+    .btn-custom-select {
+      width: 100%;
+      min-height: 46px;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 7px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      text-align: left;
+    }
+
+    .btn-custom-select:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-custom-select.active,
+    .btn-custom-select:focus-visible,
+    .custom-select-luxury.is-open .btn-custom-select {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15), 0 2px 4px rgba(0, 0, 0, 0.04);
+      background: #ffffff;
+    }
+
+    .btn-custom-select-zone {
+      border-color: #93c5fd;
+      min-height: 52px;
+      padding: 8px 16px;
+      border-radius: 12px;
+    }
+
+    .btn-custom-select-zone:hover {
+      border-color: #60a5fa;
+      background: #fbfdff;
+    }
+
+    .custom-select-trigger-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .custom-select-trigger-text {
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .custom-select-trigger-title {
+      font-size: 13.8px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .custom-select-trigger-desc {
+      font-size: 12px;
+      font-weight: 500;
+      color: #64748b;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .custom-select-trigger-arrow {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      flex-shrink: 0;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .custom-select-luxury.is-open .custom-select-trigger-arrow {
+      transform: rotate(180deg);
+      color: #2563eb;
+      background-color: #eff6ff;
+    }
+
+    .dropdown-menu-luxury {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      z-index: 1080;
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: 14px;
+      box-shadow: 0 20px 38px -6px rgba(15, 23, 42, 0.16), 0 8px 16px -4px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.03);
+      padding: 6px;
+      max-height: 320px;
+      overflow-y: auto;
+      animation: dropdownFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      display: block;
+    }
+
+    @keyframes dropdownFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .dropdown-menu-luxury.d-none {
+      display: none !important;
+    }
+
+    .dropdown-menu-luxury::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .dropdown-menu-luxury::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .dropdown-menu-luxury::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .dropdown-menu-luxury::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .luxury-option-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      margin-bottom: 2px;
+    }
+
+    .luxury-option-item:hover {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+
+    .luxury-option-item.active {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+
+    .luxury-option-item.active .option-title {
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    .luxury-option-item .option-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.15s ease;
+    }
+
+    .luxury-option-item:hover .option-icon {
+      transform: scale(1.06);
+    }
+
+    .luxury-option-item .option-content {
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .luxury-option-item .option-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.35;
+    }
+
+    .luxury-option-item .option-desc {
+      font-size: 11.8px;
+      color: #64748b;
+      line-height: 1.3;
+      margin-top: 1px;
+    }
+
+    .luxury-option-item .option-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: #ffffff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+    }
+
+    .luxury-option-item.active .option-check {
+      display: flex;
+    }
+
+    /* Refined form selects for subordinate controls */
+    .form-select-luxury {
+      border-radius: 10px !important;
+      border: 1.5px solid #e2e8f0 !important;
+      background-color: #ffffff !important;
+      font-size: 13.5px !important;
+      font-weight: 600 !important;
+      color: #1e293b !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      cursor: pointer !important;
+      height: 44px !important;
+      line-height: 1.5 !important;
+      padding: 8px 36px 8px 14px !important;
+    }
+
+    .form-select-luxury:hover {
+      border-color: #cbd5e1 !important;
+      background-color: #f8fafc !important;
+    }
+
+    .form-select-luxury:focus {
+      border-color: #2563eb !important;
+      box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15) !important;
+      background-color: #ffffff !important;
+      outline: none !important;
+    }
+
     .btn {
       border-radius: var(--radius-md);
       font-weight: 600;
@@ -2780,14 +3043,59 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </div>
                   </div>
 
-                  <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <!-- BỘ LỌC ZONE TRÊN TRANG CHÍNH -->
+                    <!-- BỘ LỌC ZONE TRÊN TRANG CHÍNH (LUXURY CUSTOM DROPDOWN) -->
                     <div class="d-flex align-items-center gap-2">
                       <label class="text-muted fw-bold small text-nowrap mb-0" style="font-size: 11.5px; letter-spacing: 0.03em;">LỌC THEO ZONE:</label>
-                      <select class="form-select fw-bold text-dark shadow-2xs" id="filter-rule-zone" style="height: 40px; border-radius: 9px; min-width: 220px; font-size: 13px; cursor: pointer; border-color: var(--border-medium);">
-                        <option value="ALL">🌐 Tất cả các Zone (${zones.length} Zone)</option>
-                        ${zones.map(z => `<option value="${z.zoneId}" ${z.zoneId === currentFilterZoneId ? 'selected' : ''}>📍 ${z.name}</option>`).join('')}
-                      </select>
+                      <div class="custom-select-luxury" id="wrapper-filter-zone" style="min-width: 240px; position: relative; z-index: 30;">
+                        <input type="hidden" id="filter-rule-zone" value="${currentFilterZoneId}">
+                        <button type="button" class="btn-custom-select py-1 px-3 shadow-2xs" id="btn-trigger-filter-zone" aria-expanded="false" style="min-height: 40px; border-radius: 10px; font-size: 13px; background: #ffffff;">
+                          <div class="d-flex align-items-center gap-2 overflow-hidden">
+                            <div class="custom-select-trigger-icon" style="width: 26px; height: 26px; border-radius: 6px; background: ${currentFilterZoneId === 'ALL' ? '#f1f5f9' : '#eff6ff'}; color: ${currentFilterZoneId === 'ALL' ? '#475569' : '#2563eb'};">
+                              <i data-lucide="${currentFilterZoneId === 'ALL' ? 'globe' : 'map-pin'}" id="filter-zone-trigger-icon" style="width: 14px; height: 14px;"></i>
+                            </div>
+                            <span class="fw-bold text-dark text-truncate" id="filter-zone-trigger-title" style="font-size: 13px;">
+                              ${currentFilterZoneId === 'ALL' ? `Tất cả các Zone (${zones.length})` : (zones.find(z => z.zoneId === currentFilterZoneId)?.name || 'Chọn Zone')}
+                            </span>
+                          </div>
+                          <div class="custom-select-trigger-arrow" style="width: 20px; height: 20px;">
+                            <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+                          </div>
+                        </button>
+                        <div class="dropdown-menu-luxury d-none" id="menu-filter-zone" style="min-width: 260px;">
+                          <div class="luxury-options-list">
+                            <div class="luxury-option-item ${currentFilterZoneId === 'ALL' ? 'active' : ''}" data-value="ALL">
+                              <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="option-icon" style="background: #f1f5f9; color: #475569; width: 30px; height: 30px;">
+                                  <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
+                                </div>
+                                <div class="option-content">
+                                  <div class="option-title" style="font-size: 13px;">Tất cả các Zone</div>
+                                  <div class="option-desc" style="font-size: 11.5px;">Toàn bộ ${zones.length} Zone điều hành</div>
+                                </div>
+                              </div>
+                              <div class="option-check" style="width: 18px; height: 18px;">
+                                <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                              </div>
+                            </div>
+                            ${zones.map(z => `
+                              <div class="luxury-option-item ${z.zoneId === currentFilterZoneId ? 'active' : ''}" data-value="${z.zoneId}">
+                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                  <div class="option-icon" style="background: #eff6ff; color: #2563eb; width: 30px; height: 30px;">
+                                    <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
+                                  </div>
+                                  <div class="option-content">
+                                    <div class="option-title" style="font-size: 13px;">${z.name}</div>
+                                    <div class="option-desc" style="font-size: 11.5px;">Trưởng Zone: ${z.leadName || 'Chưa gán'}</div>
+                                  </div>
+                                </div>
+                                <div class="option-check" style="width: 18px; height: 18px;">
+                                  <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                                </div>
+                              </div>
+                            `).join('')}
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-2 px-3 py-2 shadow-sm text-nowrap" id="btn-open-create-rule" style="border-radius: var(--radius-md); font-size: 13px;">
@@ -2854,7 +3162,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                 <div class="modal-body p-4" style="max-height: 80vh; overflow-y: auto;">
                   <form id="form-create-rule">
-                    <!-- 0. CHỌN ZONE ÁP DỤNG QUY TẮC (CRITICAL FIX) -->
+                    <!-- 0. CHỌN ZONE ÁP DỤNG QUY TẮC (LUXURY CUSTOM DROPDOWN) -->
                     <div class="row g-3 mb-4">
                       <div class="col-12">
                         <div class="p-3 rounded-3 border" style="background: #f0f7ff; border-color: #bfdbfe !important;">
@@ -2869,9 +3177,48 @@ const scheduleEngine = new ScheduleEngine(dbService);
                             </div>
                             <span class="badge bg-primary text-white fw-bold px-2.5 py-1" id="modal-zone-ins-count" style="font-size: 12px;">Đang tải...</span>
                           </div>
-                          <select class="form-select fw-bold text-dark shadow-sm" id="modal-rule-zone-select" required style="height: 44px; border-radius: 9px; font-size: 14px; border-color: #93c5fd; cursor: pointer;">
-                            ${zones.map(z => `<option value="${z.zoneId}">${z.name} — Trưởng Zone: ${z.leadName || 'Chưa gán'} (${z.leadPhone || 'Chưa rõ SĐT'})</option>`).join('')}
-                          </select>
+                          
+                          <!-- CUSTOM LUXURY ZONE DROPDOWN -->
+                          <div class="custom-select-luxury" id="wrapper-rule-zone-select" style="position: relative; z-index: 25;">
+                            <input type="hidden" id="modal-rule-zone-select" value="${zones[0]?.zoneId || ''}" required>
+                            <button type="button" class="btn-custom-select btn-custom-select-zone" id="btn-trigger-zone-select" aria-expanded="false">
+                              <div class="d-flex align-items-center gap-3 overflow-hidden">
+                                <div class="custom-select-trigger-icon" style="background: #dbeafe; color: #2563eb;">
+                                  <i data-lucide="shield" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div class="custom-select-trigger-text text-start">
+                                  <div class="custom-select-trigger-title text-truncate" id="zone-trigger-name">${zones[0]?.name || 'Chọn Zone điều hành'}</div>
+                                  <div class="custom-select-trigger-desc text-truncate" id="zone-trigger-lead">Trưởng Zone: ${zones[0]?.leadName || 'Chưa gán'} (${zones[0]?.leadPhone || 'Chưa rõ SĐT'})</div>
+                                </div>
+                              </div>
+                              <div class="custom-select-trigger-arrow">
+                                <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
+                              </div>
+                            </button>
+                            <div class="dropdown-menu-luxury d-none" id="menu-zone-select">
+                              <div class="luxury-options-list" id="options-zone-list">
+                                ${zones.map((z, idx) => `
+                                  <div class="luxury-option-item ${idx === 0 ? 'active' : ''}" data-value="${z.zoneId}">
+                                    <div class="d-flex align-items-center gap-3 overflow-hidden">
+                                      <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
+                                        <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
+                                      </div>
+                                      <div class="option-content">
+                                        <div class="option-title">${z.name}</div>
+                                        <div class="option-desc">Trưởng Zone: ${z.leadName || 'Chưa gán'} • 📞 ${z.leadPhone || 'Chưa rõ SĐT'}</div>
+                                      </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                      <div class="option-check">
+                                        <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                                      </div>
+                                    </div>
+                                  </div>
+                                `).join('')}
+                              </div>
+                            </div>
+                          </div>
+
                           <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-1">
                             <small class="text-muted" style="font-size: 12px;">
                               Hệ thống tự động đồng bộ danh sách Giám định viên và địa bàn tương ứng của Zone được chọn.
@@ -2894,16 +3241,104 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     <div class="row g-3 mb-4">
                       <div class="col-md-7">
                         <label class="field-label">Tên Quy Tắc Phân Ca <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="rule-name" required placeholder="VD: Luân phiên Chẵn/Lẻ 2 GĐV Hiện trường & Chi tiết" style="height: 44px; border-radius: 8px;">
+                        <input type="text" class="form-control" id="rule-name" required placeholder="VD: Luân phiên Chẵn/Lẻ 2 GĐV Hiện trường & Chi tiết" style="height: 46px; border-radius: 10px;">
                       </div>
                       <div class="col-md-5">
                         <label class="field-label">Chọn Mẫu Quy Tắc Chuẩn <span class="text-danger">*</span></label>
-                        <select class="form-select fw-bold text-primary" id="rule-template-type" required style="height: 44px; border-radius: 8px; cursor: pointer;">
-                          <option value="even_odd" selected>1. Luân phiên Chẵn / Lẻ & Chu kỳ</option>
-                          <option value="day_of_week">2. Theo Thứ trong tuần (T2 - CN)</option>
-                          <option value="ward_assignment">3. Theo Địa bàn cụ thể (Xã/Phường)</option>
-                          <option value="specific_date">4. Ngày cụ thể (Lễ / Sự kiện)</option>
-                        </select>
+                        
+                        <!-- CUSTOM LUXURY TEMPLATE DROPDOWN -->
+                        <div class="custom-select-luxury" id="wrapper-rule-template-select" style="position: relative; z-index: 20;">
+                          <input type="hidden" id="rule-template-type" value="even_odd" required>
+                          <button type="button" class="btn-custom-select" id="btn-trigger-template-select" aria-expanded="false">
+                            <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                              <div class="custom-select-trigger-icon" id="tpl-trigger-icon-box" style="background: #eff6ff; color: #2563eb;">
+                                <i data-lucide="repeat" id="tpl-trigger-icon" style="width: 17px; height: 17px;"></i>
+                              </div>
+                              <div class="custom-select-trigger-text text-start">
+                                <div class="custom-select-trigger-title text-truncate" id="tpl-trigger-title">1. Luân phiên Chẵn / Lẻ & Chu kỳ</div>
+                                <div class="custom-select-trigger-desc text-truncate" id="tpl-trigger-desc">Hai GĐV luân phiên Hiện trường & Chi tiết</div>
+                              </div>
+                            </div>
+                            <div class="custom-select-trigger-arrow">
+                              <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
+                            </div>
+                          </button>
+                          <div class="dropdown-menu-luxury d-none" id="menu-template-select">
+                            <div class="luxury-options-list">
+                              <div class="luxury-option-item active" data-value="even_odd" data-icon="repeat" data-icon-bg="#eff6ff" data-icon-color="#2563eb" data-title="1. Luân phiên Chẵn / Lẻ & Chu kỳ" data-desc="Hai GĐV luân phiên Hiện trường & Chi tiết">
+                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                  <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
+                                    <i data-lucide="repeat" style="width: 16px; height: 16px;"></i>
+                                  </div>
+                                  <div class="option-content">
+                                    <div class="d-flex align-items-center gap-2">
+                                      <span class="option-title">1. Luân phiên Chẵn / Lẻ & Chu kỳ</span>
+                                      <span class="badge-soft badge-soft-blue" style="font-size: 10px; padding: 2px 6px;">Phổ biến</span>
+                                    </div>
+                                    <div class="option-desc">Hai GĐV luân phiên Hiện trường & Chi tiết</div>
+                                  </div>
+                                </div>
+                                <div class="option-check">
+                                  <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                                </div>
+                              </div>
+
+                              <div class="luxury-option-item" data-value="day_of_week" data-icon="calendar" data-icon-bg="#fef3c7" data-icon-color="#b45309" data-title="2. Theo Thứ trong tuần (T2 - CN)" data-desc="Gán cố định giám định viên theo từng ngày thứ">
+                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                  <div class="option-icon" style="background: #fef3c7; color: #b45309;">
+                                    <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                                  </div>
+                                  <div class="option-content">
+                                    <div class="d-flex align-items-center gap-2">
+                                      <span class="option-title">2. Theo Thứ trong tuần (T2 - CN)</span>
+                                      <span class="badge-soft badge-soft-amber" style="font-size: 10px; padding: 2px 6px;">Cố định tuần</span>
+                                    </div>
+                                    <div class="option-desc">Gán cố định giám định viên theo từng ngày thứ</div>
+                                  </div>
+                                </div>
+                                <div class="option-check">
+                                  <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                                </div>
+                              </div>
+
+                              <div class="luxury-option-item" data-value="ward_assignment" data-icon="map-pin" data-icon-bg="#e0e7ff" data-icon-color="#4338ca" data-title="3. Theo Địa bàn cụ thể (Xã/Phường)" data-desc="Gán giám định viên chuyên trách địa bàn hành chính">
+                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                  <div class="option-icon" style="background: #e0e7ff; color: #4338ca;">
+                                    <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
+                                  </div>
+                                  <div class="option-content">
+                                    <div class="d-flex align-items-center gap-2">
+                                      <span class="option-title">3. Theo Địa bàn cụ thể (Xã/Phường)</span>
+                                      <span class="badge-soft badge-soft-slate" style="font-size: 10px; padding: 2px 6px;">Địa bàn</span>
+                                    </div>
+                                    <div class="option-desc">Gán giám định viên chuyên trách địa bàn hành chính</div>
+                                  </div>
+                                </div>
+                                <div class="option-check">
+                                  <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                                </div>
+                              </div>
+
+                              <div class="luxury-option-item" data-value="specific_date" data-icon="star" data-icon-bg="#ffe4e6" data-icon-color="#e11d48" data-title="4. Ngày cụ thể (Lễ / Sự kiện)" data-desc="Lịch trực đặc biệt ưu tiên cho ngày lễ hoặc đột xuất">
+                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                  <div class="option-icon" style="background: #ffe4e6; color: #e11d48;">
+                                    <i data-lucide="star" style="width: 16px; height: 16px;"></i>
+                                  </div>
+                                  <div class="option-content">
+                                    <div class="d-flex align-items-center gap-2">
+                                      <span class="option-title">4. Ngày cụ thể (Lễ / Sự kiện)</span>
+                                      <span class="badge-soft badge-soft-rose" style="font-size: 10px; padding: 2px 6px;">Ưu tiên</span>
+                                    </div>
+                                    <div class="option-desc">Lịch trực đặc biệt ưu tiên cho ngày lễ hoặc đột xuất</div>
+                                  </div>
+                                </div>
+                                <div class="option-check">
+                                  <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -2953,7 +3388,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               <span class="field-label text-primary mb-0">Nhân sự A (Lẻ / Ngày 1)</span>
                               <span class="badge-soft badge-soft-blue">Ca 1</span>
                             </div>
-                            <select class="form-select" id="ins-user-a" required style="height: 44px; border-radius: 8px;">
+                            <select class="form-select form-select-luxury" id="ins-user-a" required style="height: 44px; border-radius: 8px;">
                               <!-- Dynamically populated -->
                             </select>
                             <div class="mt-2 text-muted" style="font-size: 12px;">
@@ -2967,7 +3402,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               <span class="field-label text-success mb-0">Nhân sự B (Chẵn / Ngày 2)</span>
                               <span class="badge-soft badge-soft-green">Ca 2</span>
                             </div>
-                            <select class="form-select" id="ins-user-b" required style="height: 44px; border-radius: 8px;">
+                            <select class="form-select form-select-luxury" id="ins-user-b" required style="height: 44px; border-radius: 8px;">
                               <!-- Dynamically populated -->
                             </select>
                             <div class="mt-2 text-muted" style="font-size: 12px;">
@@ -3033,7 +3468,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                                 <span class="fw-bold text-dark text-nowrap d-flex align-items-center gap-1.5" style="font-size: 13.5px; width: 95px; flex-shrink: 0;">
                                   <i data-lucide="calendar" style="width: 14px; height: 14px; color: var(--primary);"></i> ${day}:
                                 </span>
-                                <select class="form-select sel-dow-inspector flex-grow-1" data-dow="${dow}" style="height: 44px; border-radius: 8px; font-size: 13.5px; line-height: 1.5 !important;">
+                                <select class="form-select form-select-luxury sel-dow-inspector flex-grow-1" data-dow="${dow}" style="height: 44px; border-radius: 8px; font-size: 13.5px; line-height: 1.5 !important;">
                                   <!-- Dynamically populated -->
                                 </select>
                               </div>
@@ -3051,13 +3486,13 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       <div class="row g-3">
                         <div class="col-md-6">
                           <label class="field-label">Chọn Xã / Phường <span class="text-danger">*</span></label>
-                          <select class="form-select" id="ward-select" style="height: 44px; border-radius: 8px;">
+                          <select class="form-select form-select-luxury" id="ward-select" style="height: 44px; border-radius: 8px;">
                             <!-- Dynamically populated -->
                           </select>
                         </div>
                         <div class="col-md-6">
                           <label class="field-label">GĐV Phụ Trách Chính <span class="text-danger">*</span></label>
-                          <select class="form-select" id="ward-primary-ins" style="height: 44px; border-radius: 8px;">
+                          <select class="form-select form-select-luxury" id="ward-primary-ins" style="height: 44px; border-radius: 8px;">
                             <!-- Dynamically populated -->
                           </select>
                         </div>
@@ -3076,7 +3511,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         </div>
                         <div class="col-md-6">
                           <label class="field-label">GĐV Trực Chính Ngày Lễ <span class="text-danger">*</span></label>
-                          <select class="form-select" id="spec-primary-ins" style="height: 44px; border-radius: 8px;">
+                          <select class="form-select form-select-luxury" id="spec-primary-ins" style="height: 44px; border-radius: 8px;">
                             <!-- Dynamically populated -->
                           </select>
                         </div>
@@ -3222,7 +3657,144 @@ const scheduleEngine = new ScheduleEngine(dbService);
           }).join('');
 
           lucide.createIcons();
+        // Cấu hình sự kiện cho toàn bộ các Custom Luxury Dropdowns trong trang Rules
+        const setupCustomLuxuryDropdowns = () => {
+          const allDropdowns = container.querySelectorAll('.custom-select-luxury');
+
+          allDropdowns.forEach(dropdown => {
+            const trigger = dropdown.querySelector('.btn-custom-select');
+            const menu = dropdown.querySelector('.dropdown-menu-luxury');
+            const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+            if (!trigger || !menu || !hiddenInput) return;
+
+            // Mở / Đóng dropdown khi click trigger
+            trigger.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const isOpen = dropdown.classList.contains('is-open');
+
+              // Đóng tất cả dropdowns khác trước
+              allDropdowns.forEach(d => {
+                if (d !== dropdown) {
+                  d.classList.remove('is-open');
+                  d.querySelector('.dropdown-menu-luxury')?.classList.add('d-none');
+                  d.querySelector('.btn-custom-select')?.setAttribute('aria-expanded', 'false');
+                }
+              });
+
+              if (isOpen) {
+                dropdown.classList.remove('is-open');
+                menu.classList.add('d-none');
+                trigger.setAttribute('aria-expanded', 'false');
+              } else {
+                dropdown.classList.add('is-open');
+                menu.classList.remove('d-none');
+                trigger.setAttribute('aria-expanded', 'true');
+                lucide.createIcons();
+              }
+            });
+
+            // Ngăn chặn sự kiện click bên trong menu làm đóng dropdown không mong muốn
+            menu.addEventListener('click', (e) => {
+              const item = e.target.closest('.luxury-option-item');
+              if (!item) return;
+              e.stopPropagation();
+
+              const val = item.dataset.value;
+              hiddenInput.value = val;
+
+              // Cập nhật trạng thái active trong menu
+              menu.querySelectorAll('.luxury-option-item').forEach(it => it.classList.remove('active'));
+              item.classList.add('active');
+
+              // Đóng menu
+              dropdown.classList.remove('is-open');
+              menu.classList.add('d-none');
+              trigger.setAttribute('aria-expanded', 'false');
+
+              // Cập nhật text & icon tương ứng với từng loại dropdown
+              if (dropdown.id === 'wrapper-rule-zone-select') {
+                const targetZone = zones.find(z => z.zoneId === val);
+                if (targetZone) {
+                  const tTitle = dropdown.querySelector('#zone-trigger-name');
+                  const tLead = dropdown.querySelector('#zone-trigger-lead');
+                  if (tTitle) tTitle.textContent = targetZone.name;
+                  if (tLead) tLead.textContent = `Trưởng Zone: ${targetZone.leadName || 'Chưa gán'} (${targetZone.leadPhone || 'Chưa rõ SĐT'})`;
+                }
+              } else if (dropdown.id === 'wrapper-rule-template-select') {
+                const iconName = item.dataset.icon || 'repeat';
+                const iconBg = item.dataset.iconBg || '#eff6ff';
+                const iconColor = item.dataset.iconColor || '#2563eb';
+                const title = item.dataset.title || '';
+                const desc = item.dataset.desc || '';
+
+                const iconBox = dropdown.querySelector('#tpl-trigger-icon-box');
+                const titleEl = dropdown.querySelector('#tpl-trigger-title');
+                const descEl = dropdown.querySelector('#tpl-trigger-desc');
+
+                if (iconBox) {
+                  iconBox.style.background = iconBg;
+                  iconBox.style.color = iconColor;
+                  iconBox.innerHTML = `<i data-lucide="${iconName}" style="width: 17px; height: 17px;"></i>`;
+                }
+                if (titleEl) titleEl.textContent = title;
+                if (descEl) descEl.textContent = desc;
+              } else if (dropdown.id === 'wrapper-filter-zone') {
+                const filterTitle = dropdown.querySelector('#filter-zone-trigger-title');
+                const filterIconWrap = dropdown.querySelector('.custom-select-trigger-icon');
+                if (val === 'ALL') {
+                  if (filterTitle) filterTitle.textContent = `Tất cả các Zone (${zones.length})`;
+                  if (filterIconWrap) {
+                    filterIconWrap.style.background = '#f1f5f9';
+                    filterIconWrap.style.color = '#475569';
+                    filterIconWrap.innerHTML = `<i data-lucide="globe" id="filter-zone-trigger-icon" style="width: 14px; height: 14px;"></i>`;
+                  }
+                } else {
+                  const targetZone = zones.find(z => z.zoneId === val);
+                  if (filterTitle) filterTitle.textContent = targetZone ? targetZone.name : val;
+                  if (filterIconWrap) {
+                    filterIconWrap.style.background = '#eff6ff';
+                    filterIconWrap.style.color = '#2563eb';
+                    filterIconWrap.innerHTML = `<i data-lucide="map-pin" id="filter-zone-trigger-icon" style="width: 14px; height: 14px;"></i>`;
+                  }
+                }
+              }
+
+              // Kích hoạt sự kiện change để các handler reactive tiếp nhận
+              hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+              lucide.createIcons();
+            });
+          });
+
+          // Đóng dropdown khi click ra ngoài
+          const handleGlobalClick = (e) => {
+            if (!e.target.closest('.custom-select-luxury')) {
+              container.querySelectorAll('.custom-select-luxury').forEach(d => {
+                d.classList.remove('is-open');
+                d.querySelector('.dropdown-menu-luxury')?.classList.add('d-none');
+                d.querySelector('.btn-custom-select')?.setAttribute('aria-expanded', 'false');
+              });
+            }
+          };
+          document.removeEventListener('click', container._customDropdownGlobalClick);
+          container._customDropdownGlobalClick = handleGlobalClick;
+          document.addEventListener('click', handleGlobalClick);
+
+          // Đóng dropdown khi nhấn Escape
+          const handleKeydown = (e) => {
+            if (e.key === 'Escape') {
+              container.querySelectorAll('.custom-select-luxury').forEach(d => {
+                d.classList.remove('is-open');
+                d.querySelector('.dropdown-menu-luxury')?.classList.add('d-none');
+                d.querySelector('.btn-custom-select')?.setAttribute('aria-expanded', 'false');
+              });
+            }
+          };
+          document.removeEventListener('keydown', container._customDropdownKeydown);
+          container._customDropdownKeydown = handleKeydown;
+          document.addEventListener('keydown', handleKeydown);
         };
+
+        setupCustomLuxuryDropdowns();
 
         renderRulesList();
 
@@ -3420,8 +3992,30 @@ const scheduleEngine = new ScheduleEngine(dbService);
         const openCreateModal = async (targetZid) => {
           const chosenZone = targetZid && targetZid !== 'ALL' ? targetZid : (zones[0]?.zoneId || '');
           if (modalZoneSelect) modalZoneSelect.value = chosenZone;
+
+          // Cập nhật giao diện của custom Zone dropdown trong modal
+          const zoneWrap = container.querySelector('#wrapper-rule-zone-select');
+          if (zoneWrap) {
+            const targetZone = zones.find(z => z.zoneId === chosenZone);
+            if (targetZone) {
+              const tTitle = zoneWrap.querySelector('#zone-trigger-name');
+              const tLead = zoneWrap.querySelector('#zone-trigger-lead');
+              if (tTitle) tTitle.textContent = targetZone.name;
+              if (tLead) tLead.textContent = `Trưởng Zone: ${targetZone.leadName || 'Chưa gán'} (${targetZone.leadPhone || 'Chưa rõ SĐT'})`;
+
+              zoneWrap.querySelectorAll('.luxury-option-item').forEach(it => {
+                if (it.dataset.value === chosenZone) {
+                  it.classList.add('active');
+                } else {
+                  it.classList.remove('active');
+                }
+              });
+            }
+          }
+
           await populateModalForZone(chosenZone);
           ruleModal.show();
+          lucide.createIcons();
         };
 
         container.querySelector('#btn-open-create-rule').addEventListener('click', () => {
