@@ -1431,6 +1431,10 @@
         const snap = await getDocs(q);
         return snap.docs.map(d => ({ ruleId: d.id, ...d.data() }));
       },
+      async getAllScheduleRules() {
+        const snap = await getDocs(collection(db, "scheduleRules"));
+        return snap.docs.map(d => ({ ruleId: d.id, ...d.data() }));
+      },
       async createScheduleRule(data) {
         if (!data.ruleId) data.ruleId = 'RULE_' + Date.now();
         await setDoc(doc(db, "scheduleRules", data.ruleId), data);
@@ -2730,47 +2734,18 @@ const scheduleEngine = new ScheduleEngine(dbService);
       // ----------------------------------------
       async renderRuleBuilder(container) {
         let zones = [];
+        let allRules = [];
         try {
           zones = await dbService.getAllZones();
+          allRules = await dbService.getAllScheduleRules();
         } catch (e) { console.warn(e); }
 
-        let currentZoneId = zones[0]?.zoneId || 'ZONE_HN_01';
-        let inspectors = [];
-        let rules = [];
-        let wards = [];
-        let garages = [];
+        let currentFilterZoneId = zones[0]?.zoneId || 'ALL';
 
-        async function loadZoneData(zid) {
-          try {
-            inspectors = await dbService.getInspectorsByZone(zid);
-            rules = await dbService.getAllRulesByZone(zid);
-            
-            // Lấy danh sách địa bàn phường/xã của Tỉnh trực thuộc Zone
-            const zoneDoc = zones.find(z => z.zoneId === zid);
-            if (zoneDoc) {
-              let provCode = zoneDoc.provinceCode;
-              if (!provCode) {
-                const snapCov = await getDocs(query(collection(db, "zoneCoverage"), where("zoneId", "==", zid)));
-                const covDocs = snapCov.docs.map(d => d.data());
-                provCode = covDocs[0]?.provinceCode;
-              }
-              if (!provCode && zoneDoc.name) {
-                const adminAreas = await dbService.getAdministrativeAreas('ROOT');
-                const clean = (s) => (s || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/[^a-z0-9]/g, "");
-                const normZone = clean(zoneDoc.name);
-                const matchedArea = adminAreas.find(a => normZone.includes(clean(a.name)));
-                if (matchedArea) provCode = matchedArea.areaCode;
-              }
-              provCode = provCode || 'HN';
-              wards = await dbService.getAdministrativeAreas(provCode);
-              garages = await dbService.searchGarages('', provCode);
-            }
-          } catch (err) {
-            console.error(err);
-          }
-        }
-
-        await loadZoneData(currentZoneId);
+        const getZoneName = (zid) => {
+          const z = zones.find(item => item.zoneId === zid);
+          return z ? z.name : zid;
+        };
 
         container.innerHTML = `
           <div class="row g-4">
@@ -2785,39 +2760,20 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     <div>
                       <div class="d-flex align-items-center gap-2">
                         <h5 class="fw-bold mb-0 text-dark" style="font-size: 16.5px;">Thiết Lập Quy Tắc Lịch Trực</h5>
-                        <span class="badge-soft badge-soft-amber fw-bold" id="badge-rules-count">${rules.length} quy tắc</span>
+                        <span class="badge-soft badge-soft-amber fw-bold" id="badge-rules-count">${allRules.length} quy tắc</span>
                       </div>
-                      <small class="text-muted" style="font-size: 12.5px;">Bộ quy tắc chuẩn hóa phân công ca trực tự động theo mẫu kết hợp</small>
+                      <small class="text-muted" style="font-size: 12.5px;">Bộ quy tắc chuẩn hóa phân công ca trực tự động theo mẫu kết hợp cho tất cả các Zone</small>
                     </div>
                   </div>
 
                   <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <!-- CUSTOM LUXURY ZONE DROPDOWN -->
-                    <div class="dropdown">
-                      <button class="btn btn-white border shadow-sm d-flex align-items-center gap-2 px-3 py-1 fw-semibold text-dark" type="button" id="btn-zone-dropdown" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 10px; background: #ffffff; min-width: 220px; height: 42px; border-color: var(--border-medium) !important;">
-                        <div style="width: 28px; height: 28px; border-radius: 8px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                          <i data-lucide="map-pin" style="width: 15px; height: 15px;"></i>
-                        </div>
-                        <div class="text-start flex-grow-1" style="line-height: 1.2;">
-                          <small class="text-muted d-block fw-bold" style="font-size: 10px; letter-spacing: 0.04em;">KHU VỰC QUẢN LÝ</small>
-                          <span class="fw-bold text-primary" id="selected-zone-display" style="font-size: 13.5px;">${zones.find(z => z.zoneId === currentZoneId)?.name || 'Chọn Zone'}</span>
-                        </div>
-                        <i data-lucide="chevron-down" class="text-muted ms-1" style="width: 14px; height: 14px;"></i>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2 mt-2" aria-labelledby="btn-zone-dropdown" style="border-radius: 12px; min-width: 240px; z-index: 1060;">
-                        <li class="dropdown-header text-uppercase fw-bold text-muted px-3 py-2" style="font-size: 11px;">Chọn Zone Điều Hành</li>
-                        ${zones.map(z => `
-                          <li>
-                            <a class="dropdown-item d-flex align-items-center justify-content-between p-2 rounded-2 ${z.zoneId === currentZoneId ? 'active bg-primary text-white fw-bold' : 'text-dark'}" href="javascript:void(0)" data-zone-id="${z.zoneId}" style="font-size: 13px;">
-                              <span class="d-flex align-items-center gap-2">
-                                <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
-                                ${z.name}
-                              </span>
-                              ${z.zoneId === currentZoneId ? '<i data-lucide="check" style="width: 14px; height: 14px;"></i>' : ''}
-                            </a>
-                          </li>
-                        `).join('')}
-                      </ul>
+                    <!-- BỘ LỌC ZONE TRÊN TRANG CHÍNH -->
+                    <div class="d-flex align-items-center gap-2">
+                      <label class="text-muted fw-bold small text-nowrap mb-0" style="font-size: 11.5px; letter-spacing: 0.03em;">LỌC THEO ZONE:</label>
+                      <select class="form-select fw-bold text-dark shadow-2xs" id="filter-rule-zone" style="height: 40px; border-radius: 9px; min-width: 220px; font-size: 13px; cursor: pointer; border-color: var(--border-medium);">
+                        <option value="ALL">🌐 Tất cả các Zone (${zones.length} Zone)</option>
+                        ${zones.map(z => `<option value="${z.zoneId}" ${z.zoneId === currentFilterZoneId ? 'selected' : ''}>📍 ${z.name}</option>`).join('')}
+                      </select>
                     </div>
 
                     <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-2 px-3 py-2 shadow-sm text-nowrap" id="btn-open-create-rule" style="border-radius: var(--radius-md); font-size: 13px;">
@@ -2832,7 +2788,10 @@ const scheduleEngine = new ScheduleEngine(dbService);
             <div class="col-12">
               <div class="card shadow-sm border-0">
                 <div class="card-header-clean py-3 px-4 d-flex justify-content-between align-items-center">
-                  <h6 class="fw-bold mb-0 text-dark" style="font-size: 14.5px;">Các Quy Tắc Lịch Trực Của Zone</h6>
+                  <div class="d-flex align-items-center gap-2">
+                    <h6 class="fw-bold mb-0 text-dark" style="font-size: 14.5px;" id="rules-table-title">Danh Sách Quy Tắc Lịch Trực</h6>
+                    <span class="badge bg-light text-secondary border small fw-semibold" id="table-filter-badge">Đang hiển thị tất cả</span>
+                  </div>
                   <small class="text-muted">Áp dụng theo thứ tự ưu tiên (Priority cao áp dụng trước)</small>
                 </div>
 
@@ -2841,14 +2800,15 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     <table class="table table-modern mb-0 align-middle">
                       <thead>
                         <tr>
-                          <th style="width: 80px;">Ưu Tiên</th>
+                          <th style="width: 75px;">Ưu Tiên</th>
                           <th>Tên Quy Tắc</th>
+                          <th style="width: 170px;">Zone Quản Lý</th>
                           <th>Mẫu Quy Tắc</th>
                           <th>Loại Công Việc</th>
                           <th>Khung Giờ</th>
                           <th>Phân Công Trực</th>
                           <th>Hiệu Lực</th>
-                          <th class="text-end" style="width: 100px;">Thao Tác</th>
+                          <th class="text-end" style="width: 90px;">Thao Tác</th>
                         </tr>
                       </thead>
                       <tbody id="rules-tbody">
@@ -2861,18 +2821,18 @@ const scheduleEngine = new ScheduleEngine(dbService);
             </div>
           </div>
 
-          <!-- MODAL THIẾT LẬP QUY TẮC MỚI (MODAL TOÀN DIỆN VỚI 5 MẪU CHUẨN - EXPANDED) -->
+          <!-- MODAL THIẾT LẬP QUY TẮC MỚI (CHỌN ZONE & TỰ ĐỘNG ĐỒNG BỘ GĐV) -->
           <div class="modal fade" id="modalCreateRule" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1100px; width: 95%;">
               <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg); overflow: hidden;">
-                <div class="modal-header py-3 px-4 border-bottom" style="background: #f8fafc;">
+                <div class="modal-header py-3 px-4 border-bottom" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
                   <div class="d-flex align-items-center gap-3">
-                    <div class="header-icon-box" style="width: 36px; height: 36px; background: #fef3c7; color: #b45309; border-radius: 10px;">
-                      <i data-lucide="calendar-check-2" style="width: 18px; height: 18px;"></i>
+                    <div class="header-icon-box" style="width: 40px; height: 40px; background: #fef3c7; color: #b45309; border-radius: 12px;">
+                      <i data-lucide="calendar-check-2" style="width: 20px; height: 20px;"></i>
                     </div>
                     <div>
-                      <h6 class="modal-title fw-bold text-dark mb-0" style="font-size: 16px;">Thêm Mới Quy Tắc Phân Công Lịch Trực</h6>
-                      <small class="text-muted" style="font-size: 12px;">Thiết lập thuật toán phân ca tự động cho Zone đang chọn</small>
+                      <h6 class="modal-title fw-bold text-dark mb-0" style="font-size: 16.5px;">Thêm Mới Quy Tắc Phân Công Lịch Trực</h6>
+                      <small class="text-muted" style="font-size: 12px;">Thiết lập thuật toán phân ca trực tự động theo từng Zone điều hành</small>
                     </div>
                   </div>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -2880,6 +2840,38 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                 <div class="modal-body p-4" style="max-height: 80vh; overflow-y: auto;">
                   <form id="form-create-rule">
+                    <!-- 0. CHỌN ZONE ÁP DỤNG QUY TẮC (CRITICAL FIX) -->
+                    <div class="row g-3 mb-4">
+                      <div class="col-12">
+                        <div class="p-3 rounded-3 border" style="background: #f0f7ff; border-color: #bfdbfe !important;">
+                          <div class="d-flex justify-content-between align-items-center mb-1.5 flex-wrap gap-2">
+                            <label class="field-label text-primary fw-bold mb-0 d-flex align-items-center gap-1.5" style="font-size: 13px;">
+                              <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
+                              Áp Dụng Cho Zone Điều Hành Nào? <span class="text-danger">*</span>
+                            </label>
+                            <span class="badge bg-primary text-white fw-bold px-2.5 py-1" id="modal-zone-ins-count" style="font-size: 12px;">Đang tải...</span>
+                          </div>
+                          <select class="form-select fw-bold text-dark shadow-sm" id="modal-rule-zone-select" required style="height: 44px; border-radius: 9px; font-size: 14px; border-color: #93c5fd; cursor: pointer;">
+                            ${zones.map(z => `<option value="${z.zoneId}">${z.name} — Trưởng Zone: ${z.leadName || 'Chưa gán'} (${z.leadPhone || 'Chưa rõ SĐT'})</option>`).join('')}
+                          </select>
+                          <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-1">
+                            <small class="text-muted" style="font-size: 12px;">
+                              Hệ thống tự động đồng bộ danh sách Giám định viên và địa bàn tương ứng của Zone được chọn.
+                            </small>
+                            <a href="#personnel" class="text-primary fw-bold small text-decoration-none d-inline-flex align-items-center gap-1" target="_self">
+                              <i data-lucide="user-plus" style="width: 13px; height: 13px;"></i> Thêm GĐV trong Quản lý nhân sự
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- THÔNG BÁO CẢNH BÁO SỐ LƯỢNG GĐV CỦA ZONE -->
+                    <div id="modal-ins-alert" class="alert alert-warning d-none py-2.5 px-3 small rounded-3 mb-3 d-flex align-items-center gap-2">
+                      <i data-lucide="alert-triangle" style="width: 17px; height: 17px; flex-shrink: 0;"></i>
+                      <div id="modal-ins-alert-text" class="flex-grow-1"></div>
+                    </div>
+
                     <!-- 1. TÊN QUY TẮC & MẪU QUY TẮC -->
                     <div class="row g-3 mb-4">
                       <div class="col-md-7">
@@ -2944,7 +2936,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               <span class="badge-soft badge-soft-blue">Ca 1</span>
                             </div>
                             <select class="form-select" id="ins-user-a" required style="height: 42px; border-radius: 8px;">
-                              ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode || 'GDV'})</option>`).join('')}
+                              <!-- Dynamically populated -->
                             </select>
                             <div class="mt-2 text-muted" style="font-size: 12px;">
                               Trực <strong>Hiện trường</strong> ngày Lẻ, <strong>Chi tiết</strong> ngày Chẵn
@@ -2958,7 +2950,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               <span class="badge-soft badge-soft-green">Ca 2</span>
                             </div>
                             <select class="form-select" id="ins-user-b" required style="height: 42px; border-radius: 8px;">
-                              ${inspectors.map((i, idx) => `<option value="${i.inspectorId}" ${idx === 1 ? 'selected' : ''}>${i.fullName} (${i.empCode || 'GDV'})</option>`).join('')}
+                              <!-- Dynamically populated -->
                             </select>
                             <div class="mt-2 text-muted" style="font-size: 12px;">
                               Trực <strong>Chi tiết</strong> ngày Lẻ, <strong>Hiện trường</strong> ngày Chẵn
@@ -2967,7 +2959,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         </div>
                       </div>
 
-                      <!-- BẢNG LIVE PREVIEW SINH LỊCH RỘNG RÃI -->
+                      <!-- BẢNG LIVE PREVIEW SINH LỊCH -->
                       <div class="bg-white p-3 rounded-3 border shadow-sm">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                           <span class="field-label text-muted mb-0">Mô phỏng lịch tự động sinh cả tháng (Live Preview):</span>
@@ -3014,7 +3006,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 14px;">
                         <i data-lucide="calendar" style="width: 17px; color: var(--primary);"></i> Phân công nhân sự theo từng Thứ trong tuần
                       </h6>
-                      <div class="row g-3">
+                      <div class="row g-3" id="dow-inputs-grid">
                         ${['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'].map((day, idx) => {
                           const dow = (idx + 1) % 7;
                           return `
@@ -3022,7 +3014,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               <div class="p-3 bg-white rounded-3 border d-flex align-items-center justify-content-between gap-3 shadow-sm">
                                 <span class="fw-bold text-dark text-nowrap" style="font-size: 13.5px; width: 85px;">${day}:</span>
                                 <select class="form-select sel-dow-inspector" data-dow="${dow}" style="height: 38px; border-radius: 8px;">
-                                  ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
+                                  <!-- Dynamically populated -->
                                 </select>
                               </div>
                             </div>
@@ -3040,14 +3032,13 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         <div class="col-md-6">
                           <label class="field-label">Chọn Xã / Phường <span class="text-danger">*</span></label>
                           <select class="form-select" id="ward-select" style="height: 42px; border-radius: 8px;">
-                            ${wards.map(w => `<option value="${w.areaCode}">📍 ${w.name}</option>`).join('')}
-                            ${wards.length === 0 ? '<option value="*">Toàn bộ địa bàn</option>' : ''}
+                            <!-- Dynamically populated -->
                           </select>
                         </div>
                         <div class="col-md-6">
                           <label class="field-label">GĐV Phụ Trách Chính <span class="text-danger">*</span></label>
                           <select class="form-select" id="ward-primary-ins" style="height: 42px; border-radius: 8px;">
-                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
+                            <!-- Dynamically populated -->
                           </select>
                         </div>
                       </div>
@@ -3066,7 +3057,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         <div class="col-md-6">
                           <label class="field-label">GĐV Trực Chính Ngày Lễ <span class="text-danger">*</span></label>
                           <select class="form-select" id="spec-primary-ins" style="height: 42px; border-radius: 8px;">
-                            ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
+                            <!-- Dynamically populated -->
                           </select>
                         </div>
                       </div>
@@ -3121,18 +3112,46 @@ const scheduleEngine = new ScheduleEngine(dbService);
             </div>
           </div>
         `;
-        
+
         lucide.createIcons();
 
-        // Hàm render danh sách quy tắc
+        // Hàm render danh sách quy tắc theo bộ lọc
         const renderRulesList = () => {
           const tbody = container.querySelector('#rules-tbody');
-          if (rules.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" class="text-center py-5 text-muted">Chưa có quy tắc lịch trực nào cho Zone này. Vui lòng bấm "Tạo Quy Tắc Mới" để thiết lập.</td></tr>';
+          const titleBadge = container.querySelector('#table-filter-badge');
+
+          const filteredRules = currentFilterZoneId === 'ALL'
+            ? allRules
+            : allRules.filter(r => r.zoneId === currentFilterZoneId);
+
+          if (titleBadge) {
+            titleBadge.innerText = currentFilterZoneId === 'ALL' 
+              ? `Đang hiển thị tất cả (${filteredRules.length} quy tắc)`
+              : `Zone: ${getZoneName(currentFilterZoneId)} (${filteredRules.length} quy tắc)`;
+          }
+
+          if (filteredRules.length === 0) {
+            tbody.innerHTML = `
+              <tr>
+                <td colspan="9" class="text-center py-5 text-muted">
+                  <div class="d-flex flex-column align-items-center justify-content-center">
+                    <i data-lucide="calendar-x" style="width: 32px; height: 32px; color: #94a3b8; margin-bottom: 8px;"></i>
+                    <span class="fw-semibold">Chưa có quy tắc lịch trực nào ${currentFilterZoneId === 'ALL' ? '' : `cho ${getZoneName(currentFilterZoneId)}`}.</span>
+                    <button class="btn btn-sm btn-outline-primary mt-2" id="btn-quick-create-rule">
+                      <i data-lucide="plus" style="width: 14px;"></i> Tạo quy tắc ngay
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+            container.querySelector('#btn-quick-create-rule')?.addEventListener('click', () => {
+              openCreateModal(currentFilterZoneId === 'ALL' ? (zones[0]?.zoneId || '') : currentFilterZoneId);
+            });
+            lucide.createIcons();
             return;
           }
 
-          tbody.innerHTML = rules.map(r => {
+          tbody.innerHTML = filteredRules.map(r => {
             let templateBadge = '<span class="badge-soft badge-soft-blue">Chẵn / Lẻ</span>';
             let summaryDesc = '';
 
@@ -3154,11 +3173,18 @@ const scheduleEngine = new ScheduleEngine(dbService);
             }
 
             const timeStr = `${r.timeSlot?.start || '00:00'} - ${r.timeSlot?.end || '23:59'}${r.timeSlot?.isOvernight ? ' (Qua đêm)' : ''}`;
+            const zName = getZoneName(r.zoneId);
 
             return `
               <tr>
                 <td><span class="badge bg-secondary">${r.priority || 50}</span></td>
                 <td><strong class="text-dark">${r.name}</strong></td>
+                <td>
+                  <span class="badge-soft badge-soft-blue fw-bold text-truncate d-inline-flex align-items-center gap-1" style="max-width: 170px;" title="${zName}">
+                    <i data-lucide="shield" style="width: 12px; height: 12px; flex-shrink: 0;"></i>
+                    ${zName}
+                  </span>
+                </td>
                 <td>${templateBadge}</td>
                 <td><span class="badge-soft badge-soft-slate">${r.taskType === 'both' ? 'Hiện trường & Chi tiết' : (r.taskType === 'field' ? 'Hiện trường' : 'Chi tiết')}</span></td>
                 <td class="small text-muted">${timeStr}</td>
@@ -3180,35 +3206,150 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
         renderRulesList();
 
-        // Chuyển đổi Zone (Custom Luxury Dropdown)
-        container.querySelectorAll('[data-zone-id]').forEach(item => {
-          item.addEventListener('click', async (e) => {
-            const newZoneId = e.currentTarget.dataset.zoneId;
-            if (newZoneId === currentZoneId) return;
-            currentZoneId = newZoneId;
-            
-            const selectedZoneName = zones.find(z => z.zoneId === currentZoneId)?.name || 'Chọn Zone';
-            const displayEl = container.querySelector('#selected-zone-display');
-            if (displayEl) displayEl.innerText = selectedZoneName;
+        // Xử lý bộ lọc Zone ngoài trang chính
+        const filterZoneSelect = container.querySelector('#filter-rule-zone');
+        filterZoneSelect.addEventListener('change', (e) => {
+          currentFilterZoneId = e.target.value;
+          renderRulesList();
+        });
 
-            // Cập nhật trạng thái active trong dropdown
-            container.querySelectorAll('[data-zone-id]').forEach(el => {
-              const isCur = el.dataset.zoneId === currentZoneId;
-              el.className = `dropdown-item d-flex align-items-center justify-content-between p-2 rounded-2 ${isCur ? 'active bg-primary text-white fw-bold' : 'text-dark'}`;
-              el.innerHTML = `
-                <span class="d-flex align-items-center gap-2">
-                  <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
-                  ${zones.find(z => z.zoneId === el.dataset.zoneId)?.name || ''}
-                </span>
-                ${isCur ? '<i data-lucide="check" style="width: 14px; height: 14px;"></i>' : ''}
-              `;
-            });
-            lucide.createIcons();
+        // Hàm cập nhật Live Preview cho Mẫu 1
+        const updatePreview = () => {
+          const optA = container.querySelector('#ins-user-a option:checked');
+          const optB = container.querySelector('#ins-user-b option:checked');
+          const nameA = optA ? optA.text.split('(')[0].trim() : 'Nhân sự A';
+          const nameB = optB ? optB.text.split('(')[0].trim() : 'Nhân sự B';
+          
+          container.querySelector('#prev-d1-f').innerText = nameA;
+          container.querySelector('#prev-d1-d').innerText = nameB;
+          container.querySelector('#prev-d2-f').innerText = nameB;
+          container.querySelector('#prev-d2-d').innerText = nameA;
+          container.querySelector('#prev-d3-f').innerText = nameA;
+          container.querySelector('#prev-d3-d').innerText = nameB;
+          container.querySelector('#prev-d4-f').innerText = nameB;
+          container.querySelector('#prev-d4-d').innerText = nameA;
+        };
 
-            await loadZoneData(currentZoneId);
-            container.querySelector('#badge-rules-count').innerText = `${rules.length} quy tắc`;
-            renderRulesList();
+        container.querySelector('#ins-user-a').addEventListener('change', updatePreview);
+        container.querySelector('#ins-user-b').addEventListener('change', updatePreview);
+
+        // HÀM QUAN TRỌNG: TỰ ĐỘNG ĐỒNG BỘ GĐV VÀ ĐỊA BÀN KHI CHỌN ZONE TRONG MODAL
+        async function populateModalForZone(targetZid) {
+          const targetZone = zones.find(z => z.zoneId === targetZid);
+          if (!targetZone) return;
+
+          let zoneInspectors = [];
+          let zoneWards = [];
+
+          try {
+            zoneInspectors = await dbService.getInspectorsByZone(targetZid);
+          } catch (e) {
+            console.warn("Lỗi tải GĐV cho zone:", e);
+          }
+
+          try {
+            let pCode = targetZone.provinceCode;
+            if (!pCode && Array.isArray(targetZone.provinceCodes) && targetZone.provinceCodes.length > 0) {
+              pCode = targetZone.provinceCodes[0];
+            }
+            if (!pCode) {
+              const snapCov = await getDocs(query(collection(db, "zoneCoverage"), where("zoneId", "==", targetZid)));
+              const covDocs = snapCov.docs.map(d => d.data());
+              pCode = covDocs[0]?.provinceCode;
+            }
+            if (pCode) {
+              zoneWards = await dbService.getAdministrativeAreas(pCode);
+            }
+          } catch (e) {
+            console.warn("Lỗi tải phường xã cho zone:", e);
+          }
+
+          // Cập nhật badge số lượng GĐV
+          const badgeCount = container.querySelector('#modal-zone-ins-count');
+          if (badgeCount) {
+            badgeCount.innerText = `${zoneInspectors.length} Giám định viên`;
+            badgeCount.className = `badge ${zoneInspectors.length >= 2 ? 'bg-success' : (zoneInspectors.length === 1 ? 'bg-warning text-dark' : 'bg-danger')} text-white fw-bold px-2.5 py-1`;
+          }
+
+          // Kiểm tra và hiển thị cảnh báo
+          const alertBox = container.querySelector('#modal-ins-alert');
+          const alertText = container.querySelector('#modal-ins-alert-text');
+
+          if (zoneInspectors.length === 0) {
+            if (alertBox) {
+              alertBox.classList.remove('d-none');
+              alertBox.className = 'alert alert-danger py-2 px-3 small rounded-3 mb-3 d-flex align-items-center gap-2';
+              alertText.innerHTML = `<strong>${targetZone.name}</strong> hiện chưa có Giám định viên nào. Bạn cần vào mục <strong>Quản Lý Nhân Sự</strong> để tạo Giám định viên thuộc Zone này trước khi thiết lập quy tắc trực.`;
+            }
+          } else if (zoneInspectors.length === 1) {
+            if (alertBox) {
+              alertBox.classList.remove('d-none');
+              alertBox.className = 'alert alert-warning py-2 px-3 small rounded-3 mb-3 d-flex align-items-center gap-2';
+              alertText.innerHTML = `<strong>${targetZone.name}</strong> hiện chỉ có 1 Giám định viên (${zoneInspectors[0].fullName}). Mẫu Chẵn/Lẻ yêu cầu 2 người luân phiên; bạn có thể chọn mẫu <em>"Theo Thứ trong tuần"</em> hoặc thêm GĐV thứ 2.`;
+            }
+          } else {
+            if (alertBox) alertBox.classList.add('d-none');
+          }
+
+          // 1. Cập nhật Mẫu 1: ins-user-a và ins-user-b
+          const selA = container.querySelector('#ins-user-a');
+          const selB = container.querySelector('#ins-user-b');
+          if (selA && selB) {
+            if (zoneInspectors.length === 0) {
+              selA.innerHTML = '<option value="">-- Zone chưa có Giám định viên --</option>';
+              selB.innerHTML = '<option value="">-- Zone chưa có Giám định viên --</option>';
+            } else {
+              selA.innerHTML = zoneInspectors.map((i, idx) => 
+                `<option value="${i.inspectorId}" ${idx === 0 ? 'selected' : ''}>${i.fullName} (${i.empCode || 'GDV'})</option>`
+              ).join('');
+              selB.innerHTML = zoneInspectors.map((i, idx) => 
+                `<option value="${i.inspectorId}" ${idx === 1 || (idx === 0 && zoneInspectors.length === 1) ? 'selected' : ''}>${i.fullName} (${i.empCode || 'GDV'})</option>`
+              ).join('');
+            }
+          }
+
+          // 2. Cập nhật Mẫu 2: Thứ trong tuần
+          container.querySelectorAll('.sel-dow-inspector').forEach((sel, selIdx) => {
+            if (zoneInspectors.length === 0) {
+              sel.innerHTML = '<option value="">-- Chưa có GĐV --</option>';
+            } else {
+              sel.innerHTML = zoneInspectors.map((i, idx) => {
+                const isSel = (idx === selIdx % zoneInspectors.length);
+                return `<option value="${i.inspectorId}" ${isSel ? 'selected' : ''}>${i.fullName} (${i.empCode || 'GDV'})</option>`;
+              }).join('');
+            }
           });
+
+          // 3. Cập nhật Mẫu 3: Địa bàn xã/phường
+          const selWard = container.querySelector('#ward-select');
+          const selWardIns = container.querySelector('#ward-primary-ins');
+          if (selWard) {
+            selWard.innerHTML = zoneWards.length > 0 
+              ? zoneWards.map(w => `<option value="${w.areaCode}">📍 ${w.name}</option>`).join('')
+              : '<option value="*">Toàn bộ địa bàn Zone</option>';
+          }
+          if (selWardIns) {
+            selWardIns.innerHTML = zoneInspectors.length > 0
+              ? zoneInspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode || 'GDV'})</option>`).join('')
+              : '<option value="">-- Chưa có GĐV --</option>';
+          }
+
+          // 4. Cập nhật Mẫu 4: Ngày cụ thể
+          const selSpecIns = container.querySelector('#spec-primary-ins');
+          if (selSpecIns) {
+            selSpecIns.innerHTML = zoneInspectors.length > 0
+              ? zoneInspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode || 'GDV'})</option>`).join('')
+              : '<option value="">-- Chưa có GĐV --</option>';
+          }
+
+          updatePreview();
+          lucide.createIcons();
+        }
+
+        // Sự kiện đổi Zone bên trong Modal
+        const modalZoneSelect = container.querySelector('#modal-rule-zone-select');
+        modalZoneSelect.addEventListener('change', async (e) => {
+          await populateModalForZone(e.target.value);
         });
 
         // Xử lý chuyển tab template trong Modal
@@ -3253,28 +3394,18 @@ const scheduleEngine = new ScheduleEngine(dbService);
           });
         });
 
-        // Cập nhật Live Preview cho Mẫu 1
-        const updatePreview = () => {
-          const nameA = container.querySelector('#ins-user-a option:checked')?.text || 'Nhân sự A';
-          const nameB = container.querySelector('#ins-user-b option:checked')?.text || 'Nhân sự B';
-          container.querySelector('#prev-d1-f').innerText = nameA;
-          container.querySelector('#prev-d1-d').innerText = nameB;
-          container.querySelector('#prev-d2-f').innerText = nameB;
-          container.querySelector('#prev-d2-d').innerText = nameA;
-          container.querySelector('#prev-d3-f').innerText = nameA;
-          container.querySelector('#prev-d3-d').innerText = nameB;
-          container.querySelector('#prev-d4-f').innerText = nameB;
-          container.querySelector('#prev-d4-d').innerText = nameA;
-        };
-
-        container.querySelector('#ins-user-a').addEventListener('change', updatePreview);
-        container.querySelector('#ins-user-b').addEventListener('change', updatePreview);
-        updatePreview();
-
         // Mở Modal
         const ruleModal = new bootstrap.Modal(document.getElementById('modalCreateRule'));
-        container.querySelector('#btn-open-create-rule').addEventListener('click', () => {
+        
+        const openCreateModal = async (targetZid) => {
+          const chosenZone = targetZid && targetZid !== 'ALL' ? targetZid : (zones[0]?.zoneId || '');
+          if (modalZoneSelect) modalZoneSelect.value = chosenZone;
+          await populateModalForZone(chosenZone);
           ruleModal.show();
+        };
+
+        container.querySelector('#btn-open-create-rule').addEventListener('click', () => {
+          openCreateModal(currentFilterZoneId);
         });
 
         // Xóa quy tắc bằng custom confirm
@@ -3293,8 +3424,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 try {
                   await dbService.deleteScheduleRule(rid);
                   showToast(`Đã xóa thành công quy tắc "${rname}"!`, 'success');
-                  await loadZoneData(currentZoneId);
-                  container.querySelector('#badge-rules-count').innerText = `${rules.length} quy tắc`;
+                  allRules = await dbService.getAllScheduleRules();
+                  container.querySelector('#badge-rules-count').innerText = `${allRules.length} quy tắc`;
                   renderRulesList();
                 } catch (err) {
                   showToast('Lỗi khi xóa: ' + err.message, 'error');
@@ -3311,6 +3442,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
           btn.disabled = true;
 
           try {
+            const targetZoneId = modalZoneSelect.value;
+            const targetZone = zones.find(z => z.zoneId === targetZoneId);
             const templateVal = selTemplate.value;
             const ruleName = container.querySelector('#rule-name').value.trim();
             const startTime = container.querySelector('#rule-start-time').value;
@@ -3320,7 +3453,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             let ruleDoc = {
               ruleId: 'RULE_' + Date.now(),
-              zoneId: currentZoneId,
+              zoneId: targetZoneId,
               name: ruleName,
               status: 'published',
               priority,
@@ -3336,6 +3469,17 @@ const scheduleEngine = new ScheduleEngine(dbService);
               const cycleMode = container.querySelector('input[name="cycleMode"]:checked').value;
               const insA = container.querySelector('#ins-user-a').value;
               const insB = container.querySelector('#ins-user-b').value;
+
+              if (!insA || !insB) {
+                showToast(`Zone "${targetZone?.name}" chưa có đủ 2 Giám định viên để thiết lập mẫu Chẵn/Lẻ!`, "error");
+                btn.disabled = false;
+                return;
+              }
+              if (insA === insB) {
+                showToast("Nhân sự A và Nhân sự B phải là 2 Giám định viên khác nhau!", "error");
+                btn.disabled = false;
+                return;
+              }
 
               ruleDoc.ruleType = cycleMode;
               ruleDoc.taskType = 'both';
@@ -3355,14 +3499,26 @@ const scheduleEngine = new ScheduleEngine(dbService);
               ruleDoc.ruleType = 'day_of_week';
               ruleDoc.taskType = 'both';
               const weekly = {};
+              let hasEmpty = false;
               container.querySelectorAll('.sel-dow-inspector').forEach(sel => {
                 const dow = parseInt(sel.dataset.dow, 10);
+                if (!sel.value) hasEmpty = true;
                 weekly[dow] = { primaryId: sel.value, backupId: null };
               });
+              if (hasEmpty) {
+                showToast("Vui lòng phân công Giám định viên cho tất cả các thứ trong tuần!", "error");
+                btn.disabled = false;
+                return;
+              }
               ruleDoc.rosterConfig = { weekly };
             } else if (templateVal === 'ward_assignment') {
               const wardCode = container.querySelector('#ward-select').value;
               const insPrimary = container.querySelector('#ward-primary-ins').value;
+              if (!insPrimary) {
+                showToast("Vui lòng chọn Giám định viên phụ trách địa bàn!", "error");
+                btn.disabled = false;
+                return;
+              }
               ruleDoc.ruleType = 'ward_assignment';
               ruleDoc.taskType = 'both';
               ruleDoc.wardCode = wardCode;
@@ -3372,6 +3528,11 @@ const scheduleEngine = new ScheduleEngine(dbService);
             } else if (templateVal === 'specific_date') {
               const specDate = container.querySelector('#spec-date-input').value;
               const insPrimary = container.querySelector('#spec-primary-ins').value;
+              if (!insPrimary) {
+                showToast("Vui lòng chọn Giám định viên trực ngày lễ!", "error");
+                btn.disabled = false;
+                return;
+              }
               ruleDoc.ruleType = 'specific_date';
               ruleDoc.taskType = 'both';
               ruleDoc.specificDate = specDate;
@@ -3382,11 +3543,12 @@ const scheduleEngine = new ScheduleEngine(dbService);
             }
 
             await dbService.createScheduleRule(ruleDoc);
-            showToast('Công bố quy tắc lịch trực thành công!', 'success');
+            showToast(`Đã công bố quy tắc cho ${targetZone?.name || 'Zone'} thành công!`, 'success');
             ruleModal.hide();
 
-            await loadZoneData(currentZoneId);
-            container.querySelector('#badge-rules-count').innerText = `${rules.length} quy tắc`;
+            // Tải lại danh sách
+            allRules = await dbService.getAllScheduleRules();
+            container.querySelector('#badge-rules-count').innerText = `${allRules.length} quy tắc`;
             renderRulesList();
           } catch (err) {
             showToast('Lỗi tạo quy tắc: ' + err.message, 'error');
