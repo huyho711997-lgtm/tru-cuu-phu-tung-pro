@@ -641,6 +641,7 @@
         <a class="nav-link" href="#rules"><i data-lucide="sliders"></i> Quy Tắc Lịch Trực</a>
         <a class="nav-link" href="#overrides"><i data-lucide="repeat"></i> Đổi Ca & Nghỉ Phép</a>
         <a class="nav-link" href="#dispatch-history"><i data-lucide="history"></i> Nhật Ký Điều Phối</a>
+        <a class="nav-link" href="#coverage"><i data-lucide="map-pinned"></i> Phân Bổ Địa Bàn</a>
         <a class="nav-link" href="#personnel"><i data-lucide="users"></i> Quản Lý Nhân Sự</a>
       </div>
 
@@ -993,71 +994,78 @@
       }
     };
 
-    // Danh sách 63 Tỉnh/Thành phố chuẩn toàn quốc
+    // Danh sách 63 Tỉnh/Thành phố chuẩn toàn quốc phân theo vùng miền
     const DEFAULT_PROVINCES = [
-      { areaCode: 'HN', name: 'Hà Nội', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'SG', name: 'TP. Hồ Chí Minh', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'DL', name: 'Đắk Lắk', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'DN', name: 'Đà Nẵng', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'HP', name: 'Hải Phòng', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'CT', name: 'Cần Thơ', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BD', name: 'Bình Dương', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'DNA', name: 'Đồng Nai', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'KH', name: 'Khánh Hòa', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'GL', name: 'Gia Lai', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'LD', name: 'Lâm Đồng', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'VT', name: 'Bà Rịa - Vũng Tàu', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'AG', name: 'An Giang', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BG', name: 'Bắc Giang', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BK', name: 'Bắc Kạn', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BL', name: 'Bạc Liêu', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BN', name: 'Bắc Ninh', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BT', name: 'Bến Tre', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BDH', name: 'Bình Định', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BP', name: 'Bình Phước', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'BTH', name: 'Bình Thuận', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'CM', name: 'Cà Mau', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'CB', name: 'Cao Bằng', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'DKN', name: 'Đắk Nông', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'DB', name: 'Điện Biên', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'DT', name: 'Đồng Tháp', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'HG', name: 'Hà Giang', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'HNM', name: 'Hà Nam', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'HT', name: 'Hà Tĩnh', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'HD', name: 'Hải Dương', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'HGI', name: 'Hậu Giang', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'HB', name: 'Hòa Bình', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'HY', name: 'Hưng Yên', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'KG', name: 'Kiên Giang', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'KT', name: 'Kon Tum', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'LC', name: 'Lai Châu', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'LS', name: 'Lạng Sơn', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'LCA', name: 'Lào Cai', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'LA', name: 'Long An', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'ND', name: 'Nam Định', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'NA', name: 'Nghệ An', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'NB', name: 'Ninh Bình', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'NT', name: 'Ninh Thuận', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'PT', name: 'Phú Thọ', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'PY', name: 'Phú Yên', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'QB', name: 'Quảng Bình', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'QNM', name: 'Quảng Nam', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'QNG', name: 'Quảng Ngãi', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'QN', name: 'Quảng Ninh', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'QT', name: 'Quảng Trị', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'ST', name: 'Sóc Trăng', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'SL', name: 'Sơn La', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'TN', name: 'Tây Ninh', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'TB', name: 'Thái Bình', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'TNG', name: 'Thái Nguyên', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'TH', name: 'Thanh Hóa', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'TTH', name: 'Thừa Thiên Huế', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'TG', name: 'Tiền Giang', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'TV', name: 'Trà Vinh', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'TQ', name: 'Tuyên Quang', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'VL', name: 'Vĩnh Long', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'VP', name: 'Vĩnh Phúc', type: 'province', parentCode: 'ROOT' },
-      { areaCode: 'YB', name: 'Yên Bái', type: 'province', parentCode: 'ROOT' }
+      // Miền Bắc (25)
+      { areaCode: 'HN', name: 'Hà Nội', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HP', name: 'Hải Phòng', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BN', name: 'Bắc Ninh', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BG', name: 'Bắc Giang', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HNM', name: 'Hà Nam', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HD', name: 'Hải Dương', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HY', name: 'Hưng Yên', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'ND', name: 'Nam Định', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'NB', name: 'Ninh Bình', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TB', name: 'Thái Bình', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'VP', name: 'Vĩnh Phúc', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'PT', name: 'Phú Thọ', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QN', name: 'Quảng Ninh', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TNG', name: 'Thái Nguyên', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BK', name: 'Bắc Kạn', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'CB', name: 'Cao Bằng', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HG', name: 'Hà Giang', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LS', name: 'Lạng Sơn', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TQ', name: 'Tuyên Quang', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LCA', name: 'Lào Cai', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'YB', name: 'Yên Bái', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DB', name: 'Điện Biên', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HB', name: 'Hòa Bình', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LC', name: 'Lai Châu', region: 'bac', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'SL', name: 'Sơn La', region: 'bac', type: 'province', parentCode: 'ROOT' },
+
+      // Miền Trung (14)
+      { areaCode: 'TH', name: 'Thanh Hóa', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'NA', name: 'Nghệ An', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HT', name: 'Hà Tĩnh', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QB', name: 'Quảng Bình', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QT', name: 'Quảng Trị', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TTH', name: 'Thừa Thiên Huế', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DN', name: 'Đà Nẵng', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QNM', name: 'Quảng Nam', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'QNG', name: 'Quảng Ngãi', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BDH', name: 'Bình Định', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'PY', name: 'Phú Yên', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'KH', name: 'Khánh Hòa', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'NT', name: 'Ninh Thuận', region: 'trung', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BTH', name: 'Bình Thuận', region: 'trung', type: 'province', parentCode: 'ROOT' },
+
+      // Tây Nguyên (5)
+      { areaCode: 'DL', name: 'Đắk Lắk', region: 'tay_nguyen', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'GL', name: 'Gia Lai', region: 'tay_nguyen', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'KT', name: 'Kon Tum', region: 'tay_nguyen', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DKN', name: 'Đắk Nông', region: 'tay_nguyen', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LD', name: 'Lâm Đồng', region: 'tay_nguyen', type: 'province', parentCode: 'ROOT' },
+
+      // Miền Nam (19)
+      { areaCode: 'SG', name: 'TP. Hồ Chí Minh', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'VT', name: 'Bà Rịa - Vũng Tàu', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BD', name: 'Bình Dương', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BP', name: 'Bình Phước', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DNA', name: 'Đồng Nai', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TN', name: 'Tây Ninh', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'CT', name: 'Cần Thơ', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'AG', name: 'An Giang', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BL', name: 'Bạc Liêu', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'BT', name: 'Bến Tre', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'CM', name: 'Cà Mau', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'DT', name: 'Đồng Tháp', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'HGI', name: 'Hậu Giang', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'KG', name: 'Kiên Giang', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'LA', name: 'Long An', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'ST', name: 'Sóc Trăng', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TG', name: 'Tiền Giang', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'TV', name: 'Trà Vinh', region: 'nam', type: 'province', parentCode: 'ROOT' },
+      { areaCode: 'VL', name: 'Vĩnh Long', region: 'nam', type: 'province', parentCode: 'ROOT' }
     ];
 
     // ==========================================
@@ -1071,6 +1079,10 @@
       async getAllInspectors() {
         const snap = await getDocs(collection(db, "inspectors"));
         return snap.docs.map(d => ({ inspectorId: d.id, ...d.data() }));
+      },
+      async getAllZoneCoverages() {
+        const snap = await getDocs(collection(db, "zoneCoverage"));
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
       },
       async createZone(data) {
         if(!data.zoneId) data.zoneId = 'ZONE_' + Date.now();
@@ -1091,6 +1103,63 @@
       },
       async deleteInspector(id) {
         await deleteDoc(doc(db, "inspectors", id));
+      },
+
+      async updateZoneCoverage(zoneId, provinceCodes) {
+        if (!zoneId) return;
+        const snap = await getDocs(query(collection(db, "zoneCoverage"), where("zoneId", "==", zoneId)));
+        const existingDocs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // 1. Xóa các tỉnh bị bỏ chọn
+        for (const docItem of existingDocs) {
+          if (!provinceCodes.includes(docItem.provinceCode)) {
+            await deleteDoc(doc(db, "zoneCoverage", docItem.id)).catch(() => {});
+          }
+        }
+
+        // 2. Thêm hoặc cập nhật các tỉnh được chọn
+        for (const pCode of provinceCodes) {
+          const covId = `COV_${zoneId}_${pCode}`;
+          await setDoc(doc(db, "zoneCoverage", covId), {
+            id: covId,
+            zoneId: zoneId,
+            provinceCode: pCode,
+            wardCode: '*',
+            taskType: 'both',
+            isActive: true,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        }
+
+        // 3. Cập nhật provinceCodes và provinceNames vào document của Zone
+        const allAreas = await this.getAdministrativeAreas('ROOT');
+        const pNames = provinceCodes.map(c => allAreas.find(a => a.areaCode === c)?.name || c);
+        await updateDoc(doc(db, "zones", zoneId), {
+          provinceCodes: provinceCodes,
+          provinceNames: pNames,
+          provinceCode: provinceCodes[0] || null,
+          provinceName: pNames[0] || null
+        }).catch(() => {});
+      },
+
+      async removeZoneProvince(zoneId, provinceCode) {
+        const covId = `COV_${zoneId}_${provinceCode}`;
+        await deleteDoc(doc(db, "zoneCoverage", covId)).catch(() => {});
+        
+        const zoneDoc = await getDoc(doc(db, "zones", zoneId));
+        if (zoneDoc.exists()) {
+          const zData = zoneDoc.data();
+          const currentCodes = Array.isArray(zData.provinceCodes) ? zData.provinceCodes : (zData.provinceCode ? [zData.provinceCode] : []);
+          const newCodes = currentCodes.filter(c => c !== provinceCode);
+          const allAreas = await this.getAdministrativeAreas('ROOT');
+          const pNames = newCodes.map(c => allAreas.find(a => a.areaCode === c)?.name || c);
+          await updateDoc(doc(db, "zones", zoneId), {
+            provinceCodes: newCodes,
+            provinceNames: pNames,
+            provinceCode: newCodes[0] || null,
+            provinceName: pNames[0] || null
+          }).catch(() => {});
+        }
       },
 
       async getAdministrativeAreas(parentCode = 'ROOT') {
@@ -3527,6 +3596,508 @@ const scheduleEngine = new ScheduleEngine(dbService);
             alert("Đăng nhập thất bại: " + err.message);
           }
         });
+      },
+
+      // ----------------------------------------
+      // VIEW: PHÂN BỔ ĐỊA BÀN QUẢN LÝ (ZONE COVERAGE)
+      // ----------------------------------------
+      async renderCoverage(container) {
+        let zones = [];
+        let coverages = [];
+        let provinces = [];
+
+        try {
+          zones = await dbService.getAllZones();
+          coverages = await dbService.getAllZoneCoverages();
+          provinces = await dbService.getAdministrativeAreas('ROOT');
+        } catch (e) {
+          console.warn("Lỗi tải dữ liệu phân bổ địa bàn:", e);
+        }
+
+        // Lập bản đồ Tỉnh/Thành -> Zone đang gán (để hiển thị trạng thái)
+        const provToZoneMap = new Map();
+        coverages.forEach(c => {
+          if (c.isActive && c.provinceCode) {
+            const z = zones.find(item => item.zoneId === c.zoneId);
+            if (z) provToZoneMap.set(c.provinceCode, z);
+          }
+        });
+        zones.forEach(z => {
+          const codes = Array.isArray(z.provinceCodes) ? z.provinceCodes : (z.provinceCode ? [z.provinceCode] : []);
+          codes.forEach(c => {
+            if (!provToZoneMap.has(c)) provToZoneMap.set(c, z);
+          });
+        });
+
+        // Tính toán thống kê
+        const totalProvinces = provinces.length;
+        const assignedProvincesCount = provToZoneMap.size;
+        const unassignedProvinces = provinces.filter(p => !provToZoneMap.has(p.areaCode));
+
+        container.innerHTML = `
+          <div class="row g-4">
+            <!-- TOP STATS & CONTROLS -->
+            <div class="col-12">
+              <div class="card shadow-sm border-0">
+                <div class="card-header-clean py-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="header-icon-box" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #6d28d9; width: 44px; height: 44px; flex-shrink: 0;">
+                      <i data-lucide="map-pinned" style="width: 22px; height: 22px;"></i>
+                    </div>
+                    <div>
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 16.5px;">Phân Bổ Địa Bàn Quản Lý</h5>
+                        <span class="badge-soft badge-soft-purple fw-bold">${zones.length} Zone điều hành</span>
+                        <span class="badge-soft badge-soft-green fw-bold">Đã gán: ${assignedProvincesCount} / ${totalProvinces} Tỉnh</span>
+                        ${unassignedProvinces.length > 0 ? `<span class="badge-soft badge-soft-amber fw-bold">${unassignedProvinces.length} Tỉnh chưa gán</span>` : ''}
+                      </div>
+                      <small class="text-muted" style="font-size: 12.5px;">1 Zone có thể quản lý nhiều Tỉnh/Thành phố. Hệ thống tự động kích hoạt lịch trực của Zone khi tra cứu tại bất kỳ tỉnh nào thuộc địa bàn.</small>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="position-relative" style="min-width: 240px;">
+                      <i data-lucide="search" class="text-muted position-absolute" style="left: 12px; top: 11px; width: 16px; height: 16px;"></i>
+                      <input type="text" class="form-control" id="search-coverage" placeholder="Tìm theo Zone hoặc Tỉnh..." style="padding-left: 36px; height: 38px; font-size: 13px; border-radius: 8px;">
+                    </div>
+                  </div>
+                </div>
+
+                ${unassignedProvinces.length > 0 ? `
+                  <div class="px-4 py-3 border-top bg-light" style="background: #fffbeb !important; border-color: #fde68a !important;">
+                    <div class="d-flex align-items-start gap-2">
+                      <i data-lucide="alert-triangle" style="width: 17px; height: 17px; color: #d97706; flex-shrink: 0; margin-top: 2px;"></i>
+                      <div class="flex-grow-1">
+                        <div class="fw-bold text-dark" style="font-size: 13px;">Còn ${unassignedProvinces.length} Tỉnh / Thành phố chưa được phân bổ cho Zone nào:</div>
+                        <div class="d-flex flex-wrap gap-1 mt-1">
+                          ${unassignedProvinces.map(p => `
+                            <span class="badge bg-white text-dark border shadow-sm fw-normal py-1 px-2" style="font-size: 11.5px;">
+                              ${p.name} <span class="text-muted">(${p.areaCode})</span>
+                            </span>
+                          `).join('')}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            <!-- DANH SÁCH CÁC ZONE VÀ ĐỊA BÀN PHÂN BỔ -->
+            <div class="col-12">
+              <div class="row g-4" id="zone-coverage-grid">
+                <!-- Render via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- MODAL PHÂN BỔ TỈNH THÀNH CHO ZONE -->
+          <div class="modal fade" id="modalAssignCoverage" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1000px; width: 95%;">
+              <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg); overflow: hidden;">
+                <div class="modal-header py-3 px-4 border-bottom" style="background: #f8fafc;">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="header-icon-box" style="width: 36px; height: 36px; background: #ede9fe; color: #6d28d9; border-radius: 10px;">
+                      <i data-lucide="map-pinned" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <div>
+                      <h6 class="modal-title fw-bold text-dark mb-0" id="assign-modal-title" style="font-size: 16px;">Phân Bổ Tỉnh / Thành Phố</h6>
+                      <small class="text-muted" id="assign-modal-subtitle" style="font-size: 12px;">Tích chọn các tỉnh thành Zone sẽ chịu trách nhiệm quản lý</small>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4" style="max-height: 75vh; overflow-y: auto;">
+                  <input type="hidden" id="assign-target-zone-id" value="">
+
+                  <!-- BỘ LỌC TÌM KIẾM & TAB VÙNG MIỀN -->
+                  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 pb-3 border-bottom">
+                    <div class="position-relative" style="min-width: 260px; flex: 1;">
+                      <i data-lucide="search" class="text-muted position-absolute" style="left: 12px; top: 11px; width: 16px; height: 16px;"></i>
+                      <input type="text" class="form-control" id="modal-search-prov" placeholder="Tìm nhanh tỉnh thành..." style="padding-left: 36px; height: 38px; font-size: 13px; border-radius: 8px;">
+                    </div>
+
+                    <div class="d-flex gap-2">
+                      <button type="button" class="btn btn-sm btn-outline-primary" id="btn-select-all-tab" style="border-radius: 6px; font-size: 12px;">
+                        <i data-lucide="check-square" style="width: 13px;"></i> Chọn cả miền
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-deselect-all-tab" style="border-radius: 6px; font-size: 12px;">
+                        <i data-lucide="square" style="width: 13px;"></i> Bỏ chọn cả miền
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- TABS VÙNG MIỀN -->
+                  <ul class="nav nav-pills mb-3 gap-2" id="region-tabs" role="tablist">
+                    <li class="nav-item">
+                      <button class="nav-link active py-1 px-3 fw-semibold" data-region="all" style="border-radius: 8px; font-size: 13px;">Tất cả (63)</button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link py-1 px-3 fw-semibold" data-region="bac" style="border-radius: 8px; font-size: 13px;">Miền Bắc (25)</button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link py-1 px-3 fw-semibold" data-region="trung" style="border-radius: 8px; font-size: 13px;">Miền Trung (14)</button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link py-1 px-3 fw-semibold" data-region="tay_nguyen" style="border-radius: 8px; font-size: 13px;">Tây Nguyên (5)</button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link py-1 px-3 fw-semibold" data-region="nam" style="border-radius: 8px; font-size: 13px;">Miền Nam (19)</button>
+                    </li>
+                  </ul>
+
+                  <!-- GRID CHECKBOX CÁC TỈNH -->
+                  <div class="row g-2" id="modal-provinces-grid">
+                    <!-- Rendered by JS -->
+                  </div>
+                </div>
+
+                <div class="modal-footer py-3 px-4 border-top d-flex justify-content-between align-items-center" style="background: #f8fafc;">
+                  <div class="text-muted small">
+                    Đang chọn: <strong class="text-primary fs-6" id="modal-selected-count">0</strong> / 63 Tỉnh Thành
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius: var(--radius-md);">Hủy bỏ</button>
+                    <button type="button" class="btn btn-primary-action fw-bold px-4 shadow-sm" id="btn-save-zone-coverage" style="border-radius: var(--radius-md);">
+                      Lưu Phân Bổ Địa Bàn
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const modalEl = document.getElementById('modalAssignCoverage');
+        const coverageModal = new bootstrap.Modal(modalEl);
+
+        let activeSelectedSet = new Set();
+        let currentModalRegion = 'all';
+
+        const renderGrid = (filterTerm = '') => {
+          const gridEl = container.querySelector('#zone-coverage-grid');
+          if (zones.length === 0) {
+            gridEl.innerHTML = `
+              <div class="col-12">
+                <div class="card p-5 text-center shadow-sm border-0">
+                  <div style="width: 60px; height: 60px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    <i data-lucide="shield-alert" style="width: 28px; height: 28px; color: #94a3b8;"></i>
+                  </div>
+                  <h5 class="fw-bold text-dark">Chưa có Zone điều hành nào</h5>
+                  <p class="text-muted small mb-3">Vui lòng tạo Zone trong phần Quản Lý Nhân Sự trước khi phân bổ địa bàn.</p>
+                  <div>
+                    <a href="#personnel" class="btn btn-primary-action fw-semibold px-4">Đến Quản Lý Nhân Sự</a>
+                  </div>
+                </div>
+              </div>
+            `;
+            lucide.createIcons();
+            return;
+          }
+
+          const term = filterTerm.trim().toLowerCase();
+
+          const filteredZones = zones.filter(z => {
+            if (!term) return true;
+            const zName = (z.name || '').toLowerCase();
+            const zLead = (z.leadName || '').toLowerCase();
+            const zCode = (z.code || '').toLowerCase();
+            const assignedCodes = Array.isArray(z.provinceCodes) ? z.provinceCodes : (z.provinceCode ? [z.provinceCode] : []);
+            const matchProv = assignedCodes.some(c => {
+              const p = provinces.find(item => item.areaCode === c);
+              return p && (p.name.toLowerCase().includes(term) || p.areaCode.toLowerCase().includes(term));
+            });
+            return zName.includes(term) || zLead.includes(term) || zCode.includes(term) || matchProv;
+          });
+
+          if (filteredZones.length === 0) {
+            gridEl.innerHTML = `
+              <div class="col-12">
+                <div class="card p-5 text-center shadow-sm border-0 text-muted">
+                  Không tìm thấy Zone hoặc Tỉnh/Thành nào khớp với từ khóa "<strong>${filterTerm}</strong>".
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          gridEl.innerHTML = filteredZones.map(z => {
+            const zoneCovDocs = coverages.filter(c => c.zoneId === z.zoneId && c.isActive);
+            const covCodes = zoneCovDocs.map(c => c.provinceCode);
+            const directCodes = Array.isArray(z.provinceCodes) ? z.provinceCodes : (z.provinceCode ? [z.provinceCode] : []);
+            const allCodes = Array.from(new Set([...covCodes, ...directCodes])).filter(Boolean);
+
+            const provObjects = allCodes.map(c => provinces.find(p => p.areaCode === c)).filter(Boolean);
+
+            return `
+              <div class="col-lg-6 col-12">
+                <div class="card shadow-sm border-0 h-100" style="overflow: visible !important;">
+                  <div class="card-header-clean py-3 px-4 d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="header-icon-box" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #2563eb; width: 40px; height: 40px;">
+                        <i data-lucide="shield" style="width: 20px; height: 20px;"></i>
+                      </div>
+                      <div>
+                        <div class="d-flex align-items-center gap-2">
+                          <h6 class="fw-bold mb-0 text-dark" style="font-size: 15px;">${z.name}</h6>
+                          <code class="px-2 py-0 bg-light rounded border text-muted small">${z.code || z.zoneId}</code>
+                        </div>
+                        <small class="text-muted" style="font-size: 12px;">
+                          Trưởng Zone: <strong class="text-dark">${z.leadName || 'Chưa gán'}</strong> ${z.leadPhone ? `(${z.leadPhone})` : ''}
+                        </small>
+                      </div>
+                    </div>
+
+                    <button class="btn btn-sm btn-outline-primary fw-bold d-flex align-items-center gap-1 btn-open-assign px-3 py-1" data-zone-id="${z.zoneId}" style="border-radius: 8px; font-size: 12.5px;">
+                      <i data-lucide="map-pin-plus" style="width: 14px; height: 14px;"></i> Phân Bổ Địa Bàn
+                    </button>
+                  </div>
+
+                  <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="field-label text-primary mb-0">Địa bàn quản lý (${provObjects.length} Tỉnh/Thành):</span>
+                      <span class="badge-soft ${provObjects.length > 0 ? 'badge-soft-blue' : 'badge-soft-amber'} fw-bold" style="font-size: 11px;">
+                        ${provObjects.length > 0 ? 'Đang điều phối' : 'Chưa phân bổ'}
+                      </span>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-1 mt-2" style="min-height: 48px;">
+                      ${provObjects.length > 0 ? provObjects.map(p => `
+                        <span class="badge-soft badge-soft-blue d-inline-flex align-items-center gap-1 py-1 px-2 fw-semibold" style="font-size: 12.5px; border-radius: 8px;">
+                          <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i>
+                          ${p.name} <span class="text-muted" style="font-size: 10.5px;">(${p.areaCode})</span>
+                          <button type="button" class="btn-close ms-1 btn-remove-prov" data-zone-id="${z.zoneId}" data-code="${p.areaCode}" data-name="${p.name}" aria-label="Gỡ" style="width: 8px; height: 8px; font-size: 8px;"></button>
+                        </span>
+                      `).join('') : `
+                        <div class="text-muted fst-italic py-2 d-flex align-items-center gap-1" style="font-size: 12.5px;">
+                          <i data-lucide="info" style="width: 14px; height: 14px;"></i>
+                          Chưa phân bổ địa bàn nào. Bấm "Phân Bổ Địa Bàn" để bắt đầu gán tỉnh thành cho Zone này.
+                        </div>
+                      `}
+                    </div>
+                  </div>
+
+                  <div class="p-3 border-top bg-light d-flex justify-content-between align-items-center text-muted" style="font-size: 12px;">
+                    <div class="d-flex align-items-center gap-1">
+                      <span class="pulse-dot" style="width:6px; height:6px;"></span>
+                      <span>Tự động kích hoạt lịch trực của Zone khi có sự cố tại các tỉnh trên.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          lucide.createIcons();
+        };
+
+        const renderModalProvinces = (currentZid) => {
+          const grid = container.querySelector('#modal-provinces-grid');
+          const searchInput = container.querySelector('#modal-search-prov');
+          const term = searchInput.value.trim().toLowerCase();
+
+          const items = provinces.filter(p => {
+            const matchRegion = currentModalRegion === 'all' || p.region === currentModalRegion;
+            const matchSearch = !term || p.name.toLowerCase().includes(term) || p.areaCode.toLowerCase().includes(term);
+            return matchRegion && matchSearch;
+          });
+
+          grid.innerHTML = items.map(p => {
+            const isChecked = activeSelectedSet.has(p.areaCode);
+            const otherZone = provToZoneMap.get(p.areaCode);
+            const isOther = otherZone && otherZone.zoneId !== currentZid;
+
+            return `
+              <div class="col-md-3 col-sm-4 col-6 prov-item" data-region="${p.region || 'other'}">
+                <label class="p-2 border rounded-3 d-flex align-items-center justify-content-between gap-2 h-100 cursor-pointer prov-card-label ${isChecked ? 'bg-light border-primary' : 'bg-white'}" style="cursor: pointer; transition: all 0.15s; ${isChecked ? 'border-color: var(--primary) !important;' : ''}">
+                  <div class="d-flex align-items-center gap-2 overflow-hidden">
+                    <input type="checkbox" class="form-check-input chk-prov m-0" value="${p.areaCode}" ${isChecked ? 'checked' : ''} style="cursor: pointer; flex-shrink: 0;">
+                    <div class="text-truncate">
+                      <span class="fw-semibold text-dark d-block" style="font-size: 13px;">${p.name}</span>
+                      <small class="text-muted" style="font-size: 10.5px;">${p.areaCode}</small>
+                    </div>
+                  </div>
+                  ${isOther ? `<span class="badge bg-secondary text-white text-nowrap" style="font-size: 9px;" title="Đang gán cho ${otherZone.name}">Thuộc: ${otherZone.name}</span>` : ''}
+                </label>
+              </div>
+            `;
+          }).join('');
+
+          container.querySelector('#modal-selected-count').innerText = activeSelectedSet.size;
+
+          grid.querySelectorAll('.chk-prov').forEach(chk => {
+            chk.addEventListener('change', (e) => {
+              const code = e.target.value;
+              if (e.target.checked) {
+                activeSelectedSet.add(code);
+                e.target.closest('.prov-card-label').classList.add('bg-light', 'border-primary');
+              } else {
+                activeSelectedSet.delete(code);
+                e.target.closest('.prov-card-label').classList.remove('bg-light', 'border-primary');
+              }
+              container.querySelector('#modal-selected-count').innerText = activeSelectedSet.size;
+            });
+          });
+        };
+
+        renderGrid();
+
+        // Tìm kiếm Zone / Tỉnh
+        container.querySelector('#search-coverage').addEventListener('input', (e) => {
+          renderGrid(e.target.value);
+        });
+
+        // Xử lý mở Modal Phân Bổ
+        container.addEventListener('click', (e) => {
+          const btnAssign = e.target.closest('.btn-open-assign');
+          if (btnAssign) {
+            const zid = btnAssign.dataset.zoneId;
+            const targetZone = zones.find(z => z.zoneId === zid);
+            if (!targetZone) return;
+
+            container.querySelector('#assign-target-zone-id').value = zid;
+            container.querySelector('#assign-modal-title').innerText = `Phân Bổ Tỉnh / Thành Phố - ${targetZone.name}`;
+            container.querySelector('#assign-modal-subtitle').innerText = `Trưởng Zone: ${targetZone.leadName} (${targetZone.leadPhone || 'Chưa rõ SĐT'})`;
+
+            const zoneCovDocs = coverages.filter(c => c.zoneId === zid && c.isActive);
+            const covCodes = zoneCovDocs.map(c => c.provinceCode);
+            const directCodes = Array.isArray(targetZone.provinceCodes) ? targetZone.provinceCodes : (targetZone.provinceCode ? [targetZone.provinceCode] : []);
+            activeSelectedSet = new Set([...covCodes, ...directCodes]);
+
+            currentModalRegion = 'all';
+            container.querySelectorAll('#region-tabs .nav-link').forEach((b, idx) => {
+              if (idx === 0) b.classList.add('active');
+              else b.classList.remove('active');
+            });
+            container.querySelector('#modal-search-prov').value = '';
+
+            renderModalProvinces(zid);
+            coverageModal.show();
+          }
+
+          // Xử lý nút gỡ tỉnh trực tiếp trên badge
+          const btnRemove = e.target.closest('.btn-remove-prov');
+          if (btnRemove) {
+            const zid = btnRemove.dataset.zoneId;
+            const pCode = btnRemove.dataset.code;
+            const pName = btnRemove.dataset.name;
+            const targetZone = zones.find(z => z.zoneId === zid);
+
+            showConfirm({
+              title: 'Xác nhận gỡ địa bàn',
+              message: `Bạn có chắc chắn muốn gỡ tỉnh "${pName}" khỏi ${targetZone?.name || 'Zone này'} không? Khi xảy ra sự cố tại ${pName}, hệ thống sẽ không còn chuyển về Zone này nữa.`,
+              confirmText: 'Gỡ địa bàn',
+              type: 'danger',
+              onConfirm: async () => {
+                try {
+                  await dbService.removeZoneProvince(zid, pCode);
+                  showToast(`Đã gỡ tỉnh ${pName} thành công!`, "success");
+                  coverages = await dbService.getAllZoneCoverages();
+                  zones = await dbService.getAllZones();
+
+                  provToZoneMap.clear();
+                  coverages.forEach(c => {
+                    if (c.isActive && c.provinceCode) {
+                      const z = zones.find(item => item.zoneId === c.zoneId);
+                      if (z) provToZoneMap.set(c.provinceCode, z);
+                    }
+                  });
+                  zones.forEach(z => {
+                    const codes = Array.isArray(z.provinceCodes) ? z.provinceCodes : (z.provinceCode ? [z.provinceCode] : []);
+                    codes.forEach(c => {
+                      if (!provToZoneMap.has(c)) provToZoneMap.set(c, z);
+                    });
+                  });
+
+                  renderGrid(container.querySelector('#search-coverage').value);
+                } catch (err) {
+                  showToast("Lỗi khi gỡ: " + err.message, "error");
+                }
+              }
+            });
+          }
+        });
+
+        // Tab switching in modal
+        container.querySelectorAll('#region-tabs .nav-link').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            container.querySelectorAll('#region-tabs .nav-link').forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            currentModalRegion = e.currentTarget.dataset.region;
+            const currentZid = container.querySelector('#assign-target-zone-id').value;
+            renderModalProvinces(currentZid);
+          });
+        });
+
+        // Search within modal
+        container.querySelector('#modal-search-prov').addEventListener('input', () => {
+          const currentZid = container.querySelector('#assign-target-zone-id').value;
+          renderModalProvinces(currentZid);
+        });
+
+        // Chọn cả miền
+        container.querySelector('#btn-select-all-tab').addEventListener('click', () => {
+          const visibleChecks = container.querySelectorAll('#modal-provinces-grid .chk-prov');
+          visibleChecks.forEach(chk => {
+            if (!chk.checked) {
+              chk.checked = true;
+              activeSelectedSet.add(chk.value);
+              chk.closest('.prov-card-label').classList.add('bg-light', 'border-primary');
+            }
+          });
+          container.querySelector('#modal-selected-count').innerText = activeSelectedSet.size;
+        });
+
+        // Bỏ chọn cả miền
+        container.querySelector('#btn-deselect-all-tab').addEventListener('click', () => {
+          const visibleChecks = container.querySelectorAll('#modal-provinces-grid .chk-prov');
+          visibleChecks.forEach(chk => {
+            if (chk.checked) {
+              chk.checked = false;
+              activeSelectedSet.delete(chk.value);
+              chk.closest('.prov-card-label').classList.remove('bg-light', 'border-primary');
+            }
+          });
+          container.querySelector('#modal-selected-count').innerText = activeSelectedSet.size;
+        });
+
+        // Lưu phân bổ
+        container.querySelector('#btn-save-zone-coverage').addEventListener('click', async (e) => {
+          const btn = e.currentTarget;
+          btn.disabled = true;
+          const zid = container.querySelector('#assign-target-zone-id').value;
+          const selectedCodes = Array.from(activeSelectedSet);
+
+          try {
+            await dbService.updateZoneCoverage(zid, selectedCodes);
+            showToast('Đã lưu phân bổ địa bàn thành công!', 'success');
+            coverageModal.hide();
+
+            coverages = await dbService.getAllZoneCoverages();
+            zones = await dbService.getAllZones();
+
+            provToZoneMap.clear();
+            coverages.forEach(c => {
+              if (c.isActive && c.provinceCode) {
+                const z = zones.find(item => item.zoneId === c.zoneId);
+                if (z) provToZoneMap.set(c.provinceCode, z);
+              }
+            });
+            zones.forEach(z => {
+              const codes = Array.isArray(z.provinceCodes) ? z.provinceCodes : (z.provinceCode ? [z.provinceCode] : []);
+              codes.forEach(c => {
+                if (!provToZoneMap.has(c)) provToZoneMap.set(c, z);
+              });
+            });
+
+            renderGrid(container.querySelector('#search-coverage').value);
+          } catch (err) {
+            showToast('Lỗi khi lưu: ' + err.message, 'error');
+          } finally {
+            btn.disabled = false;
+          }
+        });
       }
     };
 
@@ -3577,6 +4148,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
             break;
           case '#rules':
             await views.renderRuleBuilder(this.viewport);
+            break;
+          case '#coverage':
+            await views.renderCoverage(this.viewport);
             break;
           case '#overrides':
             await views.renderOverrides(this.viewport);
