@@ -576,6 +576,44 @@
         opacity: 1;
       }
     }
+
+    /* =====================================================
+       5. PREMIUM TOAST NOTIFICATIONS (TOP-RIGHT)
+       ===================================================== */
+    .toast-container-custom {
+      position: fixed !important;
+      top: 24px !important;
+      right: 24px !important;
+      z-index: 1099 !important;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+      max-width: 380px;
+      width: calc(100% - 48px);
+    }
+
+    .toast-premium {
+      pointer-events: auto;
+      background: #ffffff !important;
+      color: var(--text-main) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: var(--radius-md) !important;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08) !important;
+      animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      overflow: hidden;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
   </style>
 
 </head>
@@ -788,16 +826,40 @@
     window.showToast = function(message, type = 'info') {
       const container = document.getElementById('toast-container');
       const toastEl = document.createElement('div');
-      toastEl.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'primary'} border-0 show mb-2`;
+      toastEl.className = 'toast toast-premium show mb-2 border-0';
       toastEl.setAttribute('role', 'alert');
+      
+      let iconMarkup = '<div style="width: 36px; height: 36px; border-radius: 50%; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i data-lucide="info" style="width: 18px; height: 18px;"></i></div>';
+      let titleText = 'Thông Báo';
+      let borderColor = '#3b82f6';
+      
+      if (type === 'success') {
+        iconMarkup = '<div style="width: 36px; height: 36px; border-radius: 50%; background: #ecfdf5; color: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i data-lucide="check-circle-2" style="width: 18px; height: 18px;"></i></div>';
+        titleText = 'Thành Công';
+        borderColor = '#10b981';
+      } else if (type === 'error') {
+        iconMarkup = '<div style="width: 36px; height: 36px; border-radius: 50%; background: #fff1f2; color: #ef4444; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i></div>';
+        titleText = 'Lỗi Thao Tác';
+        borderColor = '#ef4444';
+      }
+
+      toastEl.style.borderLeft = `4px solid ${borderColor}`;
       toastEl.innerHTML = `
-        <div class="d-flex">
-          <div class="toast-body">${message}</div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        <div class="d-flex align-items-center p-3 gap-3">
+          ${iconMarkup}
+          <div class="flex-grow-1" style="min-width: 0;">
+            <div class="fw-bold text-dark mb-0" style="font-size: 13.5px; line-height: 1.2;">${titleText}</div>
+            <div class="text-muted text-break mt-1" style="font-size: 12.5px; line-height: 1.4;">${message}</div>
+          </div>
+          <button type="button" class="btn-close ms-2 my-auto" style="font-size: 11px; opacity: 0.6;" data-bs-dismiss="toast"></button>
         </div>
       `;
       container.appendChild(toastEl);
-      setTimeout(() => { toastEl.remove(); }, 4000);
+      lucide.createIcons();
+
+      const toastInstance = new bootstrap.Toast(toastEl, { delay: 4000 });
+      toastInstance.show();
+      toastEl.addEventListener('hidden.bs.toast', () => { toastEl.remove(); });
     };
 
     window.showConfirm = function({ title = 'Xác Nhận Thao Tác', message = 'Bạn có chắc chắn muốn thực hiện?', confirmText = 'Xác Nhận', type = 'danger', onConfirm }) {
