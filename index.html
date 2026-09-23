@@ -1425,6 +1425,32 @@
         font-size: 11px;
       }
     }
+
+    /* Filter Section Badges */
+    .badge-filter-counter {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 1.5px 7.5px;
+      border-radius: 6px;
+      line-height: 1.25;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .badge-filter-counter.blue {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .badge-filter-counter.purple {
+      background: #f5f3ff;
+      color: #6d28d9;
+      border: 1px solid #ddd6fe;
+    }
   </style>
 
 </head>
@@ -7949,9 +7975,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 
                 <!-- 1. LỌC THEO TỈNH / THÀNH PHỐ -->
                 <div class="col-md-4">
-                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center justify-content-between mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
                     <span>1. Lọc theo Tỉnh / Thành phố</span>
-                    <span class="badge bg-light text-secondary border small fw-normal py-0 px-1.5" id="badge-admin-prov-count" style="font-size: 10.5px;">63 Tỉnh Thành</span>
+                    <span class="badge-filter-counter blue" id="badge-admin-prov-count">63 Tỉnh Thành</span>
                   </label>
                   <div class="custom-select-luxury" id="wrapper-admin-filter-prov" style="position: relative; z-index: 50;">
                     <button type="button" class="btn-custom-select btn-custom-select-md" id="btn-trigger-admin-prov" aria-expanded="false">
@@ -8040,9 +8066,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                 <!-- 2. PHÂN CẤP LOẠI HÌNH -->
                 <div class="col-md-3">
-                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center justify-content-between mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
                     <span>2. Phân cấp loại hình</span>
-                    <span class="badge bg-light text-secondary border small fw-normal py-0 px-1.5" id="badge-admin-type-label" style="font-size: 10.5px;">Tất cả</span>
+                    <span class="badge-filter-counter purple" id="badge-admin-type-label">Tất cả</span>
                   </label>
                   <div class="custom-select-luxury" id="wrapper-admin-filter-type" style="position: relative; z-index: 40;">
                     <button type="button" class="btn-custom-select btn-custom-select-md" id="btn-trigger-admin-type" aria-expanded="false">
@@ -8118,7 +8144,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                 <!-- 3. TÌM KIẾM NHANH THEO TÊN HOẶC MÃ -->
                 <div class="col-md-5">
-                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center justify-content-between mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
                     <span>3. Tìm kiếm nhanh theo tên hoặc mã</span>
                   </label>
                   <div class="premium-search-box premium-search-box-md" id="wrapper-admin-search">
@@ -8553,6 +8579,11 @@ const scheduleEngine = new ScheduleEngine(dbService);
           selectedProvince = val;
           provTitle.textContent = titleText || (val === 'ALL' ? '-- Tất cả 63 Tỉnh Thành --' : (provMap.get(val) || val));
           provDesc.textContent = descText || (val === 'ALL' ? 'Toàn quốc (63 Tỉnh/Thành)' : `Mã vùng: ${val}`);
+
+          const badgeProv = container.querySelector('#badge-admin-prov-count');
+          if (badgeProv) {
+            badgeProv.textContent = val === 'ALL' ? `${provinces.length || 63} Tỉnh Thành` : '1 Tỉnh/Thành';
+          }
 
           listProvOptions.querySelectorAll('.luxury-option-item').forEach(it => {
             if (it.dataset.value === val) {
