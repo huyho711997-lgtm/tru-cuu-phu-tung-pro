@@ -1297,6 +1297,100 @@
       font-size: 13.5px !important;
     }
 
+  
+    /* Ultra-Premium Luxury KPI Metric Cards (Fintech / Silicon Valley aesthetic) */
+    .kpi-card-luxury {
+      position: relative;
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: 14px;
+      padding: 13px 16px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 6px 18px -4px rgba(15, 23, 42, 0.04);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .kpi-card-luxury::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      opacity: 0.95;
+    }
+
+    .kpi-card-luxury.theme-blue::before {
+      background: linear-gradient(90deg, #2563eb, #60a5fa);
+    }
+    .kpi-card-luxury.theme-green::before {
+      background: linear-gradient(90deg, #059669, #34d399);
+    }
+    .kpi-card-luxury.theme-purple::before {
+      background: linear-gradient(90deg, #7c3aed, #a78bfa);
+    }
+    .kpi-card-luxury.theme-amber::before {
+      background: linear-gradient(90deg, #d97706, #fbbf24);
+    }
+
+    .kpi-card-luxury:hover {
+      transform: translateY(-2px);
+      border-color: #cbd5e1;
+      box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+    }
+
+    .kpi-icon-glow {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .kpi-card-luxury:hover .kpi-icon-glow {
+      transform: scale(1.08);
+    }
+
+    .kpi-icon-glow.blue {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+    }
+
+    .kpi-icon-glow.green {
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
+    }
+
+    .kpi-icon-glow.purple {
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+      color: #7c3aed;
+      border: 1px solid #ddd6fe;
+      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.15);
+    }
+
+    .kpi-icon-glow.amber {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      color: #d97706;
+      border: 1px solid #fde68a;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.15);
+    }
+
+    .kpi-num-luxury {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #0f172a;
+      line-height: 1.15;
+      margin: 3px 0 2px 0;
+    }
+
   </style>
 
 </head>
@@ -7759,54 +7853,69 @@ const scheduleEngine = new ScheduleEngine(dbService);
             </div>
           </div>
 
-          <!-- KPI THỐNG KÊ ĐỊA BÀN (THIẾT KẾ GỐC THU GỌN VỪA PHẢI) -->
-          <div class="row g-2 mb-3">
+          <!-- KPI THỐNG KÊ ĐỊA BÀN (ULTRA-PREMIUM LUXURY DESIGN) -->
+          <div class="row g-2.5 mb-3">
             <div class="col-6 col-lg-3">
-              <div class="kpi-card-metric-compact">
-                <div class="d-flex align-items-center justify-content-between mb-1">
-                  <span class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Tỉnh / Thành</span>
-                  <div class="metric-icon-box" style="background: #eff6ff; color: #2563eb; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center;">
-                    <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
+              <div class="kpi-card-luxury theme-blue">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="text-muted fw-bold text-uppercase" style="font-size: 11px; letter-spacing: 0.04em;">Tỉnh / Thành</span>
+                  <div class="kpi-icon-glow blue">
+                    <i data-lucide="globe" style="width: 16px; height: 16px;"></i>
                   </div>
                 </div>
-                <h4 class="fw-bold text-dark mb-0" style="font-size: 20px;">${provinces.length || 63}</h4>
-                <small class="text-muted" style="font-size: 11px;">Đơn vị hành chính cấp 1</small>
+                <div class="kpi-num-luxury">${provinces.length || 63}</div>
+                <div class="d-flex align-items-center gap-1.5 text-muted small" style="font-size: 11.5px; font-weight: 500;">
+                  <span style="width: 5px; height: 5px; border-radius: 50%; background: #3b82f6; display: inline-block;"></span>
+                  <span>Đơn vị hành chính cấp 1</span>
+                </div>
               </div>
             </div>
+
             <div class="col-6 col-lg-3">
-              <div class="kpi-card-metric-compact">
-                <div class="d-flex align-items-center justify-content-between mb-1">
-                  <span class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Quận / Huyện / TX</span>
-                  <div class="metric-icon-box" style="background: #ecfdf5; color: #059669; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center;">
-                    <i data-lucide="map-pin" style="width: 15px; height: 15px;"></i>
+              <div class="kpi-card-luxury theme-green">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="text-muted fw-bold text-uppercase" style="font-size: 11px; letter-spacing: 0.04em;">Quận / Huyện / TX</span>
+                  <div class="kpi-icon-glow green">
+                    <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
                   </div>
                 </div>
-                <h4 class="fw-bold text-dark mb-0" style="font-size: 20px;" id="kpi-total-districts">704</h4>
-                <small class="text-muted" style="font-size: 11px;">Đơn vị hành chính cấp 2</small>
+                <div class="kpi-num-luxury" id="kpi-total-districts">704</div>
+                <div class="d-flex align-items-center gap-1.5 text-muted small" style="font-size: 11.5px; font-weight: 500;">
+                  <span style="width: 5px; height: 5px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  <span>Đơn vị hành chính cấp 2</span>
+                </div>
               </div>
             </div>
+
             <div class="col-6 col-lg-3">
-              <div class="kpi-card-metric-compact">
-                <div class="d-flex align-items-center justify-content-between mb-1">
-                  <span class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Phường / Xã / TT</span>
-                  <div class="metric-icon-box" style="background: #f5f3ff; color: #7c3aed; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center;">
-                    <i data-lucide="compass" style="width: 15px; height: 15px;"></i>
+              <div class="kpi-card-luxury theme-purple">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="text-muted fw-bold text-uppercase" style="font-size: 11px; letter-spacing: 0.04em;">Phường / Xã / TT</span>
+                  <div class="kpi-icon-glow purple">
+                    <i data-lucide="compass" style="width: 16px; height: 16px;"></i>
                   </div>
                 </div>
-                <h4 class="fw-bold text-dark mb-0" style="font-size: 20px;" id="kpi-total-wards">--</h4>
-                <small class="text-muted" style="font-size: 11px;">Đơn vị hành chính cấp 3</small>
+                <div class="kpi-num-luxury" id="kpi-total-wards">--</div>
+                <div class="d-flex align-items-center gap-1.5 text-muted small" style="font-size: 11.5px; font-weight: 500;">
+                  <span style="width: 5px; height: 5px; border-radius: 50%; background: #8b5cf6; display: inline-block;"></span>
+                  <span>Đơn vị hành chính cấp 3</span>
+                </div>
               </div>
             </div>
+
             <div class="col-6 col-lg-3">
-              <div class="kpi-card-metric-compact">
-                <div class="d-flex align-items-center justify-content-between mb-1">
-                  <span class="text-muted small fw-bold text-uppercase" style="font-size: 11px;">Tùy Chỉnh (Cloud)</span>
-                  <div class="metric-icon-box" style="background: #fffbeb; color: #d97706; width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center;">
-                    <i data-lucide="cloud" style="width: 15px; height: 15px;"></i>
+              <div class="kpi-card-luxury theme-amber">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="text-muted fw-bold text-uppercase" style="font-size: 11px; letter-spacing: 0.04em;">Tùy Chỉnh (Cloud)</span>
+                  <div class="kpi-icon-glow amber">
+                    <i data-lucide="cloud" style="width: 16px; height: 16px;"></i>
                   </div>
                 </div>
-                <h4 class="fw-bold text-dark mb-0" style="font-size: 20px;" id="kpi-total-cloud">${customAreas.length}</h4>
-                <small class="text-muted" style="font-size: 11px;">Đã lưu trên Firestore</small>
+                <div class="kpi-num-luxury" id="kpi-total-cloud">${customAreas.length}</div>
+                <div class="d-flex align-items-center gap-1.5 text-muted small" style="font-size: 11.5px; font-weight: 500;">
+                  <span style="width: 5px; height: 5px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+                  <span>Đã lưu trên Firestore</span>
+                </div>
               </div>
             </div>
           </div>
