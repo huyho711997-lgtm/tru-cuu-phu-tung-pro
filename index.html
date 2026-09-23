@@ -557,6 +557,7 @@
     .dropdown-menu-luxury {
       position: absolute;
       top: calc(100% + 6px);
+      bottom: auto !important;
       left: 0;
       right: 0;
       z-index: 1080;
@@ -809,6 +810,95 @@
       box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15) !important;
       background-color: #ffffff !important;
       outline: none !important;
+    }
+
+    /* Main Toolbar Premium Search Bar */
+    .premium-search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-height: 58px;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 8px 16px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 2px 5px rgba(15, 23, 42, 0.04);
+      gap: 12px;
+    }
+
+    .premium-search-box:hover {
+      border-color: #94a3b8;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+
+    .premium-search-box:focus-within {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15), 0 2px 6px rgba(0, 0, 0, 0.04);
+      background: #ffffff;
+    }
+
+    .premium-search-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: #f1f5f9;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .premium-search-box:focus-within .premium-search-icon-box {
+      background: #eff6ff;
+      color: #2563eb;
+      transform: scale(1.05);
+    }
+
+    .premium-search-input {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #0f172a;
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .premium-search-input::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+      font-size: 13.5px;
+    }
+
+    .premium-search-clear-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: none;
+      background: #f1f5f9;
+      color: #64748b;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      padding: 0;
+    }
+
+    .premium-search-clear-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .premium-search-clear-btn.is-visible {
+      display: flex !important;
     }
 
     .btn {
@@ -6289,50 +6379,213 @@ const scheduleEngine = new ScheduleEngine(dbService);
             </div>
           </div>
 
-          <!-- BỘ LỌC ĐA NĂNG -->
-          <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px;">
-            <div class="card-body p-4">
+          <!-- BỘ LỌC ĐA NĂNG ULTRA-PREMIUM (KHÔNG DÙNG NATIVE SELECT - POP DOWNWARD) -->
+          <div class="card border-0 shadow-sm mb-4" style="border-radius: 18px; overflow: visible !important;">
+            <div class="card-body p-4" style="overflow: visible !important;">
               <div class="row g-3 align-items-end">
+                
+                <!-- 1. LỌC THEO TỈNH / THÀNH PHỐ (CUSTOM LUXURY DROPDOWN) -->
                 <div class="col-md-4">
-                  <label class="form-label small fw-bold text-uppercase" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
-                    1. Lọc theo Tỉnh / Thành phố
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center justify-content-between mb-2" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
+                    <span>1. Lọc theo Tỉnh / Thành phố</span>
+                    <span class="badge bg-light text-secondary border small fw-normal" id="badge-admin-prov-count">63 Tỉnh Thành</span>
                   </label>
-                  <select class="form-select" id="admin-filter-province" style="min-height: 48px; border-radius: 12px; font-weight: 600; font-size: 13.5px;">
-                    <option value="ALL">-- Tất cả 63 Tỉnh Thành --</option>
-                    ${provinces.map(p => `<option value="${p.areaCode}">${p.name} (${p.areaCode})</option>`).join('')}
-                  </select>
+                  <div class="custom-select-luxury" id="wrapper-admin-filter-prov" style="position: relative; z-index: 50;">
+                    <button type="button" class="btn-custom-select" id="btn-trigger-admin-prov" aria-expanded="false">
+                      <div class="d-flex align-items-center gap-3 overflow-hidden">
+                        <div class="custom-select-trigger-icon" id="admin-prov-icon" style="background: #eff6ff; color: #2563eb;">
+                          <i data-lucide="globe" style="width: 20px; height: 20px;"></i>
+                        </div>
+                        <div class="custom-select-trigger-text text-start">
+                          <div class="custom-select-trigger-title text-truncate" id="admin-prov-title" style="color: #0f172a; font-weight: 700;">
+                            -- Tất cả 63 Tỉnh Thành --
+                          </div>
+                          <div class="custom-select-trigger-desc text-truncate" id="admin-prov-desc">
+                            Toàn quốc (63 Tỉnh/Thành)
+                          </div>
+                        </div>
+                      </div>
+                      <div class="custom-select-trigger-arrow">
+                        <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
+                      </div>
+                    </button>
+
+                    <!-- Luxury Dropdown Popover (Opens Downward strictly) -->
+                    <div class="dropdown-menu-luxury d-none" id="menu-admin-filter-prov" style="min-width: 100%; padding: 0;">
+                      <!-- Search Box inside dropdown -->
+                      <div class="dropdown-search-box">
+                        <div class="dropdown-search-field">
+                          <span class="dropdown-search-icon-left">
+                            <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                          </span>
+                          <input type="text" class="dropdown-search-input" id="input-search-admin-prov" placeholder="Gõ tên tỉnh thành (VD: Hà Nội, Đắk Lắk)..." autocomplete="off">
+                          <button type="button" class="dropdown-search-clear-btn" id="btn-clear-search-admin-prov" title="Xóa tìm kiếm">
+                            <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Quick status / hint bar -->
+                      <div class="dropdown-search-bar-status">
+                        <span id="search-admin-prov-status">Toàn quốc (${provinces.length} Tỉnh/Thành)</span>
+                        <span class="text-secondary"><i data-lucide="sparkles" style="width: 11px; height: 11px; display: inline-block;"></i> Gõ không dấu được</span>
+                      </div>
+
+                      <!-- Options List -->
+                      <div class="luxury-options-list p-2" id="list-admin-prov-options" style="max-height: 250px; overflow-y: auto;">
+                        <!-- Option: All -->
+                        <div class="luxury-option-item active" data-value="ALL" data-name="-- Tất cả 63 Tỉnh Thành --" data-desc="Toàn quốc (63 Tỉnh/Thành)">
+                          <div class="d-flex align-items-center gap-3 overflow-hidden">
+                            <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
+                              <i data-lucide="globe" style="width: 17px; height: 17px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">-- Tất cả 63 Tỉnh Thành --</div>
+                              <div class="option-desc">Toàn quốc (63 Tỉnh/Thành)</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 20px; height: 20px;">
+                            <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                          </div>
+                        </div>
+                        ${provinces.map(p => `
+                          <div class="luxury-option-item" data-value="${p.areaCode}" data-name="${p.name}" data-desc="Mã vùng: ${p.areaCode}">
+                            <div class="d-flex align-items-center gap-3 overflow-hidden">
+                              <div class="option-icon" style="background: #f1f5f9; color: #475569;">
+                                <i data-lucide="map-pin" style="width: 17px; height: 17px;"></i>
+                              </div>
+                              <div class="option-content">
+                                <div class="option-title">${p.name}</div>
+                                <div class="option-desc">Mã vùng: ${p.areaCode}</div>
+                              </div>
+                            </div>
+                            <div class="option-check" style="width: 20px; height: 20px;">
+                              <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                            </div>
+                          </div>
+                        `).join('')}
+                      </div>
+
+                      <!-- Empty state if no search matches -->
+                      <div id="empty-search-admin-prov" class="p-4 text-center text-muted d-none">
+                        <i data-lucide="map-pin-off" style="width: 28px; height: 28px; color: #94a3b8; margin-bottom: 6px;"></i>
+                        <div class="fw-semibold small">Không tìm thấy tỉnh thành nào</div>
+                        <small class="text-secondary">Thử gõ lại từ khóa hoặc kiểm tra chính tả</small>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- 2. PHÂN CẤP LOẠI HÌNH (CUSTOM LUXURY DROPDOWN) -->
                 <div class="col-md-3">
-                  <label class="form-label small fw-bold text-uppercase" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
-                    2. Phân cấp loại hình
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center justify-content-between mb-2" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
+                    <span>2. Phân cấp loại hình</span>
+                    <span class="badge bg-light text-secondary border small fw-normal" id="badge-admin-type-label">Tất cả</span>
                   </label>
-                  <select class="form-select" id="admin-filter-type" style="min-height: 48px; border-radius: 12px; font-weight: 600; font-size: 13.5px;">
-                    <option value="ALL">Tất cả cấp bậc</option>
-                    <option value="district">Quận / Huyện / Thị xã / TP</option>
-                    <option value="ward">Phường / Xã / Thị trấn</option>
-                  </select>
+                  <div class="custom-select-luxury" id="wrapper-admin-filter-type" style="position: relative; z-index: 40;">
+                    <button type="button" class="btn-custom-select" id="btn-trigger-admin-type" aria-expanded="false">
+                      <div class="d-flex align-items-center gap-3 overflow-hidden">
+                        <div class="custom-select-trigger-icon" id="admin-type-icon" style="background: #f5f3ff; color: #7c3aed;">
+                          <i data-lucide="layers" style="width: 20px; height: 20px;"></i>
+                        </div>
+                        <div class="custom-select-trigger-text text-start">
+                          <div class="custom-select-trigger-title text-truncate" id="admin-type-title" style="color: #0f172a; font-weight: 700;">
+                            Tất cả cấp bậc
+                          </div>
+                          <div class="custom-select-trigger-desc text-truncate" id="admin-type-desc">
+                            Quận, Huyện, Phường, Xã
+                          </div>
+                        </div>
+                      </div>
+                      <div class="custom-select-trigger-arrow">
+                        <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
+                      </div>
+                    </button>
+
+                    <!-- Luxury Dropdown Popover (Opens Downward strictly) -->
+                    <div class="dropdown-menu-luxury d-none" id="menu-admin-filter-type" style="min-width: 100%; padding: 0;">
+                      <div class="luxury-options-list p-2" id="list-admin-type-options">
+                        <div class="luxury-option-item active" data-value="ALL" data-name="Tất cả cấp bậc" data-desc="Quận, Huyện, Phường, Xã">
+                          <div class="d-flex align-items-center gap-3 overflow-hidden">
+                            <div class="option-icon" style="background: #f5f3ff; color: #7c3aed;">
+                              <i data-lucide="layers" style="width: 17px; height: 17px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">Tất cả cấp bậc</div>
+                              <div class="option-desc">Hiển thị cả cấp 2 và cấp 3</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 20px; height: 20px;">
+                            <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                          </div>
+                        </div>
+
+                        <div class="luxury-option-item" data-value="district" data-name="Quận / Huyện / Thị xã / TP" data-desc="Đơn vị hành chính cấp 2">
+                          <div class="d-flex align-items-center gap-3 overflow-hidden">
+                            <div class="option-icon" style="background: #ecfdf5; color: #059669;">
+                              <i data-lucide="map-pin" style="width: 17px; height: 17px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">Quận / Huyện / Thị xã / TP</div>
+                              <div class="option-desc">Đơn vị hành chính cấp 2</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 20px; height: 20px;">
+                            <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                          </div>
+                        </div>
+
+                        <div class="luxury-option-item" data-value="ward" data-name="Phường / Xã / Thị trấn" data-desc="Đơn vị hành chính cấp 3">
+                          <div class="d-flex align-items-center gap-3 overflow-hidden">
+                            <div class="option-icon" style="background: #f5f3ff; color: #7c3aed;">
+                              <i data-lucide="compass" style="width: 17px; height: 17px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">Phường / Xã / Thị trấn</div>
+                              <div class="option-desc">Đơn vị hành chính cấp 3</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 20px; height: 20px;">
+                            <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- 3. TÌM KIẾM NHANH THEO TÊN HOẶC MÃ (ULTRA-PREMIUM SEARCH BOX) -->
                 <div class="col-md-5">
-                  <label class="form-label small fw-bold text-uppercase" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
-                    3. Tìm kiếm nhanh theo tên hoặc mã
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center justify-content-between mb-2" style="color: #475569; font-size: 12px; letter-spacing: 0.03em;">
+                    <span>3. Tìm kiếm nhanh theo tên hoặc mã</span>
+                    <span class="badge bg-light text-secondary border small fw-normal d-none d-sm-inline-block">Real-time Filter</span>
                   </label>
-                  <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0" style="border-radius: 12px 0 0 12px; border-color: #e2e8f0;">
-                      <i data-lucide="search" style="width: 17px; color: #94a3b8;"></i>
-                    </span>
-                    <input type="text" class="form-control border-start-0" id="admin-filter-search" placeholder="Gõ tên (VD: Tân Lợi, Buôn Ma Thuột, Hoàn Kiếm)..." style="min-height: 48px; border-radius: 0 12px 12px 0; border-color: #e2e8f0; font-size: 13.5px;">
+                  <div class="premium-search-box" id="wrapper-admin-search">
+                    <div class="premium-search-icon-box">
+                      <i data-lucide="search" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <input type="text" class="premium-search-input" id="admin-filter-search" placeholder="Gõ tên hoặc mã (VD: Tân Lợi, Buôn Ma Thuột, DL_01)..." autocomplete="off">
+                    <button type="button" class="premium-search-clear-btn" id="btn-admin-search-clear" title="Xóa từ khóa tìm kiếm">
+                      <i data-lucide="x" style="width: 13px; height: 13px;"></i>
+                    </button>
+                    <div class="d-none d-md-flex align-items-center ps-2 border-start">
+                      <span class="badge-soft badge-soft-blue" style="font-size: 11px; padding: 4px 8px;">
+                        <i data-lucide="sparkles" style="width: 11px; height: 11px;"></i> Gõ không dấu
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
 
+              <!-- Thanh trạng thái kết quả lọc -->
               <div class="d-flex align-items-center justify-content-between mt-3 pt-3 border-top flex-wrap gap-2">
                 <div class="d-flex align-items-center gap-2">
-                  <span class="badge bg-primary rounded-pill px-2.5 py-1.5" id="badge-total-match">0 đơn vị</span>
-                  <small class="text-muted" id="label-filter-context">Đang lọc danh sách</small>
+                  <span class="badge bg-primary rounded-pill px-3 py-1.5 fw-bold" id="badge-total-match">0 đơn vị</span>
+                  <small class="text-muted fw-semibold" id="label-filter-context">Đang tải danh sách địa bàn...</small>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                  <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-secondary" id="btn-reset-filters">
-                    <i data-lucide="rotate-ccw" style="width: 13px;"></i> Đặt lại bộ lọc
+                  <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-secondary fw-semibold" id="btn-reset-filters">
+                    <i data-lucide="rotate-ccw" style="width: 13px; margin-right: 2px;"></i> Đặt lại bộ lọc
                   </button>
                 </div>
               </div>
@@ -6524,7 +6777,6 @@ const scheduleEngine = new ScheduleEngine(dbService);
         // Render Table & Thống kê
         const renderTable = () => {
           const allItems = buildMasterList();
-          const rawKw = searchKeyword.trim().toLowerCase();
           const normKw = removeVietnameseTones(searchKeyword);
 
           // Lọc danh sách theo type và keyword
@@ -6641,39 +6893,235 @@ const scheduleEngine = new ScheduleEngine(dbService);
           lucide.createIcons();
         };
 
-        // Gắn sự kiện bộ lọc
-        const selProv = container.querySelector('#admin-filter-province');
-        const selType = container.querySelector('#admin-filter-type');
+        // ------------------------------------
+        // 1. DROPDOWN TỈNH THÀNH (PROVINCE)
+        // ------------------------------------
+        const wrapperProv = container.querySelector('#wrapper-admin-filter-prov');
+        const btnTriggerProv = container.querySelector('#btn-trigger-admin-prov');
+        const menuProv = container.querySelector('#menu-admin-filter-prov');
+        const provTitle = container.querySelector('#admin-prov-title');
+        const provDesc = container.querySelector('#admin-prov-desc');
+        const inputSearchProv = container.querySelector('#input-search-admin-prov');
+        const btnClearSearchProv = container.querySelector('#btn-clear-search-admin-prov');
+        const listProvOptions = container.querySelector('#list-admin-prov-options');
+        const emptySearchProv = container.querySelector('#empty-search-admin-prov');
+        const statusSearchProv = container.querySelector('#search-admin-prov-status');
+
+        const toggleProvDropdown = (forceOpen = null) => {
+          const isOpen = forceOpen !== null ? forceOpen : menuProv.classList.contains('d-none');
+          if (isOpen) {
+            closeTypeDropdown();
+            menuProv.classList.remove('d-none');
+            wrapperProv.classList.add('is-open');
+            btnTriggerProv.setAttribute('aria-expanded', 'true');
+            if (inputSearchProv) {
+              setTimeout(() => inputSearchProv.focus(), 120);
+            }
+          } else {
+            menuProv.classList.add('d-none');
+            wrapperProv.classList.remove('is-open');
+            btnTriggerProv.setAttribute('aria-expanded', 'false');
+          }
+        };
+
+        const closeProvDropdown = () => toggleProvDropdown(false);
+
+        btnTriggerProv.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleProvDropdown();
+        });
+
+        if (inputSearchProv) {
+          inputSearchProv.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            const normVal = removeVietnameseTones(val);
+            if (btnClearSearchProv) {
+              btnClearSearchProv.style.display = val ? 'flex' : 'none';
+            }
+
+            const items = listProvOptions.querySelectorAll('.luxury-option-item');
+            let matchCount = 0;
+            items.forEach(item => {
+              const name = item.dataset.name || '';
+              const code = item.dataset.value || '';
+              const normName = removeVietnameseTones(name);
+              const normCode = removeVietnameseTones(code);
+
+              if (!normVal || normName.includes(normVal) || normCode.includes(normVal) || code === 'ALL') {
+                item.classList.remove('d-none');
+                matchCount++;
+              } else {
+                item.classList.add('d-none');
+              }
+            });
+
+            if (emptySearchProv) {
+              if (matchCount === 0) {
+                emptySearchProv.classList.remove('d-none');
+              } else {
+                emptySearchProv.classList.add('d-none');
+              }
+            }
+
+            if (statusSearchProv) {
+              statusSearchProv.textContent = val ? `Tìm thấy ${matchCount} tỉnh thành` : `Toàn quốc (${provinces.length} Tỉnh/Thành)`;
+            }
+          });
+
+          if (btnClearSearchProv) {
+            btnClearSearchProv.addEventListener('click', (e) => {
+              e.stopPropagation();
+              inputSearchProv.value = '';
+              inputSearchProv.dispatchEvent(new Event('input'));
+              inputSearchProv.focus();
+            });
+          }
+        }
+
+        const setProvinceSelection = (val, titleText, descText) => {
+          selectedProvince = val;
+          provTitle.textContent = titleText || (val === 'ALL' ? '-- Tất cả 63 Tỉnh Thành --' : (provMap.get(val) || val));
+          provDesc.textContent = descText || (val === 'ALL' ? 'Toàn quốc (63 Tỉnh/Thành)' : `Mã vùng: ${val}`);
+
+          listProvOptions.querySelectorAll('.luxury-option-item').forEach(it => {
+            if (it.dataset.value === val) {
+              it.classList.add('active');
+            } else {
+              it.classList.remove('active');
+            }
+          });
+
+          displayLimit = 60;
+          renderTable();
+          closeProvDropdown();
+        };
+
+        listProvOptions.addEventListener('click', (e) => {
+          const item = e.target.closest('.luxury-option-item');
+          if (!item) return;
+          const val = item.dataset.value;
+          const name = item.dataset.name;
+          const desc = item.dataset.desc;
+          setProvinceSelection(val, name, desc);
+        });
+
+        // ------------------------------------
+        // 2. DROPDOWN PHÂN CẤP (TYPE)
+        // ------------------------------------
+        const wrapperType = container.querySelector('#wrapper-admin-filter-type');
+        const btnTriggerType = container.querySelector('#btn-trigger-admin-type');
+        const menuType = container.querySelector('#menu-admin-filter-type');
+        const typeTitle = container.querySelector('#admin-type-title');
+        const typeDesc = container.querySelector('#admin-type-desc');
+        const listTypeOptions = container.querySelector('#list-admin-type-options');
+        const badgeTypeLabel = container.querySelector('#badge-admin-type-label');
+
+        const toggleTypeDropdown = (forceOpen = null) => {
+          const isOpen = forceOpen !== null ? forceOpen : menuType.classList.contains('d-none');
+          if (isOpen) {
+            closeProvDropdown();
+            menuType.classList.remove('d-none');
+            wrapperType.classList.add('is-open');
+            btnTriggerType.setAttribute('aria-expanded', 'true');
+          } else {
+            menuType.classList.add('d-none');
+            wrapperType.classList.remove('is-open');
+            btnTriggerType.setAttribute('aria-expanded', 'false');
+          }
+        };
+
+        const closeTypeDropdown = () => toggleTypeDropdown(false);
+
+        btnTriggerType.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleTypeDropdown();
+        });
+
+        const setTypeSelection = (val, titleText, descText) => {
+          selectedType = val;
+          typeTitle.textContent = titleText;
+          typeDesc.textContent = descText;
+          if (badgeTypeLabel) {
+            badgeTypeLabel.textContent = val === 'ALL' ? 'Tất cả' : (val === 'district' ? 'Cấp 2' : 'Cấp 3');
+          }
+
+          listTypeOptions.querySelectorAll('.luxury-option-item').forEach(it => {
+            if (it.dataset.value === val) {
+              it.classList.add('active');
+            } else {
+              it.classList.remove('active');
+            }
+          });
+
+          displayLimit = 60;
+          renderTable();
+          closeTypeDropdown();
+        };
+
+        listTypeOptions.addEventListener('click', (e) => {
+          const item = e.target.closest('.luxury-option-item');
+          if (!item) return;
+          const val = item.dataset.value;
+          const name = item.dataset.name;
+          const desc = item.dataset.desc;
+          setTypeSelection(val, name, desc);
+        });
+
+        // ------------------------------------
+        // 3. TÌM KIẾM NHANH (LIVE SEARCH)
+        // ------------------------------------
         const inputSearch = container.querySelector('#admin-filter-search');
+        const btnClearSearch = container.querySelector('#btn-admin-search-clear');
         const btnReset = container.querySelector('#btn-reset-filters');
         const btnLoadMore = container.querySelector('#btn-load-more-areas');
 
-        selProv.addEventListener('change', (e) => {
-          selectedProvince = e.target.value;
-          displayLimit = 60;
-          renderTable();
-        });
-
-        selType.addEventListener('change', (e) => {
-          selectedType = e.target.value;
-          displayLimit = 60;
-          renderTable();
-        });
-
         inputSearch.addEventListener('input', (e) => {
           searchKeyword = e.target.value;
+          if (btnClearSearch) {
+            if (searchKeyword.trim().length > 0) {
+              btnClearSearch.classList.add('is-visible');
+            } else {
+              btnClearSearch.classList.remove('is-visible');
+            }
+          }
           displayLimit = 60;
           renderTable();
         });
 
+        if (btnClearSearch) {
+          btnClearSearch.addEventListener('click', () => {
+            inputSearch.value = '';
+            searchKeyword = '';
+            btnClearSearch.classList.remove('is-visible');
+            displayLimit = 60;
+            renderTable();
+            inputSearch.focus();
+          });
+        }
+
+        // Đóng dropdown khi click ngoài
+        const handleOutsideClick = (e) => {
+          if (wrapperProv && !wrapperProv.contains(e.target)) {
+            closeProvDropdown();
+          }
+          if (wrapperType && !wrapperType.contains(e.target)) {
+            closeTypeDropdown();
+          }
+        };
+        document.addEventListener('click', handleOutsideClick);
+
+        // Reset bộ lọc
         btnReset.addEventListener('click', () => {
-          selectedProvince = 'ALL';
-          selectedType = 'ALL';
-          searchKeyword = '';
-          displayLimit = 60;
-          selProv.value = 'ALL';
-          selType.value = 'ALL';
+          setProvinceSelection('ALL', '-- Tất cả 63 Tỉnh Thành --', 'Toàn quốc (63 Tỉnh/Thành)');
+          setTypeSelection('ALL', 'Tất cả cấp bậc', 'Quận, Huyện, Phường, Xã');
           inputSearch.value = '';
+          searchKeyword = '';
+          if (btnClearSearch) btnClearSearch.classList.remove('is-visible');
+          if (inputSearchProv) {
+            inputSearchProv.value = '';
+            inputSearchProv.dispatchEvent(new Event('input'));
+          }
+          displayLimit = 60;
           renderTable();
         });
 
@@ -6835,9 +7283,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             // Cập nhật lại dữ liệu
             customAreas = await dbService.getAllCustomAdministrativeAreas();
-            selectedProvince = parentCode;
-            selProv.value = parentCode;
-            renderTable();
+            const pName = provMap.get(parentCode) || parentCode;
+            setProvinceSelection(parentCode, pName, `Mã vùng: ${parentCode}`);
           } catch (err) {
             showToast('Lỗi khi lưu: ' + err.message, 'error');
           } finally {
