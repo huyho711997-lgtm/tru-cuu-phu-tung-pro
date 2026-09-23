@@ -675,6 +675,107 @@
       display: flex;
     }
 
+    /* Search Box inside Dropdown Popover */
+    .dropdown-search-box {
+      padding: 10px 12px 8px 12px;
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      z-index: 10;
+      border-bottom: 1px solid #f1f5f9;
+      border-radius: 14px 14px 0 0;
+    }
+
+    .dropdown-search-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .dropdown-search-input {
+      width: 100%;
+      height: 40px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 6px 36px 6px 36px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #0f172a;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-search-input:focus {
+      background: #ffffff;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      outline: none;
+    }
+
+    .dropdown-search-input::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .dropdown-search-icon-left {
+      position: absolute;
+      left: 12px;
+      color: #94a3b8;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .dropdown-search-clear-btn {
+      position: absolute;
+      right: 10px;
+      background: #e2e8f0;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.15s ease;
+    }
+
+    .dropdown-search-clear-btn:hover {
+      background: #cbd5e1;
+      color: #0f172a;
+    }
+
+    .dropdown-search-bar-status {
+      padding: 6px 14px;
+      font-size: 11.5px;
+      color: #64748b;
+      background: #f8fafc;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .luxury-options-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .luxury-options-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .luxury-options-list::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .luxury-options-list::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
     /* Refined form selects for subordinate controls */
     .form-select-luxury {
       border-radius: 10px !important;
@@ -2652,21 +2753,157 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       </div>
                     </div>
 
-                    <!-- 2. Tỉnh / Thành phố -->
+                    <!-- 2. Tỉnh / Thành phố (LUXURY SEARCHABLE DROPDOWN) -->
                     <div class="mb-3">
-                      <label class="field-label">2. Tỉnh / Thành phố</label>
-                      <select class="form-select" id="lookup-province" required>
-                        <option value="">-- Chọn Tỉnh / Thành Phố --</option>
-                        ${provinces.map(p => `<option value="${p.areaCode}">${p.name}</option>`).join('')}
-                      </select>
+                      <label class="field-label d-flex justify-content-between align-items-center mb-1.5">
+                        <span>2. Tỉnh / Thành phố <span class="text-danger">*</span></span>
+                        <span class="badge bg-light text-secondary border small fw-normal" id="province-count-badge">${provinces.length} Tỉnh thành</span>
+                      </label>
+                      
+                      <div class="custom-select-luxury" id="wrapper-lookup-province" style="position: relative; z-index: 35;">
+                        <input type="hidden" id="lookup-province" value="">
+
+                        <!-- Trigger Button -->
+                        <button type="button" class="btn-custom-select" id="btn-trigger-lookup-province" aria-expanded="false" style="min-height: 48px; border-radius: 12px;">
+                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="custom-select-trigger-icon" id="province-trigger-icon" style="background: #eff6ff; color: #2563eb;">
+                              <i data-lucide="map-pin" style="width: 17px; height: 17px;"></i>
+                            </div>
+                            <div class="custom-select-trigger-text text-start">
+                              <div class="custom-select-trigger-title text-truncate" id="province-trigger-title" style="color: #64748b; font-weight: 500;">
+                                -- Chọn Tỉnh / Thành Phố --
+                              </div>
+                              <div class="custom-select-trigger-desc text-truncate" id="province-trigger-desc">
+                                Nhấp hoặc gõ từ khóa để tìm kiếm nhanh
+                              </div>
+                            </div>
+                          </div>
+                          <div class="custom-select-trigger-arrow">
+                            <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
+                          </div>
+                        </button>
+
+                        <!-- Searchable Luxury Dropdown Popover -->
+                        <div class="dropdown-menu-luxury d-none" id="menu-lookup-province" style="min-width: 100%; max-height: 360px; padding: 0;">
+                          <!-- Search Box inside dropdown -->
+                          <div class="dropdown-search-box">
+                            <div class="dropdown-search-field">
+                              <span class="dropdown-search-icon-left">
+                                <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                              </span>
+                              <input type="text" class="dropdown-search-input" id="input-search-province" placeholder="Gõ tên tỉnh thành (VD: Hà Nội, Đắk Lắk)..." autocomplete="off">
+                              <button type="button" class="dropdown-search-clear-btn" id="btn-clear-search-province" title="Xóa tìm kiếm">
+                                <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <!-- Quick status / hint bar -->
+                          <div class="dropdown-search-bar-status">
+                            <span id="search-province-status">Toàn quốc (${provinces.length} Tỉnh/Thành)</span>
+                            <span class="text-secondary"><i data-lucide="sparkles" style="width: 11px; height: 11px; display: inline-block;"></i> Gõ không dấu được</span>
+                          </div>
+
+                          <!-- Options List -->
+                          <div class="luxury-options-list p-2" id="list-province-options" style="max-height: 250px; overflow-y: auto;">
+                            ${provinces.map(p => `
+                              <div class="luxury-option-item" data-value="${p.areaCode}" data-name="${p.name}">
+                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                  <div class="option-icon" style="background: #eff6ff; color: #2563eb; width: 32px; height: 32px;">
+                                    <i data-lucide="map-pin" style="width: 15px; height: 15px;"></i>
+                                  </div>
+                                  <div class="option-content">
+                                    <div class="option-title">${p.name}</div>
+                                    <div class="option-desc">Mã vùng: ${p.areaCode}</div>
+                                  </div>
+                                </div>
+                                <div class="option-check" style="width: 20px; height: 20px;">
+                                  <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                                </div>
+                              </div>
+                            `).join('')}
+                          </div>
+
+                          <!-- Empty state if no search matches -->
+                          <div id="empty-search-province" class="p-4 text-center text-muted d-none">
+                            <i data-lucide="map-pin-off" style="width: 28px; height: 28px; color: #94a3b8; margin-bottom: 6px;"></i>
+                            <div class="fw-semibold small">Không tìm thấy tỉnh thành nào</div>
+                            <small class="text-secondary">Thử gõ lại từ khóa hoặc kiểm tra chính tả</small>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    <!-- 3. Quận / Huyện / Xã / Phường -->
+                    <!-- 3. Quận / Huyện / Xã / Phường (LUXURY SEARCHABLE DROPDOWN) -->
                     <div class="mb-3">
-                      <label class="field-label">3. Xã / Phường / Huyện</label>
-                      <select class="form-select" id="lookup-ward">
-                        <option value="*">-- Toàn tỉnh / Chưa rõ chi tiết --</option>
-                      </select>
+                      <label class="field-label d-flex justify-content-between align-items-center mb-1.5">
+                        <span>3. Xã / Phường / Huyện</span>
+                        <span class="badge bg-light text-secondary border small fw-normal" id="ward-count-badge">Chưa chọn tỉnh</span>
+                      </label>
+                      
+                      <div class="custom-select-luxury" id="wrapper-lookup-ward" style="position: relative; z-index: 30;">
+                        <input type="hidden" id="lookup-ward" value="*">
+
+                        <button type="button" class="btn-custom-select" id="btn-trigger-lookup-ward" aria-expanded="false" style="min-height: 48px; border-radius: 12px;">
+                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="custom-select-trigger-icon" id="ward-trigger-icon" style="background: #f1f5f9; color: #475569;">
+                              <i data-lucide="compass" style="width: 17px; height: 17px;"></i>
+                            </div>
+                            <div class="custom-select-trigger-text text-start">
+                              <div class="custom-select-trigger-title text-truncate" id="ward-trigger-title">
+                                -- Toàn tỉnh / Chưa rõ chi tiết --
+                              </div>
+                              <div class="custom-select-trigger-desc text-truncate" id="ward-trigger-desc">
+                                Phân bổ chung cho toàn địa bàn tỉnh
+                              </div>
+                            </div>
+                          </div>
+                          <div class="custom-select-trigger-arrow">
+                            <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
+                          </div>
+                        </button>
+
+                        <div class="dropdown-menu-luxury d-none" id="menu-lookup-ward" style="min-width: 100%; max-height: 360px; padding: 0;">
+                          <div class="dropdown-search-box">
+                            <div class="dropdown-search-field">
+                              <span class="dropdown-search-icon-left">
+                                <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                              </span>
+                              <input type="text" class="dropdown-search-input" id="input-search-ward" placeholder="Gõ tìm xã / phường / huyện..." autocomplete="off">
+                              <button type="button" class="dropdown-search-clear-btn" id="btn-clear-search-ward" title="Xóa tìm kiếm">
+                                <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div class="dropdown-search-bar-status">
+                            <span id="search-ward-status">Toàn địa bàn</span>
+                            <span class="text-secondary"><i data-lucide="sparkles" style="width: 11px; height: 11px; display: inline-block;"></i> Gõ không dấu được</span>
+                          </div>
+
+                          <div class="luxury-options-list p-2" id="list-ward-options" style="max-height: 250px; overflow-y: auto;">
+                            <div class="luxury-option-item active" data-value="*" data-name="Toàn tỉnh / Chưa rõ chi tiết">
+                              <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="option-icon" style="background: #f1f5f9; color: #475569; width: 32px; height: 32px;">
+                                  <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
+                                </div>
+                                <div class="option-content">
+                                  <div class="option-title">Toàn tỉnh / Chưa rõ chi tiết</div>
+                                  <div class="option-desc">Áp dụng cho mọi vị trí trong tỉnh</div>
+                                </div>
+                              </div>
+                              <div class="option-check" style="width: 20px; height: 20px;">
+                                <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div id="empty-search-ward" class="p-4 text-center text-muted d-none">
+                            <i data-lucide="map-pin-off" style="width: 28px; height: 28px; color: #94a3b8; margin-bottom: 6px;"></i>
+                            <div class="fw-semibold small">Không tìm thấy xã / phường nào</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <!-- 4. Ô tìm kiếm Gara (Chỉ hiện khi chọn Chi tiết) -->
@@ -2735,23 +2972,349 @@ const scheduleEngine = new ScheduleEngine(dbService);
           });
         });
 
-        // Thay đổi Tỉnh/Thành -> Load Xã/Phường
+        // Helper loại bỏ dấu tiếng Việt để tìm kiếm gợi ý linh hoạt
+        const removeVietnameseTones = (str) => {
+          if (!str) return '';
+          return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D')
+            .toLowerCase()
+            .trim();
+        };
+
+        // DOM elements cho Bộ chọn Tỉnh/Thành phố
+        const wrapProv = container.querySelector('#wrapper-lookup-province');
+        const btnProv = container.querySelector('#btn-trigger-lookup-province');
+        const menuProv = container.querySelector('#menu-lookup-province');
+        const inputSearchProv = container.querySelector('#input-search-province');
+        const btnClearProv = container.querySelector('#btn-clear-search-province');
+        const statusProv = container.querySelector('#search-province-status');
+        const emptyProv = container.querySelector('#empty-search-province');
+        const listProv = container.querySelector('#list-province-options');
         const selProv = container.querySelector('#lookup-province');
+
+        // DOM elements cho Bộ chọn Xã/Phường
+        const wrapWard = container.querySelector('#wrapper-lookup-ward');
+        const btnWard = container.querySelector('#btn-trigger-lookup-ward');
+        const menuWard = container.querySelector('#menu-lookup-ward');
+        const inputSearchWard = container.querySelector('#input-search-ward');
+        const btnClearWard = container.querySelector('#btn-clear-search-ward');
+        const statusWard = container.querySelector('#search-ward-status');
+        const emptyWard = container.querySelector('#empty-search-ward');
+        const listWard = container.querySelector('#list-ward-options');
         const selWard = container.querySelector('#lookup-ward');
-        selProv.addEventListener('change', async (e) => {
-          const val = e.target.value;
-          selWard.innerHTML = '<option value="*">-- Toàn tỉnh / Chưa rõ chi tiết --</option>';
-          if (val) {
-            try {
-              const wards = await dbService.getAdministrativeAreas(val);
-              wards.forEach(w => {
-                selWard.innerHTML += `<option value="${w.areaCode}">${w.name}</option>`;
-              });
-            } catch (err) {
-              console.error(err);
-            }
+        const badgeWardCount = container.querySelector('#ward-count-badge');
+
+        // 1. Logic mở/đóng dropdown Tỉnh/Thành
+        btnProv.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = wrapProv.classList.contains('is-open');
+
+          wrapWard.classList.remove('is-open');
+          menuWard.classList.add('d-none');
+          btnWard.setAttribute('aria-expanded', 'false');
+
+          if (isOpen) {
+            wrapProv.classList.remove('is-open');
+            menuProv.classList.add('d-none');
+            btnProv.setAttribute('aria-expanded', 'false');
+          } else {
+            wrapProv.classList.add('is-open');
+            menuProv.classList.remove('d-none');
+            btnProv.setAttribute('aria-expanded', 'true');
+            lucide.createIcons();
+            setTimeout(() => {
+              inputSearchProv.focus();
+            }, 60);
           }
         });
+
+        // 2. Tìm kiếm gợi ý Tỉnh/Thành theo thời gian thực (hỗ trợ cả có dấu và không dấu)
+        const filterProvinces = (query) => {
+          const rawQ = query.trim().toLowerCase();
+          const normQ = removeVietnameseTones(query);
+          const items = listProv.querySelectorAll('.luxury-option-item');
+          let count = 0;
+
+          items.forEach(item => {
+            const name = item.dataset.name || '';
+            const normName = removeVietnameseTones(name);
+            const matches = !normQ || normName.includes(normQ) || name.toLowerCase().includes(rawQ);
+            if (matches) {
+              item.classList.remove('d-none');
+              count++;
+            } else {
+              item.classList.add('d-none');
+            }
+          });
+
+          if (count === 0) {
+            emptyProv.classList.remove('d-none');
+            listProv.classList.add('d-none');
+          } else {
+            emptyProv.classList.add('d-none');
+            listProv.classList.remove('d-none');
+          }
+
+          if (statusProv) {
+            statusProv.innerText = normQ ? `Tìm thấy ${count} / ${provinces.length} Tỉnh/Thành` : `Toàn quốc (${provinces.length} Tỉnh/Thành)`;
+          }
+          if (btnClearProv) {
+            btnClearProv.style.display = rawQ ? 'flex' : 'none';
+          }
+        };
+
+        inputSearchProv.addEventListener('input', (e) => {
+          filterProvinces(e.target.value);
+        });
+
+        btnClearProv.addEventListener('click', (e) => {
+          e.stopPropagation();
+          inputSearchProv.value = '';
+          filterProvinces('');
+          inputSearchProv.focus();
+        });
+
+        inputSearchProv.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const firstVisible = listProv.querySelector('.luxury-option-item:not(.d-none)');
+            if (firstVisible) firstVisible.click();
+          }
+        });
+
+        // 3. Xử lý click chọn Tỉnh/Thành
+        listProv.addEventListener('click', (e) => {
+          const item = e.target.closest('.luxury-option-item');
+          if (!item) return;
+          e.stopPropagation();
+
+          const val = item.dataset.value;
+          const name = item.dataset.name;
+
+          selProv.value = val;
+          listProv.querySelectorAll('.luxury-option-item').forEach(it => it.classList.remove('active'));
+          item.classList.add('active');
+
+          const titleEl = container.querySelector('#province-trigger-title');
+          const descEl = container.querySelector('#province-trigger-desc');
+          const iconEl = container.querySelector('#province-trigger-icon');
+          if (titleEl) {
+            titleEl.textContent = name;
+            titleEl.style.color = '#0f172a';
+            titleEl.style.fontWeight = '700';
+          }
+          if (descEl) descEl.textContent = `Mã vùng: ${val} • Đã chọn`;
+          if (iconEl) {
+            iconEl.style.background = '#dbeafe';
+            iconEl.style.color = '#2563eb';
+          }
+
+          wrapProv.classList.remove('is-open');
+          menuProv.classList.add('d-none');
+          btnProv.setAttribute('aria-expanded', 'false');
+
+          // Kích hoạt sự kiện change để tải danh sách xã/phường
+          selProv.dispatchEvent(new Event('change', { bubbles: true }));
+          lucide.createIcons();
+        });
+
+        // 4. Khi Tỉnh/Thành thay đổi -> Load danh sách Xã/Phường tương ứng
+        selProv.addEventListener('change', async (e) => {
+          const val = e.target.value;
+          if (!val) return;
+
+          selWard.value = '*';
+          const wardTitle = container.querySelector('#ward-trigger-title');
+          const wardDesc = container.querySelector('#ward-trigger-desc');
+          if (wardTitle) {
+            wardTitle.textContent = '-- Toàn tỉnh / Chưa rõ chi tiết --';
+            wardTitle.style.color = '#0f172a';
+            wardTitle.style.fontWeight = '600';
+          }
+          if (wardDesc) wardDesc.textContent = 'Phân bổ chung cho toàn địa bàn tỉnh';
+          if (badgeWardCount) badgeWardCount.textContent = 'Đang tải...';
+
+          try {
+            const wards = await dbService.getAdministrativeAreas(val);
+            if (badgeWardCount) badgeWardCount.textContent = `${wards.length} Xã/Phường`;
+            if (statusWard) statusWard.textContent = `Toàn tỉnh (${wards.length} Xã/Phường)`;
+
+            listWard.innerHTML = `
+              <div class="luxury-option-item active" data-value="*" data-name="Toàn tỉnh / Chưa rõ chi tiết">
+                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                  <div class="option-icon" style="background: #f1f5f9; color: #475569; width: 32px; height: 32px;">
+                    <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
+                  </div>
+                  <div class="option-content">
+                    <div class="option-title">Toàn tỉnh / Chưa rõ chi tiết</div>
+                    <div class="option-desc">Áp dụng cho mọi vị trí trong tỉnh</div>
+                  </div>
+                </div>
+                <div class="option-check" style="width: 20px; height: 20px;">
+                  <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                </div>
+              </div>
+              ${wards.map(w => `
+                <div class="luxury-option-item" data-value="${w.areaCode}" data-name="${w.name}">
+                  <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                    <div class="option-icon" style="background: #eff6ff; color: #2563eb; width: 32px; height: 32px;">
+                      <i data-lucide="map-pin" style="width: 15px; height: 15px;"></i>
+                    </div>
+                    <div class="option-content">
+                      <div class="option-title">${w.name}</div>
+                      <div class="option-desc">Mã địa bàn: ${w.areaCode}</div>
+                    </div>
+                  </div>
+                  <div class="option-check" style="width: 20px; height: 20px;">
+                    <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                  </div>
+                </div>
+              `).join('')}
+            `;
+            lucide.createIcons();
+          } catch (err) {
+            console.error(err);
+            if (badgeWardCount) badgeWardCount.textContent = 'Lỗi tải';
+          }
+        });
+
+        // 5. Logic mở/đóng dropdown Xã/Phường
+        btnWard.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = wrapWard.classList.contains('is-open');
+
+          wrapProv.classList.remove('is-open');
+          menuProv.classList.add('d-none');
+          btnProv.setAttribute('aria-expanded', 'false');
+
+          if (isOpen) {
+            wrapWard.classList.remove('is-open');
+            menuWard.classList.add('d-none');
+            btnWard.setAttribute('aria-expanded', 'false');
+          } else {
+            wrapWard.classList.add('is-open');
+            menuWard.classList.remove('d-none');
+            btnWard.setAttribute('aria-expanded', 'true');
+            lucide.createIcons();
+            setTimeout(() => {
+              inputSearchWard.focus();
+            }, 60);
+          }
+        });
+
+        // 6. Tìm kiếm gợi ý Xã/Phường theo thời gian thực
+        const filterWards = (query) => {
+          const rawQ = query.trim().toLowerCase();
+          const normQ = removeVietnameseTones(query);
+          const items = listWard.querySelectorAll('.luxury-option-item');
+          let count = 0;
+
+          items.forEach(item => {
+            const name = item.dataset.name || '';
+            const normName = removeVietnameseTones(name);
+            const matches = !normQ || normName.includes(normQ) || name.toLowerCase().includes(rawQ);
+            if (matches) {
+              item.classList.remove('d-none');
+              count++;
+            } else {
+              item.classList.add('d-none');
+            }
+          });
+
+          if (count === 0) {
+            emptyWard.classList.remove('d-none');
+            listWard.classList.add('d-none');
+          } else {
+            emptyWard.classList.add('d-none');
+            listWard.classList.remove('d-none');
+          }
+
+          if (statusWard) {
+            statusWard.innerText = normQ ? `Tìm thấy ${count} địa bàn` : `Toàn địa bàn (${items.length})`;
+          }
+          if (btnClearWard) {
+            btnClearWard.style.display = rawQ ? 'flex' : 'none';
+          }
+        };
+
+        inputSearchWard.addEventListener('input', (e) => {
+          filterWards(e.target.value);
+        });
+
+        btnClearWard.addEventListener('click', (e) => {
+          e.stopPropagation();
+          inputSearchWard.value = '';
+          filterWards('');
+          inputSearchWard.focus();
+        });
+
+        inputSearchWard.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const firstVisible = listWard.querySelector('.luxury-option-item:not(.d-none)');
+            if (firstVisible) firstVisible.click();
+          }
+        });
+
+        // 7. Xử lý click chọn Xã/Phường
+        listWard.addEventListener('click', (e) => {
+          const item = e.target.closest('.luxury-option-item');
+          if (!item) return;
+          e.stopPropagation();
+
+          const val = item.dataset.value;
+          const name = item.dataset.name;
+
+          selWard.value = val;
+          listWard.querySelectorAll('.luxury-option-item').forEach(it => it.classList.remove('active'));
+          item.classList.add('active');
+
+          const wardTitle = container.querySelector('#ward-trigger-title');
+          const wardDesc = container.querySelector('#ward-trigger-desc');
+          if (wardTitle) {
+            wardTitle.textContent = name;
+            wardTitle.style.color = '#0f172a';
+            wardTitle.style.fontWeight = '700';
+          }
+          if (wardDesc) {
+            wardDesc.textContent = val === '*' ? 'Phân bổ chung cho toàn địa bàn tỉnh' : `Mã địa bàn: ${val} • Đã chọn`;
+          }
+
+          wrapWard.classList.remove('is-open');
+          menuWard.classList.add('d-none');
+          btnWard.setAttribute('aria-expanded', 'false');
+          lucide.createIcons();
+        });
+
+        // 8. Đóng dropdown khi click ra ngoài hoặc bấm Escape
+        const handleLookupGlobalClick = (e) => {
+          if (!e.target.closest('.custom-select-luxury')) {
+            wrapProv.classList.remove('is-open');
+            menuProv.classList.add('d-none');
+            btnProv.setAttribute('aria-expanded', 'false');
+
+            wrapWard.classList.remove('is-open');
+            menuWard.classList.add('d-none');
+            btnWard.setAttribute('aria-expanded', 'false');
+          }
+        };
+        document.addEventListener('click', handleLookupGlobalClick);
+
+        const handleLookupKeydown = (e) => {
+          if (e.key === 'Escape') {
+            wrapProv.classList.remove('is-open');
+            menuProv.classList.add('d-none');
+            btnProv.setAttribute('aria-expanded', 'false');
+
+            wrapWard.classList.remove('is-open');
+            menuWard.classList.add('d-none');
+            btnWard.setAttribute('aria-expanded', 'false');
+          }
+        };
+        document.addEventListener('keydown', handleLookupKeydown);
 
         // Tìm kiếm Gara thời gian thực
         const inputGarage = container.querySelector('#input-garage-search');
@@ -2797,6 +3360,17 @@ const scheduleEngine = new ScheduleEngine(dbService);
           const provinceCode = selProv.value;
           const wardCode = selWard.value;
           const garageId = container.querySelector('#selected-garage-id').value;
+
+          if (!provinceCode) {
+            wrapProv.classList.add('is-open');
+            menuProv.classList.remove('d-none');
+            btnProv.setAttribute('aria-expanded', 'true');
+            btnProv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+              inputSearchProv.focus();
+            }, 60);
+            return;
+          }
 
           let searchDateTime = new Date();
           if (timeMode.value === 'custom' && customDt.value) {
