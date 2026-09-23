@@ -603,6 +603,7 @@
         <a class="nav-link" href="#rules"><i data-lucide="sliders"></i> Quy Tắc Lịch Trực</a>
         <a class="nav-link" href="#overrides"><i data-lucide="repeat"></i> Đổi Ca & Nghỉ Phép</a>
         <a class="nav-link" href="#dispatch-history"><i data-lucide="history"></i> Nhật Ký Điều Phối</a>
+        <a class="nav-link" href="#personnel"><i data-lucide="users"></i> Quản Lý Nhân Sự</a>
       </div>
 
       <div class="nav-group-title mt-4">Hệ Thống & Dữ Liệu</div>
@@ -882,6 +883,26 @@
     // 4. DATABASE SERVICE (FIRESTORE)
     // ==========================================
     const dbService = {
+      async getAllZones() {
+        const snap = await getDocs(collection(db, "zones"));
+        return snap.docs.map(d => ({ zoneId: d.id, ...d.data() }));
+      },
+      async getAllInspectors() {
+        const snap = await getDocs(collection(db, "inspectors"));
+        return snap.docs.map(d => ({ inspectorId: d.id, ...d.data() }));
+      },
+      async createZone(data) {
+        if(!data.zoneId) data.zoneId = 'ZONE_' + Date.now();
+        await setDoc(doc(db, "zones", data.zoneId), data);
+      },
+      async createInspector(data) {
+        if(!data.inspectorId) data.inspectorId = 'INS_' + Date.now();
+        await setDoc(doc(db, "inspectors", data.inspectorId), data);
+      },
+      async updateInspector(id, data) {
+        await updateDoc(doc(db, "inspectors", id), data);
+      },
+
       async getAdministrativeAreas(parentCode = 'ROOT') {
         const q = query(collection(db, "administrativeAreas"), where("parentCode", "==", parentCode));
         const snap = await getDocs(q);
@@ -1219,6 +1240,162 @@
       // ----------------------------------------
       // VIEW 1: MÀN HÌNH TRA CỨU TỐC ĐỘ CAO (TT247)
       // ----------------------------------------
+      // ----------------------------------------
+      // VIEW: QUẢN LÝ NHÂN SỰ
+      // ----------------------------------------
+      async renderPersonnel(container) {
+        let zones = [];
+        let inspectors = [];
+        try {
+          zones = await dbService.getAllZones();
+          inspectors = await dbService.getAllInspectors();
+        } catch (e) {
+          console.warn(e);
+        }
+
+        container.innerHTML = `
+          <div class="row g-4">
+            <!-- Form Phân công / Tạo mới -->
+            <div class="col-lg-4">
+              <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header-clean">
+                  <h6 class="fw-bold mb-0">Tạo Giám Định Viên & Phân Vùng</h6>
+                </div>
+                <div class="card-body p-4">
+                  <form id="form-create-inspector">
+                    <div class="mb-3">
+                      <label class="field-label">Mã NV</label>
+                      <input type="text" class="form-control" id="ins-emp-code" required placeholder="VD: GDV004">
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Họ và Tên</label>
+                      <input type="text" class="form-control" id="ins-name" required placeholder="Nguyễn Văn A">
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Số điện thoại</label>
+                      <input type="text" class="form-control" id="ins-phone" required>
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Trưởng Zone Quản Lý</label>
+                      <select class="form-select" id="ins-zone" required>
+                        <option value="">-- Chọn Zone Quản Lý --</option>
+                        ${zones.map(z => `<option value="${z.zoneId}">${z.name} (Quản lý: ${z.leadName})</option>`).join('')}
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary-action w-100 fw-bold">Tạo & Phân Công</button>
+                  </form>
+                </div>
+              </div>
+              
+              <div class="card shadow-sm border-0">
+                <div class="card-header-clean">
+                  <h6 class="fw-bold mb-0">Tạo Zone / Trưởng Zone Mới</h6>
+                </div>
+                <div class="card-body p-4">
+                  <form id="form-create-zone">
+                    <div class="mb-3">
+                      <label class="field-label">Tên Zone</label>
+                      <input type="text" class="form-control" id="zone-name" required placeholder="VD: Zone Miền Trung">
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Tên Trưởng Zone</label>
+                      <input type="text" class="form-control" id="zone-lead-name" required>
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">SĐT Trưởng Zone</label>
+                      <input type="text" class="form-control" id="zone-lead-phone" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary-action w-100 fw-bold">Tạo Zone</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Danh sách -->
+            <div class="col-lg-8">
+              <div class="card shadow-sm border-0 h-100">
+                <div class="card-header-clean">
+                  <h6 class="fw-bold mb-0">Danh sách Nhân Sự Toàn Quốc</h6>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-modern">
+                      <thead>
+                        <tr>
+                          <th>Mã NV</th>
+                          <th>Giám Định Viên</th>
+                          <th>SĐT</th>
+                          <th>Thuộc Zone / Trưởng Zone</th>
+                          <th>Trạng Thái</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${inspectors.map(ins => {
+                          const z = zones.find(x => x.zoneId === ins.zoneId);
+                          return `
+                            <tr>
+                              <td>${ins.empCode || '-'}</td>
+                              <td class="fw-bold text-primary">${ins.fullName}</td>
+                              <td>${ins.phone}</td>
+                              <td>${z ? `<span class="badge-soft badge-soft-blue">${z.name}</span><br><small class="text-muted">QL: ${z.leadName}</small>` : '-'}</td>
+                              <td><span class="badge-soft badge-soft-green">Đang HĐ</span></td>
+                            </tr>
+                          `;
+                        }).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+
+        container.querySelector('#form-create-inspector').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const btn = e.target.querySelector('button');
+          btn.disabled = true;
+          try {
+            await dbService.createInspector({
+              empCode: container.querySelector('#ins-emp-code').value.trim(),
+              fullName: container.querySelector('#ins-name').value.trim(),
+              phone: container.querySelector('#ins-phone').value.trim(),
+              zoneId: container.querySelector('#ins-zone').value,
+              isActive: true
+            });
+            showToast('Tạo giám định viên thành công', 'success');
+            setTimeout(() => router.handleRoute(), 1000);
+          } catch (err) {
+            alert('Lỗi: ' + err.message);
+            btn.disabled = false;
+          }
+        });
+
+        container.querySelector('#form-create-zone').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const btn = e.target.querySelector('button');
+          btn.disabled = true;
+          try {
+            const zName = container.querySelector('#zone-name').value.trim();
+            const zoneId = 'ZONE_' + Date.now();
+            await dbService.createZone({
+              zoneId: zoneId,
+              code: zoneId,
+              name: zName,
+              leadName: container.querySelector('#zone-lead-name').value.trim(),
+              leadPhone: container.querySelector('#zone-lead-phone').value.trim(),
+              status: 'active'
+            });
+            showToast('Tạo Zone thành công', 'success');
+            setTimeout(() => router.handleRoute(), 1000);
+          } catch (err) {
+            alert('Lỗi: ' + err.message);
+            btn.disabled = false;
+          }
+        });
+      },
+
       async renderLookup(container) {
         let provinces = [];
         try {
@@ -2267,6 +2444,9 @@
         }
 
         switch (hash) {
+          case '#personnel':
+            await views.renderPersonnel(this.viewport);
+            break;
           case '#lookup':
             await views.renderLookup(this.viewport);
             break;
