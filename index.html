@@ -692,6 +692,23 @@
         </div>
       </div>
     </div>
+  <!-- MODAL XÁC NHẬN CHUYÊN DỤNG (CUSTOM CONFIRM MODAL) -->
+  <div class="modal fade" id="customConfirmModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg); overflow: hidden;">
+        <div class="modal-body p-4 text-center">
+          <div id="confirm-icon-box" class="mx-auto mb-3" style="width: 64px; height: 64px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);">
+            <i data-lucide="alert-triangle" style="width: 32px; height: 32px;"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2" id="confirm-title" style="font-size: 17px;">Xác Nhận Thao Tác</h5>
+          <p class="text-muted mb-4" id="confirm-message" style="font-size: 13.5px; line-height: 1.6;">Bạn có chắc chắn muốn thực hiện thao tác này không?</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-light px-4 py-2 fw-semibold" data-bs-dismiss="modal" id="btn-cancel-confirm" style="border-radius: var(--radius-md); font-size: 13.5px;">Hủy bỏ</button>
+            <button type="button" class="btn btn-danger px-4 py-2 fw-bold shadow-sm" id="btn-agree-confirm" style="border-radius: var(--radius-md); font-size: 13.5px;">Xóa ngay</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- TOAST THÔNG BÁO -->
@@ -779,6 +796,43 @@
       `;
       container.appendChild(toastEl);
       setTimeout(() => { toastEl.remove(); }, 4000);
+    };
+
+    window.showConfirm = function({ title = 'Xác Nhận Thao Tác', message = 'Bạn có chắc chắn muốn thực hiện?', confirmText = 'Xác Nhận', type = 'danger', onConfirm }) {
+      const modalEl = document.getElementById('customConfirmModal');
+      const titleEl = document.getElementById('confirm-title');
+      const msgEl = document.getElementById('confirm-message');
+      const btnAgree = document.getElementById('btn-agree-confirm');
+      const iconBox = document.getElementById('confirm-icon-box');
+
+      titleEl.innerText = title;
+      msgEl.innerText = message;
+      btnAgree.innerText = confirmText;
+
+      if (type === 'danger') {
+        iconBox.style.background = '#fee2e2';
+        iconBox.style.color = '#ef4444';
+        iconBox.innerHTML = '<i data-lucide="alert-triangle" style="width: 32px; height: 32px;"></i>';
+        btnAgree.className = 'btn btn-danger px-4 py-2 fw-bold shadow-sm';
+      } else {
+        iconBox.style.background = '#eff6ff';
+        iconBox.style.color = '#2563eb';
+        iconBox.innerHTML = '<i data-lucide="help-circle" style="width: 32px; height: 32px;"></i>';
+        btnAgree.className = 'btn btn-primary-action px-4 py-2 fw-bold shadow-sm';
+      }
+      lucide.createIcons();
+
+      const modal = new bootstrap.Modal(modalEl);
+      
+      const newBtn = btnAgree.cloneNode(true);
+      btnAgree.parentNode.replaceChild(newBtn, btnAgree);
+
+      newBtn.addEventListener('click', async () => {
+        modal.hide();
+        if (onConfirm) await onConfirm();
+      });
+
+      modal.show();
     };
 
     // ==========================================
@@ -1686,20 +1740,29 @@
           if (delBtn) {
             const type = delBtn.dataset.type;
             const id = delBtn.dataset.id;
+            const person = allPersonnel.find(p => p.id === id);
+            const personName = person ? person.name : 'nhân sự này';
+            const roleName = type === 'ZONE_LEAD' ? 'Trưởng Zone' : 'Giám định viên';
             
-            if (confirm("Bạn có chắc chắn muốn xóa nhân sự này không? Hành động không thể hoàn tác!")) {
-              try {
-                if (type === 'INSPECTOR') {
-                  await dbService.deleteInspector(id);
-                } else {
-                  await dbService.deleteZone(id);
+            showConfirm({
+              title: `Xác nhận xóa ${roleName}`,
+              message: `Bạn có chắc chắn muốn xóa ${roleName} "${personName}" khỏi hệ thống không? Dữ liệu sau khi xóa sẽ không thể phục hồi!`,
+              confirmText: 'Xóa ngay',
+              type: 'danger',
+              onConfirm: async () => {
+                try {
+                  if (type === 'INSPECTOR') {
+                    await dbService.deleteInspector(id);
+                  } else {
+                    await dbService.deleteZone(id);
+                  }
+                  showToast(`Đã xóa thành công ${roleName} "${personName}"!`, "success");
+                  router.handleRoute(); // reload
+                } catch (err) {
+                  showToast("Lỗi khi xóa: " + err.message, "error");
                 }
-                showToast("Đã xóa thành công!", "success");
-                router.handleRoute(); // reload
-              } catch (err) {
-                alert("Lỗi khi xóa: " + err.message);
               }
-            }
+            });
           }
         });
 
@@ -1733,7 +1796,7 @@
 
             setTimeout(() => router.handleRoute(), 300);
           } catch (err) {
-            alert('Lỗi: ' + err.message);
+            showToast('Lỗi: ' + err.message, 'error');
             btn.disabled = false;
           }
         });
@@ -1769,7 +1832,7 @@
 
             setTimeout(() => router.handleRoute(), 300);
           } catch (err) {
-            alert('Lỗi: ' + err.message);
+            showToast('Lỗi: ' + err.message, 'error');
             btn.disabled = false;
           }
         });
