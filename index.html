@@ -2414,10 +2414,11 @@ const scheduleEngine = new ScheduleEngine(dbService);
                   </div>
 
                   <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <div class="d-flex align-items-center gap-2">
-                      <span class="field-label mb-0 text-nowrap">Đang cấu hình:</span>
-                      <select class="form-select form-select-sm fw-bold text-primary" id="sel-active-zone" style="min-width: 220px; height: 38px; border-radius: 8px;">
-                        ${zones.map(z => `<option value="${z.zoneId}" ${z.zoneId === currentZoneId ? 'selected' : ''}>📍 ${z.name}</option>`).join('')}
+                    <div class="d-flex align-items-center bg-light border rounded-3 px-3 py-1 gap-2" style="background: #f8fafc; border-color: var(--border-medium) !important; height: 40px;">
+                      <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
+                      <span class="fw-bold text-muted text-nowrap" style="font-size: 11.5px; letter-spacing: 0.05em;">KHU VỰC:</span>
+                      <select class="form-select border-0 bg-transparent fw-bold text-primary p-0 shadow-none" id="sel-active-zone" style="min-width: 190px; font-size: 13.5px; cursor: pointer;">
+                        ${zones.map(z => `<option value="${z.zoneId}" ${z.zoneId === currentZoneId ? 'selected' : ''}>${z.name}</option>`).join('')}
                       </select>
                     </div>
 
@@ -2462,31 +2463,34 @@ const scheduleEngine = new ScheduleEngine(dbService);
             </div>
           </div>
 
-          <!-- MODAL THIẾT LẬP QUY TẮC MỚI (MODAL TOÀN DIỆN VỚI 5 MẪU CHUẨN) -->
+          <!-- MODAL THIẾT LẬP QUY TẮC MỚI (MODAL TOÀN DIỆN VỚI 5 MẪU CHUẨN - EXPANDED) -->
           <div class="modal fade" id="modalCreateRule" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-              <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg);">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1100px; width: 95%;">
+              <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg); overflow: hidden;">
                 <div class="modal-header py-3 px-4 border-bottom" style="background: #f8fafc;">
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="header-icon-box" style="width: 32px; height: 32px; background: #fef3c7; color: #b45309;">
-                      <i data-lucide="calendar-check-2" style="width: 16px; height: 16px;"></i>
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="header-icon-box" style="width: 36px; height: 36px; background: #fef3c7; color: #b45309; border-radius: 10px;">
+                      <i data-lucide="calendar-check-2" style="width: 18px; height: 18px;"></i>
                     </div>
-                    <h6 class="modal-title fw-bold text-dark mb-0">Thêm Mới Quy Tắc Phân Công Lịch Trực</h6>
+                    <div>
+                      <h6 class="modal-title fw-bold text-dark mb-0" style="font-size: 16px;">Thêm Mới Quy Tắc Phân Công Lịch Trực</h6>
+                      <small class="text-muted" style="font-size: 12px;">Thiết lập thuật toán phân ca tự động cho Zone đang chọn</small>
+                    </div>
                   </div>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="modal-body p-4">
+                <div class="modal-body p-4" style="max-height: 80vh; overflow-y: auto;">
                   <form id="form-create-rule">
                     <!-- 1. TÊN QUY TẮC & MẪU QUY TẮC -->
                     <div class="row g-3 mb-4">
                       <div class="col-md-7">
-                        <label class="field-label">Tên Quy Tắc <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="rule-name" required placeholder="VD: Luân phiên Chẵn/Lẻ 2 GĐV Hiện trường & Chi tiết">
+                        <label class="field-label">Tên Quy Tắc Phân Ca <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="rule-name" required placeholder="VD: Luân phiên Chẵn/Lẻ 2 GĐV Hiện trường & Chi tiết" style="height: 42px; border-radius: 8px;">
                       </div>
                       <div class="col-md-5">
                         <label class="field-label">Chọn Mẫu Quy Tắc Chuẩn <span class="text-danger">*</span></label>
-                        <select class="form-select fw-bold text-primary" id="rule-template-type" required>
+                        <select class="form-select fw-bold text-primary" id="rule-template-type" required style="height: 42px; border-radius: 8px; cursor: pointer;">
                           <option value="even_odd" selected>1. Luân phiên Chẵn / Lẻ & Chu kỳ</option>
                           <option value="day_of_week">2. Theo Thứ trong tuần (T2 - CN)</option>
                           <option value="ward_assignment">3. Theo Địa bàn cụ thể (Xã/Phường)</option>
@@ -2498,80 +2502,106 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     <!-- 2. KHU VỰC CẤU HÌNH ĐẶC THÙ THEO TỪNG MẪU -->
 
                     <!-- MẪU 1: CHẴN / LẺ & CHU KỲ LIÊN TỤC -->
-                    <div id="box-template-even-odd" class="p-3 rounded-3 mb-4 border" style="background: #f8fafc;">
-                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px;">
-                        <i data-lucide="repeat" style="width: 16px; color: var(--primary);"></i> Cấu hình Luân phiên 2 Giám định viên (Hiện trường & Chi tiết)
-                      </h6>
+                    <div id="box-template-even-odd" class="p-4 rounded-3 mb-4 border" style="background: #f8fafc;">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 14px;">
+                          <i data-lucide="repeat" style="width: 17px; color: var(--primary);"></i> Cấu hình Luân phiên 2 Giám định viên (Hiện trường & Chi tiết)
+                        </h6>
+                        <span class="badge-soft badge-soft-blue fw-bold">Tự động sinh lịch 2 chiều</span>
+                      </div>
 
                       <div class="mb-3">
                         <label class="field-label">Phương thức tính luân phiên:</label>
-                        <div class="d-flex gap-4">
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="cycleMode" id="cycle-mode-month" value="even_odd" checked>
-                            <label class="form-check-label fw-semibold" for="cycle-mode-month">
-                              Theo ngày trong tháng (Ngày 1, 3, 5... là Lẻ; 2, 4, 6... là Chẵn)
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label class="p-3 bg-white rounded-3 border d-flex align-items-start gap-3 h-100 shadow-sm" for="cycle-mode-month" style="cursor: pointer; transition: all 0.2s;">
+                              <input class="form-check-input mt-1" type="radio" name="cycleMode" id="cycle-mode-month" value="even_odd" checked>
+                              <div>
+                                <div class="fw-bold text-dark" style="font-size: 13.5px;">Theo ngày trong tháng</div>
+                                <small class="text-muted" style="font-size: 12px; line-height: 1.4; display: block; margin-top: 2px;">
+                                  Ngày 1, 3, 5... là ngày Lẻ; Ngày 2, 4, 6... là ngày Chẵn (Lưu ý: Ngày 31 và ngày 1 tháng sau đều là ngày lẻ).
+                                </small>
+                              </div>
                             </label>
                           </div>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="cycleMode" id="cycle-mode-continuous" value="continuous_cycle">
-                            <label class="form-check-label fw-semibold" for="cycle-mode-continuous">
-                              Luân phiên liên tục không ngắt quãng (Không gián đoạn khi chuyển tháng)
+                          <div class="col-md-6">
+                            <label class="p-3 bg-white rounded-3 border d-flex align-items-start gap-3 h-100 shadow-sm" for="cycle-mode-continuous" style="cursor: pointer; transition: all 0.2s;">
+                              <input class="form-check-input mt-1" type="radio" name="cycleMode" id="cycle-mode-continuous" value="continuous_cycle">
+                              <div>
+                                <div class="fw-bold text-dark" style="font-size: 13.5px;">Luân phiên liên tục (Continuous Cycle)</div>
+                                <small class="text-muted" style="font-size: 12px; line-height: 1.4; display: block; margin-top: 2px;">
+                                  Thứ tự A–B chạy liên tục theo chu kỳ không bị gián đoạn hay trùng lặp khi bước sang tháng mới.
+                                </small>
+                              </div>
                             </label>
                           </div>
                         </div>
                       </div>
 
-                      <div class="row g-3 mb-3">
+                      <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                          <div class="p-3 bg-white rounded-3 border">
-                            <span class="field-label text-primary">Nhân sự A (Lẻ / Ngày 1)</span>
-                            <select class="form-select" id="ins-user-a" required>
+                          <div class="p-3 bg-white rounded-3 border shadow-sm h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                              <span class="field-label text-primary mb-0">Nhân sự A (Lẻ / Ngày 1)</span>
+                              <span class="badge-soft badge-soft-blue">Ca 1</span>
+                            </div>
+                            <select class="form-select" id="ins-user-a" required style="height: 42px; border-radius: 8px;">
                               ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode || 'GDV'})</option>`).join('')}
                             </select>
-                            <small class="text-muted mt-1 d-block">Trực <strong>Hiện trường</strong> ngày Lẻ, <strong>Chi tiết</strong> ngày Chẵn</small>
+                            <div class="mt-2 text-muted" style="font-size: 12px;">
+                              Trực <strong>Hiện trường</strong> ngày Lẻ, <strong>Chi tiết</strong> ngày Chẵn
+                            </div>
                           </div>
                         </div>
                         <div class="col-md-6">
-                          <div class="p-3 bg-white rounded-3 border">
-                            <span class="field-label text-success">Nhân sự B (Chẵn / Ngày 2)</span>
-                            <select class="form-select" id="ins-user-b" required>
+                          <div class="p-3 bg-white rounded-3 border shadow-sm h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                              <span class="field-label text-success mb-0">Nhân sự B (Chẵn / Ngày 2)</span>
+                              <span class="badge-soft badge-soft-green">Ca 2</span>
+                            </div>
+                            <select class="form-select" id="ins-user-b" required style="height: 42px; border-radius: 8px;">
                               ${inspectors.map((i, idx) => `<option value="${i.inspectorId}" ${idx === 1 ? 'selected' : ''}>${i.fullName} (${i.empCode || 'GDV'})</option>`).join('')}
                             </select>
-                            <small class="text-muted mt-1 d-block">Trực <strong>Chi tiết</strong> ngày Lẻ, <strong>Hiện trường</strong> ngày Chẵn</small>
+                            <div class="mt-2 text-muted" style="font-size: 12px;">
+                              Trực <strong>Chi tiết</strong> ngày Lẻ, <strong>Hiện trường</strong> ngày Chẵn
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      <!-- BẢNG LIVE PREVIEW SINH LỊCH -->
-                      <div class="bg-white p-3 rounded-3 border">
-                        <span class="field-label text-muted mb-2">Mô phỏng lịch tự động sinh cả tháng (Preview):</span>
+                      <!-- BẢNG LIVE PREVIEW SINH LỊCH RỘNG RÃI -->
+                      <div class="bg-white p-3 rounded-3 border shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                          <span class="field-label text-muted mb-0">Mô phỏng lịch tự động sinh cả tháng (Live Preview):</span>
+                          <small class="text-muted fst-italic">Hệ thống tự động hoán đổi công việc theo chu kỳ</small>
+                        </div>
                         <div class="table-responsive">
-                          <table class="table table-sm table-bordered text-center mb-0" style="font-size: 12.5px;">
+                          <table class="table table-sm table-bordered text-center align-middle mb-0" style="font-size: 13px;">
                             <thead class="table-light">
                               <tr>
-                                <th>Thời gian</th>
-                                <th>Hiện Trường</th>
-                                <th>Chi Tiết / Gara</th>
+                                <th style="width: 180px;">Thời gian</th>
+                                <th>Giám Định Hiện Trường</th>
+                                <th>Giám Định Chi Tiết / Gara</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
-                                <td><strong>Ngày 1 (Lẻ)</strong></td>
+                                <td><span class="badge-soft badge-soft-slate">Ngày 1 (Lẻ)</span></td>
                                 <td class="text-primary fw-bold" id="prev-d1-f">Nhân sự A</td>
                                 <td class="text-success fw-bold" id="prev-d1-d">Nhân sự B</td>
                               </tr>
                               <tr>
-                                <td><strong>Ngày 2 (Chẵn)</strong></td>
+                                <td><span class="badge-soft badge-soft-slate">Ngày 2 (Chẵn)</span></td>
                                 <td class="text-success fw-bold" id="prev-d2-f">Nhân sự B</td>
                                 <td class="text-primary fw-bold" id="prev-d2-d">Nhân sự A</td>
                               </tr>
                               <tr>
-                                <td><strong>Ngày 3 (Lẻ)</strong></td>
+                                <td><span class="badge-soft badge-soft-slate">Ngày 3 (Lẻ)</span></td>
                                 <td class="text-primary fw-bold" id="prev-d3-f">Nhân sự A</td>
                                 <td class="text-success fw-bold" id="prev-d3-d">Nhân sự B</td>
                               </tr>
                               <tr>
-                                <td><strong>Ngày 4 (Chẵn)</strong></td>
+                                <td><span class="badge-soft badge-soft-slate">Ngày 4 (Chẵn)</span></td>
                                 <td class="text-success fw-bold" id="prev-d4-f">Nhân sự B</td>
                                 <td class="text-primary fw-bold" id="prev-d4-d">Nhân sự A</td>
                               </tr>
@@ -2582,18 +2612,18 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </div>
 
                     <!-- MẪU 2: THEO THỨ TRONG TUẦN -->
-                    <div id="box-template-dow" class="p-3 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
-                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px;">
-                        <i data-lucide="calendar" style="width: 16px; color: var(--primary);"></i> Phân công nhân sự theo từng Thứ trong tuần
+                    <div id="box-template-dow" class="p-4 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
+                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 14px;">
+                        <i data-lucide="calendar" style="width: 17px; color: var(--primary);"></i> Phân công nhân sự theo từng Thứ trong tuần
                       </h6>
-                      <div class="row g-2">
+                      <div class="row g-3">
                         ${['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'].map((day, idx) => {
                           const dow = (idx + 1) % 7;
                           return `
                             <div class="col-md-6">
-                              <div class="p-2 bg-white rounded border d-flex align-items-center justify-content-between gap-2">
-                                <span class="fw-bold text-dark text-nowrap" style="font-size: 13px; width: 80px;">${day}:</span>
-                                <select class="form-select form-select-sm sel-dow-inspector" data-dow="${dow}">
+                              <div class="p-3 bg-white rounded-3 border d-flex align-items-center justify-content-between gap-3 shadow-sm">
+                                <span class="fw-bold text-dark text-nowrap" style="font-size: 13.5px; width: 85px;">${day}:</span>
+                                <select class="form-select sel-dow-inspector" data-dow="${dow}" style="height: 38px; border-radius: 8px;">
                                   ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
                                 </select>
                               </div>
@@ -2604,21 +2634,21 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </div>
 
                     <!-- MẪU 3: THEO ĐỊA BÀN CỤ THỂ -->
-                    <div id="box-template-ward" class="p-3 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
-                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px;">
-                        <i data-lucide="map-pin" style="width: 16px; color: var(--primary);"></i> Phân công theo Địa bàn Phường/Xã cụ thể
+                    <div id="box-template-ward" class="p-4 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
+                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 14px;">
+                        <i data-lucide="map-pin" style="width: 17px; color: var(--primary);"></i> Phân công theo Địa bàn Phường/Xã cụ thể
                       </h6>
                       <div class="row g-3">
                         <div class="col-md-6">
                           <label class="field-label">Chọn Xã / Phường <span class="text-danger">*</span></label>
-                          <select class="form-select" id="ward-select">
-                            ${wards.map(w => `<option value="${w.areaCode}">${w.name}</option>`).join('')}
+                          <select class="form-select" id="ward-select" style="height: 42px; border-radius: 8px;">
+                            ${wards.map(w => `<option value="${w.areaCode}">📍 ${w.name}</option>`).join('')}
                             ${wards.length === 0 ? '<option value="*">Toàn bộ địa bàn</option>' : ''}
                           </select>
                         </div>
                         <div class="col-md-6">
                           <label class="field-label">GĐV Phụ Trách Chính <span class="text-danger">*</span></label>
-                          <select class="form-select" id="ward-primary-ins">
+                          <select class="form-select" id="ward-primary-ins" style="height: 42px; border-radius: 8px;">
                             ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
                           </select>
                         </div>
@@ -2626,52 +2656,66 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </div>
 
                     <!-- MẪU 4: NGÀY CỤ THỂ (LỄ / SỰ KIỆN) -->
-                    <div id="box-template-date" class="p-3 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
-                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px;">
-                        <i data-lucide="star" style="width: 16px; color: #e11d48;"></i> Phân công ca trực Ngày Lễ hoặc Sự kiện đặc biệt
+                    <div id="box-template-date" class="p-4 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
+                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 14px;">
+                        <i data-lucide="star" style="width: 17px; color: #e11d48;"></i> Phân công ca trực Ngày Lễ hoặc Sự kiện đặc biệt
                       </h6>
                       <div class="row g-3">
                         <div class="col-md-6">
                           <label class="field-label">Chọn ngày diễn ra sự kiện <span class="text-danger">*</span></label>
-                          <input type="date" class="form-control" id="spec-date-input" value="2026-04-30">
+                          <input type="date" class="form-control" id="spec-date-input" value="2026-04-30" style="height: 42px; border-radius: 8px;">
                         </div>
                         <div class="col-md-6">
                           <label class="field-label">GĐV Trực Chính Ngày Lễ <span class="text-danger">*</span></label>
-                          <select class="form-select" id="spec-primary-ins">
+                          <select class="form-select" id="spec-primary-ins" style="height: 42px; border-radius: 8px;">
                             ${inspectors.map(i => `<option value="${i.inspectorId}">${i.fullName}</option>`).join('')}
                           </select>
                         </div>
                       </div>
                     </div>
 
-                    <!-- 3. KHUNG GIỜ VÀ HIỆU LỰC CHUNG -->
-                    <div class="p-3 bg-light rounded-3 mb-3 border">
-                      <label class="field-label mb-2">Khung giờ ca trực & Mức ưu tiên</label>
-                      <div class="row g-3">
+                    <!-- 3. KHUNG GIỜ VÀ HIỆU LỰC CHUNG (CÓ NÚT CHỌN NHANH PRESET) -->
+                    <div class="p-4 bg-light rounded-3 mb-4 border">
+                      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <label class="field-label mb-0">Khung giờ ca trực & Mức ưu tiên</label>
+                        <div class="d-flex gap-2">
+                          <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-3 btn-time-preset" data-start="00:00" data-end="23:59" data-overnight="false" style="font-size: 12px; border-radius: 6px;">
+                            <i data-lucide="clock" style="width: 13px;"></i> Ca 24h (Cả ngày)
+                          </button>
+                          <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-3 btn-time-preset" data-start="08:00" data-end="17:00" data-overnight="false" style="font-size: 12px; border-radius: 6px;">
+                            Ca Hành chính (08h - 17h)
+                          </button>
+                          <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-3 btn-time-preset" data-start="17:00" data-end="08:00" data-overnight="true" style="font-size: 12px; border-radius: 6px;">
+                            Ca đêm (17h - 08h)
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="row g-3 align-items-center">
                         <div class="col-md-3">
-                          <label class="small text-muted">Bắt đầu</label>
-                          <input type="time" class="form-control" id="rule-start-time" value="00:00" required>
+                          <label class="small text-muted mb-1">Giờ bắt đầu</label>
+                          <input type="time" class="form-control" id="rule-start-time" value="00:00" required style="height: 42px; border-radius: 8px;">
                         </div>
                         <div class="col-md-3">
-                          <label class="small text-muted">Kết thúc</label>
-                          <input type="time" class="form-control" id="rule-end-time" value="23:59" required>
+                          <label class="small text-muted mb-1">Giờ kết thúc</label>
+                          <input type="time" class="form-control" id="rule-end-time" value="23:59" required style="height: 42px; border-radius: 8px;">
                         </div>
-                        <div class="col-md-3 d-flex align-items-end">
-                          <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="rule-is-overnight">
-                            <label class="form-check-label small fw-semibold" for="rule-is-overnight">Ca qua đêm</label>
+                        <div class="col-md-3 d-flex align-items-center pt-md-4">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rule-is-overnight" style="cursor: pointer;">
+                            <label class="form-check-label small fw-semibold text-dark" for="rule-is-overnight" style="cursor: pointer;">Ca qua đêm (vắt qua 0h)</label>
                           </div>
                         </div>
                         <div class="col-md-3">
-                          <label class="small text-muted">Ưu tiên (1 - 100)</label>
-                          <input type="number" class="form-control" id="rule-priority" value="50" min="1" max="100">
+                          <label class="small text-muted mb-1">Mức ưu tiên (1 - 100)</label>
+                          <input type="number" class="form-control" id="rule-priority" value="50" min="1" max="100" style="height: 42px; border-radius: 8px;">
                         </div>
                       </div>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2 pt-2 border-top">
-                      <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy bỏ</button>
-                      <button type="submit" class="btn btn-primary-action fw-bold px-4" id="btn-submit-rule">Công Bố Quy Tắc</button>
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                      <button type="button" class="btn btn-light px-4 py-2" data-bs-dismiss="modal" style="border-radius: var(--radius-md);">Hủy bỏ</button>
+                      <button type="submit" class="btn btn-primary-action fw-bold px-4 py-2 shadow-sm" id="btn-submit-rule" style="border-radius: var(--radius-md);">Công Bố Quy Tắc</button>
                     </div>
                   </form>
                 </div>
@@ -2774,6 +2818,18 @@ const scheduleEngine = new ScheduleEngine(dbService);
             boxDate.classList.remove('d-none');
             priorityInput.value = '100';
           }
+        });
+
+        // Xử lý nút chọn nhanh khung giờ preset
+        container.querySelectorAll('.btn-time-preset').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const start = btn.dataset.start;
+            const end = btn.dataset.end;
+            const overnight = btn.dataset.overnight === 'true';
+            container.querySelector('#rule-start-time').value = start;
+            container.querySelector('#rule-end-time').value = end;
+            container.querySelector('#rule-is-overnight').checked = overnight;
+          });
         });
 
         // Cập nhật Live Preview cho Mẫu 1
