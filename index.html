@@ -243,6 +243,7 @@
       flex-direction: column;
       background: var(--bg-canvas);
       transition: margin-left 0.3s ease;
+      padding-bottom: 120px;
     }
 
     .top-header {
@@ -321,13 +322,14 @@
       border-radius: var(--radius-lg) !important;
       box-shadow: var(--shadow-card) !important;
       transition: box-shadow 0.2s ease, transform 0.2s ease;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .card-header-clean {
       padding: 20px 24px;
       background: #ffffff;
       border-bottom: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -541,6 +543,10 @@
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, color 0.2s ease;
     }
 
+    .custom-select-luxury.is-open {
+      z-index: 100 !important;
+    }
+
     .custom-select-luxury.is-open .custom-select-trigger-arrow {
       transform: rotate(180deg);
       color: #2563eb;
@@ -556,12 +562,12 @@
       background: #ffffff;
       border: 1px solid rgba(226, 232, 240, 0.95);
       border-radius: 14px;
-      box-shadow: 0 20px 38px -6px rgba(15, 23, 42, 0.16), 0 8px 16px -4px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.03);
-      padding: 6px;
-      max-height: 320px;
-      overflow-y: auto;
+      box-shadow: 0 20px 38px -6px rgba(15, 23, 42, 0.18), 0 8px 16px -4px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
+      padding: 0;
+      overflow: hidden;
       animation: dropdownFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-      display: block;
+      display: flex;
+      flex-direction: column;
     }
 
     @keyframes dropdownFadeIn {
@@ -2723,7 +2729,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
           <div class="row g-4">
             <!-- CỘT TÌM KIẾM TRỰC -->
             <div class="col-lg-5">
-              <div class="card shadow-sm border-0">
+              <div class="card shadow-sm border-0" style="overflow: visible;">
                 <div class="card-header-clean">
                   <div class="d-flex align-items-center gap-3">
                     <div class="header-icon-box">
@@ -2736,7 +2742,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                   </div>
                 </div>
 
-                <div class="card-body p-4">
+                <div class="card-body p-4" style="overflow: visible;">
                   <form id="form-lookup">
                     <!-- 1. Loại công việc (Segmented Pill Switcher) -->
                     <div class="mb-4">
@@ -2784,7 +2790,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         </button>
 
                         <!-- Searchable Luxury Dropdown Popover -->
-                        <div class="dropdown-menu-luxury d-none" id="menu-lookup-province" style="min-width: 100%; max-height: 360px; padding: 0;">
+                        <div class="dropdown-menu-luxury d-none" id="menu-lookup-province" style="min-width: 100%; padding: 0;">
                           <!-- Search Box inside dropdown -->
                           <div class="dropdown-search-box">
                             <div class="dropdown-search-field">
@@ -2805,7 +2811,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                           </div>
 
                           <!-- Options List -->
-                          <div class="luxury-options-list p-2" id="list-province-options" style="max-height: 250px; overflow-y: auto;">
+                          <div class="luxury-options-list p-2" id="list-province-options" style="max-height: 240px; overflow-y: auto;">
                             ${provinces.map(p => `
                               <div class="luxury-option-item" data-value="${p.areaCode}" data-name="${p.name}">
                                 <div class="d-flex align-items-center gap-2.5 overflow-hidden">
@@ -2863,7 +2869,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                           </div>
                         </button>
 
-                        <div class="dropdown-menu-luxury d-none" id="menu-lookup-ward" style="min-width: 100%; max-height: 360px; padding: 0;">
+                        <div class="dropdown-menu-luxury d-none" id="menu-lookup-ward" style="min-width: 100%; padding: 0;">
                           <div class="dropdown-search-box">
                             <div class="dropdown-search-field">
                               <span class="dropdown-search-icon-left">
@@ -2881,7 +2887,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                             <span class="text-secondary"><i data-lucide="sparkles" style="width: 11px; height: 11px; display: inline-block;"></i> Gõ không dấu được</span>
                           </div>
 
-                          <div class="luxury-options-list p-2" id="list-ward-options" style="max-height: 250px; overflow-y: auto;">
+                          <div class="luxury-options-list p-2" id="list-ward-options" style="max-height: 240px; overflow-y: auto;">
                             <div class="luxury-option-item active" data-value="*" data-name="Toàn tỉnh / Chưa rõ chi tiết">
                               <div class="d-flex align-items-center gap-2.5 overflow-hidden">
                                 <div class="option-icon" style="background: #f1f5f9; color: #475569; width: 32px; height: 32px;">
