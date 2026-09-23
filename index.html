@@ -7749,17 +7749,10 @@ const scheduleEngine = new ScheduleEngine(dbService);
         container.innerHTML = `
           <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
             <div>
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <span class="badge-soft badge-soft-blue" style="font-size: 11px; padding: 3px 8px;"><i data-lucide="shield-check" style="width: 13px;"></i> ĐƠN VỊ HÀNH CHÍNH TRUYỀN THỐNG</span>
-                <span class="badge-soft badge-soft-amber" style="font-size: 11px; padding: 3px 8px;"><i data-lucide="history" style="width: 12px;"></i> Dữ liệu chuẩn trước sáp nhập</span>
-              </div>
               <h4 class="fw-bold mb-1" style="color: var(--text-main); font-size: 20px;">Quản Lý Phường Xã & Quận Huyện</h4>
               <p class="text-muted mb-0 small" style="font-size: 12.5px;">Danh mục đơn vị hành chính chuẩn trước sáp nhập (đầy đủ Quận 2, Quận 9, Quận Thủ Đức, Cửa Lò, Nông Sơn, Hoành Bồ...) phục vụ chuẩn xác hồ sơ xe và điều phối giám định</p>
             </div>
             <div class="d-flex align-items-center gap-2 flex-shrink-0">
-              <button class="btn btn-sm btn-outline-secondary px-2.5 py-1.5 fw-semibold" id="btn-refresh-areas" style="border-radius: 10px; font-size: 12.5px;">
-                <i data-lucide="refresh-cw" class="me-1" style="width: 14px;"></i> Làm Mới
-              </button>
               <button class="btn btn-sm btn-primary-action px-3 py-1.5 fw-bold" id="btn-open-create-area" style="border-radius: 10px; font-size: 12.5px;">
                 <i data-lucide="plus-circle" class="me-1" style="width: 15px;"></i> Thêm Địa Bàn Mới
               </button>
@@ -7996,7 +7989,6 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 <div class="col-md-5">
                   <label class="form-label small fw-bold text-uppercase d-flex align-items-center justify-content-between mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
                     <span>3. Tìm kiếm nhanh theo tên hoặc mã</span>
-                    <span class="badge bg-light text-secondary border small fw-normal py-0 px-1.5 d-none d-sm-inline-block" style="font-size: 10.5px;">Real-time</span>
                   </label>
                   <div class="premium-search-box premium-search-box-md" id="wrapper-admin-search">
                     <div class="premium-search-icon-box">
@@ -8016,16 +8008,12 @@ const scheduleEngine = new ScheduleEngine(dbService);
               </div>
 
               <!-- Thanh trạng thái kết quả lọc -->
-              <div class="d-flex align-items-center justify-content-between mt-2.5 pt-2.5 border-top flex-wrap gap-2" style="font-size: 12px;">
-                <div class="d-flex align-items-center gap-2">
-                  <span class="badge bg-primary rounded-pill px-2.5 py-1 fw-bold" id="badge-total-match" style="font-size: 11px;">0 đơn vị</span>
-                  <small class="text-muted fw-semibold" id="label-filter-context">Đang tải danh sách địa bàn...</small>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                  <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-secondary fw-semibold" id="btn-reset-filters" style="font-size: 12px;">
-                    <i data-lucide="rotate-ccw" style="width: 12px; height: 12px; margin-right: 2px;"></i> Đặt lại bộ lọc
-                  </button>
-                </div>
+              <div class="d-flex align-items-center justify-content-end mt-2 pt-2 border-top" style="font-size: 12px;">
+                <span id="badge-total-match" class="d-none"></span>
+                <span id="label-filter-context" class="d-none"></span>
+                <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-secondary fw-semibold" id="btn-reset-filters" style="font-size: 12px;">
+                  <i data-lucide="rotate-ccw" style="width: 12px; height: 12px; margin-right: 2px;"></i> Đặt lại bộ lọc
+                </button>
               </div>
             </div>
           </div>
@@ -8582,7 +8570,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
           renderTable();
         });
 
-        container.querySelector('#btn-refresh-areas').addEventListener('click', async () => {
+        container.querySelector('#btn-refresh-areas')?.addEventListener('click', async () => {
           showToast('Đang làm mới dữ liệu địa bàn...', 'info');
           try {
             customAreas = await dbService.getAllCustomAdministrativeAreas();
