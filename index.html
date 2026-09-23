@@ -1292,7 +1292,7 @@
           <div class="row">
             <div class="col-12">
               <div class="card shadow-sm border-0 h-100">
-                <div class="card-header-clean d-flex justify-content-between align-items-center">
+                <div class="card-header-clean d-flex flex-wrap justify-content-between align-items-center gap-3">
                   <h6 class="fw-bold mb-0">Danh sách Nhân Sự Toàn Quốc</h6>
                   <div class="d-flex gap-2">
                     <button class="btn btn-outline-primary btn-sm fw-bold d-flex align-items-center gap-1" id="btn-open-create-zone">
@@ -1303,6 +1303,22 @@
                     </button>
                   </div>
                 </div>
+                
+                <!-- BỘ LỌC VÀ TÌM KIẾM -->
+                <div class="p-3 border-bottom bg-light d-flex flex-wrap gap-3 align-items-center">
+                  <div class="d-flex align-items-center gap-2" style="flex: 1; min-width: 250px;">
+                    <i data-lucide="search" class="text-muted" style="width: 18px;"></i>
+                    <input type="text" class="form-control form-control-sm border-0 shadow-none bg-transparent" id="search-personnel" placeholder="Tìm kiếm theo Tên, SĐT, Mã NV..." style="font-size: 14px;">
+                  </div>
+                  <div style="width: 200px; border-left: 1px solid #cbd5e1; padding-left: 15px;">
+                    <select class="form-select form-select-sm border-0 shadow-none bg-transparent fw-semibold text-primary" id="filter-role" style="cursor: pointer;">
+                      <option value="ALL">Tất cả vai trò</option>
+                      <option value="ZONE_LEAD">Chỉ Trưởng Zone</option>
+                      <option value="INSPECTOR">Chỉ Giám định viên</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div class="card-body p-0">
                   <div class="table-responsive">
                     <table class="table table-modern mb-0">
@@ -1316,23 +1332,8 @@
                           <th class="text-end">Thao Tác</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        ${allPersonnel.map(p => `
-                          <tr>
-                            <td><span class="badge ${p.type === 'ZONE_LEAD' ? 'bg-danger' : 'bg-primary'}">${p.type === 'ZONE_LEAD' ? 'Trưởng Zone' : 'Giám định viên'}</span></td>
-                            <td>${p.empCode}</td>
-                            <td class="fw-bold ${p.type === 'ZONE_LEAD' ? 'text-danger' : 'text-primary'}">${p.name}</td>
-                            <td>${p.phone}</td>
-                            <td><span class="badge-soft badge-soft-blue">${p.zoneName}</span></td>
-                            <td>
-                              <div class="d-flex gap-2 justify-content-end">
-                                <button class="btn btn-sm btn-light border btn-edit" data-type="${p.type}" data-id="${p.id}" title="Chỉnh sửa"><i data-lucide="edit" style="width:14px; color: #2563eb"></i></button>
-                                <button class="btn btn-sm btn-light border btn-delete" data-type="${p.type}" data-id="${p.id}" title="Xóa"><i data-lucide="trash-2" style="width:14px; color: #dc2626"></i></button>
-                              </div>
-                            </td>
-                          </tr>
-                        `).join('')}
-                        ${allPersonnel.length === 0 ? '<tr><td colspan="6" class="text-center py-4 text-muted">Chưa có dữ liệu nhân sự</td></tr>' : ''}
+                      <tbody id="personnel-tbody">
+                        <!-- Rows rendered by JS -->
                       </tbody>
                     </table>
                   </div>
@@ -1412,7 +1413,45 @@
             </div>
           </div>
         `;
-        lucide.createIcons();
+        
+        const renderTable = () => {
+          const term = container.querySelector('#search-personnel').value.toLowerCase();
+          const role = container.querySelector('#filter-role').value;
+          
+          const filtered = allPersonnel.filter(p => {
+            const matchRole = role === 'ALL' || p.type === role;
+            const matchTerm = !term || p.name.toLowerCase().includes(term) || p.phone.includes(term) || p.empCode.toLowerCase().includes(term);
+            return matchRole && matchTerm;
+          });
+
+          container.querySelector('#personnel-tbody').innerHTML = filtered.map(p => `
+            <tr>
+              <td><span class="badge ${p.type === 'ZONE_LEAD' ? 'bg-danger' : 'bg-primary'}">${p.type === 'ZONE_LEAD' ? 'Trưởng Zone' : 'Giám định viên'}</span></td>
+              <td>${p.empCode}</td>
+              <td class="fw-bold ${p.type === 'ZONE_LEAD' ? 'text-danger' : 'text-primary'}">${p.name}</td>
+              <td>${p.phone}</td>
+              <td><span class="badge-soft badge-soft-blue">${p.zoneName}</span></td>
+              <td>
+                <div class="d-flex gap-2 justify-content-end">
+                  <button class="btn btn-sm btn-light border btn-edit" data-type="${p.type}" data-id="${p.id}" title="Chỉnh sửa"><i data-lucide="edit" style="width:14px; color: #2563eb"></i></button>
+                  <button class="btn btn-sm btn-light border btn-delete" data-type="${p.type}" data-id="${p.id}" title="Xóa"><i data-lucide="trash-2" style="width:14px; color: #dc2626"></i></button>
+                </div>
+              </td>
+            </tr>
+          `).join('');
+
+          if(filtered.length === 0) {
+            container.querySelector('#personnel-tbody').innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Không tìm thấy nhân sự phù hợp</td></tr>';
+          }
+          lucide.createIcons();
+        };
+
+        // Render bảng lần đầu
+        renderTable();
+
+        // Gắn sự kiện Tìm kiếm và Lọc
+        container.querySelector('#search-personnel').addEventListener('input', renderTable);
+        container.querySelector('#filter-role').addEventListener('change', renderTable);
         
         // Cấp phát Bootstrap Modals
         const modalIns = new bootstrap.Modal(document.getElementById('modalCreateInspector'));
@@ -1438,12 +1477,12 @@
           modalZone.show();
         });
 
-        // Xử lý nút Sửa
-        container.querySelectorAll('.btn-edit').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const btnEl = e.currentTarget;
-            const type = btnEl.dataset.type;
-            const id = btnEl.dataset.id;
+        // Xử lý nút Sửa và Xóa (Dùng Event Delegation trên tbody)
+        container.querySelector('#personnel-tbody').addEventListener('click', async (e) => {
+          const editBtn = e.target.closest('.btn-edit');
+          if (editBtn) {
+            const type = editBtn.dataset.type;
+            const id = editBtn.dataset.id;
             const person = allPersonnel.find(p => p.id === id);
             
             if (type === 'INSPECTOR') {
@@ -1465,15 +1504,12 @@
               document.getElementById('btn-submit-zone').innerText = 'Lưu Thay Đổi';
               modalZone.show();
             }
-          });
-        });
+          }
 
-        // Xử lý nút Xóa
-        container.querySelectorAll('.btn-delete').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            const btnEl = e.currentTarget;
-            const type = btnEl.dataset.type;
-            const id = btnEl.dataset.id;
+          const delBtn = e.target.closest('.btn-delete');
+          if (delBtn) {
+            const type = delBtn.dataset.type;
+            const id = delBtn.dataset.id;
             
             if (confirm("Bạn có chắc chắn muốn xóa nhân sự này không? Hành động không thể hoàn tác!")) {
               try {
@@ -1488,7 +1524,7 @@
                 alert("Lỗi khi xóa: " + err.message);
               }
             }
-          });
+          }
         });
 
         // Xử lý submit Giám định viên
