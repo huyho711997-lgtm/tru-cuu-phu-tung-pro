@@ -1271,6 +1271,7 @@
             empCode: z.code || 'ZL-' + z.zoneId.slice(-4),
             name: z.leadName,
             phone: z.leadPhone,
+            zoneId: z.zoneId,
             zoneName: z.name,
             raw: z
           });
@@ -1283,59 +1284,120 @@
             empCode: i.empCode,
             name: i.fullName,
             phone: i.phone,
+            zoneId: i.zoneId,
             zoneName: z ? z.name : '-',
+            leadName: z ? z.leadName : null,
             raw: i
           });
         });
 
+        const totalLeads = allPersonnel.filter(p => p.type === 'ZONE_LEAD').length;
+        const totalInspectors = allPersonnel.filter(p => p.type === 'INSPECTOR').length;
+
         container.innerHTML = `
           <div class="row">
             <div class="col-12">
-              <div class="card shadow-sm border-0 h-100">
-                <div class="card-header-clean d-flex flex-wrap justify-content-between align-items-center gap-3">
-                  <h6 class="fw-bold mb-0">Danh sách Nhân Sự Toàn Quốc</h6>
-                  <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-sm fw-bold d-flex align-items-center gap-1" id="btn-open-create-zone">
-                      <i data-lucide="plus-circle" style="width: 16px;"></i> Tạo Trưởng Zone
+              <div class="card shadow-sm border-0">
+                <!-- TOP HEADER -->
+                <div class="card-header-clean py-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="header-icon-box" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #2563eb; width: 44px; height: 44px;">
+                      <i data-lucide="users" style="width: 22px; height: 22px;"></i>
+                    </div>
+                    <div>
+                      <div class="d-flex align-items-center gap-2">
+                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 16.5px;">Quản Lý Nhân Sự Toàn Quốc</h5>
+                        <span class="badge-soft badge-soft-slate fw-bold" id="badge-total-count">${allPersonnel.length} nhân sự</span>
+                      </div>
+                      <small class="text-muted" style="font-size: 12.5px;">Danh mục và phân quyền Trưởng Zone, Giám định viên trực thuộc</small>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-outline-primary btn-sm fw-semibold d-flex align-items-center gap-2 px-3 py-2" id="btn-open-create-zone" style="border-radius: var(--radius-md); font-size: 13px;">
+                      <i data-lucide="shield-plus" style="width: 16px; height: 16px;"></i> Tạo Trưởng Zone
                     </button>
-                    <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-1" id="btn-open-create-inspector">
-                      <i data-lucide="user-plus" style="width: 16px;"></i> Tạo Nhân Sự
+                    <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-2 px-3 py-2 shadow-sm" id="btn-open-create-inspector" style="border-radius: var(--radius-md); font-size: 13px;">
+                      <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> Thêm Giám Định Viên
                     </button>
                   </div>
                 </div>
                 
-                <!-- BỘ LỌC VÀ TÌM KIẾM -->
-                <div class="p-3 border-bottom bg-light d-flex flex-wrap gap-3 align-items-center">
-                  <div class="d-flex align-items-center gap-2" style="flex: 1; min-width: 250px;">
-                    <i data-lucide="search" class="text-muted" style="width: 18px;"></i>
-                    <input type="text" class="form-control form-control-sm border-0 shadow-none bg-transparent" id="search-personnel" placeholder="Tìm kiếm theo Tên, SĐT, Mã NV..." style="font-size: 14px;">
-                  </div>
-                  <div style="width: 200px; border-left: 1px solid #cbd5e1; padding-left: 15px;">
-                    <select class="form-select form-select-sm border-0 shadow-none bg-transparent fw-semibold text-primary" id="filter-role" style="cursor: pointer;">
-                      <option value="ALL">Tất cả vai trò</option>
-                      <option value="ZONE_LEAD">Chỉ Trưởng Zone</option>
-                      <option value="INSPECTOR">Chỉ Giám định viên</option>
-                    </select>
+                <!-- PREMIUM FILTER & SEARCH TOOLBAR -->
+                <div class="p-3 bg-white border-bottom" style="background: #fafbfe;">
+                  <div class="row g-3 align-items-center">
+                    <!-- Ô tìm kiếm thông minh -->
+                    <div class="col-lg-6 col-md-12">
+                      <div class="position-relative d-flex align-items-center">
+                        <i data-lucide="search" class="text-muted position-absolute" style="left: 14px; width: 17px; height: 17px; pointer-events: none;"></i>
+                        <input type="text" 
+                               class="form-control" 
+                               id="search-personnel" 
+                               placeholder="Tìm theo tên, SĐT, mã NV hoặc zone..." 
+                               style="padding-left: 40px; padding-right: 36px; height: 42px; border-radius: 10px; font-size: 13.5px; border: 1px solid var(--border-medium); background: #ffffff;">
+                        <button class="btn btn-link text-muted position-absolute p-0 d-none" id="btn-clear-search" style="right: 12px; text-decoration: none;" title="Xóa tìm kiếm">
+                          <i data-lucide="x-circle" style="width: 16px; height: 16px;"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Bộ lọc vai trò dạng Segmented Pills cực đẹp -->
+                    <div class="col-lg-6 col-md-12">
+                      <div class="d-flex justify-content-lg-end gap-2 flex-wrap">
+                        <div class="segmented-control" style="padding: 3px; border-radius: 10px; background: #f1f5f9;">
+                          <input type="radio" name="personnelRoleFilter" id="filter-role-all" value="ALL" checked>
+                          <label for="filter-role-all" style="padding: 7px 14px; font-size: 12.5px;">
+                            <span>Tất cả</span>
+                            <span class="badge rounded-pill bg-white text-dark ms-1 shadow-sm" style="font-size: 11px;">${allPersonnel.length}</span>
+                          </label>
+
+                          <input type="radio" name="personnelRoleFilter" id="filter-role-lead" value="ZONE_LEAD">
+                          <label for="filter-role-lead" style="padding: 7px 14px; font-size: 12.5px;">
+                            <i data-lucide="shield-check" style="width: 14px; height: 14px; color: #e11d48;"></i>
+                            <span>Trưởng Zone</span>
+                            <span class="badge rounded-pill bg-white text-dark ms-1 shadow-sm" style="font-size: 11px;">${totalLeads}</span>
+                          </label>
+
+                          <input type="radio" name="personnelRoleFilter" id="filter-role-inspector" value="INSPECTOR">
+                          <label for="filter-role-inspector" style="padding: 7px 14px; font-size: 12.5px;">
+                            <i data-lucide="user" style="width: 14px; height: 14px; color: #2563eb;"></i>
+                            <span>Giám Định Viên</span>
+                            <span class="badge rounded-pill bg-white text-dark ms-1 shadow-sm" style="font-size: 11px;">${totalInspectors}</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
+                <!-- TABLE DANH SÁCH -->
                 <div class="card-body p-0">
                   <div class="table-responsive">
-                    <table class="table table-modern mb-0">
+                    <table class="table table-modern mb-0 align-middle">
                       <thead>
                         <tr>
-                          <th>Vai Trò</th>
-                          <th>Mã NV</th>
+                          <th style="width: 150px;">Vai Trò</th>
+                          <th style="width: 120px;">Mã NV</th>
                           <th>Họ và Tên</th>
-                          <th>SĐT</th>
-                          <th>Quản lý / Thuộc Zone</th>
-                          <th class="text-end">Thao Tác</th>
+                          <th>Liên Hệ</th>
+                          <th>Quản Lý / Đơn Vị</th>
+                          <th class="text-end" style="width: 120px;">Thao Tác</th>
                         </tr>
                       </thead>
                       <tbody id="personnel-tbody">
-                        <!-- Rows rendered by JS -->
+                        <!-- Render qua JS -->
                       </tbody>
                     </table>
+                  </div>
+                </div>
+
+                <!-- TABLE FOOTER / STATS -->
+                <div class="p-3 border-top bg-light d-flex justify-content-between align-items-center flex-wrap gap-2 text-muted" style="font-size: 12.5px;">
+                  <div id="filter-result-info">
+                    Đang hiển thị <strong>${allPersonnel.length}</strong> nhân sự
+                  </div>
+                  <div class="d-flex align-items-center gap-3">
+                    <span><span class="pulse-dot d-inline-block me-1" style="width:7px;height:7px;"></span> Đồng bộ dữ liệu trực tiếp</span>
                   </div>
                 </div>
               </div>
@@ -1345,34 +1407,46 @@
           <!-- MODAL TẠO/SỬA GIÁM ĐỊNH VIÊN -->
           <div class="modal fade" id="modalCreateInspector" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-light">
-                  <h6 class="modal-title fw-bold" id="ins-modal-title">Tạo Giám Định Viên Mới</h6>
+              <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg);">
+                <div class="modal-header py-3 px-4 border-bottom" style="background: #f8fafc;">
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="header-icon-box" style="width: 32px; height: 32px; background: #eff6ff; color: #2563eb;">
+                      <i data-lucide="user-check" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <h6 class="modal-title fw-bold text-dark mb-0" id="ins-modal-title">Tạo Giám Định Viên Mới</h6>
+                  </div>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                   <form id="form-create-inspector">
                     <input type="hidden" id="edit-ins-id">
                     <div class="mb-3">
-                      <label class="field-label">Mã NV (Tự động cấp)</label>
-                      <input type="text" class="form-control bg-light" id="ins-emp-code" readonly placeholder="Ví dụ: GDV-1234">
+                      <label class="field-label">Mã Giám Định Viên (Tự Động Cấp)</label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light text-muted border-end-0"><i data-lucide="hash" style="width: 15px;"></i></span>
+                        <input type="text" class="form-control bg-light border-start-0 fw-bold text-primary" id="ins-emp-code" readonly placeholder="Ví dụ: GDV-1234">
+                      </div>
                     </div>
                     <div class="mb-3">
-                      <label class="field-label">Họ và Tên</label>
-                      <input type="text" class="form-control" id="ins-name" required placeholder="Nguyễn Văn A">
+                      <label class="field-label">Họ và Tên Giám Định Viên <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="ins-name" required placeholder="Nhập họ và tên...">
                     </div>
                     <div class="mb-3">
-                      <label class="field-label">Số điện thoại</label>
-                      <input type="text" class="form-control" id="ins-phone" required>
+                      <label class="field-label">Số Điện Thoại Liên Hệ <span class="text-danger">*</span></label>
+                      <input type="tel" class="form-control" id="ins-phone" required placeholder="Ví dụ: 0912345678">
                     </div>
-                    <div class="mb-3">
-                      <label class="field-label">Trưởng Zone Quản Lý</label>
+                    <div class="mb-4">
+                      <label class="field-label">Trưởng Zone Quản Lý Trực Tiếp <span class="text-danger">*</span></label>
                       <select class="form-select" id="ins-zone" required>
                         <option value="">-- Chọn Zone Quản Lý --</option>
                         ${zones.map(z => `<option value="${z.zoneId}">${z.name} (Quản lý: ${z.leadName})</option>`).join('')}
                       </select>
+                      <small class="text-muted mt-1 d-block" style="font-size: 11.5px;">GĐV sẽ chịu sự chỉ đạo và điều phối của Trưởng Zone này</small>
                     </div>
-                    <button type="submit" class="btn btn-primary-action w-100 fw-bold mt-2" id="btn-submit-ins">Tạo Nhân Sự</button>
+                    <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                      <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy bỏ</button>
+                      <button type="submit" class="btn btn-primary-action fw-bold px-4" id="btn-submit-ins">Tạo Nhân Sự</button>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -1382,31 +1456,42 @@
           <!-- MODAL TẠO/SỬA ZONE -->
           <div class="modal fade" id="modalCreateZone" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-light">
-                  <h6 class="modal-title fw-bold" id="zone-modal-title">Tạo Zone / Trưởng Zone Mới</h6>
+              <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg);">
+                <div class="modal-header py-3 px-4 border-bottom" style="background: #f8fafc;">
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="header-icon-box" style="width: 32px; height: 32px; background: #fff1f2; color: #e11d48;">
+                      <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <h6 class="modal-title fw-bold text-dark mb-0" id="zone-modal-title">Tạo Zone / Trưởng Zone Mới</h6>
+                  </div>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                   <form id="form-create-zone">
                     <input type="hidden" id="edit-zone-id">
                     <div class="mb-3">
-                      <label class="field-label">Tên Zone</label>
-                      <input type="text" class="form-control" id="zone-name" required placeholder="VD: Zone Miền Trung">
+                      <label class="field-label">Tên Zone / Khu Vực <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="zone-name" required placeholder="VD: Zone Miền Trung, Zone Hà Nội...">
                     </div>
                     <div class="mb-3">
-                      <label class="field-label">Mã Trưởng Zone (Tự động)</label>
-                      <input type="text" class="form-control bg-light" id="zone-lead-code" readonly placeholder="Hệ thống tự động cấp">
+                      <label class="field-label">Mã Trưởng Zone (Tự Động Cấp)</label>
+                      <div class="input-group">
+                        <span class="input-group-text bg-light text-muted border-end-0"><i data-lucide="hash" style="width: 15px;"></i></span>
+                        <input type="text" class="form-control bg-light border-start-0 fw-bold text-danger" id="zone-lead-code" readonly placeholder="Hệ thống tự động cấp">
+                      </div>
                     </div>
                     <div class="mb-3">
-                      <label class="field-label">Tên Trưởng Zone</label>
-                      <input type="text" class="form-control" id="zone-lead-name" required placeholder="Nguyễn Văn B">
+                      <label class="field-label">Họ và Tên Trưởng Zone <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="zone-lead-name" required placeholder="Nhập tên Trưởng Zone...">
                     </div>
-                    <div class="mb-3">
-                      <label class="field-label">SĐT Trưởng Zone</label>
-                      <input type="text" class="form-control" id="zone-lead-phone" required>
+                    <div class="mb-4">
+                      <label class="field-label">SĐT Trưởng Zone <span class="text-danger">*</span></label>
+                      <input type="tel" class="form-control" id="zone-lead-phone" required placeholder="Ví dụ: 0909123456">
                     </div>
-                    <button type="submit" class="btn btn-primary-action w-100 fw-bold mt-2" id="btn-submit-zone">Tạo Zone</button>
+                    <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                      <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy bỏ</button>
+                      <button type="submit" class="btn btn-primary-action fw-bold px-4" id="btn-submit-zone">Tạo Zone</button>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -1415,33 +1500,100 @@
         `;
         
         const renderTable = () => {
-          const term = container.querySelector('#search-personnel').value.toLowerCase();
-          const role = container.querySelector('#filter-role').value;
+          const searchInput = container.querySelector('#search-personnel');
+          const term = searchInput.value.trim().toLowerCase();
+          const roleRadio = container.querySelector('input[name="personnelRoleFilter"]:checked');
+          const role = roleRadio ? roleRadio.value : 'ALL';
+          const clearBtn = container.querySelector('#btn-clear-search');
           
+          if (term.length > 0) {
+            clearBtn.classList.remove('d-none');
+          } else {
+            clearBtn.classList.add('d-none');
+          }
+
           const filtered = allPersonnel.filter(p => {
             const matchRole = role === 'ALL' || p.type === role;
-            const matchTerm = !term || p.name.toLowerCase().includes(term) || p.phone.includes(term) || p.empCode.toLowerCase().includes(term);
+            const matchTerm = !term || 
+              (p.name && p.name.toLowerCase().includes(term)) || 
+              (p.phone && p.phone.includes(term)) || 
+              (p.empCode && p.empCode.toLowerCase().includes(term)) ||
+              (p.zoneName && p.zoneName.toLowerCase().includes(term));
             return matchRole && matchTerm;
           });
 
-          container.querySelector('#personnel-tbody').innerHTML = filtered.map(p => `
-            <tr>
-              <td><span class="badge ${p.type === 'ZONE_LEAD' ? 'bg-danger' : 'bg-primary'}">${p.type === 'ZONE_LEAD' ? 'Trưởng Zone' : 'Giám định viên'}</span></td>
-              <td>${p.empCode}</td>
-              <td class="fw-bold ${p.type === 'ZONE_LEAD' ? 'text-danger' : 'text-primary'}">${p.name}</td>
-              <td>${p.phone}</td>
-              <td><span class="badge-soft badge-soft-blue">${p.zoneName}</span></td>
-              <td>
-                <div class="d-flex gap-2 justify-content-end">
-                  <button class="btn btn-sm btn-light border btn-edit" data-type="${p.type}" data-id="${p.id}" title="Chỉnh sửa"><i data-lucide="edit" style="width:14px; color: #2563eb"></i></button>
-                  <button class="btn btn-sm btn-light border btn-delete" data-type="${p.type}" data-id="${p.id}" title="Xóa"><i data-lucide="trash-2" style="width:14px; color: #dc2626"></i></button>
-                </div>
-              </td>
-            </tr>
-          `).join('');
+          container.querySelector('#filter-result-info').innerHTML = `Đang hiển thị <strong>${filtered.length}</strong> / ${allPersonnel.length} nhân sự`;
 
-          if(filtered.length === 0) {
-            container.querySelector('#personnel-tbody').innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Không tìm thấy nhân sự phù hợp</td></tr>';
+          if (filtered.length === 0) {
+            container.querySelector('#personnel-tbody').innerHTML = `
+              <tr>
+                <td colspan="6" class="text-center py-5">
+                  <div class="d-flex flex-column align-items-center justify-content-center">
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: #f8fafc; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; border: 1px dashed var(--border-medium);">
+                      <i data-lucide="user-x" style="width: 26px; height: 26px; color: #94a3b8;"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-1">Không tìm thấy nhân sự phù hợp</h6>
+                    <p class="text-muted small mb-3">Vui lòng thử lại với từ khóa khác hoặc xóa bộ lọc</p>
+                    <button class="btn btn-sm btn-outline-secondary" id="btn-reset-filters" style="border-radius: 8px;">
+                      <i data-lucide="rotate-ccw" class="me-1" style="width: 14px;"></i> Đặt lại bộ lọc
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+            container.querySelector('#btn-reset-filters')?.addEventListener('click', () => {
+              searchInput.value = '';
+              const allRadio = container.querySelector('#filter-role-all');
+              if (allRadio) allRadio.checked = true;
+              renderTable();
+            });
+          } else {
+            container.querySelector('#personnel-tbody').innerHTML = filtered.map(p => {
+              const isLead = p.type === 'ZONE_LEAD';
+              const initial = (p.name || '?').charAt(0).toUpperCase();
+              const avatarBg = isLead ? 'linear-gradient(135deg, #e11d48, #f43f5e)' : 'linear-gradient(135deg, #2563eb, #3b82f6)';
+              const roleBadge = isLead 
+                ? `<span class="badge-soft badge-soft-rose fw-bold"><i data-lucide="shield-check" style="width: 13px;"></i> Trưởng Zone</span>`
+                : `<span class="badge-soft badge-soft-blue fw-bold"><i data-lucide="user" style="width: 13px;"></i> Giám định viên</span>`;
+
+              const zoneDetail = isLead
+                ? `<span class="badge-soft badge-soft-slate"><i data-lucide="map-pin" style="width: 12px;"></i> ${p.zoneName}</span>`
+                : `<span class="badge-soft badge-soft-slate mb-1"><i data-lucide="map-pin" style="width: 12px;"></i> ${p.zoneName}</span>${p.leadName ? `<br><small class="text-muted" style="font-size: 11.5px;">QL: <strong class="text-dark">${p.leadName}</strong></small>` : ''}`;
+
+              return `
+                <tr>
+                  <td>${roleBadge}</td>
+                  <td><code class="fw-bold text-dark px-2 py-1 bg-light rounded border" style="font-size: 12px;">${p.empCode}</code></td>
+                  <td>
+                    <div class="d-flex align-items-center gap-3">
+                      <div style="width: 36px; height: 36px; border-radius: 50%; background: ${avatarBg}; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        ${initial}
+                      </div>
+                      <div>
+                        <div class="fw-bold text-dark" style="font-size: 14px;">${p.name}</div>
+                        <small class="text-muted">${isLead ? 'Phụ trách điều hành' : 'Hiện trường & Gara'}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <a href="tel:${p.phone}" class="text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 text-dark hover-primary" style="font-size: 13.5px;">
+                      <i data-lucide="phone" style="width: 13px; color: var(--primary);"></i> ${p.phone}
+                    </a>
+                  </td>
+                  <td>${zoneDetail}</td>
+                  <td>
+                    <div class="d-flex gap-1 justify-content-end">
+                      <button class="btn btn-sm btn-light border btn-edit p-2" data-type="${p.type}" data-id="${p.id}" title="Chỉnh sửa thông tin" style="border-radius: 8px;">
+                        <i data-lucide="pencil" style="width: 14px; height: 14px; color: #2563eb;"></i>
+                      </button>
+                      <button class="btn btn-sm btn-light border btn-delete p-2" data-type="${p.type}" data-id="${p.id}" title="Xóa nhân sự" style="border-radius: 8px;">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px; color: #dc2626;"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('');
           }
           lucide.createIcons();
         };
@@ -1449,9 +1601,20 @@
         // Render bảng lần đầu
         renderTable();
 
-        // Gắn sự kiện Tìm kiếm và Lọc
-        container.querySelector('#search-personnel').addEventListener('input', renderTable);
-        container.querySelector('#filter-role').addEventListener('change', renderTable);
+        // Gắn sự kiện Tìm kiếm và Lọc Segmented Control
+        const searchInput = container.querySelector('#search-personnel');
+        searchInput.addEventListener('input', renderTable);
+        
+        container.querySelectorAll('input[name="personnelRoleFilter"]').forEach(radio => {
+          radio.addEventListener('change', renderTable);
+        });
+
+        // Xóa nhanh thanh tìm kiếm
+        container.querySelector('#btn-clear-search').addEventListener('click', () => {
+          searchInput.value = '';
+          searchInput.focus();
+          renderTable();
+        });
         
         // Cấp phát Bootstrap Modals
         const modalIns = new bootstrap.Modal(document.getElementById('modalCreateInspector'));
