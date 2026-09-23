@@ -4790,9 +4790,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                     <!-- 2. Tỉnh / Thành phố (LUXURY SEARCHABLE DROPDOWN) -->
                     <div class="mb-3">
-                      <label class="field-label d-flex justify-content-between align-items-center mb-1">
+                      <label class="field-label d-flex align-items-center gap-2 mb-1">
                         <span class="fw-bold" style="font-size: 11.5px; color: #475569; letter-spacing: 0.03em; text-transform: uppercase;">2. Tỉnh / Thành phố <span class="text-danger">*</span></span>
-                        <span class="badge bg-light text-secondary border small fw-normal py-0 px-1.5" id="province-count-badge" style="font-size: 10.5px; border-radius: 6px;">${provinces.length} Tỉnh thành</span>
+                        <span class="badge-filter-counter blue" id="province-count-badge">${provinces.length} Tỉnh thành</span>
                       </label>
                       
                       <div class="custom-select-luxury" id="wrapper-lookup-province" style="position: relative; z-index: 35;">
@@ -4871,9 +4871,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                     <!-- 3. Quận / Huyện / Xã / Phường (LUXURY SEARCHABLE DROPDOWN) -->
                     <div class="mb-3">
-                      <label class="field-label d-flex justify-content-between align-items-center mb-1">
+                      <label class="field-label d-flex align-items-center gap-2 mb-1">
                         <span class="fw-bold" style="font-size: 11.5px; color: #475569; letter-spacing: 0.03em; text-transform: uppercase;">3. Quận / Huyện / Xã / Phường</span>
-                        <span class="badge bg-light text-secondary border small fw-normal py-0 px-1.5" id="ward-count-badge" style="font-size: 10.5px; border-radius: 6px;">Chưa chọn tỉnh</span>
+                        <span class="badge-filter-counter purple" id="ward-count-badge">Chưa chọn tỉnh</span>
                       </label>
                       
                       <div class="custom-select-luxury" id="wrapper-lookup-ward" style="position: relative; z-index: 30;">
@@ -5440,21 +5440,21 @@ const scheduleEngine = new ScheduleEngine(dbService);
       renderResultCard(container, res, queryMeta) {
         if (!res.success) {
           container.innerHTML = `
-            <div class="card border-0 shadow-sm" style="border-left: 6px solid #ef4444 !important;">
-              <div class="card-header-clean bg-light">
-                <div class="d-flex align-items-center gap-2 text-danger fw-bold">
-                  <i data-lucide="alert-octagon"></i> KHÔNG THỂ XÁC ĐỊNH NGƯỜI TRỰC
+            <div class="card border-0 shadow-sm" style="border-left: 5px solid #ef4444 !important; border-radius: 14px;">
+              <div class="card-header-clean bg-light py-2.5 px-3">
+                <div class="d-flex align-items-center gap-2 text-danger fw-bold" style="font-size: 13.5px;">
+                  <i data-lucide="alert-octagon" style="width: 17px; height: 17px;"></i> KHÔNG THỂ XÁC ĐỊNH NGƯỜI TRỰC
                 </div>
               </div>
-              <div class="card-body p-4">
-                <h6 class="text-danger fw-bold mb-3">${res.error}</h6>
-                <ul class="mb-4 text-muted small">${res.warnings.map(w => `<li class="text-danger">${w}</li>`).join('')}</ul>
+              <div class="card-body p-3 p-md-3.5">
+                <h6 class="text-danger fw-bold mb-2" style="font-size: 14px;">${res.error}</h6>
+                <ul class="mb-3 text-muted small ps-3" style="font-size: 12px;">${res.warnings.map(w => `<li class="text-danger">${w}</li>`).join('')}</ul>
                 ${res.zoneLead ? `
-                  <div class="p-3 bg-light rounded-3 border">
-                    <span class="field-label text-primary">Đầu mối xử lý khẩn cấp (Trưởng Zone)</span>
-                    <h5 class="mt-1 mb-1 text-dark fw-bold">${res.zoneLead.name}</h5>
-                    <a href="tel:${res.zoneLead.phone}" class="btn btn-sm btn-outline-primary fw-bold mt-1">
-                      <i data-lucide="phone" class="me-1"></i> ${res.zoneLead.phone}
+                  <div class="p-2.5 bg-light rounded-3 border">
+                    <span class="field-label text-primary mb-1 d-block fw-bold text-uppercase" style="font-size: 11px;">Đầu mối xử lý khẩn cấp (Trưởng Zone)</span>
+                    <h6 class="mt-1 mb-1 text-dark fw-bold" style="font-size: 14px;">${res.zoneLead.name}</h6>
+                    <a href="tel:${res.zoneLead.phone}" class="btn btn-sm btn-outline-primary fw-bold mt-1" style="border-radius: 8px; font-size: 12px; padding: 4px 10px;">
+                      <i data-lucide="phone" class="me-1" style="width: 13px; height: 13px;"></i> ${res.zoneLead.phone}
                     </a>
                   </div>
                 ` : ''}
@@ -5468,100 +5468,100 @@ const scheduleEngine = new ScheduleEngine(dbService);
         const { primary, backup, zone, source, warnings, shiftTime } = res;
 
         container.innerHTML = `
-          <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header-clean">
+          <div class="card border-0 shadow-sm mb-3" style="border-radius: 14px;">
+            <div class="card-header-clean py-2.5 px-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
               <div class="d-flex align-items-center gap-2 flex-wrap">
-                <span class="badge-soft badge-soft-blue"><i data-lucide="map-pin" style="width: 14px;"></i> ${zone.name}</span>
-                <span class="badge-soft ${source.includes('GARA') ? 'badge-soft-green' : 'badge-soft-slate'}">${source}</span>
+                <span class="badge-soft badge-soft-blue fw-bold" style="font-size: 11px; padding: 3px 8px;"><i data-lucide="map-pin" style="width: 13px; height: 13px;"></i> ${zone.name}</span>
+                <span class="badge-soft ${source.includes('GARA') ? 'badge-soft-green' : 'badge-soft-slate'} fw-bold" style="font-size: 11px; padding: 3px 8px;">${source}</span>
               </div>
-              <span class="badge-soft badge-soft-slate"><i data-lucide="clock" style="width: 14px;"></i> ${shiftTime}</span>
+              <span class="badge-soft badge-soft-slate fw-bold" style="font-size: 11px; padding: 3px 8px;"><i data-lucide="clock" style="width: 13px; height: 13px;"></i> ${shiftTime}</span>
             </div>
 
-            <div class="card-body p-4">
+            <div class="card-body p-3 p-md-3.5">
               <!-- GĐV TRỰC CHÍNH (HERO PROFILE) -->
-              <div class="p-4 rounded-4 mb-4 border" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-color: #e2e8f0 !important;">
-                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
-                  <span class="badge-soft badge-soft-green fw-bold">
+              <div class="p-3 rounded-3 mb-2.5 border" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-color: #e2e8f0 !important;">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                  <span class="badge-soft badge-soft-green fw-bold" style="font-size: 10.5px; padding: 2px 7px;">
                     <span class="pulse-dot me-1"></span> GĐV TRỰC CHÍNH TIẾP NHẬN
                   </span>
-                  <span class="text-muted small">Mã NV: <strong>${primary.empCode || 'N/A'}</strong></span>
+                  <span class="text-muted small" style="font-size: 11.5px;">Mã NV: <strong>${primary.empCode || 'N/A'}</strong></span>
                 </div>
 
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-3 gap-3">
-                  <div class="d-flex align-items-center gap-3">
-                    <div style="width: 54px; height: 54px; border-radius: 50%; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mt-2 gap-2.5">
+                  <div class="d-flex align-items-center gap-2.5">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25); flex-shrink: 0;">
                       ${primary.fullName.charAt(0)}
                     </div>
                     <div>
-                      <h3 class="mb-0 fw-bold" style="color: var(--text-main); font-size: 22px;">${primary.fullName}</h3>
-                      <small class="text-muted">${zone.name}</small>
+                      <h5 class="mb-0 fw-bold" style="color: var(--text-main); font-size: 17px; line-height: 1.2;">${primary.fullName}</h5>
+                      <small class="text-muted" style="font-size: 12px;">${zone.name}</small>
                     </div>
                   </div>
 
-                  <div class="d-flex gap-2">
-                    <a href="tel:${primary.phone}" class="btn btn-call-vip shadow">
-                      <i data-lucide="phone-call" style="width: 18px; height: 18px;"></i> GỌI: ${primary.phone}
+                  <div class="d-flex gap-2 align-items-center flex-shrink-0">
+                    <a href="tel:${primary.phone}" class="btn btn-call-vip shadow-sm" style="padding: 7px 15px; font-size: 13px; border-radius: 9px; box-shadow: 0 3px 8px rgba(16, 185, 129, 0.25);">
+                      <i data-lucide="phone-call" style="width: 15px; height: 15px;"></i> GỌI: ${primary.phone}
                     </a>
-                    <button class="btn btn-light border" id="btn-copy-phone" title="Sao chép SĐT" style="border-radius: var(--radius-md);">
-                      <i data-lucide="copy" style="width: 18px; height: 18px;"></i>
+                    <button class="btn btn-light border" id="btn-copy-phone" title="Sao chép SĐT" style="width: 35px; height: 35px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px;">
+                      <i data-lucide="copy" style="width: 15px; height: 15px;"></i>
                     </button>
                   </div>
                 </div>
               </div>
 
               <!-- DỰ PHÒNG & TRƯỞNG ZONE -->
-              <div class="row g-3 mb-4">
+              <div class="row g-2.5 mb-2.5">
                 <div class="col-md-6">
-                  <div class="p-3 border rounded-3 h-100" style="background: #ffffff;">
-                    <span class="field-label mb-1">GĐV Dự Phòng:</span>
+                  <div class="p-2.5 border rounded-3 h-100" style="background: #ffffff;">
+                    <div class="text-muted fw-bold text-uppercase mb-1" style="font-size: 11px; letter-spacing: 0.03em;">GĐV Dự Phòng:</div>
                     ${backup ? `
-                      <div class="fw-bold text-dark fs-6">${backup.fullName}</div>
-                      <a href="tel:${backup.phone}" class="small text-primary text-decoration-none fw-semibold"><i data-lucide="phone" style="width: 14px;"></i> ${backup.phone}</a>
-                    ` : '<div class="text-muted small fst-italic mt-1">Không cấu hình dự phòng</div>'}
+                      <div class="fw-bold text-dark" style="font-size: 13.5px; line-height: 1.2;">${backup.fullName}</div>
+                      <a href="tel:${backup.phone}" class="small text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 mt-1" style="font-size: 12px;"><i data-lucide="phone" style="width: 12px; height: 12px;"></i> ${backup.phone}</a>
+                    ` : '<div class="text-muted small fst-italic mt-1" style="font-size: 12px;">Không cấu hình dự phòng</div>'}
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <div class="p-3 border rounded-3 h-100" style="background: #ffffff;">
-                    <span class="field-label mb-1">Trưởng Zone Điều Hành:</span>
-                    <div class="fw-bold text-dark fs-6">${zone.leadName}</div>
-                    <a href="tel:${zone.leadPhone}" class="small text-primary text-decoration-none fw-semibold"><i data-lucide="phone" style="width: 14px;"></i> ${zone.leadPhone}</a>
+                  <div class="p-2.5 border rounded-3 h-100" style="background: #ffffff;">
+                    <div class="text-muted fw-bold text-uppercase mb-1" style="font-size: 11px; letter-spacing: 0.03em;">Trưởng Zone Điều Hành:</div>
+                    <div class="fw-bold text-dark" style="font-size: 13.5px; line-height: 1.2;">${zone.leadName}</div>
+                    <a href="tel:${zone.leadPhone}" class="small text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-1 mt-1" style="font-size: 12px;"><i data-lucide="phone" style="width: 12px; height: 12px;"></i> ${zone.leadPhone}</a>
                   </div>
                 </div>
               </div>
 
               <!-- CẢNH BÁO NẾU CÓ -->
               ${warnings.length > 0 ? `
-                <div class="p-3 rounded-3 mb-4" style="background: #fffbeb; border: 1px solid #fde68a;">
-                  <span class="field-label text-warning mb-1"><i data-lucide="alert-triangle" class="me-1" style="width: 14px;"></i> Lưu ý phân công:</span>
-                  <ul class="mb-0 small text-dark">${warnings.map(w => `<li>${w}</li>`).join('')}</ul>
+                <div class="p-2.5 rounded-3 mb-2.5" style="background: #fffbeb; border: 1px solid #fde68a;">
+                  <span class="field-label text-warning mb-1 fw-bold" style="font-size: 11px;"><i data-lucide="alert-triangle" class="me-1" style="width: 13px; height: 13px;"></i> Lưu ý phân công:</span>
+                  <ul class="mb-0 small text-dark ps-3" style="font-size: 12px;">${warnings.map(w => `<li>${w}</li>`).join('')}</ul>
                 </div>
               ` : ''}
 
               <!-- GHI NHẬN ĐIỀU PHỐI TT247 -->
-              <div class="border-top pt-3">
-                <h6 class="fw-bold d-flex align-items-center gap-2 mb-3" style="font-size: 14px;">
-                  <i data-lucide="clipboard-edit" style="width: 16px; height: 16px; color: var(--primary);"></i> Ghi Nhận Điều Phối Nhanh
-                </h6>
+              <div class="border-top pt-2.5 mt-2.5">
+                <div class="fw-bold d-flex align-items-center gap-1.5 mb-2" style="font-size: 12px; color: #475569; text-transform: uppercase; letter-spacing: 0.03em;">
+                  <i data-lucide="clipboard-edit" style="width: 14px; height: 14px; color: var(--primary);"></i> Ghi Nhận Điều Phối Nhanh
+                </div>
                 <div class="row g-2">
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="rec-case-code" placeholder="Mã hồ sơ / Biển số xe *" required>
+                    <input type="text" class="form-control" id="rec-case-code" placeholder="Mã hồ sơ / Biển số xe *" style="min-height: 40px; border-radius: 9px; font-size: 13px;" required>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="rec-customer-phone" placeholder="SĐT khách hàng *" required>
+                    <input type="text" class="form-control" id="rec-customer-phone" placeholder="SĐT khách hàng *" style="min-height: 40px; border-radius: 9px; font-size: 13px;" required>
                   </div>
                   <div class="col-md-4">
-                    <select class="form-select" id="rec-call-status">
+                    <select class="form-select" id="rec-call-status" style="min-height: 40px; border-radius: 9px; font-size: 13px;">
                       <option value="connected">Đã kết nối GĐV</option>
                       <option value="busy">GĐV bận, chuyển dự phòng</option>
                       <option value="unreachable">Không nghe máy / Ngoài vùng</option>
                     </select>
                   </div>
-                  <div class="col-12 mt-2">
-                    <input type="text" class="form-control" id="rec-notes" placeholder="Ghi chú hiện trường, yêu cầu đặc biệt...">
+                  <div class="col-12">
+                    <input type="text" class="form-control" id="rec-notes" placeholder="Ghi chú hiện trường, yêu cầu đặc biệt..." style="min-height: 40px; border-radius: 9px; font-size: 13px;">
                   </div>
-                  <div class="col-12 mt-3 text-end">
-                    <button class="btn btn-primary-action px-4 py-2" id="btn-save-record">
-                      <i data-lucide="save" class="me-1" style="width: 16px; height: 16px;"></i> Lưu Nhật Ký Điều Phối
+                  <div class="col-12 text-end">
+                    <button class="btn btn-primary-action px-3.5 py-1.5 fw-bold" id="btn-save-record" style="min-height: 40px; font-size: 13px; border-radius: 9px;">
+                      <i data-lucide="save" class="me-1" style="width: 14px; height: 14px;"></i> Lưu Nhật Ký Điều Phối
                     </button>
                   </div>
                 </div>
