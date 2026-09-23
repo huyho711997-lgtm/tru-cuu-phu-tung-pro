@@ -614,6 +614,93 @@
         transform: translateX(0);
       }
     }
+
+    /* =====================================================
+       6. PREMIUM ZONE COVERAGE & LOCATION PICKER STYLES
+       ===================================================== */
+    .zone-card-premium {
+      border: 1px solid #e2e8f0 !important;
+      border-radius: 16px !important;
+      background: #ffffff !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      overflow: hidden;
+      position: relative;
+    }
+    .zone-card-premium:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.08), 0 6px 12px -4px rgba(15, 23, 42, 0.04) !important;
+      border-color: #cbd5e1 !important;
+    }
+    .province-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+    .province-tag:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+    }
+    .province-tag .btn-remove-prov {
+      border: none;
+      background: transparent;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      color: inherit;
+      opacity: 0.55;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .province-tag .btn-remove-prov:hover {
+      opacity: 1;
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+    .prov-card-label {
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      background: #ffffff;
+      cursor: pointer;
+      user-select: none;
+    }
+    .prov-card-label:hover {
+      border-color: #94a3b8;
+      background: #f8fafc;
+    }
+    .prov-card-label.is-selected {
+      border-color: var(--primary) !important;
+      background: #eff6ff !important;
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+    .badge-soft-purple {
+      background: #f5f3ff;
+      color: #6d28d9;
+      border: 1px solid #ddd6fe;
+    }
+    .kpi-card-metric {
+      border-radius: 14px;
+      border: 1px solid #edf2f7;
+      background: #ffffff;
+      padding: 18px 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+    }
+    .kpi-card-metric:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      transform: translateY(-1px);
+    }
   </style>
 
 </head>
@@ -3614,6 +3701,32 @@ const scheduleEngine = new ScheduleEngine(dbService);
           console.warn("Lỗi tải dữ liệu phân bổ địa bàn:", e);
         }
 
+        // Region helper functions
+        const getRegionName = (reg) => {
+          switch (reg) {
+            case 'bac': return 'Miền Bắc';
+            case 'trung': return 'Miền Trung';
+            case 'tay_nguyen': return 'Tây Nguyên';
+            case 'nam': return 'Miền Nam';
+            default: return 'Khác';
+          }
+        };
+
+        const getRegionStyle = (reg) => {
+          switch (reg) {
+            case 'bac':
+              return { bg: '#ecfdf5', color: '#065f46', border: '#a7f3d0', badgeClass: 'badge-soft-green' };
+            case 'trung':
+              return { bg: '#f0f9ff', color: '#0369a1', border: '#bae6fd', badgeClass: 'badge-soft-blue' };
+            case 'tay_nguyen':
+              return { bg: '#fffbeb', color: '#92400e', border: '#fde68a', badgeClass: 'badge-soft-amber' };
+            case 'nam':
+              return { bg: '#f5f3ff', color: '#6d28d9', border: '#ddd6fe', badgeClass: 'badge-soft-purple' };
+            default:
+              return { bg: '#f1f5f9', color: '#334155', border: '#cbd5e1', badgeClass: 'badge-soft-slate' };
+          }
+        };
+
         // Lập bản đồ Tỉnh/Thành -> Zone đang gán (để hiển thị trạng thái)
         const provToZoneMap = new Map();
         coverages.forEach(c => {
@@ -3630,100 +3743,283 @@ const scheduleEngine = new ScheduleEngine(dbService);
         });
 
         // Tính toán thống kê
-        const totalProvinces = provinces.length;
+        const totalProvinces = provinces.length || 63;
         const assignedProvincesCount = provToZoneMap.size;
         const unassignedProvinces = provinces.filter(p => !provToZoneMap.has(p.areaCode));
+        const coveragePercent = totalProvinces > 0 ? ((assignedProvincesCount / totalProvinces) * 100).toFixed(1) : '0';
+
+        // Phân nhóm tỉnh chưa gán theo vùng miền
+        const unassignedByRegion = {
+          bac: unassignedProvinces.filter(p => p.region === 'bac'),
+          trung: unassignedProvinces.filter(p => p.region === 'trung'),
+          tay_nguyen: unassignedProvinces.filter(p => p.region === 'tay_nguyen'),
+          nam: unassignedProvinces.filter(p => p.region === 'nam')
+        };
 
         container.innerHTML = `
           <div class="row g-4">
-            <!-- TOP STATS & CONTROLS -->
+            <!-- 1. HERO TITLE & SEARCH BAR -->
             <div class="col-12">
-              <div class="card shadow-sm border-0">
-                <div class="card-header-clean py-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                  <div class="d-flex align-items-center gap-3">
-                    <div class="header-icon-box" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #6d28d9; width: 44px; height: 44px; flex-shrink: 0;">
-                      <i data-lucide="map-pinned" style="width: 22px; height: 22px;"></i>
-                    </div>
-                    <div>
-                      <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 16.5px;">Phân Bổ Địa Bàn Quản Lý</h5>
-                        <span class="badge-soft badge-soft-purple fw-bold">${zones.length} Zone điều hành</span>
-                        <span class="badge-soft badge-soft-green fw-bold">Đã gán: ${assignedProvincesCount} / ${totalProvinces} Tỉnh</span>
-                        ${unassignedProvinces.length > 0 ? `<span class="badge-soft badge-soft-amber fw-bold">${unassignedProvinces.length} Tỉnh chưa gán</span>` : ''}
-                      </div>
-                      <small class="text-muted" style="font-size: 12.5px;">1 Zone có thể quản lý nhiều Tỉnh/Thành phố. Hệ thống tự động kích hoạt lịch trực của Zone khi tra cứu tại bất kỳ tỉnh nào thuộc địa bàn.</small>
-                    </div>
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <h4 class="fw-bold mb-0 text-dark" style="font-size: 21px; letter-spacing: -0.02em;">Phân Bổ Địa Bàn Quản Lý</h4>
+                    <span class="badge-soft badge-soft-blue fw-bold" style="font-size: 11px;">Zone Coverage Matrix</span>
                   </div>
+                  <p class="text-muted mb-0" style="font-size: 13px;">
+                    1 Zone có thể quản lý nhiều Tỉnh/Thành phố. Hệ thống tự động kích hoạt lịch trực của Zone khi tra cứu tại bất kỳ địa bàn phụ trách nào.
+                  </p>
+                </div>
 
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="position-relative" style="min-width: 240px;">
-                      <i data-lucide="search" class="text-muted position-absolute" style="left: 12px; top: 11px; width: 16px; height: 16px;"></i>
-                      <input type="text" class="form-control" id="search-coverage" placeholder="Tìm theo Zone hoặc Tỉnh..." style="padding-left: 36px; height: 38px; font-size: 13px; border-radius: 8px;">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="position-relative" style="min-width: 280px;">
+                    <i data-lucide="search" class="text-muted position-absolute" style="left: 14px; top: 12px; width: 16px; height: 16px;"></i>
+                    <input type="text" class="form-control shadow-2xs" id="search-coverage" placeholder="Tìm Zone, Trưởng Zone, Tỉnh..." style="padding-left: 40px; height: 40px; font-size: 13px; border-radius: 10px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. EXECUTIVE KPI METRICS (4 CARDS) -->
+            <div class="col-12">
+              <div class="row g-3">
+                <!-- KPI 1: Zones count -->
+                <div class="col-xl-3 col-sm-6 col-12">
+                  <div class="kpi-card-metric h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div>
+                        <span class="text-muted text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.05em;">Zone Điều Hành</span>
+                        <h3 class="fw-bold text-dark mt-1 mb-0" style="font-size: 26px; letter-spacing: -0.03em;">${String(zones.length).padStart(2, '0')}</h3>
+                      </div>
+                      <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #2563eb; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="shield" style="width: 22px; height: 22px;"></i>
+                      </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between" style="font-size: 12px;">
+                      <span class="text-muted">Đơn vị tiếp nhận</span>
+                      <span class="badge-soft badge-soft-green fw-semibold"><span class="pulse-dot" style="width:6px;height:6px;"></span> Sẵn sàng trực</span>
                     </div>
                   </div>
                 </div>
 
-                ${unassignedProvinces.length > 0 ? `
-                  <div class="px-4 py-3 border-top bg-light" style="background: #fffbeb !important; border-color: #fde68a !important;">
-                    <div class="d-flex align-items-start gap-2">
-                      <i data-lucide="alert-triangle" style="width: 17px; height: 17px; color: #d97706; flex-shrink: 0; margin-top: 2px;"></i>
-                      <div class="flex-grow-1">
-                        <div class="fw-bold text-dark" style="font-size: 13px;">Còn ${unassignedProvinces.length} Tỉnh / Thành phố chưa được phân bổ cho Zone nào:</div>
-                        <div class="d-flex flex-wrap gap-1 mt-1">
-                          ${unassignedProvinces.map(p => `
-                            <span class="badge bg-white text-dark border shadow-sm fw-normal py-1 px-2" style="font-size: 11.5px;">
-                              ${p.name} <span class="text-muted">(${p.areaCode})</span>
-                            </span>
-                          `).join('')}
+                <!-- KPI 2: National Coverage -->
+                <div class="col-xl-3 col-sm-6 col-12">
+                  <div class="kpi-card-metric h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div>
+                        <span class="text-muted text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.05em;">Độ Phủ Toàn Quốc</span>
+                        <h3 class="fw-bold text-dark mt-1 mb-0" style="font-size: 26px; letter-spacing: -0.03em;">${coveragePercent}%</h3>
+                      </div>
+                      <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #f5f3ff, #ede9fe); color: #7c3aed; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="globe" style="width: 22px; height: 22px;"></i>
+                      </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top">
+                      <div class="d-flex justify-content-between text-muted mb-1" style="font-size: 11.5px;">
+                        <span>${assignedProvincesCount} / ${totalProvinces} Tỉnh Thành</span>
+                        <span class="fw-semibold text-dark">${coveragePercent}%</span>
+                      </div>
+                      <div class="progress" style="height: 6px; border-radius: 6px; background: #f1f5f9;">
+                        <div class="progress-bar" role="progressbar" style="width: ${coveragePercent}%; background: linear-gradient(90deg, #6366f1, #3b82f6); border-radius: 6px;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- KPI 3: Assigned Provinces -->
+                <div class="col-xl-3 col-sm-6 col-12">
+                  <div class="kpi-card-metric h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div>
+                        <span class="text-muted text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.05em;">Tỉnh Đã Phân Bổ</span>
+                        <h3 class="fw-bold mt-1 mb-0" style="font-size: 26px; letter-spacing: -0.03em; color: #059669;">${String(assignedProvincesCount).padStart(2, '0')}</h3>
+                      </div>
+                      <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #059669; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="map-pin" style="width: 22px; height: 22px;"></i>
+                      </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between" style="font-size: 12px;">
+                      <span class="text-muted">Định tuyến tự động</span>
+                      <span class="text-dark fw-semibold">Hoạt động 24/7</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- KPI 4: Unassigned Provinces Alert & Toggle -->
+                <div class="col-xl-3 col-sm-6 col-12">
+                  <div class="kpi-card-metric h-100" style="${unassignedProvinces.length > 0 ? 'background: linear-gradient(135deg, #fffbeb, #fef3c7); border-color: #fde68a !important;' : ''}">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div>
+                        <span class="text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.05em; color: ${unassignedProvinces.length > 0 ? '#92400e' : '#64748b'};">Tỉnh Chưa Gán</span>
+                        <h3 class="fw-bold mt-1 mb-0" style="font-size: 26px; letter-spacing: -0.03em; color: ${unassignedProvinces.length > 0 ? '#b45309' : '#059669'};">${String(unassignedProvinces.length).padStart(2, '0')}</h3>
+                      </div>
+                      <div style="width: 46px; height: 46px; border-radius: 12px; background: ${unassignedProvinces.length > 0 ? '#fef3c7' : '#ecfdf5'}; color: ${unassignedProvinces.length > 0 ? '#d97706' : '#059669'}; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="${unassignedProvinces.length > 0 ? 'alert-triangle' : 'check-circle'}" style="width: 22px; height: 22px;"></i>
+                      </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between" style="font-size: 12px; border-color: ${unassignedProvinces.length > 0 ? 'rgba(217, 119, 6, 0.2)' : '#f1f5f9'} !important;">
+                      <span style="color: ${unassignedProvinces.length > 0 ? '#92400e' : '#64748b'};">${unassignedProvinces.length > 0 ? 'Cần bổ sung đơn vị' : 'Đã phủ kín toàn quốc'}</span>
+                      ${unassignedProvinces.length > 0 ? `
+                        <button type="button" class="btn btn-xs fw-bold p-0 text-decoration-none d-flex align-items-center gap-1" id="btn-toggle-unassigned" style="font-size: 12px; color: #b45309; background: none; border: none; cursor: pointer;">
+                          <span>Xem chi tiết</span> <i data-lucide="chevron-down" id="chevron-unassigned" style="width:13px; height:13px; transition: transform 0.2s;"></i>
+                        </button>
+                      ` : ''}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. COLLAPSIBLE UNASSIGNED PROVINCES PANEL (CLEAN & REGIONAL) -->
+            ${unassignedProvinces.length > 0 ? `
+              <div class="col-12" id="panel-unassigned" style="display: none;">
+                <div class="card border-0 shadow-sm" style="border-radius: 16px; border: 1px solid #fde68a !important; overflow: hidden; background: #ffffff;">
+                  <div class="p-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-2" style="background: linear-gradient(90deg, #fffbeb, #fef3c7); border-bottom: 1px solid #fde68a;">
+                    <div class="d-flex align-items-center gap-2">
+                      <div style="width: 32px; height: 32px; border-radius: 8px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="map-pin-off" style="width: 17px; height: 17px;"></i>
+                      </div>
+                      <div>
+                        <span class="fw-bold text-dark" style="font-size: 14.5px;">Danh Sách ${unassignedProvinces.length} Tỉnh/Thành Chưa Có Zone Quản Lý</span>
+                        <span class="text-muted d-block" style="font-size: 12px;">Các tỉnh này sẽ phát sinh lỗi khi giám định viên tra cứu lịch trực nếu chưa được gán vào Zone.</span>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-close-unassigned" style="border-radius: 8px; font-size: 12px;">
+                        Thu gọn <i data-lucide="chevron-up" style="width: 13px; height: 13px;"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="p-4">
+                    <div class="row g-3">
+                      <!-- Miền Bắc -->
+                      <div class="col-lg-3 col-md-6 col-12">
+                        <div class="p-3 rounded-3 h-100" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                          <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom">
+                            <span class="fw-bold text-dark" style="font-size: 13px;">Miền Bắc</span>
+                            <span class="badge-soft badge-soft-green fw-bold" style="font-size: 11px;">${unassignedByRegion.bac.length} / 25 tỉnh</span>
+                          </div>
+                          <div class="d-flex flex-wrap gap-1" style="max-height: 220px; overflow-y: auto;">
+                            ${unassignedByRegion.bac.length > 0 ? unassignedByRegion.bac.map(p => `
+                              <span class="badge bg-white text-dark border shadow-2xs fw-normal py-1 px-2" style="font-size: 11.5px; border-radius: 6px;">
+                                ${p.name} <span class="text-muted" style="font-size: 10px;">(${p.areaCode})</span>
+                              </span>
+                            `).join('') : '<span class="text-muted fst-italic small">Đã phủ kín toàn bộ</span>'}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Miền Trung -->
+                      <div class="col-lg-3 col-md-6 col-12">
+                        <div class="p-3 rounded-3 h-100" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                          <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom">
+                            <span class="fw-bold text-dark" style="font-size: 13px;">Miền Trung</span>
+                            <span class="badge-soft badge-soft-blue fw-bold" style="font-size: 11px;">${unassignedByRegion.trung.length} / 14 tỉnh</span>
+                          </div>
+                          <div class="d-flex flex-wrap gap-1" style="max-height: 220px; overflow-y: auto;">
+                            ${unassignedByRegion.trung.length > 0 ? unassignedByRegion.trung.map(p => `
+                              <span class="badge bg-white text-dark border shadow-2xs fw-normal py-1 px-2" style="font-size: 11.5px; border-radius: 6px;">
+                                ${p.name} <span class="text-muted" style="font-size: 10px;">(${p.areaCode})</span>
+                              </span>
+                            `).join('') : '<span class="text-muted fst-italic small">Đã phủ kín toàn bộ</span>'}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Tây Nguyên -->
+                      <div class="col-lg-3 col-md-6 col-12">
+                        <div class="p-3 rounded-3 h-100" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                          <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom">
+                            <span class="fw-bold text-dark" style="font-size: 13px;">Tây Nguyên</span>
+                            <span class="badge-soft badge-soft-amber fw-bold" style="font-size: 11px;">${unassignedByRegion.tay_nguyen.length} / 5 tỉnh</span>
+                          </div>
+                          <div class="d-flex flex-wrap gap-1" style="max-height: 220px; overflow-y: auto;">
+                            ${unassignedByRegion.tay_nguyen.length > 0 ? unassignedByRegion.tay_nguyen.map(p => `
+                              <span class="badge bg-white text-dark border shadow-2xs fw-normal py-1 px-2" style="font-size: 11.5px; border-radius: 6px;">
+                                ${p.name} <span class="text-muted" style="font-size: 10px;">(${p.areaCode})</span>
+                              </span>
+                            `).join('') : '<span class="text-muted fst-italic small">Đã phủ kín toàn bộ</span>'}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Miền Nam -->
+                      <div class="col-lg-3 col-md-6 col-12">
+                        <div class="p-3 rounded-3 h-100" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                          <div class="d-flex justify-content-between align-items-center mb-2 pb-1 border-bottom">
+                            <span class="fw-bold text-dark" style="font-size: 13px;">Miền Nam</span>
+                            <span class="badge-soft badge-soft-purple fw-bold" style="font-size: 11px;">${unassignedByRegion.nam.length} / 19 tỉnh</span>
+                          </div>
+                          <div class="d-flex flex-wrap gap-1" style="max-height: 220px; overflow-y: auto;">
+                            ${unassignedByRegion.nam.length > 0 ? unassignedByRegion.nam.map(p => `
+                              <span class="badge bg-white text-dark border shadow-2xs fw-normal py-1 px-2" style="font-size: 11.5px; border-radius: 6px;">
+                                ${p.name} <span class="text-muted" style="font-size: 10px;">(${p.areaCode})</span>
+                              </span>
+                            `).join('') : '<span class="text-muted fst-italic small">Đã phủ kín toàn bộ</span>'}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                ` : ''}
+                </div>
               </div>
-            </div>
+            ` : ''}
 
-            <!-- DANH SÁCH CÁC ZONE VÀ ĐỊA BÀN PHÂN BỔ -->
+            <!-- 4. DANH SÁCH CÁC ZONE VÀ ĐỊA BÀN PHÂN BỔ -->
             <div class="col-12">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center gap-2">
+                  <h6 class="fw-bold text-dark mb-0" style="font-size: 15px;">Danh Sách Zone & Phạm Vi Phụ Trách</h6>
+                  <span class="badge bg-secondary-subtle text-secondary border px-2 py-0.5 fw-semibold" style="font-size: 11.5px; border-radius: 6px;">${zones.length} Đơn vị</span>
+                </div>
+                <small class="text-muted" style="font-size: 12px;">Nhấn vào "Phân Bổ Địa Bàn" trên từng Zone để thay đổi các tỉnh phụ trách</small>
+              </div>
+
               <div class="row g-4" id="zone-coverage-grid">
-                <!-- Render via JS -->
+                <!-- Rendered by JS -->
               </div>
             </div>
           </div>
 
           <!-- MODAL PHÂN BỔ TỈNH THÀNH CHO ZONE -->
           <div class="modal fade" id="modalAssignCoverage" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1000px; width: 95%;">
-              <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg); overflow: hidden;">
-                <div class="modal-header py-3 px-4 border-bottom" style="background: #f8fafc;">
+            <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1050px; width: 95%;">
+              <div class="modal-content border-0 shadow-lg" style="border-radius: 18px; overflow: hidden;">
+                <!-- Modal Header -->
+                <div class="modal-header py-3 px-4 border-bottom" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
                   <div class="d-flex align-items-center gap-3">
-                    <div class="header-icon-box" style="width: 36px; height: 36px; background: #ede9fe; color: #6d28d9; border-radius: 10px;">
-                      <i data-lucide="map-pinned" style="width: 18px; height: 18px;"></i>
+                    <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5, #3b82f6); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);">
+                      <i data-lucide="map-pinned" style="width: 22px; height: 22px;"></i>
                     </div>
                     <div>
-                      <h6 class="modal-title fw-bold text-dark mb-0" id="assign-modal-title" style="font-size: 16px;">Phân Bổ Tỉnh / Thành Phố</h6>
-                      <small class="text-muted" id="assign-modal-subtitle" style="font-size: 12px;">Tích chọn các tỉnh thành Zone sẽ chịu trách nhiệm quản lý</small>
+                      <div class="d-flex align-items-center gap-2">
+                        <h5 class="modal-title fw-bold text-dark mb-0" id="assign-modal-title" style="font-size: 17px;">Phân Bổ Tỉnh / Thành Phố</h5>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-0.5" id="assign-modal-badge" style="font-size: 11.5px; border-radius: 6px;">Zone Coverage</span>
+                      </div>
+                      <small class="text-muted" id="assign-modal-subtitle" style="font-size: 12.5px;">Tích chọn các tỉnh thành Zone sẽ chịu trách nhiệm quản lý trực</small>
                     </div>
                   </div>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
+                <!-- Modal Body -->
                 <div class="modal-body p-4" style="max-height: 75vh; overflow-y: auto;">
                   <input type="hidden" id="assign-target-zone-id" value="">
 
-                  <!-- BỘ LỌC TÌM KIẾM & TAB VÙNG MIỀN -->
+                  <!-- BỘ LỌC TÌM KIẾM & HÀNH ĐỘNG NHANH -->
                   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 pb-3 border-bottom">
-                    <div class="position-relative" style="min-width: 260px; flex: 1;">
-                      <i data-lucide="search" class="text-muted position-absolute" style="left: 12px; top: 11px; width: 16px; height: 16px;"></i>
-                      <input type="text" class="form-control" id="modal-search-prov" placeholder="Tìm nhanh tỉnh thành..." style="padding-left: 36px; height: 38px; font-size: 13px; border-radius: 8px;">
+                    <div class="position-relative" style="min-width: 280px; flex: 1;">
+                      <i data-lucide="search" class="text-muted position-absolute" style="left: 14px; top: 12px; width: 16px; height: 16px;"></i>
+                      <input type="text" class="form-control" id="modal-search-prov" placeholder="Tìm kiếm nhanh tên hoặc mã tỉnh..." style="padding-left: 40px; height: 40px; font-size: 13.5px; border-radius: 10px;">
                     </div>
 
                     <div class="d-flex gap-2">
-                      <button type="button" class="btn btn-sm btn-outline-primary" id="btn-select-all-tab" style="border-radius: 6px; font-size: 12px;">
-                        <i data-lucide="check-square" style="width: 13px;"></i> Chọn cả miền
+                      <button type="button" class="btn btn-sm btn-outline-primary fw-semibold d-flex align-items-center gap-1.5 px-3" id="btn-select-all-tab" style="border-radius: 8px; font-size: 12.5px;">
+                        <i data-lucide="check-square" style="width: 14px; height: 14px;"></i> Chọn cả miền
                       </button>
-                      <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-deselect-all-tab" style="border-radius: 6px; font-size: 12px;">
-                        <i data-lucide="square" style="width: 13px;"></i> Bỏ chọn cả miền
+                      <button type="button" class="btn btn-sm btn-outline-secondary fw-semibold d-flex align-items-center gap-1.5 px-3" id="btn-deselect-all-tab" style="border-radius: 8px; font-size: 12.5px;">
+                        <i data-lucide="square" style="width: 14px; height: 14px;"></i> Bỏ chọn cả miền
                       </button>
                     </div>
                   </div>
@@ -3731,36 +4027,39 @@ const scheduleEngine = new ScheduleEngine(dbService);
                   <!-- TABS VÙNG MIỀN -->
                   <ul class="nav nav-pills mb-3 gap-2" id="region-tabs" role="tablist">
                     <li class="nav-item">
-                      <button class="nav-link active py-1 px-3 fw-semibold" data-region="all" style="border-radius: 8px; font-size: 13px;">Tất cả (63)</button>
+                      <button class="nav-link active py-1.5 px-3.5 fw-semibold" data-region="all" style="border-radius: 8px; font-size: 13px;">Tất cả (63)</button>
                     </li>
                     <li class="nav-item">
-                      <button class="nav-link py-1 px-3 fw-semibold" data-region="bac" style="border-radius: 8px; font-size: 13px;">Miền Bắc (25)</button>
+                      <button class="nav-link py-1.5 px-3.5 fw-semibold" data-region="bac" style="border-radius: 8px; font-size: 13px;">Miền Bắc (25)</button>
                     </li>
                     <li class="nav-item">
-                      <button class="nav-link py-1 px-3 fw-semibold" data-region="trung" style="border-radius: 8px; font-size: 13px;">Miền Trung (14)</button>
+                      <button class="nav-link py-1.5 px-3.5 fw-semibold" data-region="trung" style="border-radius: 8px; font-size: 13px;">Miền Trung (14)</button>
                     </li>
                     <li class="nav-item">
-                      <button class="nav-link py-1 px-3 fw-semibold" data-region="tay_nguyen" style="border-radius: 8px; font-size: 13px;">Tây Nguyên (5)</button>
+                      <button class="nav-link py-1.5 px-3.5 fw-semibold" data-region="tay_nguyen" style="border-radius: 8px; font-size: 13px;">Tây Nguyên (5)</button>
                     </li>
                     <li class="nav-item">
-                      <button class="nav-link py-1 px-3 fw-semibold" data-region="nam" style="border-radius: 8px; font-size: 13px;">Miền Nam (19)</button>
+                      <button class="nav-link py-1.5 px-3.5 fw-semibold" data-region="nam" style="border-radius: 8px; font-size: 13px;">Miền Nam (19)</button>
                     </li>
                   </ul>
 
                   <!-- GRID CHECKBOX CÁC TỈNH -->
-                  <div class="row g-2" id="modal-provinces-grid">
+                  <div class="row g-2.5" id="modal-provinces-grid">
                     <!-- Rendered by JS -->
                   </div>
                 </div>
 
+                <!-- Modal Footer -->
                 <div class="modal-footer py-3 px-4 border-top d-flex justify-content-between align-items-center" style="background: #f8fafc;">
-                  <div class="text-muted small">
-                    Đang chọn: <strong class="text-primary fs-6" id="modal-selected-count">0</strong> / 63 Tỉnh Thành
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted" style="font-size: 13px;">Đang chọn:</span>
+                    <span class="badge bg-primary text-white fw-bold px-2.5 py-1" style="font-size: 13px; border-radius: 6px;" id="modal-selected-count">0</span>
+                    <span class="text-muted" style="font-size: 13px;">/ 63 Tỉnh Thành</span>
                   </div>
                   <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius: var(--radius-md);">Hủy bỏ</button>
-                    <button type="button" class="btn btn-primary-action fw-bold px-4 shadow-sm" id="btn-save-zone-coverage" style="border-radius: var(--radius-md);">
-                      Lưu Phân Bổ Địa Bàn
+                    <button type="button" class="btn btn-light px-4 fw-semibold" data-bs-dismiss="modal" style="border-radius: 10px; font-size: 13.5px;">Hủy bỏ</button>
+                    <button type="button" class="btn btn-primary-action fw-bold px-4 shadow-sm d-flex align-items-center gap-2" id="btn-save-zone-coverage" style="border-radius: 10px; font-size: 13.5px;">
+                      <i data-lucide="check" style="width: 16px; height: 16px;"></i> Lưu Phân Bổ Địa Bàn
                     </button>
                   </div>
                 </div>
@@ -3775,14 +4074,36 @@ const scheduleEngine = new ScheduleEngine(dbService);
         let activeSelectedSet = new Set();
         let currentModalRegion = 'all';
 
+        // Xử lý nút mở/đóng danh sách tỉnh chưa gán
+        const btnToggleUnassigned = container.querySelector('#btn-toggle-unassigned');
+        const btnCloseUnassigned = container.querySelector('#btn-close-unassigned');
+        const panelUnassigned = container.querySelector('#panel-unassigned');
+        const chevronUnassigned = container.querySelector('#chevron-unassigned');
+
+        if (btnToggleUnassigned && panelUnassigned) {
+          btnToggleUnassigned.addEventListener('click', () => {
+            const isHidden = panelUnassigned.style.display === 'none';
+            panelUnassigned.style.display = isHidden ? 'block' : 'none';
+            if (chevronUnassigned) {
+              chevronUnassigned.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+          });
+        }
+        if (btnCloseUnassigned && panelUnassigned) {
+          btnCloseUnassigned.addEventListener('click', () => {
+            panelUnassigned.style.display = 'none';
+            if (chevronUnassigned) chevronUnassigned.style.transform = 'rotate(0deg)';
+          });
+        }
+
         const renderGrid = (filterTerm = '') => {
           const gridEl = container.querySelector('#zone-coverage-grid');
           if (zones.length === 0) {
             gridEl.innerHTML = `
               <div class="col-12">
-                <div class="card p-5 text-center shadow-sm border-0">
-                  <div style="width: 60px; height: 60px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
-                    <i data-lucide="shield-alert" style="width: 28px; height: 28px; color: #94a3b8;"></i>
+                <div class="card p-5 text-center shadow-sm border-0" style="border-radius: 16px;">
+                  <div style="width: 64px; height: 64px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    <i data-lucide="shield-alert" style="width: 30px; height: 30px; color: #94a3b8;"></i>
                   </div>
                   <h5 class="fw-bold text-dark">Chưa có Zone điều hành nào</h5>
                   <p class="text-muted small mb-3">Vui lòng tạo Zone trong phần Quản Lý Nhân Sự trước khi phân bổ địa bàn.</p>
@@ -3814,7 +4135,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
           if (filteredZones.length === 0) {
             gridEl.innerHTML = `
               <div class="col-12">
-                <div class="card p-5 text-center shadow-sm border-0 text-muted">
+                <div class="card p-5 text-center shadow-sm border-0 text-muted" style="border-radius: 16px;">
                   Không tìm thấy Zone hoặc Tỉnh/Thành nào khớp với từ khóa "<strong>${filterTerm}</strong>".
                 </div>
               </div>
@@ -3830,59 +4151,98 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             const provObjects = allCodes.map(c => provinces.find(p => p.areaCode === c)).filter(Boolean);
 
+            // Thống kê vùng miền của Zone
+            const regionCountMap = {};
+            provObjects.forEach(p => {
+              const reg = p.region || 'other';
+              regionCountMap[reg] = (regionCountMap[reg] || 0) + 1;
+            });
+            const regionSummaryParts = Object.entries(regionCountMap).map(([reg, cnt]) => `${getRegionName(reg)} (${cnt})`);
+            const regionSummaryText = regionSummaryParts.length > 0 ? regionSummaryParts.join(', ') : 'Chưa xác định';
+
             return `
               <div class="col-lg-6 col-12">
-                <div class="card shadow-sm border-0 h-100" style="overflow: visible !important;">
-                  <div class="card-header-clean py-3 px-4 d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-3">
-                      <div class="header-icon-box" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #2563eb; width: 40px; height: 40px;">
-                        <i data-lucide="shield" style="width: 20px; height: 20px;"></i>
-                      </div>
-                      <div>
-                        <div class="d-flex align-items-center gap-2">
-                          <h6 class="fw-bold mb-0 text-dark" style="font-size: 15px;">${z.name}</h6>
-                          <code class="px-2 py-0 bg-light rounded border text-muted small">${z.code || z.zoneId}</code>
+                <div class="zone-card-premium shadow-sm h-100 d-flex flex-column">
+                  <!-- Top accent bar -->
+                  <div style="height: 4px; background: linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6);"></div>
+
+                  <div class="p-4 flex-grow-1">
+                    <!-- Zone Card Header -->
+                    <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                      <div class="d-flex align-items-center gap-3">
+                        <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #1e40af, #3b82f6); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); flex-shrink: 0;">
+                          <i data-lucide="shield" style="width: 22px; height: 22px;"></i>
                         </div>
-                        <small class="text-muted" style="font-size: 12px;">
-                          Trưởng Zone: <strong class="text-dark">${z.leadName || 'Chưa gán'}</strong> ${z.leadPhone ? `(${z.leadPhone})` : ''}
-                        </small>
+                        <div>
+                          <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <h5 class="fw-bold mb-0 text-dark" style="font-size: 16px; letter-spacing: -0.01em;">${z.name}</h5>
+                            <span class="badge bg-light text-secondary border px-2 py-0.5" style="font-size: 11px; font-family: monospace; border-radius: 6px;">${z.code || z.zoneId}</span>
+                          </div>
+                          <div class="d-flex align-items-center gap-2 mt-1 text-muted" style="font-size: 12.5px;">
+                            <i data-lucide="user-check" style="width: 13px; height: 13px; color: #64748b;"></i>
+                            <span>Trưởng Zone: <strong class="text-dark">${z.leadName || 'Chưa phân công'}</strong></span>
+                            ${z.leadPhone ? `<span class="badge bg-light text-primary border px-2 py-0.5" style="font-size: 11px;"><i data-lucide="phone" style="width: 10px; height: 10px;"></i> ${z.leadPhone}</span>` : ''}
+                          </div>
+                        </div>
                       </div>
+
+                      <button class="btn btn-sm btn-outline-primary fw-bold d-flex align-items-center gap-1.5 btn-open-assign px-3 py-1.5 shadow-2xs" data-zone-id="${z.zoneId}" style="border-radius: 8px; font-size: 12.5px; white-space: nowrap;">
+                        <i data-lucide="map-pin-plus" style="width: 14px; height: 14px;"></i> Phân Bổ Địa Bàn
+                      </button>
                     </div>
 
-                    <button class="btn btn-sm btn-outline-primary fw-bold d-flex align-items-center gap-1 btn-open-assign px-3 py-1" data-zone-id="${z.zoneId}" style="border-radius: 8px; font-size: 12.5px;">
-                      <i data-lucide="map-pin-plus" style="width: 14px; height: 14px;"></i> Phân Bổ Địa Bàn
-                    </button>
-                  </div>
-
-                  <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <span class="field-label text-primary mb-0">Địa bàn quản lý (${provObjects.length} Tỉnh/Thành):</span>
-                      <span class="badge-soft ${provObjects.length > 0 ? 'badge-soft-blue' : 'badge-soft-amber'} fw-bold" style="font-size: 11px;">
-                        ${provObjects.length > 0 ? 'Đang điều phối' : 'Chưa phân bổ'}
+                    <!-- Quick Metrics Strip -->
+                    <div class="p-2.5 rounded-3 mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2" style="background: #f8fafc; border: 1px solid #edf2f7;">
+                      <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-white text-primary border shadow-2xs fw-bold px-2.5 py-1" style="font-size: 12px; border-radius: 6px;">
+                          <i data-lucide="map" style="width: 13px; height: 13px;"></i> ${provObjects.length} Tỉnh Thành
+                        </span>
+                        <span class="text-muted" style="font-size: 12px;">• Phủ sóng: <strong class="text-dark">${regionSummaryText}</strong></span>
+                      </div>
+                      <span class="badge-soft ${provObjects.length > 0 ? 'badge-soft-green' : 'badge-soft-amber'} fw-semibold" style="font-size: 11px;">
+                        <span class="pulse-dot" style="width: 5px; height: 5px; background: ${provObjects.length > 0 ? '#10b981' : '#f59e0b'};"></span>
+                        ${provObjects.length > 0 ? 'Đang điều phối' : 'Chưa có địa bàn'}
                       </span>
                     </div>
 
-                    <div class="d-flex flex-wrap gap-1 mt-2" style="min-height: 48px;">
-                      ${provObjects.length > 0 ? provObjects.map(p => `
-                        <span class="badge-soft badge-soft-blue d-inline-flex align-items-center gap-1 py-1 px-2 fw-semibold" style="font-size: 12.5px; border-radius: 8px;">
-                          <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i>
-                          ${p.name} <span class="text-muted" style="font-size: 10.5px;">(${p.areaCode})</span>
-                          <button type="button" class="btn-close ms-1 btn-remove-prov" data-zone-id="${z.zoneId}" data-code="${p.areaCode}" data-name="${p.name}" aria-label="Gỡ" style="width: 8px; height: 8px; font-size: 8px;"></button>
-                        </span>
-                      `).join('') : `
-                        <div class="text-muted fst-italic py-2 d-flex align-items-center gap-1" style="font-size: 12.5px;">
-                          <i data-lucide="info" style="width: 14px; height: 14px;"></i>
-                          Chưa phân bổ địa bàn nào. Bấm "Phân Bổ Địa Bàn" để bắt đầu gán tỉnh thành cho Zone này.
-                        </div>
-                      `}
+                    <!-- Province Chips Section -->
+                    <div>
+                      <div class="field-label text-muted mb-2" style="font-size: 11px;">Địa bàn phụ trách trực tiếp:</div>
+                      <div class="d-flex flex-wrap gap-1.5" style="min-height: 52px;">
+                        ${provObjects.length > 0 ? provObjects.map(p => {
+                          const regStyle = getRegionStyle(p.region);
+                          return `
+                            <span class="province-tag shadow-2xs" style="background: ${regStyle.bg}; color: ${regStyle.color}; border-color: ${regStyle.border} !important;">
+                              <i data-lucide="map-pin" style="width: 12px; height: 12px; opacity: 0.85;"></i>
+                              <span>${p.name}</span>
+                              <span style="font-size: 10px; opacity: 0.7; font-family: monospace;">(${p.areaCode})</span>
+                              <button type="button" class="btn-remove-prov" data-zone-id="${z.zoneId}" data-code="${p.areaCode}" data-name="${p.name}" title="Gỡ ${p.name} khỏi Zone">
+                                <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                              </button>
+                            </span>
+                          `;
+                        }).join('') : `
+                          <div class="w-100 p-3 text-center rounded-3 border border-dashed text-muted d-flex flex-column align-items-center justify-content-center gap-1" style="background: #fafafa; border-color: #cbd5e1 !important;">
+                            <i data-lucide="map-pin-off" style="width: 22px; height: 22px; color: #94a3b8;"></i>
+                            <span style="font-size: 12.5px;">Chưa gán tỉnh thành nào cho Zone này</span>
+                            <button class="btn btn-xs btn-link p-0 text-primary fw-bold btn-open-assign" data-zone-id="${z.zoneId}" style="font-size: 12px; text-decoration: none;">
+                              + Gán tỉnh thành ngay
+                            </button>
+                          </div>
+                        `}
+                      </div>
                     </div>
                   </div>
 
-                  <div class="p-3 border-top bg-light d-flex justify-content-between align-items-center text-muted" style="font-size: 12px;">
-                    <div class="d-flex align-items-center gap-1">
-                      <span class="pulse-dot" style="width:6px; height:6px;"></span>
-                      <span>Tự động kích hoạt lịch trực của Zone khi có sự cố tại các tỉnh trên.</span>
+                  <!-- Card Footer -->
+                  <div class="py-2.5 px-4 bg-light border-top d-flex justify-content-between align-items-center text-muted" style="font-size: 12px; border-color: #f1f5f9 !important;">
+                    <div class="d-flex align-items-center gap-1.5 text-muted">
+                      <i data-lucide="radio" style="width: 13px; height: 13px; color: #3b82f6;"></i>
+                      <span>Tự động định tuyến cuộc gọi & lịch trực cho các tỉnh trên</span>
                     </div>
+                    <a href="#rules" class="text-primary fw-semibold text-decoration-none d-flex align-items-center gap-1" style="font-size: 11.5px;">
+                      Lịch trực <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -3907,18 +4267,22 @@ const scheduleEngine = new ScheduleEngine(dbService);
             const isChecked = activeSelectedSet.has(p.areaCode);
             const otherZone = provToZoneMap.get(p.areaCode);
             const isOther = otherZone && otherZone.zoneId !== currentZid;
+            const regStyle = getRegionStyle(p.region);
 
             return `
               <div class="col-md-3 col-sm-4 col-6 prov-item" data-region="${p.region || 'other'}">
-                <label class="p-2 border rounded-3 d-flex align-items-center justify-content-between gap-2 h-100 cursor-pointer prov-card-label ${isChecked ? 'bg-light border-primary' : 'bg-white'}" style="cursor: pointer; transition: all 0.15s; ${isChecked ? 'border-color: var(--primary) !important;' : ''}">
+                <label class="p-2.5 border rounded-3 d-flex align-items-center justify-content-between gap-2 h-100 prov-card-label ${isChecked ? 'is-selected' : ''}">
                   <div class="d-flex align-items-center gap-2 overflow-hidden">
-                    <input type="checkbox" class="form-check-input chk-prov m-0" value="${p.areaCode}" ${isChecked ? 'checked' : ''} style="cursor: pointer; flex-shrink: 0;">
+                    <input type="checkbox" class="form-check-input chk-prov m-0" value="${p.areaCode}" ${isChecked ? 'checked' : ''} style="cursor: pointer; flex-shrink: 0; width: 17px; height: 17px;">
                     <div class="text-truncate">
-                      <span class="fw-semibold text-dark d-block" style="font-size: 13px;">${p.name}</span>
-                      <small class="text-muted" style="font-size: 10.5px;">${p.areaCode}</small>
+                      <span class="fw-bold text-dark d-block text-truncate" style="font-size: 13px;">${p.name}</span>
+                      <div class="d-flex align-items-center gap-1">
+                        <small class="text-muted font-monospace" style="font-size: 10.5px;">${p.areaCode}</small>
+                        <span class="badge px-1 py-0" style="font-size: 9.5px; background: ${regStyle.bg}; color: ${regStyle.color}; border: 1px solid ${regStyle.border}; border-radius: 4px;">${getRegionName(p.region)}</span>
+                      </div>
                     </div>
                   </div>
-                  ${isOther ? `<span class="badge bg-secondary text-white text-nowrap" style="font-size: 9px;" title="Đang gán cho ${otherZone.name}">Thuộc: ${otherZone.name}</span>` : ''}
+                  ${isOther ? `<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle text-nowrap" style="font-size: 9.5px;" title="Đang gán cho ${otherZone.name}">Thuộc: ${otherZone.name}</span>` : ''}
                 </label>
               </div>
             `;
@@ -3929,12 +4293,13 @@ const scheduleEngine = new ScheduleEngine(dbService);
           grid.querySelectorAll('.chk-prov').forEach(chk => {
             chk.addEventListener('change', (e) => {
               const code = e.target.value;
+              const label = e.target.closest('.prov-card-label');
               if (e.target.checked) {
                 activeSelectedSet.add(code);
-                e.target.closest('.prov-card-label').classList.add('bg-light', 'border-primary');
+                if (label) label.classList.add('is-selected');
               } else {
                 activeSelectedSet.delete(code);
-                e.target.closest('.prov-card-label').classList.remove('bg-light', 'border-primary');
+                if (label) label.classList.remove('is-selected');
               }
               container.querySelector('#modal-selected-count').innerText = activeSelectedSet.size;
             });
@@ -3943,7 +4308,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
         renderGrid();
 
-        // Tìm kiếm Zone / Tỉnh
+        // Tìm kiếm Zone / Tỉnh ngoài trang chính
         container.querySelector('#search-coverage').addEventListener('input', (e) => {
           renderGrid(e.target.value);
         });
@@ -3957,8 +4322,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
             if (!targetZone) return;
 
             container.querySelector('#assign-target-zone-id').value = zid;
-            container.querySelector('#assign-modal-title').innerText = `Phân Bổ Tỉnh / Thành Phố - ${targetZone.name}`;
-            container.querySelector('#assign-modal-subtitle').innerText = `Trưởng Zone: ${targetZone.leadName} (${targetZone.leadPhone || 'Chưa rõ SĐT'})`;
+            container.querySelector('#assign-modal-title').innerText = `Phân Bổ Tỉnh / Thành - ${targetZone.name}`;
+            container.querySelector('#assign-modal-subtitle').innerText = `Trưởng Zone: ${targetZone.leadName || 'Chưa phân công'} (${targetZone.leadPhone || 'Chưa rõ SĐT'})`;
 
             const zoneCovDocs = coverages.filter(c => c.zoneId === zid && c.isActive);
             const covCodes = zoneCovDocs.map(c => c.provinceCode);
@@ -3973,6 +4338,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
             container.querySelector('#modal-search-prov').value = '';
 
             renderModalProvinces(zid);
+            lucide.createIcons();
             coverageModal.show();
           }
 
@@ -4043,7 +4409,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
             if (!chk.checked) {
               chk.checked = true;
               activeSelectedSet.add(chk.value);
-              chk.closest('.prov-card-label').classList.add('bg-light', 'border-primary');
+              const label = chk.closest('.prov-card-label');
+              if (label) label.classList.add('is-selected');
             }
           });
           container.querySelector('#modal-selected-count').innerText = activeSelectedSet.size;
@@ -4056,7 +4423,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
             if (chk.checked) {
               chk.checked = false;
               activeSelectedSet.delete(chk.value);
-              chk.closest('.prov-card-label').classList.remove('bg-light', 'border-primary');
+              const label = chk.closest('.prov-card-label');
+              if (label) label.classList.remove('is-selected');
             }
           });
           container.querySelector('#modal-selected-count').innerText = activeSelectedSet.size;
@@ -4066,6 +4434,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
         container.querySelector('#btn-save-zone-coverage').addEventListener('click', async (e) => {
           const btn = e.currentTarget;
           btn.disabled = true;
+          const origHtml = btn.innerHTML;
+          btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Đang lưu...`;
+
           const zid = container.querySelector('#assign-target-zone-id').value;
           const selectedCodes = Array.from(activeSelectedSet);
 
@@ -4096,6 +4467,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
             showToast('Lỗi khi lưu: ' + err.message, 'error');
           } finally {
             btn.disabled = false;
+            btn.innerHTML = origHtml;
+            lucide.createIcons();
           }
         });
       }
