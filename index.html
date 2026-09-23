@@ -1254,72 +1254,23 @@
         }
 
         container.innerHTML = `
-          <div class="row g-4">
-            <!-- Form Phân công / Tạo mới -->
-            <div class="col-lg-4">
-              <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header-clean">
-                  <h6 class="fw-bold mb-0">Tạo Giám Định Viên & Phân Vùng</h6>
-                </div>
-                <div class="card-body p-4">
-                  <form id="form-create-inspector">
-                    <div class="mb-3">
-                      <label class="field-label">Mã NV</label>
-                      <input type="text" class="form-control" id="ins-emp-code" required placeholder="VD: GDV004">
-                    </div>
-                    <div class="mb-3">
-                      <label class="field-label">Họ và Tên</label>
-                      <input type="text" class="form-control" id="ins-name" required placeholder="Nguyễn Văn A">
-                    </div>
-                    <div class="mb-3">
-                      <label class="field-label">Số điện thoại</label>
-                      <input type="text" class="form-control" id="ins-phone" required>
-                    </div>
-                    <div class="mb-3">
-                      <label class="field-label">Trưởng Zone Quản Lý</label>
-                      <select class="form-select" id="ins-zone" required>
-                        <option value="">-- Chọn Zone Quản Lý --</option>
-                        ${zones.map(z => `<option value="${z.zoneId}">${z.name} (Quản lý: ${z.leadName})</option>`).join('')}
-                      </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary-action w-100 fw-bold">Tạo & Phân Công</button>
-                  </form>
-                </div>
-              </div>
-              
-              <div class="card shadow-sm border-0">
-                <div class="card-header-clean">
-                  <h6 class="fw-bold mb-0">Tạo Zone / Trưởng Zone Mới</h6>
-                </div>
-                <div class="card-body p-4">
-                  <form id="form-create-zone">
-                    <div class="mb-3">
-                      <label class="field-label">Tên Zone</label>
-                      <input type="text" class="form-control" id="zone-name" required placeholder="VD: Zone Miền Trung">
-                    </div>
-                    <div class="mb-3">
-                      <label class="field-label">Tên Trưởng Zone</label>
-                      <input type="text" class="form-control" id="zone-lead-name" required>
-                    </div>
-                    <div class="mb-3">
-                      <label class="field-label">SĐT Trưởng Zone</label>
-                      <input type="text" class="form-control" id="zone-lead-phone" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary-action w-100 fw-bold">Tạo Zone</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-
-            <!-- Danh sách -->
-            <div class="col-lg-8">
+          <div class="row">
+            <div class="col-12">
               <div class="card shadow-sm border-0 h-100">
-                <div class="card-header-clean">
+                <div class="card-header-clean d-flex justify-content-between align-items-center">
                   <h6 class="fw-bold mb-0">Danh sách Nhân Sự Toàn Quốc</h6>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm fw-bold d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCreateZone">
+                      <i data-lucide="plus-circle" style="width: 16px;"></i> Tạo Trưởng Zone
+                    </button>
+                    <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalCreateInspector">
+                      <i data-lucide="user-plus" style="width: 16px;"></i> Tạo Nhân Sự
+                    </button>
+                  </div>
                 </div>
                 <div class="card-body p-0">
                   <div class="table-responsive">
-                    <table class="table table-modern">
+                    <table class="table table-modern mb-0">
                       <thead>
                         <tr>
                           <th>Mã NV</th>
@@ -1342,6 +1293,7 @@
                             </tr>
                           `;
                         }).join('')}
+                        ${inspectors.length === 0 ? '<tr><td colspan="5" class="text-center py-4 text-muted">Chưa có dữ liệu nhân sự</td></tr>' : ''}
                       </tbody>
                     </table>
                   </div>
@@ -1349,9 +1301,75 @@
               </div>
             </div>
           </div>
+
+          <!-- MODAL TẠO GIÁM ĐỊNH VIÊN -->
+          <div class="modal fade" id="modalCreateInspector" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                  <h6 class="modal-title fw-bold">Tạo Giám Định Viên & Phân Vùng</h6>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="form-create-inspector">
+                    <div class="mb-3">
+                      <label class="field-label">Mã NV</label>
+                      <input type="text" class="form-control" id="ins-emp-code" required placeholder="VD: GDV004">
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Họ và Tên</label>
+                      <input type="text" class="form-control" id="ins-name" required placeholder="Nguyễn Văn A">
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Số điện thoại</label>
+                      <input type="text" class="form-control" id="ins-phone" required>
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Trưởng Zone Quản Lý</label>
+                      <select class="form-select" id="ins-zone" required>
+                        <option value="">-- Chọn Zone Quản Lý --</option>
+                        ${zones.map(z => `<option value="${z.zoneId}">${z.name} (Quản lý: ${z.leadName})</option>`).join('')}
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary-action w-100 fw-bold mt-2">Tạo & Phân Công</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODAL TẠO ZONE -->
+          <div class="modal fade" id="modalCreateZone" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                  <h6 class="modal-title fw-bold">Tạo Zone / Trưởng Zone Mới</h6>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="form-create-zone">
+                    <div class="mb-3">
+                      <label class="field-label">Tên Zone</label>
+                      <input type="text" class="form-control" id="zone-name" required placeholder="VD: Zone Miền Trung">
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">Tên Trưởng Zone</label>
+                      <input type="text" class="form-control" id="zone-lead-name" required placeholder="Nguyễn Văn B">
+                    </div>
+                    <div class="mb-3">
+                      <label class="field-label">SĐT Trưởng Zone</label>
+                      <input type="text" class="form-control" id="zone-lead-phone" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary-action w-100 fw-bold mt-2">Tạo Zone</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         `;
         lucide.createIcons();
 
+        // Xử lý submit Giám định viên
         container.querySelector('#form-create-inspector').addEventListener('submit', async (e) => {
           e.preventDefault();
           const btn = e.target.querySelector('button');
@@ -1365,13 +1383,23 @@
               isActive: true
             });
             showToast('Tạo giám định viên thành công', 'success');
-            setTimeout(() => router.handleRoute(), 1000);
+            
+            const modalEl = document.getElementById('modalCreateInspector');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if(modalInstance) modalInstance.hide();
+            
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style = '';
+
+            setTimeout(() => router.handleRoute(), 300);
           } catch (err) {
             alert('Lỗi: ' + err.message);
             btn.disabled = false;
           }
         });
 
+        // Xử lý submit Zone
         container.querySelector('#form-create-zone').addEventListener('submit', async (e) => {
           e.preventDefault();
           const btn = e.target.querySelector('button');
@@ -1388,14 +1416,24 @@
               status: 'active'
             });
             showToast('Tạo Zone thành công', 'success');
-            setTimeout(() => router.handleRoute(), 1000);
+            
+            const modalEl = document.getElementById('modalCreateZone');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if(modalInstance) modalInstance.hide();
+
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style = '';
+
+            setTimeout(() => router.handleRoute(), 300);
           } catch (err) {
             alert('Lỗi: ' + err.message);
             btn.disabled = false;
           }
         });
       },
-
+      
+      // ----------------------------------------
       async renderLookup(container) {
         let provinces = [];
         try {
