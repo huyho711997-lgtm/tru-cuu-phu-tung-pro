@@ -244,6 +244,8 @@
       background: var(--bg-canvas);
       transition: margin-left 0.3s ease;
       padding-bottom: 120px;
+      min-width: 0;
+      max-width: calc(100vw - var(--sidebar-width));
     }
 
     .top-header {
@@ -1029,6 +1031,7 @@
       }
       .main-content {
         margin-left: 0;
+        max-width: 100vw;
       }
       .top-header {
         padding: 0 16px;
@@ -5626,7 +5629,20 @@ const scheduleEngine = new ScheduleEngine(dbService);
           allRules = await dbService.getAllScheduleRules();
         } catch (e) { console.warn(e); }
 
-        let currentFilterZoneId = zones[0]?.zoneId || 'ALL';
+        let currentFilterZoneId = 'ALL';
+        let currentFilterType = 'ALL';
+        let currentSearchKeyword = '';
+
+        const removeVietnameseTones = (str) => {
+          if (!str) return '';
+          return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D')
+            .toLowerCase()
+            .trim();
+        };
 
         const getZoneName = (zid) => {
           const z = zones.find(item => item.zoneId === zid);
@@ -5634,121 +5650,323 @@ const scheduleEngine = new ScheduleEngine(dbService);
         };
 
         container.innerHTML = `
-          <div class="row g-4">
-            <!-- TOP CONTROLS & ZONE SELECTOR -->
-            <div class="col-12">
-              <div class="card shadow-sm border-0" style="overflow: visible !important;">
-                <div class="card-header-clean py-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-3" style="overflow: visible !important;">
-                  <div class="d-flex align-items-center gap-3">
-                    <div class="header-icon-box" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309; width: 44px; height: 44px; flex-shrink: 0;">
-                      <i data-lucide="sliders" style="width: 22px; height: 22px;"></i>
-                    </div>
-                    <div>
-                      <div class="d-flex align-items-center gap-2">
-                        <h5 class="fw-bold mb-0 text-dark" style="font-size: 16.5px;">Thiết Lập Quy Tắc Lịch Trực</h5>
-                        <span class="badge-soft badge-soft-amber fw-bold" id="badge-rules-count">${allRules.length} quy tắc</span>
-                      </div>
-                      <small class="text-muted" style="font-size: 12.5px;">Bộ quy tắc chuẩn hóa phân công ca trực tự động theo mẫu kết hợp cho tất cả các Zone</small>
-                    </div>
-                  </div>
+          <!-- 1. TIÊU ĐỀ TRANG & NÚT HÀNH ĐỘNG CHÍNH -->
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <h4 class="fw-bold mb-0" style="color: var(--text-main); font-size: 20px;">Thiết Lập Quy Tắc Lịch Trực</h4>
+                <span class="badge-soft badge-soft-blue fw-bold" id="badge-rules-count">${allRules.length} quy tắc</span>
+              </div>
+              <p class="text-muted mb-0 small" style="font-size: 12.5px;">Bộ quy tắc chuẩn hóa phân công ca trực tự động theo mẫu kết hợp cho tất cả các Zone</p>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+              <button class="btn btn-sm btn-primary-action px-3 py-1.5 fw-bold" id="btn-open-create-rule" style="border-radius: 10px; font-size: 12.5px;">
+                <i data-lucide="plus-circle" class="me-1" style="width: 15px;"></i> Tạo Quy Tắc Mới
+              </button>
+            </div>
+          </div>
 
-                    <!-- BỘ LỌC ZONE TRÊN TRANG CHÍNH (LUXURY CUSTOM DROPDOWN) -->
-                    <div class="d-flex align-items-center gap-2">
-                      <label class="text-muted fw-bold small text-nowrap mb-0" style="font-size: 11.5px; letter-spacing: 0.03em;">LỌC THEO ZONE:</label>
-                      <div class="custom-select-luxury" id="wrapper-filter-zone" style="min-width: 240px; position: relative; z-index: 30;">
-                        <input type="hidden" id="filter-rule-zone" value="${currentFilterZoneId}">
-                        <button type="button" class="btn-custom-select py-1 px-3 shadow-2xs" id="btn-trigger-filter-zone" aria-expanded="false" style="min-height: 40px; border-radius: 10px; font-size: 13px; background: #ffffff;">
-                          <div class="d-flex align-items-center gap-2 overflow-hidden">
-                            <div class="custom-select-trigger-icon" style="width: 26px; height: 26px; border-radius: 6px; background: ${currentFilterZoneId === 'ALL' ? '#f1f5f9' : '#eff6ff'}; color: ${currentFilterZoneId === 'ALL' ? '#475569' : '#2563eb'};">
-                              <i data-lucide="${currentFilterZoneId === 'ALL' ? 'globe' : 'map-pin'}" id="filter-zone-trigger-icon" style="width: 14px; height: 14px;"></i>
-                            </div>
-                            <span class="fw-bold text-dark text-truncate" id="filter-zone-trigger-title" style="font-size: 13px;">
-                              ${currentFilterZoneId === 'ALL' ? `Tất cả các Zone (${zones.length})` : (zones.find(z => z.zoneId === currentFilterZoneId)?.name || 'Chọn Zone')}
-                            </span>
-                          </div>
-                          <div class="custom-select-trigger-arrow" style="width: 20px; height: 20px;">
-                            <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
-                          </div>
-                        </button>
-                        <div class="dropdown-menu-luxury d-none" id="menu-filter-zone" style="min-width: 260px;">
-                          <div class="luxury-options-list">
-                            <div class="luxury-option-item ${currentFilterZoneId === 'ALL' ? 'active' : ''}" data-value="ALL">
-                              <div class="d-flex align-items-center gap-2.5 overflow-hidden">
-                                <div class="option-icon" style="background: #f1f5f9; color: #475569; width: 30px; height: 30px;">
-                                  <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
-                                </div>
-                                <div class="option-content">
-                                  <div class="option-title" style="font-size: 13px;">Tất cả các Zone</div>
-                                  <div class="option-desc" style="font-size: 11.5px;">Toàn bộ ${zones.length} Zone điều hành</div>
-                                </div>
-                              </div>
-                              <div class="option-check" style="width: 18px; height: 18px;">
-                                <i data-lucide="check" style="width: 11px; height: 11px;"></i>
-                              </div>
-                            </div>
-                            ${zones.map(z => `
-                              <div class="luxury-option-item ${z.zoneId === currentFilterZoneId ? 'active' : ''}" data-value="${z.zoneId}">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
-                                  <div class="option-icon" style="background: #eff6ff; color: #2563eb; width: 30px; height: 30px;">
-                                    <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
-                                  </div>
-                                  <div class="option-content">
-                                    <div class="option-title" style="font-size: 13px;">${z.name}</div>
-                                    <div class="option-desc" style="font-size: 11.5px;">Trưởng Zone: ${z.leadName || 'Chưa gán'}</div>
-                                  </div>
-                                </div>
-                                <div class="option-check" style="width: 18px; height: 18px;">
-                                  <i data-lucide="check" style="width: 11px; height: 11px;"></i>
-                                </div>
-                              </div>
-                            `).join('')}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button class="btn btn-primary-action btn-sm fw-bold d-flex align-items-center gap-2 px-3 py-2 shadow-sm text-nowrap" id="btn-open-create-rule" style="border-radius: var(--radius-md); font-size: 13px;">
-                      <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Tạo Quy Tắc Mới
-                    </button>
-                  </div>
+          <!-- 2. KPI THỐNG KÊ QUY TẮC LỊCH TRỰC (THỐNG NHẤT 4 THẺ MÀU THEO SYSTEM) -->
+          <div class="row g-3 mb-3">
+            <!-- 1. Tổng Quy Tắc (Purple / Lavender) -->
+            <div class="col-6 col-lg-3">
+              <div class="kpi-card-sample purple">
+                <div class="kpi-circle-icon">
+                  <i data-lucide="sliders"></i>
+                </div>
+                <div class="kpi-sample-content">
+                  <div class="kpi-sample-number" id="kpi-total-rules">${allRules.length}</div>
+                  <div class="kpi-sample-label">Tổng Quy Tắc</div>
                 </div>
               </div>
             </div>
 
-            <!-- DANH SÁCH CÁC QUY TẮC ĐANG ÁP DỤNG -->
-            <div class="col-12">
-              <div class="card shadow-sm border-0">
-                <div class="card-header-clean py-3 px-4 d-flex justify-content-between align-items-center">
-                  <div class="d-flex align-items-center gap-2">
-                    <h6 class="fw-bold mb-0 text-dark" style="font-size: 14.5px;" id="rules-table-title">Danh Sách Quy Tắc Lịch Trực</h6>
-                    <span class="badge bg-light text-secondary border small fw-semibold" id="table-filter-badge">Đang hiển thị tất cả</span>
+            <!-- 2. Zone Đã Cấu Hình (Vibrant Blue) -->
+            <div class="col-6 col-lg-3">
+              <div class="kpi-card-sample blue">
+                <div class="kpi-circle-icon">
+                  <i data-lucide="map-pin"></i>
+                </div>
+                <div class="kpi-sample-content">
+                  <div class="kpi-sample-number" id="kpi-configured-zones">${new Set(allRules.map(r => r.zoneId)).size} / ${zones.length}</div>
+                  <div class="kpi-sample-label">Zone Đã Cấu Hình</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Mẫu Chẵn / Lẻ (Coral / Red-Pink) -->
+            <div class="col-6 col-lg-3">
+              <div class="kpi-card-sample coral">
+                <div class="kpi-circle-icon">
+                  <i data-lucide="repeat"></i>
+                </div>
+                <div class="kpi-sample-content">
+                  <div class="kpi-sample-number" id="kpi-even-odd-rules">${allRules.filter(r => r.ruleType === 'even_odd').length}</div>
+                  <div class="kpi-sample-label">Mẫu Chẵn / Lẻ</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Hiện Trường & Chi Tiết (Warm Orange) -->
+            <div class="col-6 col-lg-3">
+              <div class="kpi-card-sample orange">
+                <div class="kpi-circle-icon">
+                  <i data-lucide="clock"></i>
+                </div>
+                <div class="kpi-sample-content">
+                  <div class="kpi-sample-number" id="kpi-both-tasks-rules">${allRules.filter(r => r.taskType === 'both').length}</div>
+                  <div class="kpi-sample-label">Hiện Trường & Chi Tiết</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. BỘ LỌC ĐA NĂNG ĐỒNG BỘ CHUẨN SYSTEM (ZONE, MẪU QUY TẮC & TÌM KIẾM) -->
+          <div class="card border-0 shadow-sm mb-3" style="border-radius: 16px; overflow: visible !important;">
+            <div class="card-body p-3" style="overflow: visible !important;">
+              <div class="row g-2 align-items-end">
+                
+                <!-- 1. LỌC THEO ZONE ĐIỀU HÀNH -->
+                <div class="col-md-4">
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
+                    <span>1. Lọc theo Zone điều hành</span>
+                    <span class="badge-filter-counter blue" id="badge-rules-zone-count">Tất cả Zone</span>
+                  </label>
+                  <div class="custom-select-luxury" id="wrapper-filter-zone" style="position: relative; z-index: 50;">
+                    <input type="hidden" id="filter-rule-zone" value="${currentFilterZoneId}">
+                    <button type="button" class="btn-custom-select btn-custom-select-md" id="btn-trigger-filter-zone" aria-expanded="false">
+                      <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                        <div class="custom-select-trigger-icon" id="filter-zone-trigger-icon-wrap" style="background: #f1f5f9; color: #475569;">
+                          <i data-lucide="globe" id="filter-zone-trigger-icon" style="width: 17px; height: 17px;"></i>
+                        </div>
+                        <div class="custom-select-trigger-text text-start">
+                          <div class="custom-select-trigger-title text-truncate" id="filter-zone-trigger-title" style="color: #0f172a; font-weight: 700;">
+                            -- Tất cả các Zone --
+                          </div>
+                          <div class="custom-select-trigger-desc text-truncate" id="filter-zone-trigger-desc">
+                            Toàn bộ ${zones.length} Zone điều hành
+                          </div>
+                        </div>
+                      </div>
+                      <div class="custom-select-trigger-arrow">
+                        <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                      </div>
+                    </button>
+
+                    <div class="dropdown-menu-luxury d-none" id="menu-filter-zone" style="min-width: 100%; padding: 0;">
+                      <div class="luxury-options-list p-2" style="max-height: 250px; overflow-y: auto;">
+                        <div class="luxury-option-item active" data-value="ALL" data-name="-- Tất cả các Zone --" data-desc="Toàn bộ ${zones.length} Zone điều hành">
+                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="option-icon" style="background: #f1f5f9; color: #475569;">
+                              <i data-lucide="globe" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">-- Tất cả các Zone --</div>
+                              <div class="option-desc">Toàn bộ ${zones.length} Zone điều hành</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 19px; height: 19px;">
+                            <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                          </div>
+                        </div>
+                        ${zones.map(z => `
+                          <div class="luxury-option-item" data-value="${z.zoneId}" data-name="${z.name}" data-desc="Trưởng Zone: ${z.leadName || 'Chưa gán'}">
+                            <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                              <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
+                                <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
+                              </div>
+                              <div class="option-content">
+                                <div class="option-title">${z.name}</div>
+                                <div class="option-desc">Trưởng Zone: ${z.leadName || 'Chưa gán'}</div>
+                              </div>
+                            </div>
+                            <div class="option-check" style="width: 19px; height: 19px;">
+                              <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                            </div>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
                   </div>
-                  <small class="text-muted">Áp dụng theo thứ tự ưu tiên (Priority cao áp dụng trước)</small>
                 </div>
 
-                <div class="card-body p-0">
-                  <div class="table-responsive">
-                    <table class="table table-modern mb-0 align-middle">
-                      <thead>
-                        <tr>
-                          <th style="width: 75px;">Ưu Tiên</th>
-                          <th>Tên Quy Tắc</th>
-                          <th style="width: 170px;">Zone Quản Lý</th>
-                          <th>Mẫu Quy Tắc</th>
-                          <th>Loại Công Việc</th>
-                          <th>Khung Giờ</th>
-                          <th>Phân Công Trực</th>
-                          <th>Hiệu Lực</th>
-                          <th class="text-end" style="width: 90px;">Thao Tác</th>
-                        </tr>
-                      </thead>
-                      <tbody id="rules-tbody">
-                        <!-- Render via JS -->
-                      </tbody>
-                    </table>
+                <!-- 2. PHÂN LOẠI THEO MẪU QUY TẮC -->
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
+                    <span>2. Mẫu quy tắc</span>
+                    <span class="badge-filter-counter purple" id="badge-rules-type-count">Tất cả mẫu</span>
+                  </label>
+                  <div class="custom-select-luxury" id="wrapper-filter-type" style="position: relative; z-index: 40;">
+                    <input type="hidden" id="filter-rule-type" value="ALL">
+                    <button type="button" class="btn-custom-select btn-custom-select-md" id="btn-trigger-filter-type" aria-expanded="false">
+                      <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                        <div class="custom-select-trigger-icon" id="filter-type-trigger-icon-wrap" style="background: #f5f3ff; color: #7c3aed;">
+                          <i data-lucide="sliders" style="width: 17px; height: 17px;"></i>
+                        </div>
+                        <div class="custom-select-trigger-text text-start">
+                          <div class="custom-select-trigger-title text-truncate" id="filter-type-trigger-title" style="color: #0f172a; font-weight: 700;">
+                            Tất cả mẫu quy tắc
+                          </div>
+                          <div class="custom-select-trigger-desc text-truncate" id="filter-type-trigger-desc">
+                            Chẵn lẻ, thứ tuần, sự kiện
+                          </div>
+                        </div>
+                      </div>
+                      <div class="custom-select-trigger-arrow">
+                        <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                      </div>
+                    </button>
+
+                    <div class="dropdown-menu-luxury d-none" id="menu-filter-type" style="min-width: 100%; padding: 0;">
+                      <div class="luxury-options-list p-2">
+                        <div class="luxury-option-item active" data-value="ALL" data-name="Tất cả mẫu quy tắc" data-desc="Chẵn lẻ, thứ tuần, sự kiện">
+                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="option-icon" style="background: #f5f3ff; color: #7c3aed;">
+                              <i data-lucide="sliders" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">Tất cả mẫu quy tắc</div>
+                              <div class="option-desc">Hiển thị mọi mẫu phân công</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 19px; height: 19px;">
+                            <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                          </div>
+                        </div>
+                        <div class="luxury-option-item" data-value="even_odd" data-name="Mẫu Chẵn / Lẻ" data-desc="Luân phiên 2 GĐV A & B">
+                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
+                              <i data-lucide="repeat" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">Mẫu Chẵn / Lẻ</div>
+                              <div class="option-desc">Luân phiên 2 GĐV A & B</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 19px; height: 19px;">
+                            <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                          </div>
+                        </div>
+                        <div class="luxury-option-item" data-value="day_of_week" data-name="Theo Thứ trong tuần" data-desc="Phân bổ cố định T2 đến CN">
+                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="option-icon" style="background: #fffbeb; color: #d97706;">
+                              <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">Theo Thứ trong tuần</div>
+                              <div class="option-desc">Phân bổ cố định T2 đến CN</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 19px; height: 19px;">
+                            <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                          </div>
+                        </div>
+                        <div class="luxury-option-item" data-value="ward_assignment" data-name="Địa bàn xã / phường" data-desc="GĐV phụ trách khu vực">
+                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="option-icon" style="background: #f1f5f9; color: #475569;">
+                              <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">Địa bàn xã / phường</div>
+                              <div class="option-desc">GĐV phụ trách khu vực</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 19px; height: 19px;">
+                            <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                          </div>
+                        </div>
+                        <div class="luxury-option-item" data-value="specific_date" data-name="Ngày cụ thể" data-desc="Sự kiện, lễ tết hoặc đặc biệt">
+                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="option-icon" style="background: #fff1f2; color: #e11d48;">
+                              <i data-lucide="star" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="option-content">
+                              <div class="option-title">Ngày cụ thể</div>
+                              <div class="option-desc">Sự kiện, lễ tết hoặc đặc biệt</div>
+                            </div>
+                          </div>
+                          <div class="option-check" style="width: 19px; height: 19px;">
+                            <i data-lucide="check" style="width: 11px; height: 11px;"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. TÌM KIẾM NHANH THEO TÊN QUY TẮC -->
+                <div class="col-md-5">
+                  <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
+                    <span>3. Tìm kiếm quy tắc trực</span>
+                  </label>
+                  <div class="premium-search-box premium-search-box-md" id="wrapper-rules-search">
+                    <div class="premium-search-icon-box">
+                      <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <input type="text" class="premium-search-input" id="rules-filter-search" placeholder="Gõ tên quy tắc, Zone hoặc người trực..." autocomplete="off">
+                    <button type="button" class="premium-search-clear-btn" id="btn-rules-search-clear" title="Xóa từ khóa tìm kiếm">
+                      <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                    </button>
+                    <div class="d-none d-md-flex align-items-center ps-2 border-start">
+                      <span class="badge-soft badge-soft-blue py-0.5 px-2" style="font-size: 10.5px;">
+                        <i data-lucide="sparkles" style="width: 10px; height: 10px;"></i> Gõ không dấu
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <!-- Thanh trạng thái kết quả lọc -->
+              <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top" style="font-size: 12px;">
+                <span id="rules-filter-status" class="text-muted fw-semibold">Đang hiển thị ${allRules.length} quy tắc</span>
+                <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-secondary fw-semibold" id="btn-reset-rules-filters" style="font-size: 12px;">
+                  <i data-lucide="rotate-ccw" style="width: 12px; height: 12px; margin-right: 2px;"></i> Đặt lại bộ lọc
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. BẢNG DANH MỤC QUY TẮC LỊCH TRỰC LIỀN MẠCH, THỐNG NHẤT -->
+          <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px; overflow: hidden;">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0" style="min-width: 980px;">
+                <thead style="background: #f8fafc; border-bottom: 1.5px solid #e2e8f0;">
+                  <tr>
+                    <th class="py-3 px-2 text-uppercase small fw-bold text-center" style="color: #64748b; font-size: 11px; width: 65px;">Ưu Tiên</th>
+                    <th class="py-3 px-3 text-uppercase small fw-bold" style="color: #64748b; font-size: 11px; min-width: 160px;">Tên Quy Tắc</th>
+                    <th class="py-3 px-2 text-uppercase small fw-bold" style="color: #64748b; font-size: 11px; width: 135px;">Zone Quản Lý</th>
+                    <th class="py-3 px-2 text-uppercase small fw-bold" style="color: #64748b; font-size: 11px; width: 115px;">Mẫu Quy Tắc</th>
+                    <th class="py-3 px-2 text-uppercase small fw-bold" style="color: #64748b; font-size: 11px; width: 150px;">Loại Công Việc</th>
+                    <th class="py-3 px-2 text-uppercase small fw-bold text-nowrap" style="color: #64748b; font-size: 11px; width: 125px;">Khung Giờ</th>
+                    <th class="py-3 px-3 text-uppercase small fw-bold" style="color: #64748b; font-size: 11px; min-width: 175px;">Phân Công Trực</th>
+                    <th class="py-3 px-2 text-uppercase small fw-bold text-nowrap" style="color: #64748b; font-size: 11px; width: 95px;">Hiệu Lực</th>
+                    <th class="py-3 px-2 text-uppercase small fw-bold text-center" style="color: #64748b; font-size: 11px; width: 65px;">Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="rules-tbody">
+                  <!-- Render via JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Empty State nếu không có kết quả -->
+            <div id="rules-empty-state" class="text-center p-5 d-none">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">
+                <i data-lucide="sliders" style="width: 26px; color: #94a3b8;"></i>
+              </div>
+              <h6 class="fw-bold text-dark mb-1">Không tìm thấy quy tắc nào</h6>
+              <p class="text-muted small mb-3">Thử kiểm tra lại từ khóa tìm kiếm hoặc chọn Zone khác</p>
+              <button class="btn btn-sm btn-primary-action px-3 py-2 fw-semibold" id="btn-empty-create-rule" style="border-radius: 10px;">
+                <i data-lucide="plus" style="width: 14px;"></i> Tạo Quy Tắc Mới Ngay
+              </button>
+            </div>
+
+            <!-- Footer Thông Tin & Phân Trang -->
+            <div class="p-3 border-top bg-light d-flex justify-content-between align-items-center flex-wrap gap-2" id="rules-footer-box">
+              <span class="small text-muted" id="rules-showing-text">Đang hiển thị 0 / 0 quy tắc</span>
+              <span class="badge bg-white border text-secondary fw-normal px-2.5 py-1" style="font-size: 11.5px;">
+                <i data-lucide="info" style="width: 12px; height: 12px; margin-right: 3px;"></i> Ưu tiên cao hơn sẽ được áp dụng trước
+              </span>
             </div>
           </div>
 
@@ -6182,58 +6400,101 @@ const scheduleEngine = new ScheduleEngine(dbService);
         // Hàm render danh sách quy tắc theo bộ lọc
         const renderRulesList = () => {
           const tbody = container.querySelector('#rules-tbody');
-          const titleBadge = container.querySelector('#table-filter-badge');
+          const emptyState = container.querySelector('#rules-empty-state');
+          const tableWrap = container.querySelector('.table-responsive');
+          const filterStatus = container.querySelector('#rules-filter-status');
+          const showingText = container.querySelector('#rules-showing-text');
+          const badgeZoneCount = container.querySelector('#badge-rules-zone-count');
+          const badgeTypeCount = container.querySelector('#badge-rules-type-count');
 
-          const filteredRules = currentFilterZoneId === 'ALL'
-            ? allRules
-            : allRules.filter(r => r.zoneId === currentFilterZoneId);
+          // Cập nhật 4 thẻ KPI Thống Kê
+          const kpiTotal = container.querySelector('#kpi-total-rules');
+          const kpiConfigured = container.querySelector('#kpi-configured-zones');
+          const kpiEvenOdd = container.querySelector('#kpi-even-odd-rules');
+          const kpiBoth = container.querySelector('#kpi-both-tasks-rules');
 
-          if (titleBadge) {
-            titleBadge.innerText = currentFilterZoneId === 'ALL' 
-              ? `Đang hiển thị tất cả (${filteredRules.length} quy tắc)`
-              : `Zone: ${getZoneName(currentFilterZoneId)} (${filteredRules.length} quy tắc)`;
+          if (kpiTotal) kpiTotal.innerText = allRules.length;
+          if (kpiConfigured) {
+            const configuredCount = new Set(allRules.map(r => r.zoneId)).size;
+            kpiConfigured.innerText = `${configuredCount} / ${zones.length}`;
+          }
+          if (kpiEvenOdd) {
+            kpiEvenOdd.innerText = allRules.filter(r => r.ruleType === 'even_odd').length;
+          }
+          if (kpiBoth) {
+            kpiBoth.innerText = allRules.filter(r => r.taskType === 'both').length;
+          }
+
+          // Lọc danh sách theo Zone, Mẫu quy tắc và Từ khóa tìm kiếm
+          const kw = removeVietnameseTones(currentSearchKeyword);
+          const filteredRules = allRules.filter(r => {
+            const matchZone = currentFilterZoneId === 'ALL' || r.zoneId === currentFilterZoneId;
+            const matchType = currentFilterType === 'ALL' || r.ruleType === currentFilterType;
+            let matchSearch = true;
+            if (kw) {
+              const ruleName = removeVietnameseTones(r.name || '');
+              const zName = removeVietnameseTones(getZoneName(r.zoneId));
+              const taskText = removeVietnameseTones(r.taskType === 'both' ? 'Hiện trường & Chi tiết' : (r.taskType === 'field' ? 'Hiện trường' : 'Chi tiết'));
+              matchSearch = ruleName.includes(kw) || zName.includes(kw) || taskText.includes(kw);
+            }
+            return matchZone && matchType && matchSearch;
+          });
+
+          // Sắp xếp ưu tiên cao lên trước
+          filteredRules.sort((a, b) => (b.priority || 50) - (a.priority || 50));
+
+          // Cập nhật Badge Counter trên thanh filter
+          if (badgeZoneCount) {
+            badgeZoneCount.innerText = currentFilterZoneId === 'ALL' ? 'Tất cả Zone' : getZoneName(currentFilterZoneId);
+          }
+          if (badgeTypeCount) {
+            const typeLabels = {
+              'ALL': 'Tất cả mẫu',
+              'even_odd': 'Chẵn / Lẻ',
+              'day_of_week': 'Theo Thứ',
+              'ward_assignment': 'Theo Địa Bàn',
+              'specific_date': 'Ngày Cụ Thể'
+            };
+            badgeTypeCount.innerText = typeLabels[currentFilterType] || 'Tất cả mẫu';
+          }
+
+          if (filterStatus) {
+            filterStatus.innerText = `Đang hiển thị ${filteredRules.length} / ${allRules.length} quy tắc`;
+          }
+          if (showingText) {
+            showingText.innerText = `Đang hiển thị ${filteredRules.length} / ${allRules.length} quy tắc`;
           }
 
           if (filteredRules.length === 0) {
-            tbody.innerHTML = `
-              <tr>
-                <td colspan="9" class="text-center py-5 text-muted">
-                  <div class="d-flex flex-column align-items-center justify-content-center">
-                    <i data-lucide="calendar-x" style="width: 32px; height: 32px; color: #94a3b8; margin-bottom: 8px;"></i>
-                    <span class="fw-semibold">Chưa có quy tắc lịch trực nào ${currentFilterZoneId === 'ALL' ? '' : `cho ${getZoneName(currentFilterZoneId)}`}.</span>
-                    <button class="btn btn-sm btn-outline-primary mt-2" id="btn-quick-create-rule">
-                      <i data-lucide="plus" style="width: 14px;"></i> Tạo quy tắc ngay
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            `;
-            container.querySelector('#btn-quick-create-rule')?.addEventListener('click', () => {
-              openCreateModal(currentFilterZoneId === 'ALL' ? (zones[0]?.zoneId || '') : currentFilterZoneId);
-            });
+            if (tbody) tbody.innerHTML = '';
+            if (emptyState) emptyState.classList.remove('d-none');
+            if (tableWrap) tableWrap.classList.add('d-none');
             lucide.createIcons();
             return;
+          } else {
+            if (emptyState) emptyState.classList.add('d-none');
+            if (tableWrap) tableWrap.classList.remove('d-none');
           }
 
           tbody.innerHTML = filteredRules.map(r => {
-            let templateBadge = '<span class="badge-soft badge-soft-blue">Chẵn / Lẻ</span>';
+            let templateBadge = '<span class="badge-soft badge-soft-blue"><i data-lucide="repeat" style="width:12px"></i> Chẵn / Lẻ</span>';
             let summaryDesc = '';
 
             if (r.ruleType === 'even_odd') {
-              templateBadge = '<span class="badge-soft badge-soft-blue"><i data-lucide="repeat" style="width:12px"></i> Chẵn / Lẻ</span>';
+              templateBadge = '<span class="badge-soft badge-soft-blue fw-semibold"><i data-lucide="repeat" style="width:12px"></i> Chẵn / Lẻ</span>';
               summaryDesc = 'Luân phiên A/B Hiện trường & Chi tiết';
             } else if (r.ruleType === 'continuous_cycle') {
-              templateBadge = '<span class="badge-soft badge-soft-green"><i data-lucide="refresh-cw" style="width:12px"></i> Luân phiên liên tục</span>';
-              summaryDesc = 'Chu kỳ không gián đoạn chuyển tháng';
+              templateBadge = '<span class="badge-soft badge-soft-green fw-semibold"><i data-lucide="refresh-cw" style="width:12px"></i> Luân phiên liên tục</span>';
+              summaryDesc = 'Chu kỳ không gián đoạn';
             } else if (r.ruleType === 'day_of_week') {
-              templateBadge = '<span class="badge-soft badge-soft-amber"><i data-lucide="calendar" style="width:12px"></i> Theo Thứ (T2-CN)</span>';
+              templateBadge = '<span class="badge-soft badge-soft-amber fw-semibold"><i data-lucide="calendar" style="width:12px"></i> Theo Thứ (T2-CN)</span>';
               summaryDesc = 'Phân bổ theo ngày trong tuần';
             } else if (r.ruleType === 'ward_assignment') {
-              templateBadge = '<span class="badge-soft badge-soft-slate"><i data-lucide="map-pin" style="width:12px"></i> Địa bàn cụ thể</span>';
+              templateBadge = '<span class="badge-soft badge-soft-slate fw-semibold"><i data-lucide="map-pin" style="width:12px"></i> Theo Địa Bàn</span>';
               summaryDesc = `Xã/Phường: ${r.wardCode || '*'}`;
             } else if (r.ruleType === 'specific_date') {
-              templateBadge = '<span class="badge-soft badge-soft-rose"><i data-lucide="star" style="width:12px"></i> Ngày cụ thể</span>';
-              summaryDesc = `Sự kiện ngày: ${r.specificDate}`;
+              templateBadge = '<span class="badge-soft badge-soft-rose fw-semibold"><i data-lucide="star" style="width:12px"></i> Ngày Cụ Thể</span>';
+              summaryDesc = `Sự kiện: ${r.specificDate}`;
             }
 
             const timeStr = `${r.timeSlot?.start || '00:00'} - ${r.timeSlot?.end || '23:59'}${r.timeSlot?.isOvernight ? ' (Qua đêm)' : ''}`;
@@ -6241,23 +6502,30 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             return `
               <tr>
-                <td><span class="badge bg-secondary">${r.priority || 50}</span></td>
-                <td><strong class="text-dark">${r.name}</strong></td>
-                <td>
-                  <span class="badge-soft badge-soft-blue fw-bold text-truncate d-inline-flex align-items-center gap-1" style="max-width: 170px;" title="${zName}">
+                <td class="px-3 text-center"><span class="badge bg-secondary px-2.5 py-1 fw-bold" style="border-radius: 6px; font-size: 11.5px;">${r.priority || 50}</span></td>
+                <td class="px-3">
+                  <div class="fw-bold text-dark" style="font-size: 13.5px;">${r.name}</div>
+                  <small class="text-muted" style="font-size: 11px;">ID: ${r.ruleId || 'auto'}</small>
+                </td>
+                <td class="px-3">
+                  <span class="badge-soft badge-soft-blue fw-bold text-truncate d-inline-flex align-items-center gap-1.5 py-1 px-2.5" style="max-width: 160px; border-radius: 6px; font-size: 12px;" title="${zName}">
                     <i data-lucide="shield" style="width: 12px; height: 12px; flex-shrink: 0;"></i>
                     ${zName}
                   </span>
                 </td>
-                <td>${templateBadge}</td>
-                <td><span class="badge-soft badge-soft-slate">${r.taskType === 'both' ? 'Hiện trường & Chi tiết' : (r.taskType === 'field' ? 'Hiện trường' : 'Chi tiết')}</span></td>
-                <td class="small text-muted">${timeStr}</td>
-                <td><small class="fw-semibold text-dark">${summaryDesc}</small></td>
-                <td class="small text-muted">${r.effectiveFrom || '2026-01-01'}</td>
-                <td>
-                  <div class="d-flex gap-1 justify-content-end">
-                    <button class="btn btn-sm btn-light border btn-delete-rule p-2" data-id="${r.ruleId}" data-name="${r.name}" title="Xóa quy tắc" style="border-radius: 8px;">
-                      <i data-lucide="trash-2" style="width: 14px; height: 14px; color: #dc2626;"></i>
+                <td class="px-3">${templateBadge}</td>
+                <td class="px-3">
+                  <span class="badge-soft badge-soft-slate fw-semibold py-1 px-2.5 text-nowrap" style="border-radius: 6px; font-size: 12px;">
+                    ${r.taskType === 'both' ? 'Hiện trường & Chi tiết' : (r.taskType === 'field' ? 'Hiện trường' : 'Chi tiết')}
+                  </span>
+                </td>
+                <td class="px-3 small text-muted font-monospace text-nowrap" style="font-size: 12px;">${timeStr}</td>
+                <td class="px-3"><span class="fw-semibold text-dark text-nowrap d-inline-block" style="font-size: 12.5px;">${summaryDesc}</span></td>
+                <td class="px-3 small text-muted font-monospace text-nowrap" style="font-size: 12px;">${r.effectiveFrom || '2026-01-01'}</td>
+                <td class="px-3 text-center">
+                  <div class="d-inline-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-sm btn-light p-1.5 text-danger btn-delete-rule" data-id="${r.ruleId}" data-name="${r.name}" title="Xóa quy tắc" style="width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;">
+                      <i data-lucide="trash-2" style="width: 15px; height: 15px; flex-shrink: 0;"></i>
                     </button>
                   </div>
                 </td>
@@ -6351,23 +6619,35 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 if (descEl) descEl.textContent = desc;
               } else if (dropdown.id === 'wrapper-filter-zone') {
                 const filterTitle = dropdown.querySelector('#filter-zone-trigger-title');
-                const filterIconWrap = dropdown.querySelector('.custom-select-trigger-icon');
+                const filterDesc = dropdown.querySelector('#filter-zone-trigger-desc');
+                const filterIconWrap = dropdown.querySelector('#filter-zone-trigger-icon-wrap') || dropdown.querySelector('.custom-select-trigger-icon');
                 if (val === 'ALL') {
-                  if (filterTitle) filterTitle.textContent = `Tất cả các Zone (${zones.length})`;
+                  if (filterTitle) filterTitle.textContent = '-- Tất cả các Zone --';
+                  if (filterDesc) filterDesc.textContent = `Toàn bộ ${zones.length} Zone điều hành`;
                   if (filterIconWrap) {
                     filterIconWrap.style.background = '#f1f5f9';
                     filterIconWrap.style.color = '#475569';
-                    filterIconWrap.innerHTML = `<i data-lucide="globe" id="filter-zone-trigger-icon" style="width: 14px; height: 14px;"></i>`;
+                    filterIconWrap.innerHTML = `<i data-lucide="globe" id="filter-zone-trigger-icon" style="width: 17px; height: 17px;"></i>`;
                   }
                 } else {
                   const targetZone = zones.find(z => z.zoneId === val);
                   if (filterTitle) filterTitle.textContent = targetZone ? targetZone.name : val;
+                  if (filterDesc) filterDesc.textContent = `Trưởng Zone: ${targetZone?.leadName || 'Chưa gán'}`;
                   if (filterIconWrap) {
                     filterIconWrap.style.background = '#eff6ff';
                     filterIconWrap.style.color = '#2563eb';
-                    filterIconWrap.innerHTML = `<i data-lucide="map-pin" id="filter-zone-trigger-icon" style="width: 14px; height: 14px;"></i>`;
+                    filterIconWrap.innerHTML = `<i data-lucide="map-pin" id="filter-zone-trigger-icon" style="width: 17px; height: 17px;"></i>`;
                   }
                 }
+                currentFilterZoneId = val;
+                renderRulesList();
+              } else if (dropdown.id === 'wrapper-filter-type') {
+                const filterTypeTitle = dropdown.querySelector('#filter-type-trigger-title');
+                const filterTypeDesc = dropdown.querySelector('#filter-type-trigger-desc');
+                if (filterTypeTitle) filterTypeTitle.textContent = item.dataset.name || 'Tất cả mẫu';
+                if (filterTypeDesc) filterTypeDesc.textContent = item.dataset.desc || '';
+                currentFilterType = val;
+                renderRulesList();
               }
 
               // Kích hoạt sự kiện change để các handler reactive tiếp nhận
@@ -6407,14 +6687,72 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
         setupCustomLuxuryDropdowns();
 
-        renderRulesList();
+        // Xử lý ô tìm kiếm tên quy tắc trực
+        const searchInput = container.querySelector('#rules-filter-search');
+        const clearBtn = container.querySelector('#btn-rules-search-clear');
+        if (searchInput) {
+          searchInput.addEventListener('input', (e) => {
+            currentSearchKeyword = e.target.value.trim();
+            if (clearBtn) {
+              clearBtn.classList.toggle('is-visible', !!currentSearchKeyword);
+            }
+            renderRulesList();
+          });
+        }
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            currentSearchKeyword = '';
+            clearBtn.classList.remove('is-visible');
+            renderRulesList();
+          });
+        }
 
-        // Xử lý bộ lọc Zone ngoài trang chính
-        const filterZoneSelect = container.querySelector('#filter-rule-zone');
-        filterZoneSelect.addEventListener('change', (e) => {
-          currentFilterZoneId = e.target.value;
-          renderRulesList();
+        // Xử lý nút Đặt lại bộ lọc
+        const btnResetFilters = container.querySelector('#btn-reset-rules-filters');
+        if (btnResetFilters) {
+          btnResetFilters.addEventListener('click', () => {
+            currentFilterZoneId = 'ALL';
+            currentFilterType = 'ALL';
+            currentSearchKeyword = '';
+            if (searchInput) searchInput.value = '';
+            if (clearBtn) clearBtn.classList.remove('is-visible');
+
+            // Reset Zone dropdown UI
+            const zoneTitle = container.querySelector('#filter-zone-trigger-title');
+            const zoneDesc = container.querySelector('#filter-zone-trigger-desc');
+            const zoneIconWrap = container.querySelector('#filter-zone-trigger-icon-wrap');
+            if (zoneTitle) zoneTitle.textContent = '-- Tất cả các Zone --';
+            if (zoneDesc) zoneDesc.textContent = `Toàn bộ ${zones.length} Zone điều hành`;
+            if (zoneIconWrap) {
+              zoneIconWrap.style.background = '#f1f5f9';
+              zoneIconWrap.style.color = '#475569';
+              zoneIconWrap.innerHTML = '<i data-lucide="globe" id="filter-zone-trigger-icon" style="width: 17px; height: 17px;"></i>';
+            }
+            container.querySelectorAll('#menu-filter-zone .luxury-option-item').forEach(it => {
+              it.classList.toggle('active', it.dataset.value === 'ALL');
+            });
+
+            // Reset Type dropdown UI
+            const typeTitle = container.querySelector('#filter-type-trigger-title');
+            const typeDesc = container.querySelector('#filter-type-trigger-desc');
+            if (typeTitle) typeTitle.textContent = 'Tất cả mẫu quy tắc';
+            if (typeDesc) typeDesc.textContent = 'Chẵn lẻ, thứ tuần, sự kiện';
+            container.querySelectorAll('#menu-filter-type .luxury-option-item').forEach(it => {
+              it.classList.toggle('active', it.dataset.value === 'ALL');
+            });
+
+            renderRulesList();
+            lucide.createIcons();
+          });
+        }
+
+        // Xử lý nút tạo nhanh trong Empty State
+        container.querySelector('#btn-empty-create-rule')?.addEventListener('click', () => {
+          openCreateModal(currentFilterZoneId);
         });
+
+        renderRulesList();
 
         // Hàm cập nhật Live Preview cho Mẫu 1
         const updatePreview = () => {
