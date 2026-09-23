@@ -453,40 +453,40 @@
 
     .btn-custom-select {
       width: 100%;
-      min-height: 46px;
+      min-height: 58px;
       background: #ffffff;
       border: 1.5px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 7px 14px;
+      border-radius: 14px;
+      padding: 10px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 5px rgba(15, 23, 42, 0.04);
       text-align: left;
     }
 
     .btn-custom-select:hover {
       background: #f8fafc;
-      border-color: #cbd5e1;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      border-color: #94a3b8;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
     }
 
     .btn-custom-select.active,
     .btn-custom-select:focus-visible,
     .custom-select-luxury.is-open .btn-custom-select {
       border-color: #2563eb;
-      box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15), 0 2px 4px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15), 0 2px 6px rgba(0, 0, 0, 0.04);
       background: #ffffff;
     }
 
     .btn-custom-select-zone {
       border-color: #93c5fd;
-      min-height: 52px;
-      padding: 8px 16px;
-      border-radius: 12px;
+      min-height: 58px;
+      padding: 10px 18px;
+      border-radius: 14px;
     }
 
     .btn-custom-select-zone:hover {
@@ -495,14 +495,15 @@
     }
 
     .custom-select-trigger-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       transition: transform 0.2s ease;
+      font-size: 18px;
     }
 
     .custom-select-trigger-text {
@@ -511,7 +512,7 @@
     }
 
     .custom-select-trigger-title {
-      font-size: 13.8px;
+      font-size: 14.5px;
       font-weight: 700;
       color: #0f172a;
       line-height: 1.35;
@@ -521,20 +522,20 @@
     }
 
     .custom-select-trigger-desc {
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 500;
       color: #64748b;
-      line-height: 1.3;
+      line-height: 1.35;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-top: 1px;
+      margin-top: 3px;
     }
 
     .custom-select-trigger-arrow {
-      width: 26px;
-      height: 26px;
-      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -606,13 +607,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 10px 12px;
-      border-radius: 10px;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.15s ease;
       border: 1px solid transparent;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
     .luxury-option-item:hover {
@@ -631,9 +632,9 @@
     }
 
     .luxury-option-item .option-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -651,17 +652,17 @@
     }
 
     .luxury-option-item .option-title {
-      font-size: 13.5px;
+      font-size: 14px;
       font-weight: 600;
       color: #1e293b;
       line-height: 1.35;
     }
 
     .luxury-option-item .option-desc {
-      font-size: 11.8px;
+      font-size: 12.2px;
       color: #64748b;
-      line-height: 1.3;
-      margin-top: 1px;
+      line-height: 1.35;
+      margin-top: 2px;
     }
 
     .luxury-option-item .option-check {
@@ -683,7 +684,7 @@
 
     /* Search Box inside Dropdown Popover */
     .dropdown-search-box {
-      padding: 10px 12px 8px 12px;
+      padding: 12px 14px 10px 14px;
       position: sticky;
       top: 0;
       background: #ffffff;
@@ -700,12 +701,12 @@
 
     .dropdown-search-input {
       width: 100%;
-      height: 40px;
+      height: 44px;
       background: #f8fafc;
       border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 6px 36px 6px 36px;
-      font-size: 13.5px;
+      border-radius: 12px;
+      padding: 8px 38px 8px 38px;
+      font-size: 13.8px;
       font-weight: 500;
       color: #0f172a;
       transition: all 0.2s ease;
@@ -1540,6 +1541,291 @@
     ];
 
     // ==========================================
+    // DANH SÁCH QUẬN / HUYỆN / THỊ XÃ CHUẨN 63 TỈNH THÀNH
+    // ==========================================
+    const DEFAULT_DISTRICTS_MAP = {
+  HN: [
+    'Quận Ba Đình', 'Quận Hoàn Kiếm', 'Quận Tây Hồ', 'Quận Long Biên', 'Quận Cầu Giấy',
+    'Quận Đống Đa', 'Quận Hai Bà Trưng', 'Quận Hoàng Mai', 'Quận Thanh Xuân', 'Quận Nam Từ Liêm',
+    'Quận Bắc Từ Liêm', 'Quận Hà Đông', 'Thị xã Sơn Tây', 'Huyện Ba Vì', 'Huyện Chương Mỹ',
+    'Huyện Đan Phượng', 'Huyện Đông Anh', 'Huyện Gia Lâm', 'Huyện Hoài Đức', 'Huyện Mê Linh',
+    'Huyện Mỹ Đức', 'Huyện Phú Xuyên', 'Huyện Phúc Thọ', 'Huyện Quốc Oai', 'Huyện Sóc Sơn',
+    'Huyện Thạch Thất', 'Huyện Thanh Oai', 'Huyện Thanh Trì', 'Huyện Thường Tín', 'Huyện Ứng Hòa'
+  ],
+  HP: [
+    'Quận Hồng Bàng', 'Quận Ngô Quyền', 'Quận Lê Chân', 'Quận Hải An', 'Quận Kiến An',
+    'Quận Đồ Sơn', 'Quận Dương Kinh', 'Huyện Thủy Nguyên', 'Huyện An Dương', 'Huyện An Lão',
+    'Huyện Kiến Thụy', 'Huyện Tiên Lãng', 'Huyện Vĩnh Bảo', 'Huyện Cát Hải', 'Huyện Bạch Long Vĩ'
+  ],
+  BN: [
+    'TP. Bắc Ninh', 'TP. Từ Sơn', 'Thị xã Quế Võ', 'Thị xã Thuận Thành',
+    'Huyện Tiên Du', 'Huyện Yên Phong', 'Huyện Gia Bình', 'Huyện Lương Tài'
+  ],
+  BG: [
+    'TP. Bắc Giang', 'Thị xã Việt Yên', 'Huyện Hiệp Hòa', 'Huyện Tân Yên', 'Huyện Lạng Giang',
+    'Huyện Lục Nam', 'Huyện Lục Ngạn', 'Huyện Sơn Động', 'Huyện Yên Thế', 'Huyện Yên Dũng'
+  ],
+  HNM: [
+    'TP. Phủ Lý', 'Thị xã Duy Tiên', 'Huyện Bình Lục', 'Huyện Kim Bảng', 'Huyện Lý Nhân', 'Huyện Thanh Liêm'
+  ],
+  HD: [
+    'TP. Hải Dương', 'TP. Chí Linh', 'Thị xã Kinh Môn', 'Huyện Cẩm Giàng', 'Huyện Ninh Giang',
+    'Huyện Gia Lộc', 'Huyện Kim Thành', 'Huyện Nam Sách', 'Huyện Thanh Hà', 'Huyện Tứ Kỳ',
+    'Huyện Bình Giang', 'Huyện Thanh Miện'
+  ],
+  HY: [
+    'TP. Hưng Yên', 'Thị xã Mỹ Hào', 'Huyện Văn Giang', 'Huyện Văn Lâm', 'Huyện Yên Mỹ',
+    'Huyện Khoái Châu', 'Huyện Ân Thi', 'Huyện Kim Động', 'Huyện Tiên Lữ', 'Huyện Phù Cừ'
+  ],
+  ND: [
+    'TP. Nam Định', 'Huyện Giao Thủy', 'Huyện Hải Hậu', 'Huyện Mỹ Lộc', 'Huyện Nam Trực',
+    'Huyện Nghĩa Hưng', 'Huyện Trực Ninh', 'Huyện Vụ Bản', 'Huyện Xuân Trường', 'Huyện Ý Yên'
+  ],
+  NB: [
+    'TP. Ninh Bình', 'TP. Tam Điệp', 'Huyện Gia Viễn', 'Huyện Hoa Lư', 'Huyện Kim Sơn',
+    'Huyện Nho Quan', 'Huyện Yên Khánh', 'Huyện Yên Mô'
+  ],
+  TB: [
+    'TP. Thái Bình', 'Huyện Đông Hưng', 'Huyện Hưng Hà', 'Huyện Kiến Xương', 'Huyện Quỳnh Phụ',
+    'Huyện Thái Thụy', 'Huyện Tiền Hải', 'Huyện Vũ Thư'
+  ],
+  VP: [
+    'TP. Vĩnh Yên', 'TP. Phúc Yên', 'Huyện Bình Xuyên', 'Huyện Lập Thạch', 'Huyện Sông Lô',
+    'Huyện Tam Đảo', 'Huyện Tam Dương', 'Huyện Vĩnh Tường', 'Huyện Yên Lạc'
+  ],
+  PT: [
+    'TP. Việt Trì', 'Thị xã Phú Thọ', 'Huyện Cẩm Khê', 'Huyện Đoan Hùng', 'Huyện Hạ Hòa',
+    'Huyện Lâm Thao', 'Huyện Phù Ninh', 'Huyện Tam Nông', 'Huyện Tân Sơn', 'Huyện Thanh Ba',
+    'Huyện Thanh Sơn', 'Huyện Thanh Thủy', 'Huyện Yên Lập'
+  ],
+  QN: [
+    'TP. Hạ Long', 'TP. Cẩm Phả', 'TP. Uông Bí', 'TP. Móng Cái', 'Thị xã Đông Triều',
+    'Thị xã Quảng Yên', 'Huyện Vân Đồn', 'Huyện Tiên Yên', 'Huyện Đầm Hà', 'Huyện Hải Hà',
+    'Huyện Ba Chẽ', 'Huyện Bình Liêu', 'Huyện Cô Tô'
+  ],
+  TNG: [
+    'TP. Thái Nguyên', 'TP. Sông Công', 'TP. Phổ Yên', 'Huyện Đại Từ', 'Huyện Định Hóa',
+    'Huyện Đồng Hỷ', 'Huyện Phú Bình', 'Huyện Phú Lương', 'Huyện Võ Nhai'
+  ],
+  BK: [
+    'TP. Bắc Kạn', 'Huyện Ba Bể', 'Huyện Bạch Thông', 'Huyện Chợ Đồn', 'Huyện Chợ Mới',
+    'Huyện Na Rì', 'Huyện Ngân Sơn', 'Huyện Pác Nặm'
+  ],
+  CB: [
+    'TP. Cao Bằng', 'Huyện Bảo Lạc', 'Huyện Bảo Lâm', 'Huyện Hạ Lang', 'Huyện Hà Quảng',
+    'Huyện Hòa An', 'Huyện Nguyên Bình', 'Huyện Quảng Hòa', 'Huyện Thạch An', 'Huyện Trùng Khánh'
+  ],
+  HG: [
+    'TP. Hà Giang', 'Huyện Bắc Mê', 'Huyện Bắc Quang', 'Huyện Đồng Văn', 'Huyện Hoàng Su Phì',
+    'Huyện Mèo Vạc', 'Huyện Quản Bạ', 'Huyện Quang Bình', 'Huyện Vị Xuyên', 'Huyện Xín Mần', 'Huyện Yên Minh'
+  ],
+  LS: [
+    'TP. Lạng Sơn', 'Huyện Bắc Sơn', 'Huyện Bình Gia', 'Huyện Cao Lộc', 'Huyện Chi Lăng',
+    'Huyện Đình Lập', 'Huyện Hữu Lũng', 'Huyện Lộc Bình', 'Huyện Tràng Định', 'Huyện Văn Lãng', 'Huyện Văn Quan'
+  ],
+  TQ: [
+    'TP. Tuyên Quang', 'Huyện Chiêm Hóa', 'Huyện Hàm Yên', 'Huyện Lâm Bình', 'Huyện Na Hang',
+    'Huyện Sơn Dương', 'Huyện Yên Sơn'
+  ],
+  LCA: [
+    'TP. Lào Cai', 'Thị xã Sa Pa', 'Huyện Bát Xát', 'Huyện Bảo Thắng', 'Huyện Bảo Yên',
+    'Huyện Bắc Hà', 'Huyện Mường Khương', 'Huyện Si Ma Cai', 'Huyện Văn Bàn'
+  ],
+  YB: [
+    'TP. Yên Bái', 'Thị xã Nghĩa Lộ', 'Huyện Lục Yên', 'Huyện Mù Cang Chải', 'Huyện Trạm Tấu',
+    'Huyện Trấn Yên', 'Huyện Văn Chấn', 'Huyện Văn Yên', 'Huyện Yên Bình'
+  ],
+  DB: [
+    'TP. Điện Biên Phủ', 'Thị xã Mường Lay', 'Huyện Điện Biên', 'Huyện Điện Biên Đông', 'Huyện Mường Ảng',
+    'Huyện Mường Chà', 'Huyện Mường Nhé', 'Huyện Nậm Pồ', 'Huyện Tủa Chùa', 'Huyện Tuần Giáo'
+  ],
+  HB: [
+    'TP. Hòa Bình', 'Huyện Cao Phong', 'Huyện Đà Bắc', 'Huyện Kim Bôi', 'Huyện Lạc Sơn',
+    'Huyện Lạc Thủy', 'Huyện Lương Sơn', 'Huyện Mai Châu', 'Huyện Tân Lạc', 'Huyện Yên Thủy'
+  ],
+  LC: [
+    'TP. Lai Châu', 'Huyện Mường Tè', 'Huyện Nậm Nhùn', 'Huyện Phong Thổ', 'Huyện Sìn Hồ',
+    'Huyện Tam Đường', 'Huyện Tân Uyên', 'Huyện Than Uyên'
+  ],
+  SL: [
+    'TP. Sơn La', 'Huyện Bắc Yên', 'Huyện Mai Sơn', 'Huyện Mộc Châu', 'Huyện Mường La',
+    'Huyện Phù Yên', 'Huyện Quỳnh Nhai', 'Huyện Sông Mã', 'Huyện Sốp Cộp', 'Huyện Thuận Châu', 'Huyện Vân Hồ', 'Huyện Yên Châu'
+  ],
+  TH: [
+    'TP. Thanh Hóa', 'TP. Sầm Sơn', 'Thị xã Bỉm Sơn', 'Thị xã Nghi Sơn', 'Huyện Đông Sơn',
+    'Huyện Quảng Xương', 'Huyện Hoằng Hóa', 'Huyện Hậu Lộc', 'Huyện Hà Trung', 'Huyện Nga Sơn',
+    'Huyện Thiệu Hóa', 'Huyện Triệu Sơn', 'Huyện Yên Định', 'Huyện Thọ Xuân', 'Huyện Nông Cống',
+    'Huyện Như Thanh', 'Huyện Như Xuân', 'Huyện Thường Xuân', 'Huyện Lang Chánh', 'Huyện Bá Thước',
+    'Huyện Cẩm Thủy', 'Huyện Ngọc Lặc', 'Huyện Thạch Thành', 'Huyện Quan Hóa', 'Huyện Quan Sơn', 'Huyện Mường Lát'
+  ],
+  NA: [
+    'TP. Vinh', 'Thị xã Cửa Lò', 'Thị xã Thái Hòa', 'Thị xã Hoàng Mai', 'Huyện Nghi Lộc',
+    'Huyện Hưng Nguyên', 'Huyện Nam Đàn', 'Huyện Diễn Châu', 'Huyện Yên Thành', 'Huyện Quỳnh Lưu',
+    'Huyện Đô Lương', 'Huyện Thanh Chương', 'Huyện Anh Sơn', 'Huyện Con Cuông', 'Huyện Tương Dương',
+    'Huyện Kỳ Sơn', 'Huyện Quỳ Hợp', 'Huyện Quỳ Châu', 'Huyện Quế Phong', 'Huyện Tân Kỳ', 'Huyện Nghĩa Đàn'
+  ],
+  HT: [
+    'TP. Hà Tĩnh', 'Thị xã Hồng Lĩnh', 'Thị xã Kỳ Anh', 'Huyện Nghi Xuân', 'Huyện Đức Thọ',
+    'Huyện Hương Sơn', 'Huyện Hương Khê', 'Huyện Vũ Quang', 'Huyện Can Lộc', 'Huyện Lộc Hà',
+    'Huyện Thạch Hà', 'Huyện Cẩm Xuyên', 'Huyện Kỳ Anh'
+  ],
+  QB: [
+    'TP. Đồng Hới', 'Thị xã Ba Đồn', 'Huyện Bố Trạch', 'Huyện Quảng Trạch', 'Huyện Tuyên Hóa',
+    'Huyện Minh Hóa', 'Huyện Quảng Ninh', 'Huyện Lệ Thủy'
+  ],
+  QT: [
+    'TP. Đông Hà', 'Thị xã Quảng Trị', 'Huyện Vĩnh Linh', 'Huyện Gio Linh', 'Huyện Cam Lộ',
+    'Huyện Triệu Phong', 'Huyện Hải Lăng', 'Huyện Hướng Hóa', 'Huyện Đakrông', 'Huyện Cồn Cỏ'
+  ],
+  TTH: [
+    'TP. Huế', 'Thị xã Hương Thủy', 'Thị xã Hương Trà', 'Huyện Phong Điền', 'Huyện Quảng Điền',
+    'Huyện Phú Vang', 'Huyện Phú Lộc', 'Huyện A Lưới', 'Huyện Nam Đông'
+  ],
+  DN: [
+    'Quận Hải Châu', 'Quận Thanh Khê', 'Quận Sơn Trà', 'Quận Ngũ Hành Sơn', 'Quận Liên Chiểu',
+    'Quận Cẩm Lệ', 'Huyện Hòa Vang', 'Huyện Hoàng Sa'
+  ],
+  QNM: [
+    'TP. Tam Kỳ', 'TP. Hội An', 'Thị xã Điện Bàn', 'Huyện Đại Lộc', 'Huyện Duy Xuyên',
+    'Huyện Thăng Bình', 'Huyện Quế Sơn', 'Huyện Núi Thành', 'Huyện Tiên Phước', 'Huyện Bắc Trà My',
+    'Huyện Nam Trà My', 'Huyện Phước Sơn', 'Huyện Hiệp Đức', 'Huyện Nông Sơn', 'Huyện Đông Giang',
+    'Huyện Nam Giang', 'Huyện Tây Giang', 'Huyện Phú Ninh'
+  ],
+  QNG: [
+    'TP. Quảng Ngãi', 'Thị xã Đức Phổ', 'Huyện Bình Sơn', 'Huyện Sơn Tịnh', 'Huyện Tư Nghĩa',
+    'Huyện Nghĩa Hành', 'Huyện Mộ Đức', 'Huyện Trà Bồng', 'Huyện Sơn Hà', 'Huyện Sơn Tây',
+    'Huyện Minh Long', 'Huyện Ba Tơ', 'Huyện Lý Sơn'
+  ],
+  BDH: [
+    'TP. Quy Nhơn', 'Thị xã An Nhơn', 'Thị xã Hoài Nhơn', 'Huyện Tuy Phước', 'Huyện Phù Cát',
+    'Huyện Phù Mỹ', 'Huyện Hoài Ân', 'Huyện Tây Sơn', 'Huyện Vân Canh', 'Huyện Vĩnh Thạnh', 'Huyện An Lão'
+  ],
+  PY: [
+    'TP. Tuy Hòa', 'Thị xã Sông Cầu', 'Thị xã Đông Hòa', 'Huyện Đồng Xuân', 'Huyện Sông Hinh',
+    'Huyện Sơn Hòa', 'Huyện Phú Hòa', 'Huyện Tây Hòa', 'Huyện Tuy An'
+  ],
+  KH: [
+    'TP. Nha Trang', 'TP. Cam Ranh', 'Thị xã Ninh Hòa', 'Huyện Vạn Ninh', 'Huyện Diên Khánh',
+    'Huyện Cam Lâm', 'Huyện Khánh Vĩnh', 'Huyện Khánh Sơn', 'Huyện Trường Sa'
+  ],
+  NT: [
+    'TP. Phan Rang - Tháp Chàm', 'Huyện Ninh Sơn', 'Huyện Ninh Hải', 'Huyện Ninh Phước',
+    'Huyện Bác Ái', 'Huyện Thuận Bắc', 'Huyện Thuận Nam'
+  ],
+  BTH: [
+    'TP. Phan Thiết', 'Thị xã La Gi', 'Huyện Tuy Phong', 'Huyện Bắc Bình', 'Huyện Hàm Thuận Bắc',
+    'Huyện Hàm Thuận Nam', 'Huyện Hàm Tân', 'Huyện Đức Linh', 'Huyện Tánh Linh', 'Huyện Phú Quý'
+  ],
+  DL: [
+    'TP. Buôn Ma Thuột', 'Thị xã Buôn Hồ', 'Huyện Cư M\'gar', 'Huyện Ea Kar', 'Huyện Krông Pắc',
+    'Huyện Krông Búk', 'Huyện Krông Năng', 'Huyện Krông Bông', 'Huyện Krông Ana', 'Huyện Buôn Đôn',
+    'Huyện Ea H\'leo', 'Huyện Ea Súp', 'Huyện Cư Kuin', 'Huyện Lắk', 'Huyện M\'Drắk'
+  ],
+  GL: [
+    'TP. Pleiku', 'Thị xã An Khê', 'Thị xã Ayun Pa', 'Huyện Chư Păh', 'Huyện Chư Prông',
+    'Huyện Chư Sê', 'Huyện Đak Đoa', 'Huyện Đak Pơ', 'Huyện Đức Cơ', 'Huyện Ia Grai',
+    'Huyện Ia Pa', 'Huyện K\'Bang', 'Huyện Kông Chro', 'Huyện Krông Pa', 'Huyện Mang Yang',
+    'Huyện Phú Thiện', 'Huyện Chư Pưh'
+  ],
+  KT: [
+    'TP. Kon Tum', 'Huyện Đắk Hà', 'Huyện Đắk Tô', 'Huyện Ngọc Hồi', 'Huyện Đắk Glei',
+    'Huyện Sa Thầy', 'Huyện Kon Rẫy', 'Huyện Kon Plông', 'Huyện Tu Mơ Rông', 'Huyện Ia H\'Drai'
+  ],
+  DKN: [
+    'TP. Gia Nghĩa', 'Huyện Đắk R\'lấp', 'Huyện Đắk Mil', 'Huyện Đắk Song', 'Huyện Krông Nô',
+    'Huyện Đắk Glong', 'Huyện Tuy Đức', 'Huyện Cư Jút'
+  ],
+  LD: [
+    'TP. Đà Lạt', 'TP. Bảo Lộc', 'Huyện Lạc Dương', 'Huyện Đơn Dương', 'Huyện Đức Trọng',
+    'Huyện Lâm Hà', 'Huyện Di Linh', 'Huyện Bảo Lâm', 'Huyện Đạ Huoai', 'Huyện Đạ Tẻh',
+    'Huyện Cát Tiên', 'Huyện Đam Rông'
+  ],
+  SG: [
+    'TP. Thủ Đức', 'Quận 1', 'Quận 3', 'Quận 4', 'Quận 5', 'Quận 6', 'Quận 7', 'Quận 8',
+    'Quận 10', 'Quận 11', 'Quận 12', 'Quận Bình Thạnh', 'Quận Gò Vấp', 'Quận Phú Nhuận',
+    'Quận Tân Bình', 'Quận Tân Phú', 'Quận Bình Tân', 'Huyện Củ Chi', 'Huyện Hóc Môn',
+    'Huyện Bình Chánh', 'Huyện Nhà Bè', 'Huyện Cần Giờ'
+  ],
+  VT: [
+    'TP. Vũng Tàu', 'TP. Bà Rịa', 'Thị xã Phú Mỹ', 'Huyện Châu Đức', 'Huyện Đất Đỏ',
+    'Huyện Long Điền', 'Huyện Xuyên Mộc', 'Huyện Côn Đảo'
+  ],
+  BD: [
+    'TP. Thủ Dầu Một', 'TP. Thuận An', 'TP. Dĩ An', 'TP. Tân Uyên', 'TP. Bến Cát',
+    'Huyện Bàu Bàng', 'Huyện Bắc Tân Uyên', 'Huyện Dầu Tiếng', 'Huyện Phú Giáo'
+  ],
+  BP: [
+    'TP. Đồng Xoài', 'Thị xã Bình Long', 'Thị xã Phước Long', 'Thị xã Chơn Thành',
+    'Huyện Bù Đăng', 'Huyện Bù Đốp', 'Huyện Bù Gia Mập', 'Huyện Đồng Phú', 'Huyện Hớn Quản',
+    'Huyện Lộc Ninh', 'Huyện Phú Riềng'
+  ],
+  DNA: [
+    'TP. Biên Hòa', 'TP. Long Khánh', 'Huyện Long Thành', 'Huyện Nhơn Trạch', 'Huyện Trảng Bom',
+    'Huyện Thống Nhất', 'Huyện Vĩnh Cửu', 'Huyện Cẩm Mỹ', 'Huyện Xuân Lộc', 'Huyện Định Quán', 'Huyện Tân Phú'
+  ],
+  TN: [
+    'TP. Tây Ninh', 'Thị xã Trảng Bàng', 'Thị xã Hòa Thành', 'Huyện Bến Cầu', 'Huyện Châu Thành',
+    'Huyện Dương Minh Châu', 'Huyện Gò Dầu', 'Huyện Tân Biên', 'Huyện Tân Châu'
+  ],
+  CT: [
+    'Quận Ninh Kiều', 'Quận Bình Thủy', 'Quận Cái Răng', 'Quận Ô Môn', 'Quận Thốt Nốt',
+    'Huyện Phong Điền', 'Huyện Cờ Đỏ', 'Huyện Thới Lai', 'Huyện Vĩnh Thạnh'
+  ],
+  AG: [
+    'TP. Long Xuyên', 'TP. Châu Đốc', 'Thị xã Tân Châu', 'Thị xã Tịnh Biên', 'Huyện An Phú',
+    'Huyện Châu Phú', 'Huyện Châu Thành', 'Huyện Chợ Mới', 'Huyện Phú Tân', 'Huyện Thoại Sơn', 'Huyện Tri Tôn'
+  ],
+  BL: [
+    'TP. Bạc Liêu', 'Thị xã Giá Rai', 'Huyện Đông Hải', 'Huyện Hòa Bình', 'Huyện Hồng Dân',
+    'Huyện Phước Long', 'Huyện Vĩnh Lợi'
+  ],
+  BT: [
+    'TP. Bến Tre', 'Huyện Ba Tri', 'Huyện Bình Đại', 'Huyện Châu Thành', 'Huyện Chợ Lách',
+    'Huyện Giồng Trôm', 'Huyện Mỏ Cày Bắc', 'Huyện Mỏ Cày Nam', 'Huyện Thạnh Phú'
+  ],
+  CM: [
+    'TP. Cà Mau', 'Huyện Cái Nước', 'Huyện Đầm Dơi', 'Huyện Năm Căn', 'Huyện Ngọc Hiển',
+    'Huyện Phú Tân', 'Huyện Thới Bình', 'Huyện Trần Văn Thời', 'Huyện U Minh'
+  ],
+  DT: [
+    'TP. Cao Lãnh', 'TP. Sa Đéc', 'TP. Hồng Ngự', 'Huyện Cao Lãnh', 'Huyện Châu Thành',
+    'Huyện Hồng Ngự', 'Huyện Lai Vung', 'Huyện Lấp Vò', 'Huyện Tam Nông', 'Huyện Tân Hồng',
+    'Huyện Thanh Bình', 'Huyện Tháp Mười'
+  ],
+  HGI: [
+    'TP. Vị Thanh', 'TP. Ngã Bảy', 'Thị xã Long Mỹ', 'Huyện Châu Thành', 'Huyện Châu Thành A',
+    'Huyện Phụng Hiệp', 'Huyện Vị Thủy', 'Huyện Long Mỹ'
+  ],
+  KG: [
+    'TP. Rạch Giá', 'TP. Hà Tiên', 'TP. Phú Quốc', 'Huyện An Biên', 'Huyện An Minh',
+    'Huyện Châu Thành', 'Huyện Giang Thành', 'Huyện Giồng Riềng', 'Huyện Gò Quao', 'Huyện Hòn Đất',
+    'Huyện Kiên Hải', 'Huyện Kiên Lương', 'Huyện Tân Hiệp', 'Huyện U Minh Thượng', 'Huyện Vĩnh Thuận'
+  ],
+  LA: [
+    'TP. Tân An', 'Thị xã Kiến Tường', 'Huyện Bến Lức', 'Huyện Cần Đước', 'Huyện Cần Giuộc',
+    'Huyện Châu Thành', 'Huyện Đức Hòa', 'Huyện Đức Huệ', 'Huyện Mộc Hóa', 'Huyện Tân Hưng',
+    'Huyện Tân Thạnh', 'Huyện Tân Trụ', 'Huyện Thạnh Hóa', 'Huyện Thủ Thừa', 'Huyện Vĩnh Hưng'
+  ],
+  ST: [
+    'TP. Sóc Trăng', 'Thị xã Vĩnh Châu', 'Thị xã Ngã Năm', 'Huyện Châu Thành', 'Huyện Cù Lao Dung',
+    'Huyện Kế Sách', 'Huyện Long Phú', 'Huyện Mỹ Tú', 'Huyện Mỹ Xuyên', 'Huyện Thạnh Trị', 'Huyện Trần Đề'
+  ],
+  TG: [
+    'TP. Mỹ Tho', 'Thị xã Gò Công', 'Thị xã Cai Lậy', 'Huyện Cái Bè', 'Huyện Cai Lậy',
+    'Huyện Châu Thành', 'Huyện Chợ Gạo', 'Huyện Gò Công Đông', 'Huyện Gò Công Tây',
+    'Huyện Tân Phú Đông', 'Huyện Tân Phước'
+  ],
+  TV: [
+    'TP. Trà Vinh', 'Thị xã Duyên Hải', 'Huyện Càng Long', 'Huyện Cầu Kè', 'Huyện Cầu Ngang',
+    'Huyện Châu Thành', 'Huyện Duyên Hải', 'Huyện Tiểu Cần', 'Huyện Trà Cú'
+  ],
+  VL: [
+    'TP. Vĩnh Long', 'Thị xã Bình Minh', 'Huyện Bình Tân', 'Huyện Long Hồ', 'Huyện Mang Thít',
+    'Huyện Tam Bình', 'Huyện Trà Ôn', 'Huyện Vũng Liêm'
+  ]
+};
+
+    // ==========================================
     // 4. DATABASE SERVICE (FIRESTORE)
     // ==========================================
     const dbService = {
@@ -1645,11 +1931,39 @@
             list.forEach(p => map.set(p.areaCode, { ...map.get(p.areaCode), ...p }));
             return Array.from(map.values());
           }
-          return list;
+          // Sinh danh sách quận/huyện mặc định chuẩn từ DEFAULT_DISTRICTS_MAP
+          const defaultNames = DEFAULT_DISTRICTS_MAP[parentCode] || [];
+          const map = new Map();
+          defaultNames.forEach((name, idx) => {
+            const code = `${parentCode}_D${String(idx + 1).padStart(2, '0')}`;
+            map.set(code, {
+              areaCode: code,
+              name: name,
+              parentCode: parentCode,
+              type: 'district'
+            });
+          });
+          // Hợp nhất dữ liệu Firestore (nếu có bổ sung hoặc override từ Firestore)
+          list.forEach(d => {
+            const code = d.areaCode || d.id;
+            const existingEntry = Array.from(map.values()).find(it => it.name.trim().toLowerCase() === (d.name || '').trim().toLowerCase());
+            if (existingEntry) {
+              map.set(existingEntry.areaCode, { ...existingEntry, ...d });
+            } else {
+              map.set(code, { ...d, areaCode: code, parentCode: parentCode, type: d.type || 'ward' });
+            }
+          });
+          return Array.from(map.values());
         } catch (e) {
           console.warn("Lỗi getAdministrativeAreas, dùng fallback chuẩn:", e);
           if (parentCode === 'ROOT') return DEFAULT_PROVINCES;
-          return [];
+          const defaultNames = DEFAULT_DISTRICTS_MAP[parentCode] || [];
+          return defaultNames.map((name, idx) => ({
+            areaCode: `${parentCode}_D${String(idx + 1).padStart(2, '0')}`,
+            name: name,
+            parentCode: parentCode,
+            type: 'district'
+          }));
         }
       },
 
@@ -2742,41 +3056,43 @@ const scheduleEngine = new ScheduleEngine(dbService);
                   </div>
                 </div>
 
-                <div class="card-body p-4" style="overflow: visible;">
+                <div class="card-body p-4 p-md-5" style="overflow: visible;">
                   <form id="form-lookup">
                     <!-- 1. Loại công việc (Segmented Pill Switcher) -->
-                    <div class="mb-4">
-                      <label class="field-label">1. Loại hình sự cố</label>
-                      <div class="segmented-control">
+                    <div class="mb-4" style="margin-bottom: 24px;">
+                      <label class="field-label d-block mb-2 text-uppercase fw-bold" style="font-size: 13px; color: #475569; letter-spacing: 0.03em;">
+                        1. Loại hình sự cố
+                      </label>
+                      <div class="segmented-control" style="padding: 6px; border-radius: 14px; gap: 8px;">
                         <input type="radio" name="taskType" id="type-field" value="field" checked>
-                        <label for="type-field">
-                          <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i> Hiện Trường
+                        <label for="type-field" style="padding: 10px 16px; font-size: 14px; font-weight: 600; border-radius: 10px;">
+                          <i data-lucide="map-pin" style="width: 17px; height: 17px;"></i> Hiện Trường
                         </label>
                         <input type="radio" name="taskType" id="type-detailed" value="detailed">
-                        <label for="type-detailed">
-                          <i data-lucide="wrench" style="width: 16px; height: 16px;"></i> Chi Tiết / Gara
+                        <label for="type-detailed" style="padding: 10px 16px; font-size: 14px; font-weight: 600; border-radius: 10px;">
+                          <i data-lucide="wrench" style="width: 17px; height: 17px;"></i> Chi Tiết / Gara
                         </label>
                       </div>
                     </div>
 
                     <!-- 2. Tỉnh / Thành phố (LUXURY SEARCHABLE DROPDOWN) -->
-                    <div class="mb-3">
-                      <label class="field-label d-flex justify-content-between align-items-center mb-1.5">
-                        <span>2. Tỉnh / Thành phố <span class="text-danger">*</span></span>
-                        <span class="badge bg-light text-secondary border small fw-normal" id="province-count-badge">${provinces.length} Tỉnh thành</span>
+                    <div class="mb-4" style="margin-bottom: 24px;">
+                      <label class="field-label d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold" style="font-size: 13px; color: #475569; letter-spacing: 0.03em; text-transform: uppercase;">2. Tỉnh / Thành phố <span class="text-danger">*</span></span>
+                        <span class="badge bg-light text-secondary border small fw-normal" id="province-count-badge" style="padding: 5px 10px; border-radius: 8px;">${provinces.length} Tỉnh thành</span>
                       </label>
                       
                       <div class="custom-select-luxury" id="wrapper-lookup-province" style="position: relative; z-index: 35;">
                         <input type="hidden" id="lookup-province" value="">
 
                         <!-- Trigger Button -->
-                        <button type="button" class="btn-custom-select" id="btn-trigger-lookup-province" aria-expanded="false" style="min-height: 48px; border-radius: 12px;">
-                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                        <button type="button" class="btn-custom-select" id="btn-trigger-lookup-province" aria-expanded="false">
+                          <div class="d-flex align-items-center gap-3 overflow-hidden">
                             <div class="custom-select-trigger-icon" id="province-trigger-icon" style="background: #eff6ff; color: #2563eb;">
-                              <i data-lucide="map-pin" style="width: 17px; height: 17px;"></i>
+                              <i data-lucide="map-pin" style="width: 20px; height: 20px;"></i>
                             </div>
                             <div class="custom-select-trigger-text text-start">
-                              <div class="custom-select-trigger-title text-truncate" id="province-trigger-title" style="color: #64748b; font-weight: 500;">
+                              <div class="custom-select-trigger-title text-truncate" id="province-trigger-title" style="color: #64748b; font-weight: 600;">
                                 -- Chọn Tỉnh / Thành Phố --
                               </div>
                               <div class="custom-select-trigger-desc text-truncate" id="province-trigger-desc">
@@ -2814,9 +3130,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
                           <div class="luxury-options-list p-2" id="list-province-options" style="max-height: 240px; overflow-y: auto;">
                             ${provinces.map(p => `
                               <div class="luxury-option-item" data-value="${p.areaCode}" data-name="${p.name}">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
-                                  <div class="option-icon" style="background: #eff6ff; color: #2563eb; width: 32px; height: 32px;">
-                                    <i data-lucide="map-pin" style="width: 15px; height: 15px;"></i>
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
+                                  <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
+                                    <i data-lucide="map-pin" style="width: 17px; height: 17px;"></i>
                                   </div>
                                   <div class="option-content">
                                     <div class="option-title">${p.name}</div>
@@ -2841,19 +3157,19 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </div>
 
                     <!-- 3. Quận / Huyện / Xã / Phường (LUXURY SEARCHABLE DROPDOWN) -->
-                    <div class="mb-3">
-                      <label class="field-label d-flex justify-content-between align-items-center mb-1.5">
-                        <span>3. Xã / Phường / Huyện</span>
-                        <span class="badge bg-light text-secondary border small fw-normal" id="ward-count-badge">Chưa chọn tỉnh</span>
+                    <div class="mb-4" style="margin-bottom: 24px;">
+                      <label class="field-label d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold" style="font-size: 13px; color: #475569; letter-spacing: 0.03em; text-transform: uppercase;">3. Quận / Huyện / Xã / Phường</span>
+                        <span class="badge bg-light text-secondary border small fw-normal" id="ward-count-badge" style="padding: 5px 10px; border-radius: 8px;">Chưa chọn tỉnh</span>
                       </label>
                       
                       <div class="custom-select-luxury" id="wrapper-lookup-ward" style="position: relative; z-index: 30;">
                         <input type="hidden" id="lookup-ward" value="*">
 
-                        <button type="button" class="btn-custom-select" id="btn-trigger-lookup-ward" aria-expanded="false" style="min-height: 48px; border-radius: 12px;">
-                          <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                        <button type="button" class="btn-custom-select" id="btn-trigger-lookup-ward" aria-expanded="false">
+                          <div class="d-flex align-items-center gap-3 overflow-hidden">
                             <div class="custom-select-trigger-icon" id="ward-trigger-icon" style="background: #f1f5f9; color: #475569;">
-                              <i data-lucide="compass" style="width: 17px; height: 17px;"></i>
+                              <i data-lucide="compass" style="width: 20px; height: 20px;"></i>
                             </div>
                             <div class="custom-select-trigger-text text-start">
                               <div class="custom-select-trigger-title text-truncate" id="ward-trigger-title">
@@ -2875,7 +3191,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               <span class="dropdown-search-icon-left">
                                 <i data-lucide="search" style="width: 16px; height: 16px;"></i>
                               </span>
-                              <input type="text" class="dropdown-search-input" id="input-search-ward" placeholder="Gõ tìm xã / phường / huyện..." autocomplete="off">
+                              <input type="text" class="dropdown-search-input" id="input-search-ward" placeholder="Gõ tìm quận, huyện, thị xã, xã, phường..." autocomplete="off">
                               <button type="button" class="dropdown-search-clear-btn" id="btn-clear-search-ward" title="Xóa tìm kiếm">
                                 <i data-lucide="x" style="width: 12px; height: 12px;"></i>
                               </button>
@@ -2889,9 +3205,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                           <div class="luxury-options-list p-2" id="list-ward-options" style="max-height: 240px; overflow-y: auto;">
                             <div class="luxury-option-item active" data-value="*" data-name="Toàn tỉnh / Chưa rõ chi tiết">
-                              <div class="d-flex align-items-center gap-2.5 overflow-hidden">
-                                <div class="option-icon" style="background: #f1f5f9; color: #475569; width: 32px; height: 32px;">
-                                  <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
+                              <div class="d-flex align-items-center gap-3 overflow-hidden">
+                                <div class="option-icon" style="background: #f1f5f9; color: #475569;">
+                                  <i data-lucide="globe" style="width: 18px; height: 18px;"></i>
                                 </div>
                                 <div class="option-content">
                                   <div class="option-title">Toàn tỉnh / Chưa rõ chi tiết</div>
@@ -2906,37 +3222,37 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                           <div id="empty-search-ward" class="p-4 text-center text-muted d-none">
                             <i data-lucide="map-pin-off" style="width: 28px; height: 28px; color: #94a3b8; margin-bottom: 6px;"></i>
-                            <div class="fw-semibold small">Không tìm thấy xã / phường nào</div>
+                            <div class="fw-semibold small">Không tìm thấy quận / huyện / xã / phường nào</div>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     <!-- 4. Ô tìm kiếm Gara (Chỉ hiện khi chọn Chi tiết) -->
-                    <div class="mb-3 d-none" id="box-garage-search">
-                      <label class="field-label text-primary">4. Gara sửa chữa chỉ định</label>
-                      <input type="text" class="form-control" id="input-garage-search" placeholder="Gõ tên gara (VD: Toyota Mỹ Đình)...">
+                    <div class="mb-4 d-none" id="box-garage-search" style="margin-bottom: 24px;">
+                      <label class="field-label text-primary mb-2 fw-bold" style="font-size: 13px; text-transform: uppercase;">4. Gara sửa chữa chỉ định</label>
+                      <input type="text" class="form-control" id="input-garage-search" placeholder="Gõ tên gara (VD: Toyota Mỹ Đình)..." style="min-height: 52px; border-radius: 12px; font-size: 14px;">
                       <input type="hidden" id="selected-garage-id" value="">
                       <div id="garage-search-dropdown" class="list-group mt-1 shadow-sm"></div>
                     </div>
 
                     <!-- 5. Thời điểm sự cố -->
-                    <div class="mb-4">
-                      <label class="field-label">5. Thời điểm tra cứu</label>
+                    <div class="mb-4" style="margin-bottom: 28px;">
+                      <label class="field-label mb-2 fw-bold text-uppercase" style="font-size: 13px; color: #475569; letter-spacing: 0.03em;">5. Thời điểm tra cứu</label>
                       <div class="row g-2">
                         <div class="col-7">
-                          <select class="form-select" id="select-time-mode">
+                          <select class="form-select" id="select-time-mode" style="min-height: 52px; border-radius: 12px; font-weight: 600; font-size: 14px; padding: 10px 16px;">
                             <option value="now" selected>Thời điểm hiện tại</option>
                             <option value="custom">Chọn ngày & giờ khác</option>
                           </select>
                         </div>
                         <div class="col-5">
-                          <input type="datetime-local" class="form-control d-none" id="input-custom-datetime">
+                          <input type="datetime-local" class="form-control d-none" id="input-custom-datetime" style="min-height: 52px; border-radius: 12px; font-size: 13.5px;">
                         </div>
                       </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary-action w-100 py-3 fw-bold" id="btn-submit-lookup">
+                    <button type="submit" class="btn btn-primary-action w-100 py-3 fw-bold" id="btn-submit-lookup" style="min-height: 56px; font-size: 15px; border-radius: 14px; letter-spacing: 0.03em; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);">
                       <i data-lucide="search" class="me-2" style="width: 18px; height: 18px;"></i> TRA CỨU NGAY (ENTER)
                     </button>
                   </form>
@@ -3145,14 +3461,14 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
           try {
             const wards = await dbService.getAdministrativeAreas(val);
-            if (badgeWardCount) badgeWardCount.textContent = `${wards.length} Xã/Phường`;
-            if (statusWard) statusWard.textContent = `Toàn tỉnh (${wards.length} Xã/Phường)`;
+            if (badgeWardCount) badgeWardCount.textContent = `${wards.length} Quận/Huyện/Xã`;
+            if (statusWard) statusWard.textContent = `Toàn tỉnh (${wards.length} Quận/Huyện/Xã)`;
 
             listWard.innerHTML = `
               <div class="luxury-option-item active" data-value="*" data-name="Toàn tỉnh / Chưa rõ chi tiết">
-                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
-                  <div class="option-icon" style="background: #f1f5f9; color: #475569; width: 32px; height: 32px;">
-                    <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
+                <div class="d-flex align-items-center gap-3 overflow-hidden">
+                  <div class="option-icon" style="background: #f1f5f9; color: #475569;">
+                    <i data-lucide="globe" style="width: 18px; height: 18px;"></i>
                   </div>
                   <div class="option-content">
                     <div class="option-title">Toàn tỉnh / Chưa rõ chi tiết</div>
@@ -3165,9 +3481,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
               </div>
               ${wards.map(w => `
                 <div class="luxury-option-item" data-value="${w.areaCode}" data-name="${w.name}">
-                  <div class="d-flex align-items-center gap-2.5 overflow-hidden">
-                    <div class="option-icon" style="background: #eff6ff; color: #2563eb; width: 32px; height: 32px;">
-                      <i data-lucide="map-pin" style="width: 15px; height: 15px;"></i>
+                  <div class="d-flex align-items-center gap-3 overflow-hidden">
+                    <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
+                      <i data-lucide="map-pin" style="width: 17px; height: 17px;"></i>
                     </div>
                     <div class="option-content">
                       <div class="option-title">${w.name}</div>
