@@ -5732,7 +5732,6 @@ const scheduleEngine = new ScheduleEngine(dbService);
             <div>
               <div class="d-flex align-items-center gap-2 mb-1">
                 <h4 class="fw-bold mb-0" style="color: var(--text-main); font-size: 20px;">Thiết Lập Quy Tắc Lịch Trực</h4>
-                <span class="badge-soft badge-soft-blue fw-bold" id="badge-rules-count">${allRules.length} quy tắc</span>
               </div>
               <p class="text-muted mb-0 small" style="font-size: 12.5px;">Bộ quy tắc chuẩn hóa phân công ca trực tự động theo mẫu kết hợp cho tất cả các Zone</p>
             </div>
@@ -5806,8 +5805,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 <!-- 1. LỌC THEO ZONE ĐIỀU HÀNH -->
                 <div class="col-md-4">
                   <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
-                    <span>1. Lọc theo Zone điều hành</span>
-                    <span class="badge-filter-counter blue" id="badge-rules-zone-count">Tất cả Zone</span>
+                    <span>1. Lọc theo zone</span>
                   </label>
                   <div class="custom-select-luxury" id="wrapper-filter-zone" style="position: relative; z-index: 50;">
                     <input type="hidden" id="filter-rule-zone" value="${currentFilterZoneId}">
@@ -5870,8 +5868,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 <!-- 2. PHÂN LOẠI THEO MẪU QUY TẮC -->
                 <div class="col-md-3">
                   <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
-                    <span>2. Mẫu quy tắc</span>
-                    <span class="badge-filter-counter purple" id="badge-rules-type-count">Tất cả mẫu</span>
+                    <span>2. Lọc theo quy tắc</span>
                   </label>
                   <div class="custom-select-luxury" id="wrapper-filter-type" style="position: relative; z-index: 40;">
                     <input type="hidden" id="filter-rule-type" value="ALL">
@@ -5974,7 +5971,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 <!-- 3. TÌM KIẾM NHANH THEO TÊN QUY TẮC -->
                 <div class="col-md-5">
                   <label class="form-label small fw-bold text-uppercase d-flex align-items-center gap-2 mb-1" style="color: #475569; font-size: 11.5px; letter-spacing: 0.03em;">
-                    <span>3. Tìm kiếm quy tắc trực</span>
+                    <span>3. Tìm kiếm</span>
                   </label>
                   <div class="premium-search-box premium-search-box-md" id="wrapper-rules-search">
                     <div class="premium-search-icon-box">
@@ -6686,6 +6683,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
           filteredRules.sort((a, b) => (b.priority || 50) - (a.priority || 50));
 
           // Cập nhật Badge Counter trên thanh filter
+          /*
           if (badgeZoneCount) {
             badgeZoneCount.innerText = currentFilterZoneId === 'ALL' ? 'Tất cả Zone' : getZoneName(currentFilterZoneId);
           }
@@ -6699,6 +6697,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
             };
             badgeTypeCount.innerText = typeLabels[currentFilterType] || 'Tất cả mẫu';
           }
+          */
 
           const totalFiltered = filteredRules.length;
           const totalPages = Math.ceil(totalFiltered / rulesPerPage) || 1;
@@ -7365,7 +7364,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                   await dbService.deleteScheduleRule(rid);
                   showToast(`Đã xóa thành công quy tắc "${rname}"!`, 'success');
                   allRules = await dbService.getAllScheduleRules();
-                  container.querySelector('#badge-rules-count').innerText = `${allRules.length} quy tắc`;
+                  // container.querySelector('#badge-rules-count').innerText = `${allRules.length} quy tắc`;
                   renderRulesList();
                 } catch (err) {
                   showToast('Lỗi khi xóa: ' + err.message, 'error');
@@ -7600,7 +7599,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             // Tải lại danh sách
             allRules = await dbService.getAllScheduleRules();
-            container.querySelector('#badge-rules-count').innerText = `${allRules.length} quy tắc`;
+            // container.querySelector('#badge-rules-count').innerText = `${allRules.length} quy tắc`;
             renderRulesList();
           } catch (err) {
             showToast('Lỗi tạo quy tắc: ' + err.message, 'error');
