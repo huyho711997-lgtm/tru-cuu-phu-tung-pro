@@ -5707,6 +5707,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
         let currentFilterZoneId = 'ALL';
         let currentFilterType = 'ALL';
         let currentSearchKeyword = '';
+        let rulesCurrentPage = 1;
+        let rulesPerPage = 10;
 
         const removeVietnameseTones = (str) => {
           if (!str) return '';
@@ -5992,8 +5994,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
               </div>
 
               <!-- Thanh trạng thái kết quả lọc -->
-              <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top" style="font-size: 12px;">
-                <span id="rules-filter-status" class="text-muted fw-semibold">Đang hiển thị ${allRules.length} quy tắc</span>
+              <div class="d-flex align-items-center justify-content-end mt-2 pt-2 border-top" style="font-size: 12px;">
+                <span id="rules-filter-status" class="d-none"></span>
                 <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 text-secondary fw-semibold" id="btn-reset-rules-filters" style="font-size: 12px;">
                   <i data-lucide="rotate-ccw" style="width: 12px; height: 12px; margin-right: 2px;"></i> Đặt lại bộ lọc
                 </button>
@@ -6037,11 +6039,28 @@ const scheduleEngine = new ScheduleEngine(dbService);
             </div>
 
             <!-- Footer Thông Tin & Phân Trang -->
-            <div class="p-3 border-top bg-light d-flex justify-content-between align-items-center flex-wrap gap-2" id="rules-footer-box">
-              <span class="small text-muted" id="rules-showing-text">Đang hiển thị 0 / 0 quy tắc</span>
-              <span class="badge bg-white border text-secondary fw-normal px-2.5 py-1" style="font-size: 11.5px;">
-                <i data-lucide="info" style="width: 12px; height: 12px; margin-right: 3px;"></i> Ưu tiên cao hơn sẽ được áp dụng trước
-              </span>
+            <div class="p-3 border-top bg-light d-flex flex-column flex-md-row justify-content-between align-items-center gap-3" id="rules-footer-box">
+              <div class="d-flex align-items-center gap-2">
+                <span class="small text-muted fw-semibold">Số dòng:</span>
+                <select class="form-select form-select-sm shadow-none" id="rules-per-page" style="width: 70px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid #e2e8f0; cursor: pointer;">
+                  <option value="5">5</option>
+                  <option value="10" selected>10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+                <span class="small text-muted ms-2" id="rules-showing-text">Đang hiển thị 0 / 0 quy tắc</span>
+              </div>
+              
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-white border text-secondary fw-normal px-2.5 py-1 d-none d-lg-inline-flex" style="font-size: 11.5px;">
+                  <i data-lucide="info" style="width: 12px; height: 12px; margin-right: 3px;"></i> Ưu tiên cao hơn sẽ được áp dụng trước
+                </span>
+                <nav aria-label="Page navigation">
+                  <ul class="pagination pagination-sm mb-0" id="rules-pagination" style="gap: 4px;">
+                    <!-- Rendered via JS -->
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
 
@@ -6683,14 +6702,57 @@ const scheduleEngine = new ScheduleEngine(dbService);
             badgeTypeCount.innerText = typeLabels[currentFilterType] || 'Tất cả mẫu';
           }
 
+          const totalFiltered = filteredRules.length;
+          const totalPages = Math.ceil(totalFiltered / rulesPerPage) || 1;
+          if (rulesCurrentPage > totalPages) rulesCurrentPage = totalPages;
+
+          const startIndex = (rulesCurrentPage - 1) * rulesPerPage;
+          const endIndex = startIndex + rulesPerPage;
+          const paginatedRules = filteredRules.slice(startIndex, endIndex);
+
           if (filterStatus) {
-            filterStatus.innerText = `Đang hiển thị ${filteredRules.length} / ${allRules.length} quy tắc`;
+            filterStatus.innerText = '';
           }
           if (showingText) {
-            showingText.innerText = `Đang hiển thị ${filteredRules.length} / ${allRules.length} quy tắc`;
+            if (totalFiltered === 0) {
+              showingText.innerText = `Đang hiển thị 0 / 0 quy tắc`;
+            } else {
+              showingText.innerText = `Đang hiển thị ${startIndex + 1}-${Math.min(endIndex, totalFiltered)} / ${totalFiltered} quy tắc`;
+            }
           }
 
-          if (filteredRules.length === 0) {
+          const paginationUl = container.querySelector('#rules-pagination');
+          if (paginationUl) {
+            if (totalPages <= 1) {
+              paginationUl.innerHTML = '';
+            } else {
+              let html = '';
+              html += `<li class="page-item ${rulesCurrentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link border-0 rounded-3 ${rulesCurrentPage === 1 ? 'text-muted' : 'text-dark'}" href="#" data-page="${rulesCurrentPage - 1}" style="padding: 4px 8px;">
+                          <i data-lucide="chevron-left" style="width: 16px; height: 16px;"></i>
+                        </a>
+                      </li>`;
+              for (let i = 1; i <= totalPages; i++) {
+                if (totalPages > 5 && i !== 1 && i !== totalPages && Math.abs(i - rulesCurrentPage) > 1) {
+                  if (i === 2 && rulesCurrentPage > 3) html += `<li class="page-item disabled"><a class="page-link border-0 rounded-3 text-muted" href="#" style="padding: 4px 8px;">...</a></li>`;
+                  if (i === totalPages - 1 && rulesCurrentPage < totalPages - 2) html += `<li class="page-item disabled"><a class="page-link border-0 rounded-3 text-muted" href="#" style="padding: 4px 8px;">...</a></li>`;
+                  continue;
+                }
+                const isActive = i === rulesCurrentPage;
+                html += `<li class="page-item ${isActive ? 'active' : ''}">
+                          <a class="page-link border-0 rounded-3 ${isActive ? '' : 'text-muted'}" href="#" data-page="${i}" style="padding: 4px 10px; font-weight: 600;">${i}</a>
+                        </li>`;
+              }
+              html += `<li class="page-item ${rulesCurrentPage === totalPages ? 'disabled' : ''}">
+                        <a class="page-link border-0 rounded-3 ${rulesCurrentPage === totalPages ? 'text-muted' : 'text-dark'}" href="#" data-page="${rulesCurrentPage + 1}" style="padding: 4px 8px;">
+                          <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
+                        </a>
+                      </li>`;
+              paginationUl.innerHTML = html;
+            }
+          }
+
+          if (totalFiltered === 0) {
             if (tbody) tbody.innerHTML = '';
             if (emptyState) emptyState.classList.remove('d-none');
             if (tableWrap) tableWrap.classList.add('d-none');
@@ -6701,7 +6763,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
             if (tableWrap) tableWrap.classList.remove('d-none');
           }
 
-          tbody.innerHTML = filteredRules.map(r => {
+          tbody.innerHTML = paginatedRules.map(r => {
             let templateBadge = '<span class="badge-soft badge-soft-blue"><i data-lucide="repeat" style="width:12px"></i> Chẵn / Lẻ</span>';
             let summaryDesc = '';
 
@@ -7008,6 +7070,30 @@ const scheduleEngine = new ScheduleEngine(dbService);
         });
 
         renderRulesList();
+
+        const perPageSelect = container.querySelector('#rules-per-page');
+        if (perPageSelect) {
+          perPageSelect.addEventListener('change', (e) => {
+            rulesPerPage = parseInt(e.target.value, 10);
+            rulesCurrentPage = 1;
+            renderRulesList();
+          });
+        }
+        
+        const paginationUl = container.querySelector('#rules-pagination');
+        if (paginationUl) {
+          paginationUl.addEventListener('click', (e) => {
+            const link = e.target.closest('a.page-link');
+            if (!link) return;
+            e.preventDefault();
+            if (link.parentElement.classList.contains('disabled')) return;
+            const targetPage = parseInt(link.dataset.page, 10);
+            if (!isNaN(targetPage)) {
+              rulesCurrentPage = targetPage;
+              renderRulesList();
+            }
+          });
+        }
 
         // Hàm cập nhật Live Preview cho Mẫu 1
         const updatePreview = () => {
