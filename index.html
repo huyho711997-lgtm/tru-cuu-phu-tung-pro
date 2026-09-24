@@ -4479,7 +4479,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
         }
 
         container.innerHTML = `
-          <style>\n          .ward-picker-overlay {\n            position: fixed; inset: 0; z-index: 1060; \n            background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);\n            display: flex; align-items: center; justify-content: center;\n          }\n          .ward-picker-overlay.d-none { display: none !important; }\n          .ward-picker-container {\n            width: 90%; max-width: 800px; height: 80vh; max-height: 700px;\n            border-radius: 16px; overflow: hidden; transition: all 0.3s;\n          }\n          .ward-picker-container.is-fullscreen {\n            width: 100%; max-width: 100%; height: 100vh; max-height: 100vh; border-radius: 0;\n          }\n          .ward-grid {\n            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;\n          }\n          .ward-list {\n            display: flex; flex-direction: column; gap: 8px;\n          }\n          .ward-card {\n            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px;\n            cursor: pointer; transition: all 0.15s ease; display: flex; align-items: flex-start; gap: 10px;\n          }\n          .ward-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }\n          .ward-card.selected {\n            background: #eff6ff; border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary);\n          }\n          .ward-card-checkbox {\n            width: 18px; height: 18px; margin-top: 2px; pointer-events: none;\n          }\n          .ward-card-title { font-size: 13px; font-weight: 700; color: #1e293b; line-height: 1.3; }\n          .ward-card-subtitle { font-size: 11px; color: #64748b; margin-top: 2px; }\n          .task-radio-card input:checked + .task-card-inner {\n            border-color: var(--primary) !important;\n            background-color: #f8fafc !important;\n            box-shadow: 0 0 0 4px rgba(37,99,235,0.1) !important;\n          }\n          .ward-picker-trigger:hover {\n            border-color: var(--primary) !important;\n            box-shadow: 0 4px 12px rgba(37,99,235,0.08) !important;\n          }\n          </style>\n          <style>
+          <style>
           .ward-picker-overlay {
             position: fixed; inset: 0; z-index: 1060; 
             background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);
@@ -6516,8 +6516,8 @@ const scheduleEngine = new ScheduleEngine(dbService);
         
         if(triggerBtn) {
           triggerBtn.addEventListener('click', () => {
-            wardOverlay.classList.remove('d-none');
-            const checkboxes = wardOverlay.querySelectorAll('.ward-card-checkbox');
+            if(wardOverlay) wardOverlay.classList.remove('d-none');
+            const checkboxes = wardOverlay ? wardOverlay.querySelectorAll('.ward-card-checkbox') : [];
             checkboxes.forEach(cb => {
               cb.checked = currentSelectedWardCodes.includes(cb.value);
               if(cb.checked) cb.closest('.ward-card').classList.add('selected');
@@ -6528,6 +6528,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
         }
         
         function updateWardCount() {
+          if(!wardOverlay) return;
           const checked = wardOverlay.querySelectorAll('.ward-card-checkbox:checked').length;
           container.querySelector('#ward-selected-count').innerText = checked;
         }
@@ -6942,62 +6943,6 @@ const scheduleEngine = new ScheduleEngine(dbService);
               </div>
             </div>
           </div>
-          <!-- MÀN HÌNH CHỌN MULTI-WARD (OVERLAY) -->
-          <div id="ward-picker-overlay" class="ward-picker-overlay d-none">
-            <div class="ward-picker-container shadow-lg d-flex flex-column bg-white">
-              <div class="ward-picker-header p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
-                <div class="d-flex align-items-center gap-2">
-                  <div class="d-flex align-items-center justify-content-center rounded bg-white border" style="width: 32px; height: 32px; color: var(--primary);">
-                    <i data-lucide="map" style="width: 16px; height: 16px;"></i>
-                  </div>
-                  <div>
-                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Chọn Xã/Phường Phụ Trách</h6>
-                    <small class="text-muted" style="font-size: 11px;">Có thể chọn nhiều địa bàn</small>
-                  </div>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center" id="btn-ward-view-list" title="Hiển thị dạng danh sách">
-                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center active" id="btn-ward-view-grid" title="Hiển thị dạng lưới">
-                    <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center ms-2" id="btn-ward-fullscreen" title="Phóng to/Thu nhỏ">
-                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-light border text-danger d-flex align-items-center ms-1" id="btn-close-ward-picker">
-                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
-                  </button>
-                </div>
-              </div>
-              
-              <div class="ward-picker-toolbar p-3 border-bottom bg-white d-flex flex-wrap gap-2 align-items-center">
-                <div class="flex-grow-1 position-relative" style="min-width: 200px;">
-                  <i data-lucide="search" class="position-absolute text-muted" style="left: 12px; top: 10px; width: 16px; height: 16px;"></i>
-                  <input type="text" class="form-control ps-5" id="ward-search-input" placeholder="Tìm kiếm xã/phường..." style="height: 36px; font-size: 13px;">
-                </div>
-                <div class="d-flex gap-2">
-                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ward-select-all" style="font-size: 12px;">Chọn tất cả</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-ward-clear-all" style="font-size: 12px;">Bỏ chọn</button>
-                </div>
-              </div>
-
-              <div class="ward-picker-body flex-grow-1 p-3 overflow-auto" style="background: #f8fafc;">
-                <div id="ward-cards-container" class="ward-grid">
-                  <!-- Rendered via JS -->
-                </div>
-              </div>
-
-              <div class="ward-picker-footer p-3 border-top bg-white d-flex align-items-center justify-content-between">
-                <div class="text-dark fw-bold" style="font-size: 13px;">
-                  Đã chọn: <span id="ward-selected-count" class="text-primary fs-6">0</span> địa bàn
-                </div>
-                <button type="button" class="btn btn-primary-action px-4 py-2" id="btn-apply-wards" style="font-size: 13px;">
-                  Xác nhận & Áp dụng
-                </button>
-              </div>
-            </div>
-          </div>
         `;
         lucide.createIcons();
 
@@ -7066,62 +7011,6 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     ĐĂNG NHẬP HỆ THỐNG
                   </button>
                 </form>
-              </div>
-            </div>
-          </div>
-          <!-- MÀN HÌNH CHỌN MULTI-WARD (OVERLAY) -->
-          <div id="ward-picker-overlay" class="ward-picker-overlay d-none">
-            <div class="ward-picker-container shadow-lg d-flex flex-column bg-white">
-              <div class="ward-picker-header p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
-                <div class="d-flex align-items-center gap-2">
-                  <div class="d-flex align-items-center justify-content-center rounded bg-white border" style="width: 32px; height: 32px; color: var(--primary);">
-                    <i data-lucide="map" style="width: 16px; height: 16px;"></i>
-                  </div>
-                  <div>
-                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Chọn Xã/Phường Phụ Trách</h6>
-                    <small class="text-muted" style="font-size: 11px;">Có thể chọn nhiều địa bàn</small>
-                  </div>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center" id="btn-ward-view-list" title="Hiển thị dạng danh sách">
-                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center active" id="btn-ward-view-grid" title="Hiển thị dạng lưới">
-                    <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center ms-2" id="btn-ward-fullscreen" title="Phóng to/Thu nhỏ">
-                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-light border text-danger d-flex align-items-center ms-1" id="btn-close-ward-picker">
-                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
-                  </button>
-                </div>
-              </div>
-              
-              <div class="ward-picker-toolbar p-3 border-bottom bg-white d-flex flex-wrap gap-2 align-items-center">
-                <div class="flex-grow-1 position-relative" style="min-width: 200px;">
-                  <i data-lucide="search" class="position-absolute text-muted" style="left: 12px; top: 10px; width: 16px; height: 16px;"></i>
-                  <input type="text" class="form-control ps-5" id="ward-search-input" placeholder="Tìm kiếm xã/phường..." style="height: 36px; font-size: 13px;">
-                </div>
-                <div class="d-flex gap-2">
-                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ward-select-all" style="font-size: 12px;">Chọn tất cả</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-ward-clear-all" style="font-size: 12px;">Bỏ chọn</button>
-                </div>
-              </div>
-
-              <div class="ward-picker-body flex-grow-1 p-3 overflow-auto" style="background: #f8fafc;">
-                <div id="ward-cards-container" class="ward-grid">
-                  <!-- Rendered via JS -->
-                </div>
-              </div>
-
-              <div class="ward-picker-footer p-3 border-top bg-white d-flex align-items-center justify-content-between">
-                <div class="text-dark fw-bold" style="font-size: 13px;">
-                  Đã chọn: <span id="ward-selected-count" class="text-primary fs-6">0</span> địa bàn
-                </div>
-                <button type="button" class="btn btn-primary-action px-4 py-2" id="btn-apply-wards" style="font-size: 13px;">
-                  Xác nhận & Áp dụng
-                </button>
               </div>
             </div>
           </div>
