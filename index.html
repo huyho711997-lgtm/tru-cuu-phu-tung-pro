@@ -6090,13 +6090,18 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       <!-- CỘT 2: ÁP DỤNG ZONE -->
                       <div class="col-md-4">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                          <label class="field-label mb-0" style="font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em;">Áp Dụng Cho Zone Nào? <span class="text-danger">*</span></label>
-                          <span class="badge bg-primary text-white fw-bold px-2 py-0" id="modal-zone-ins-count" style="font-size: 10px; line-height: 16px; border-radius: 4px;">Đang tải...</span>
+                          <label class="field-label mb-0" style="font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em;">Áp Dụng Cho Zone <span class="text-danger">*</span></label>
+                          <div class="d-flex align-items-center gap-1.5">
+                            <span class="badge bg-primary text-white fw-bold px-2 py-0" id="modal-zone-ins-count" style="font-size: 10px; line-height: 16px; border-radius: 4px;">Đang tải...</span>
+                            <a href="#personnel" class="text-primary fw-bold text-decoration-none d-inline-flex align-items-center" target="_self" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.03em;">
+                              <i data-lucide="plus" style="width: 11px; height: 11px; margin-right: 2px;"></i> THÊM
+                            </a>
+                          </div>
                         </div>
                           <!-- CUSTOM LUXURY ZONE DROPDOWN -->
                           <div class="custom-select-luxury" id="wrapper-rule-zone-select" style="position: relative; z-index: 20;">
                             <input type="hidden" id="modal-rule-zone-select" value="${zones[0]?.zoneId || ''}" required>
-                            <button type="button" class="btn-custom-select btn-custom-select-zone" id="btn-trigger-zone-select" aria-expanded="false">
+                            <button type="button" class="btn-custom-select" id="btn-trigger-zone-select" style="height: 64px;" aria-expanded="false">
                               <div class="d-flex align-items-center gap-3 overflow-hidden">
                                 <div class="custom-select-trigger-icon" style="background: #dbeafe; color: #2563eb;">
                                   <i data-lucide="shield" style="width: 18px; height: 18px;"></i>
@@ -6134,11 +6139,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                             </div>
                           </div>
 
-                        <div class="mt-2 text-end">
-                          <a href="#personnel" class="text-primary fw-bold small text-decoration-none d-inline-flex align-items-center gap-1" target="_self" style="font-size: 11px;">
-                            <i data-lucide="user-plus" style="width: 12px; height: 12px;"></i> Thêm GĐV
-                          </a>
-                        </div>
+
                       </div>
 
                       <!-- CỘT 3: CHỌN MẪU -->
