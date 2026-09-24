@@ -1176,6 +1176,51 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
       transform: translateY(-1px);
     }
+
+    /* MULTI-WARD PICKER OVERLAY */
+    .ward-picker-overlay {
+      position: absolute; inset: 0; z-index: 1060; 
+      background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: inherit;
+    }
+    .ward-picker-overlay.d-none { display: none !important; }
+    .ward-picker-container {
+      width: 90%; max-width: 800px; height: 80vh; max-height: 700px;
+      border-radius: 16px; overflow: hidden; transition: all 0.3s;
+    }
+    .ward-picker-container.is-fullscreen {
+      width: 100%; max-width: 100%; height: 100%; max-height: 100%; border-radius: inherit;
+    }
+    .ward-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;
+    }
+    .ward-list {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .ward-card {
+      background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px;
+      cursor: pointer; transition: all 0.15s ease; display: flex; align-items: flex-start; gap: 10px;
+    }
+    .ward-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .ward-card.selected {
+      background: #eff6ff; border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary);
+    }
+    .ward-card-checkbox {
+      width: 18px; height: 18px; margin-top: 2px; pointer-events: none;
+    }
+    .ward-card-title { font-size: 13px; font-weight: 700; color: #1e293b; line-height: 1.3; }
+    .ward-card-subtitle { font-size: 11px; color: #64748b; margin-top: 2px; }
+    
+    .task-radio-card input:checked + .task-card-inner {
+      border-color: var(--primary) !important;
+      background-color: #f8fafc !important;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.1) !important;
+    }
+    .ward-picker-trigger:hover {
+      border-color: var(--primary) !important;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.08) !important;
+    }
   </style>
 
 </head>
@@ -4479,49 +4524,6 @@ const scheduleEngine = new ScheduleEngine(dbService);
         }
 
         container.innerHTML = `
-          <style>
-          .ward-picker-overlay {
-            position: fixed; inset: 0; z-index: 1060; 
-            background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-          }
-          .ward-picker-overlay.d-none { display: none !important; }
-          .ward-picker-container {
-            width: 90%; max-width: 800px; height: 80vh; max-height: 700px;
-            border-radius: 16px; overflow: hidden; transition: all 0.3s;
-          }
-          .ward-picker-container.is-fullscreen {
-            width: 100%; max-width: 100%; height: 100vh; max-height: 100vh; border-radius: 0;
-          }
-          .ward-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;
-          }
-          .ward-list {
-            display: flex; flex-direction: column; gap: 8px;
-          }
-          .ward-card {
-            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px;
-            cursor: pointer; transition: all 0.15s ease; display: flex; align-items: flex-start; gap: 10px;
-          }
-          .ward-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-          .ward-card.selected {
-            background: #eff6ff; border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary);
-          }
-          .ward-card-checkbox {
-            width: 18px; height: 18px; margin-top: 2px; pointer-events: none;
-          }
-          .ward-card-title { font-size: 13px; font-weight: 700; color: #1e293b; line-height: 1.3; }
-          .ward-card-subtitle { font-size: 11px; color: #64748b; margin-top: 2px; }
-          .task-radio-card input:checked + .task-card-inner {
-            border-color: var(--primary) !important;
-            background-color: #f8fafc !important;
-            box-shadow: 0 0 0 4px rgba(37,99,235,0.1) !important;
-          }
-          .ward-picker-trigger:hover {
-            border-color: var(--primary) !important;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.08) !important;
-          }
-          </style>
           <div class="row g-4">
             <!-- CỘT TÌM KIẾM TRỰC -->
             <div class="col-lg-5">
