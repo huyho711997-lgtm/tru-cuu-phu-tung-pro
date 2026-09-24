@@ -6078,81 +6078,6 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                 <div class="modal-body p-4" style="max-height: 80vh; overflow-y: auto;">
                   <form id="form-create-rule">
-                    <!-- 0. CHỌN ZONE ÁP DỤNG QUY TẮC (LUXURY CUSTOM DROPDOWN) -->
-                    <div class="row g-3 mb-4">
-                      <div class="col-12">
-                        <div class="p-3 rounded-3 border" style="background: #f0f7ff; border-color: #bfdbfe !important;">
-                          <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-                            <div class="d-flex align-items-center gap-2">
-                              <div style="width: 24px; height: 24px; border-radius: 6px; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                <i data-lucide="shield" style="width: 14px; height: 14px;"></i>
-                              </div>
-                              <span class="fw-bold text-primary" style="font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em;">
-                                Áp Dụng Cho Zone Điều Hành Nào? <span class="text-danger">*</span>
-                              </span>
-                            </div>
-                            <span class="badge bg-primary text-white fw-bold px-2.5 py-1" id="modal-zone-ins-count" style="font-size: 12px;">Đang tải...</span>
-                          </div>
-                          
-                          <!-- CUSTOM LUXURY ZONE DROPDOWN -->
-                          <div class="custom-select-luxury" id="wrapper-rule-zone-select" style="position: relative; z-index: 25;">
-                            <input type="hidden" id="modal-rule-zone-select" value="${zones[0]?.zoneId || ''}" required>
-                            <button type="button" class="btn-custom-select btn-custom-select-zone" id="btn-trigger-zone-select" aria-expanded="false">
-                              <div class="d-flex align-items-center gap-3 overflow-hidden">
-                                <div class="custom-select-trigger-icon" style="background: #dbeafe; color: #2563eb;">
-                                  <i data-lucide="shield" style="width: 18px; height: 18px;"></i>
-                                </div>
-                                <div class="custom-select-trigger-text text-start">
-                                  <div class="custom-select-trigger-title text-truncate" id="zone-trigger-name">${zones[0]?.name || 'Chọn Zone điều hành'}</div>
-                                  <div class="custom-select-trigger-desc text-truncate" id="zone-trigger-lead">Trưởng Zone: ${zones[0]?.leadName || 'Chưa gán'} (${zones[0]?.leadPhone || 'Chưa rõ SĐT'})</div>
-                                </div>
-                              </div>
-                              <div class="custom-select-trigger-arrow">
-                                <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
-                              </div>
-                            </button>
-                            <div class="dropdown-menu-luxury d-none" id="menu-zone-select">
-                              <div class="luxury-options-list" id="options-zone-list">
-                                ${zones.map((z, idx) => `
-                                  <div class="luxury-option-item ${idx === 0 ? 'active' : ''}" data-value="${z.zoneId}">
-                                    <div class="d-flex align-items-center gap-3 overflow-hidden">
-                                      <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
-                                        <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
-                                      </div>
-                                      <div class="option-content">
-                                        <div class="option-title">${z.name}</div>
-                                        <div class="option-desc">Trưởng Zone: ${z.leadName || 'Chưa gán'} • 📞 ${z.leadPhone || 'Chưa rõ SĐT'}</div>
-                                      </div>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-2">
-                                      <div class="option-check">
-                                        <i data-lucide="check" style="width: 12px; height: 12px;"></i>
-                                      </div>
-                                    </div>
-                                  </div>
-                                `).join('')}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-1">
-                            <small class="text-muted" style="font-size: 12px;">
-                              Hệ thống tự động đồng bộ danh sách Giám định viên và địa bàn tương ứng của Zone được chọn.
-                            </small>
-                            <a href="#personnel" class="text-primary fw-bold small text-decoration-none d-inline-flex align-items-center gap-1" target="_self">
-                              <i data-lucide="user-plus" style="width: 13px; height: 13px;"></i> Thêm GĐV trong Quản lý nhân sự
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- THÔNG BÁO CẢNH BÁO SỐ LƯỢNG GĐV CỦA ZONE -->
-                    <div id="modal-ins-alert" class="alert alert-warning d-none py-2.5 px-3 small rounded-3 mb-3 d-flex align-items-center gap-2">
-                      <i data-lucide="alert-triangle" style="width: 17px; height: 17px; flex-shrink: 0;"></i>
-                      <div id="modal-ins-alert-text" class="flex-grow-1"></div>
-                    </div>
-
                     <!-- 1. TÊN QUY TẮC & MẪU QUY TẮC -->
                     <div class="row g-3 mb-4">
                       <div class="col-md-7">
@@ -6163,7 +6088,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         <label class="field-label" style="font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em;">Chọn Mẫu Quy Tắc Chuẩn <span class="text-danger">*</span></label>
                         
                         <!-- CUSTOM LUXURY TEMPLATE DROPDOWN -->
-                        <div class="custom-select-luxury" id="wrapper-rule-template-select" style="position: relative; z-index: 20;">
+                        <div class="custom-select-luxury" id="wrapper-rule-template-select" style="position: relative; z-index: 25;">
                           <input type="hidden" id="rule-template-type" value="even_odd" required>
                           <button type="button" class="btn-custom-select" id="btn-trigger-template-select" style="height: 64px;" aria-expanded="false">
                             <div class="d-flex align-items-center gap-3 overflow-hidden">
@@ -6256,6 +6181,81 @@ const scheduleEngine = new ScheduleEngine(dbService);
                           </div>
                         </div>
                       </div>
+                    </div>
+
+                    <!-- 0. CHỌN ZONE ÁP DỤNG QUY TẮC (LUXURY CUSTOM DROPDOWN) -->
+                    <div class="row g-3 mb-4">
+                      <div class="col-12">
+                        <div class="p-3 rounded-3 border" style="background: #f0f7ff; border-color: #bfdbfe !important;">
+                          <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                            <div class="d-flex align-items-center gap-2">
+                              <div style="width: 24px; height: 24px; border-radius: 6px; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i data-lucide="shield" style="width: 14px; height: 14px;"></i>
+                              </div>
+                              <span class="fw-bold text-primary" style="font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em;">
+                                Áp Dụng Cho Zone Điều Hành Nào? <span class="text-danger">*</span>
+                              </span>
+                            </div>
+                            <span class="badge bg-primary text-white fw-bold px-2.5 py-1" id="modal-zone-ins-count" style="font-size: 12px;">Đang tải...</span>
+                          </div>
+                          
+                          <!-- CUSTOM LUXURY ZONE DROPDOWN -->
+                          <div class="custom-select-luxury" id="wrapper-rule-zone-select" style="position: relative; z-index: 20;">
+                            <input type="hidden" id="modal-rule-zone-select" value="${zones[0]?.zoneId || ''}" required>
+                            <button type="button" class="btn-custom-select btn-custom-select-zone" id="btn-trigger-zone-select" aria-expanded="false">
+                              <div class="d-flex align-items-center gap-3 overflow-hidden">
+                                <div class="custom-select-trigger-icon" style="background: #dbeafe; color: #2563eb;">
+                                  <i data-lucide="shield" style="width: 18px; height: 18px;"></i>
+                                </div>
+                                <div class="custom-select-trigger-text text-start">
+                                  <div class="custom-select-trigger-title text-truncate" id="zone-trigger-name">${zones[0]?.name || 'Chọn Zone điều hành'}</div>
+                                  <div class="custom-select-trigger-desc text-truncate" id="zone-trigger-lead">Trưởng Zone: ${zones[0]?.leadName || 'Chưa gán'} (${zones[0]?.leadPhone || 'Chưa rõ SĐT'})</div>
+                                </div>
+                              </div>
+                              <div class="custom-select-trigger-arrow">
+                                <i data-lucide="chevron-down" style="width: 18px; height: 18px;"></i>
+                              </div>
+                            </button>
+                            <div class="dropdown-menu-luxury d-none" id="menu-zone-select">
+                              <div class="luxury-options-list" id="options-zone-list">
+                                ${zones.map((z, idx) => `
+                                  <div class="luxury-option-item ${idx === 0 ? 'active' : ''}" data-value="${z.zoneId}">
+                                    <div class="d-flex align-items-center gap-3 overflow-hidden">
+                                      <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
+                                        <i data-lucide="shield" style="width: 16px; height: 16px;"></i>
+                                      </div>
+                                      <div class="option-content">
+                                        <div class="option-title">${z.name}</div>
+                                        <div class="option-desc">Trưởng Zone: ${z.leadName || 'Chưa gán'} • 📞 ${z.leadPhone || 'Chưa rõ SĐT'}</div>
+                                      </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                      <div class="option-check">
+                                        <i data-lucide="check" style="width: 12px; height: 12px;"></i>
+                                      </div>
+                                    </div>
+                                  </div>
+                                `).join('')}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-1">
+                            <small class="text-muted" style="font-size: 12px;">
+                              Hệ thống tự động đồng bộ danh sách Giám định viên và địa bàn tương ứng của Zone được chọn.
+                            </small>
+                            <a href="#personnel" class="text-primary fw-bold small text-decoration-none d-inline-flex align-items-center gap-1" target="_self">
+                              <i data-lucide="user-plus" style="width: 13px; height: 13px;"></i> Thêm GĐV trong Quản lý nhân sự
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- THÔNG BÁO CẢNH BÁO SỐ LƯỢNG GĐV CỦA ZONE -->
+                    <div id="modal-ins-alert" class="alert alert-warning d-none py-2.5 px-3 small rounded-3 mb-3 d-flex align-items-center gap-2">
+                      <i data-lucide="alert-triangle" style="width: 17px; height: 17px; flex-shrink: 0;"></i>
+                      <div id="modal-ins-alert-text" class="flex-grow-1"></div>
                     </div>
 
                     <!-- 2. KHU VỰC CẤU HÌNH ĐẶC THÙ THEO TỪNG MẪU -->
