@@ -1221,6 +1221,31 @@
       border-color: var(--primary) !important;
       box-shadow: 0 4px 12px rgba(37,99,235,0.08) !important;
     }
+
+    /* PREMIUM RADIO CARDS WARD OVERLAY HOVER EFFECTS */
+    .task-radio-card .task-card-inner:hover {
+      border-color: #bfdbfe;
+      background-color: #f8fafc;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.025);
+    }
+    .task-radio-card input:checked + .task-card-inner {
+      border-color: var(--primary) !important;
+      background-color: #fff !important;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.1), 0 4px 6px -1px rgba(0,0,0,0.05) !important;
+      transform: translateY(-2px);
+    }
+    .task-radio-card input:checked + .task-card-inner .task-icon {
+      background-color: var(--primary) !important;
+      color: #fff !important;
+      transform: scale(1.1);
+    }
+    .ward-picker-trigger:hover {
+      border-color: var(--primary) !important;
+      background-color: #f8fafc !important;
+      transform: translateY(-1px);
+    }
+
   </style>
 
 </head>
@@ -5858,83 +5883,118 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       </div>
                     </div>
 
-                    <!-- MẪU 3: THEO ĐỊA BÀN CỤ THỂ -->
-                    <div id="box-template-ward" class="p-4 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
-                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 14px;">
-                        <i data-lucide="map-pin" style="width: 17px; color: var(--primary);"></i> Phân công theo Địa bàn Phường/Xã cụ thể
-                      </h6>
+                    <!-- MẪU 3: THEO ĐỊA BÀN CỤ THỂ (PREMIUM REDESIGN) -->
+                    <div id="box-template-ward" class="p-0 rounded-4 mb-4 border d-none bg-white shadow-sm" style="overflow: hidden;">
                       
-                      <!-- NHIỆM VỤ GIÁM ĐỊNH -->
-                      <div class="mb-4">
-                        <label class="field-label mb-2">Nhiệm Vụ Giám Định <span class="text-danger">*</span></label>
-                        <div class="row g-2">
-                          <div class="col-md-4">
-                            <label class="task-radio-card w-100 mb-0">
-                              <input type="radio" name="wardTaskType" value="field" class="d-none" checked>
-                              <div class="task-card-inner p-3 rounded-3 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100">
-                                <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #eff6ff; color: var(--primary);">
-                                  <i data-lucide="camera" style="width: 18px; height: 18px;"></i>
-                                </div>
-                                <div>
-                                  <div class="fw-bold text-dark" style="font-size: 13px;">GĐ Hiện Trường</div>
-                                  <div class="text-muted" style="font-size: 11px; margin-top: 2px;">Tiếp cận hiện trường</div>
-                                </div>
-                              </div>
-                            </label>
-                          </div>
-                          <div class="col-md-4">
-                            <label class="task-radio-card w-100 mb-0">
-                              <input type="radio" name="wardTaskType" value="detailed" class="d-none">
-                              <div class="task-card-inner p-3 rounded-3 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100">
-                                <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #fef2f2; color: #ef4444;">
-                                  <i data-lucide="search" style="width: 18px; height: 18px;"></i>
-                                </div>
-                                <div>
-                                  <div class="fw-bold text-dark" style="font-size: 13px;">GĐ Chi Tiết</div>
-                                  <div class="text-muted" style="font-size: 11px; margin-top: 2px;">Tại Gara/Xưởng</div>
-                                </div>
-                              </div>
-                            </label>
-                          </div>
-                          <div class="col-md-4">
-                            <label class="task-radio-card w-100 mb-0">
-                              <input type="radio" name="wardTaskType" value="both" class="d-none">
-                              <div class="task-card-inner p-3 rounded-3 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100">
-                                <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: #f0fdf4; color: #22c55e;">
-                                  <i data-lucide="layers" style="width: 18px; height: 18px;"></i>
-                                </div>
-                                <div>
-                                  <div class="fw-bold text-dark" style="font-size: 13px;">Cả Hai</div>
-                                  <div class="text-muted" style="font-size: 11px; margin-top: 2px;">Phụ trách toàn bộ</div>
-                                </div>
-                              </div>
-                            </label>
-                          </div>
+                      <!-- Tiêu đề box -->
+                      <div class="p-3 border-bottom d-flex align-items-center gap-3" style="background: linear-gradient(90deg, #f8fafc 0%, #eff6ff 100%);">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 36px; height: 36px; background: #fff; color: #2563eb;">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <div class="flex-grow-1">
+                          <h6 class="fw-bold text-dark mb-0" style="font-size: 15px;">Phân công theo Địa bàn Phường/Xã cụ thể</h6>
+                          <small class="text-muted" style="font-size: 12px;">Thiết lập GĐV chuyên trách cho các khu vực hành chính</small>
                         </div>
                       </div>
 
-                      <div class="row g-3">
-                        <div class="col-md-6">
-                          <label class="field-label">Chọn Xã / Phường <span class="text-danger">*</span></label>
-                          <div class="ward-picker-trigger border rounded-3 p-3 bg-white d-flex align-items-center justify-content-between cursor-pointer" id="btn-open-ward-picker" style="min-height: 54px; transition: all 0.2s;">
-                            <div class="d-flex align-items-center gap-3">
-                              <div class="d-flex align-items-center justify-content-center rounded" style="width: 32px; height: 32px; background: #eff6ff; color: var(--primary);">
-                                <i data-lucide="map" style="width: 16px; height: 16px;"></i>
-                              </div>
-                              <div>
-                                <div class="fw-bold text-dark" id="ward-trigger-title" style="font-size: 13.5px;">Chưa chọn địa bàn</div>
-                                <div class="text-muted" id="ward-trigger-subtitle" style="font-size: 11px; margin-top: 2px;">Nhấp để chọn phường/xã</div>
-                              </div>
+                      <div class="p-4" style="background: #fafaf9;">
+                        
+                        <!-- NHIỆM VỤ GIÁM ĐỊNH -->
+                        <div class="mb-4">
+                          <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            Nhiệm Vụ Giám Định <span class="text-danger">*</span>
+                          </label>
+                          
+                          <div class="row g-3">
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="wardTaskType" value="field" class="d-none" checked>
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #eff6ff; color: #2563eb; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Hiện Trường</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tiếp cận hiện trường</div>
+                                  </div>
+                                </div>
+                              </label>
                             </div>
-                            <i data-lucide="chevron-right" class="text-muted" style="width: 18px; height: 18px;"></i>
+                            
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="wardTaskType" value="detailed" class="d-none">
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #fef2f2; color: #ef4444; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Chi Tiết</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tại Gara/Xưởng</div>
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
+                            
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="wardTaskType" value="both" class="d-none">
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #f0fdf4; color: #22c55e; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">Cả Hai</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Phụ trách toàn bộ</div>
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
                           </div>
                         </div>
-                        <div class="col-md-6">
-                          <label class="field-label">GĐV Phụ Trách Chính <span class="text-danger">*</span></label>
-                          <select class="form-select form-select-luxury" id="ward-primary-ins" style="height: 54px; border-radius: 8px;">
-                            <!-- Dynamically populated -->
-                          </select>
+
+                        <!-- CẤU HÌNH ĐỊA BÀN VÀ GĐV -->
+                        <div class="row g-4">
+                          <!-- CỘT 1: CHỌN XÃ/PHƯỜNG -->
+                          <div class="col-md-6">
+                            <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                              Chọn Xã / Phường <span class="text-danger">*</span>
+                            </label>
+                            
+                            <div class="ward-picker-trigger border bg-white d-flex align-items-center justify-content-between cursor-pointer shadow-sm" id="btn-open-ward-picker" style="height: 64px; border-radius: 12px; padding: 0 16px; transition: all 0.2s;">
+                              <div class="d-flex align-items-center gap-3 w-100">
+                                <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 36px; height: 36px; background: #eff6ff; color: #2563eb; flex-shrink: 0;">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg>
+                                </div>
+                                <div class="flex-grow-1 overflow-hidden">
+                                  <div class="fw-bold text-dark text-truncate" id="ward-trigger-title" style="font-size: 14px; line-height: 1.2;">Chưa chọn địa bàn</div>
+                                  <div class="text-muted text-truncate" id="ward-trigger-subtitle" style="font-size: 11.5px; margin-top: 3px;">Nhấp để chọn phường/xã</div>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted flex-shrink: 0" style="opacity: 0.6;"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <!-- CỘT 2: GĐV PHỤ TRÁCH CHÍNH -->
+                          <div class="col-md-6">
+                            <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                              GĐV Phụ Trách Chính <span class="text-danger">*</span>
+                            </label>
+                            
+                            <div style="position: relative;">
+                              <div class="position-absolute d-flex align-items-center justify-content-center" style="left: 12px; top: 14px; width: 36px; height: 36px; background: #eff6ff; color: #2563eb; border-radius: 8px; pointer-events: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                              </div>
+                              <select class="form-select border shadow-sm text-dark fw-bold" id="ward-primary-ins" style="height: 64px; border-radius: 12px; padding-left: 56px; font-size: 14px; background-color: #fff; cursor: pointer;">
+                                <!-- Dynamically populated -->
+                              </select>
+                            </div>
+                          </div>
                         </div>
+
                       </div>
                     </div>
 
