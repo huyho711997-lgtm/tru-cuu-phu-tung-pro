@@ -6508,18 +6508,80 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 14px;">
                         <i data-lucide="star" style="width: 17px; color: #e11d48;"></i> Phân công ca trực Ngày Lễ hoặc Sự kiện đặc biệt
                       </h6>
-                      <div class="row g-3">
-                        <div class="col-md-6">
-                          <label class="field-label">Chọn ngày diễn ra sự kiện <span class="text-danger">*</span></label>
-                          <input type="date" class="form-control" id="spec-date-input" value="2026-04-30" style="height: 44px; border-radius: 8px;">
+                      
+                      <!-- CHỌN THỜI GIAN VÀ NHÂN SỰ -->
+                      <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                          <label class="field-label" style="font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em;">Từ ngày <span class="text-danger">*</span></label>
+                          <input type="date" class="form-control" id="spec-date-start" value="2026-04-30" style="height: 44px; border-radius: 8px;">
                         </div>
-                        <div class="col-md-6">
-                          <label class="field-label">GĐV Trực Chính Ngày Lễ <span class="text-danger">*</span></label>
+                        <div class="col-md-4">
+                          <label class="field-label" style="font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em;">Đến ngày</label>
+                          <input type="date" class="form-control" id="spec-date-end" style="height: 44px; border-radius: 8px;">
+                          <small class="text-muted d-block mt-1" style="font-size: 11px;">(Để trống nếu chỉ nghỉ 1 ngày)</small>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="field-label" style="font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em;">GĐV Trực Chính Ngày Lễ <span class="text-danger">*</span></label>
                           <select class="form-select form-select-luxury" id="spec-primary-ins" style="height: 44px; border-radius: 8px;">
                             <!-- Dynamically populated -->
                           </select>
                         </div>
                       </div>
+
+                        <div class="mb-4">
+                          <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            Nhiệm Vụ Giám Định <span class="text-danger">*</span>
+                          </label>
+                          
+                          <div class="row g-3">
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="specTaskType" value="field" class="d-none" checked>
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #eff6ff; color: #2563eb; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Hiện Trường</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tiếp cận hiện trường</div>
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
+                            
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="specTaskType" value="detailed" class="d-none">
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #fef2f2; color: #ef4444; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Chi Tiết</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tại Gara/Xưởng</div>
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
+                            
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="specTaskType" value="both" class="d-none">
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #f0fdf4; color: #22c55e; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">Cả Hai</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Phụ trách toàn bộ</div>
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
                     </div>
 
                     <!-- 3. KHUNG GIỜ VÀ HIỆU LỰC CHUNG (CÓ NÚT CHỌN NHANH PRESET) -->
@@ -7571,7 +7633,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 assignment: { primaryId: insPrimary, backupId: null }
               };
             } else if (templateVal === 'specific_date') {
-              const specDate = container.querySelector('#spec-date-input').value;
+              const specDateStart = container.querySelector('#spec-date-start').value;
+              const specDateEnd = container.querySelector('#spec-date-end').value;
+              const specTaskType = container.querySelector('input[name="specTaskType"]:checked').value;
               const insPrimary = container.querySelector('#spec-primary-ins').value;
               if (!insPrimary) {
                 showToast("Vui lòng chọn Giám định viên trực ngày lễ!", "error");
@@ -7579,8 +7643,9 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 return;
               }
               ruleDoc.ruleType = 'specific_date';
-              ruleDoc.taskType = 'both';
-              ruleDoc.specificDate = specDate;
+              ruleDoc.taskType = specTaskType;
+              ruleDoc.specificDateStart = specDateStart;
+              ruleDoc.specificDateEnd = specDateEnd || specDateStart;
               ruleDoc.priority = 100; // Ưu tiên cao nhất
               ruleDoc.rosterConfig = {
                 slot: { primaryId: insPrimary, backupId: null }
