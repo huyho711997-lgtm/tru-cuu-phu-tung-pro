@@ -6003,6 +6003,62 @@ const scheduleEngine = new ScheduleEngine(dbService);
               </div>
             </div>
           </div>
+          <!-- MÀN HÌNH CHỌN MULTI-WARD (OVERLAY) -->
+          <div id="ward-picker-overlay" class="ward-picker-overlay d-none">
+            <div class="ward-picker-container shadow-lg d-flex flex-column bg-white">
+              <div class="ward-picker-header p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="d-flex align-items-center justify-content-center rounded bg-white border" style="width: 32px; height: 32px; color: var(--primary);">
+                    <i data-lucide="map" style="width: 16px; height: 16px;"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Chọn Xã/Phường Phụ Trách</h6>
+                    <small class="text-muted" style="font-size: 11px;">Có thể chọn nhiều địa bàn</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center" id="btn-ward-view-list" title="Hiển thị dạng danh sách">
+                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center active" id="btn-ward-view-grid" title="Hiển thị dạng lưới">
+                    <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center ms-2" id="btn-ward-fullscreen" title="Phóng to/Thu nhỏ">
+                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border text-danger d-flex align-items-center ms-1" id="btn-close-ward-picker">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="ward-picker-toolbar p-3 border-bottom bg-white d-flex flex-wrap gap-2 align-items-center">
+                <div class="flex-grow-1 position-relative" style="min-width: 200px;">
+                  <i data-lucide="search" class="position-absolute text-muted" style="left: 12px; top: 10px; width: 16px; height: 16px;"></i>
+                  <input type="text" class="form-control ps-5" id="ward-search-input" placeholder="Tìm kiếm xã/phường..." style="height: 36px; font-size: 13px;">
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ward-select-all" style="font-size: 12px;">Chọn tất cả</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-ward-clear-all" style="font-size: 12px;">Bỏ chọn</button>
+                </div>
+              </div>
+
+              <div class="ward-picker-body flex-grow-1 p-3 overflow-auto" style="background: #f8fafc;">
+                <div id="ward-cards-container" class="ward-grid">
+                  <!-- Rendered via JS -->
+                </div>
+              </div>
+
+              <div class="ward-picker-footer p-3 border-top bg-white d-flex align-items-center justify-content-between">
+                <div class="text-dark fw-bold" style="font-size: 13px;">
+                  Đã chọn: <span id="ward-selected-count" class="text-primary fs-6">0</span> địa bàn
+                </div>
+                <button type="button" class="btn btn-primary-action px-4 py-2" id="btn-apply-wards" style="font-size: 13px;">
+                  Xác nhận & Áp dụng
+                </button>
+              </div>
+            </div>
+          </div>
         `;
 
         lucide.createIcons();
@@ -6850,6 +6906,62 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </button>
                   </form>
                 </div>
+              </div>
+            </div>
+          </div>
+          <!-- MÀN HÌNH CHỌN MULTI-WARD (OVERLAY) -->
+          <div id="ward-picker-overlay" class="ward-picker-overlay d-none">
+            <div class="ward-picker-container shadow-lg d-flex flex-column bg-white">
+              <div class="ward-picker-header p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="d-flex align-items-center justify-content-center rounded bg-white border" style="width: 32px; height: 32px; color: var(--primary);">
+                    <i data-lucide="map" style="width: 16px; height: 16px;"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Chọn Xã/Phường Phụ Trách</h6>
+                    <small class="text-muted" style="font-size: 11px;">Có thể chọn nhiều địa bàn</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center" id="btn-ward-view-list" title="Hiển thị dạng danh sách">
+                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center active" id="btn-ward-view-grid" title="Hiển thị dạng lưới">
+                    <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center ms-2" id="btn-ward-fullscreen" title="Phóng to/Thu nhỏ">
+                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border text-danger d-flex align-items-center ms-1" id="btn-close-ward-picker">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="ward-picker-toolbar p-3 border-bottom bg-white d-flex flex-wrap gap-2 align-items-center">
+                <div class="flex-grow-1 position-relative" style="min-width: 200px;">
+                  <i data-lucide="search" class="position-absolute text-muted" style="left: 12px; top: 10px; width: 16px; height: 16px;"></i>
+                  <input type="text" class="form-control ps-5" id="ward-search-input" placeholder="Tìm kiếm xã/phường..." style="height: 36px; font-size: 13px;">
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ward-select-all" style="font-size: 12px;">Chọn tất cả</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-ward-clear-all" style="font-size: 12px;">Bỏ chọn</button>
+                </div>
+              </div>
+
+              <div class="ward-picker-body flex-grow-1 p-3 overflow-auto" style="background: #f8fafc;">
+                <div id="ward-cards-container" class="ward-grid">
+                  <!-- Rendered via JS -->
+                </div>
+              </div>
+
+              <div class="ward-picker-footer p-3 border-top bg-white d-flex align-items-center justify-content-between">
+                <div class="text-dark fw-bold" style="font-size: 13px;">
+                  Đã chọn: <span id="ward-selected-count" class="text-primary fs-6">0</span> địa bàn
+                </div>
+                <button type="button" class="btn btn-primary-action px-4 py-2" id="btn-apply-wards" style="font-size: 13px;">
+                  Xác nhận & Áp dụng
+                </button>
               </div>
             </div>
           </div>
@@ -8255,6 +8367,62 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </div>
                   </form>
                 </div>
+              </div>
+            </div>
+          </div>
+          <!-- MÀN HÌNH CHỌN MULTI-WARD (OVERLAY) -->
+          <div id="ward-picker-overlay" class="ward-picker-overlay d-none">
+            <div class="ward-picker-container shadow-lg d-flex flex-column bg-white">
+              <div class="ward-picker-header p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="d-flex align-items-center justify-content-center rounded bg-white border" style="width: 32px; height: 32px; color: var(--primary);">
+                    <i data-lucide="map" style="width: 16px; height: 16px;"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Chọn Xã/Phường Phụ Trách</h6>
+                    <small class="text-muted" style="font-size: 11px;">Có thể chọn nhiều địa bàn</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center" id="btn-ward-view-list" title="Hiển thị dạng danh sách">
+                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center active" id="btn-ward-view-grid" title="Hiển thị dạng lưới">
+                    <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center ms-2" id="btn-ward-fullscreen" title="Phóng to/Thu nhỏ">
+                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border text-danger d-flex align-items-center ms-1" id="btn-close-ward-picker">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="ward-picker-toolbar p-3 border-bottom bg-white d-flex flex-wrap gap-2 align-items-center">
+                <div class="flex-grow-1 position-relative" style="min-width: 200px;">
+                  <i data-lucide="search" class="position-absolute text-muted" style="left: 12px; top: 10px; width: 16px; height: 16px;"></i>
+                  <input type="text" class="form-control ps-5" id="ward-search-input" placeholder="Tìm kiếm xã/phường..." style="height: 36px; font-size: 13px;">
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ward-select-all" style="font-size: 12px;">Chọn tất cả</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-ward-clear-all" style="font-size: 12px;">Bỏ chọn</button>
+                </div>
+              </div>
+
+              <div class="ward-picker-body flex-grow-1 p-3 overflow-auto" style="background: #f8fafc;">
+                <div id="ward-cards-container" class="ward-grid">
+                  <!-- Rendered via JS -->
+                </div>
+              </div>
+
+              <div class="ward-picker-footer p-3 border-top bg-white d-flex align-items-center justify-content-between">
+                <div class="text-dark fw-bold" style="font-size: 13px;">
+                  Đã chọn: <span id="ward-selected-count" class="text-primary fs-6">0</span> địa bàn
+                </div>
+                <button type="button" class="btn btn-primary-action px-4 py-2" id="btn-apply-wards" style="font-size: 13px;">
+                  Xác nhận & Áp dụng
+                </button>
               </div>
             </div>
           </div>
