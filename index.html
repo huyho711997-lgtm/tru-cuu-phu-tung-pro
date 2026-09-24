@@ -616,7 +616,7 @@
       cursor: pointer;
       transition: all 0.15s ease;
       border: 1px solid transparent;
-      margin-bottom: 3px;
+      margin-bottom: 8px;
     }
 
     .luxury-option-item:hover {
@@ -1179,6 +1179,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
       transform: translateY(-1px);
     }
+<<<<<<< HEAD
   
     /* Compact variants for Toolbars and Filters */
     .btn-custom-select-compact {
@@ -1454,6 +1455,79 @@
       color: #6d28d9;
       border: 1px solid #ddd6fe;
     }
+
+    /* MULTI-WARD PICKER OVERLAY */
+    .ward-picker-overlay {
+      position: fixed; inset: 0; z-index: 9999 !important; 
+      background: rgba(15,23,42,0.6); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: inherit;
+    }
+    .ward-picker-overlay.d-none { display: none !important; }
+    .ward-picker-container {
+      width: 90%; max-width: 800px; height: 80vh; max-height: 700px;
+      border-radius: 16px; overflow: hidden; transition: all 0.3s;
+    }
+    .ward-picker-container.is-fullscreen {
+      width: 100%; max-width: 100%; height: 100%; max-height: 100%; border-radius: inherit;
+    }
+    .ward-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;
+    }
+    .ward-list {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .ward-card {
+      background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px;
+      cursor: pointer; transition: all 0.15s ease; display: flex; align-items: flex-start; gap: 10px;
+    }
+    .ward-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .ward-card.selected {
+      background: #eff6ff; border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary);
+    }
+    .ward-card-checkbox {
+      width: 18px; height: 18px; margin-top: 2px; pointer-events: none;
+    }
+    .ward-card-title { font-size: 13px; font-weight: 700; color: #1e293b; line-height: 1.3; }
+    .ward-card-subtitle { font-size: 11px; color: #64748b; margin-top: 2px; }
+    
+    .task-radio-card input:checked + .task-card-inner {
+      border-color: var(--primary) !important;
+      background-color: #f8fafc !important;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.1) !important;
+    }
+    .ward-picker-trigger:hover {
+      border-color: var(--primary) !important;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.08) !important;
+    }
+
+    /* PREMIUM RADIO CARDS WARD OVERLAY HOVER EFFECTS */
+    .task-radio-card .task-card-inner:hover {
+      border-color: #bfdbfe;
+      background-color: #f8fafc;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.025);
+    }
+    .task-radio-card input:checked + .task-card-inner {
+      border-color: var(--primary) !important;
+      background-color: #fff !important;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.1), 0 4px 6px -1px rgba(0,0,0,0.05) !important;
+      transform: translateY(-2px);
+    }
+    .task-radio-card input:checked + .task-card-inner .task-icon {
+      background-color: var(--primary) !important;
+      color: #fff !important;
+      transform: scale(1.1);
+    }
+    .ward-picker-trigger:hover {
+      border-color: var(--primary) !important;
+      background-color: #f8fafc !important;
+      transform: translateY(-1px);
+    }
+
+    .luxury-option-item:last-child {
+      margin-bottom: 0;
+    }
   </style>
 
 </head>
@@ -1571,7 +1645,7 @@
   </div>
 
   <!-- MODAL XÁC NHẬN CHUYÊN DỤNG (CUSTOM CONFIRM MODAL) -->
-  <div class="modal fade" id="customConfirmModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+  <div class="modal fade" id="customConfirmModal" tabindex="-1" aria-hidden="true" style="z-index: 9999 !important;">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
       <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg); overflow: hidden;">
         <div class="modal-body p-4 text-center">
@@ -4145,8 +4219,9 @@
           // Kiểm tra ngày cụ thể nếu là rule lễ/sự kiện
           if (r.ruleType === 'specific_date' && r.specificDate !== dateStr) continue;
 
-          // Kiểm tra địa bàn
+          // Kiểm tra địa bàn (hỗ trợ cả mảng wardCodes)
           if (r.wardCode && r.wardCode !== '*' && r.wardCode !== wardCode) continue;
+          if (r.wardCodes && !r.wardCodes.includes('*') && !r.wardCodes.includes(wardCode)) continue;
 
           // Kiểm tra khung giờ
           if (this.isWithinTimeSlot(timeStr, r.timeSlot)) {
@@ -6067,17 +6142,17 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     <!-- 1. TÊN QUY TẮC & MẪU QUY TẮC -->
                     <div class="row g-3 mb-4">
                       <div class="col-md-7">
-                        <label class="field-label">Tên Quy Tắc Phân Ca <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="rule-name" required placeholder="VD: Luân phiên Chẵn/Lẻ 2 GĐV Hiện trường & Chi tiết" style="height: 46px; border-radius: 10px;">
+                        <label class="field-label" style="font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em;">Tên Quy Tắc Phân Ca <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control shadow-sm" id="rule-name" required placeholder="VD: Luân phiên Chẵn/Lẻ 2 GĐV Hiện trường & Chi tiết" style="height: 64px; min-height: 64px; border-radius: 14px; border: 1.5px solid #e2e8f0; font-weight: 500; font-size: 14px; padding: 10px 18px;">
                       </div>
                       <div class="col-md-5">
-                        <label class="field-label">Chọn Mẫu Quy Tắc Chuẩn <span class="text-danger">*</span></label>
+                        <label class="field-label" style="font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em;">Chọn Mẫu Quy Tắc Chuẩn <span class="text-danger">*</span></label>
                         
                         <!-- CUSTOM LUXURY TEMPLATE DROPDOWN -->
                         <div class="custom-select-luxury" id="wrapper-rule-template-select" style="position: relative; z-index: 20;">
                           <input type="hidden" id="rule-template-type" value="even_odd" required>
-                          <button type="button" class="btn-custom-select" id="btn-trigger-template-select" aria-expanded="false">
-                            <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                          <button type="button" class="btn-custom-select" id="btn-trigger-template-select" style="height: 64px;" aria-expanded="false">
+                            <div class="d-flex align-items-center gap-3 overflow-hidden">
                               <div class="custom-select-trigger-icon" id="tpl-trigger-icon-box" style="background: #eff6ff; color: #2563eb;">
                                 <i data-lucide="repeat" id="tpl-trigger-icon" style="width: 17px; height: 17px;"></i>
                               </div>
@@ -6093,7 +6168,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                           <div class="dropdown-menu-luxury d-none" id="menu-template-select">
                             <div class="luxury-options-list">
                               <div class="luxury-option-item active" data-value="even_odd" data-icon="repeat" data-icon-bg="#eff6ff" data-icon-color="#2563eb" data-title="1. Luân phiên Chẵn / Lẻ & Chu kỳ" data-desc="Hai GĐV luân phiên Hiện trường & Chi tiết">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
                                     <i data-lucide="repeat" style="width: 16px; height: 16px;"></i>
                                   </div>
@@ -6111,7 +6186,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               </div>
 
                               <div class="luxury-option-item" data-value="day_of_week" data-icon="calendar" data-icon-bg="#fef3c7" data-icon-color="#b45309" data-title="2. Theo Thứ trong tuần (T2 - CN)" data-desc="Gán cố định giám định viên theo từng ngày thứ">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #fef3c7; color: #b45309;">
                                     <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
                                   </div>
@@ -6129,7 +6204,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               </div>
 
                               <div class="luxury-option-item" data-value="ward_assignment" data-icon="map-pin" data-icon-bg="#e0e7ff" data-icon-color="#4338ca" data-title="3. Theo Địa bàn cụ thể (Xã/Phường)" data-desc="Gán giám định viên chuyên trách địa bàn hành chính">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #e0e7ff; color: #4338ca;">
                                     <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
                                   </div>
@@ -6147,7 +6222,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               </div>
 
                               <div class="luxury-option-item" data-value="specific_date" data-icon="star" data-icon-bg="#ffe4e6" data-icon-color="#e11d48" data-title="4. Ngày cụ thể (Lễ / Sự kiện)" data-desc="Lịch trực đặc biệt ưu tiên cho ngày lễ hoặc đột xuất">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #ffe4e6; color: #e11d48;">
                                     <i data-lucide="star" style="width: 16px; height: 16px;"></i>
                                   </div>
@@ -6305,24 +6380,118 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       </div>
                     </div>
 
-                    <!-- MẪU 3: THEO ĐỊA BÀN CỤ THỂ -->
-                    <div id="box-template-ward" class="p-4 rounded-3 mb-4 border d-none" style="background: #f8fafc;">
-                      <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 14px;">
-                        <i data-lucide="map-pin" style="width: 17px; color: var(--primary);"></i> Phân công theo Địa bàn Phường/Xã cụ thể
-                      </h6>
-                      <div class="row g-3">
-                        <div class="col-md-6">
-                          <label class="field-label">Chọn Xã / Phường <span class="text-danger">*</span></label>
-                          <select class="form-select form-select-luxury" id="ward-select" style="height: 44px; border-radius: 8px;">
-                            <!-- Dynamically populated -->
-                          </select>
+                    <!-- MẪU 3: THEO ĐỊA BÀN CỤ THỂ (PREMIUM REDESIGN) -->
+                    <div id="box-template-ward" class="p-0 rounded-4 mb-4 border d-none bg-white shadow-sm" style="overflow: hidden;">
+                      
+                      <!-- Tiêu đề box -->
+                      <div class="p-3 border-bottom d-flex align-items-center gap-3" style="background: linear-gradient(90deg, #f8fafc 0%, #eff6ff 100%);">
+                        <div class="d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 36px; height: 36px; background: #fff; color: #2563eb;">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                         </div>
-                        <div class="col-md-6">
-                          <label class="field-label">GĐV Phụ Trách Chính <span class="text-danger">*</span></label>
-                          <select class="form-select form-select-luxury" id="ward-primary-ins" style="height: 44px; border-radius: 8px;">
-                            <!-- Dynamically populated -->
-                          </select>
+                        <div class="flex-grow-1">
+                          <h6 class="fw-bold text-dark mb-0" style="font-size: 15px;">Phân công theo Địa bàn Phường/Xã cụ thể</h6>
+                          <small class="text-muted" style="font-size: 12px;">Thiết lập GĐV chuyên trách cho các khu vực hành chính</small>
                         </div>
+                      </div>
+
+                      <div class="p-4" style="background: #fafaf9;">
+                        
+                        <!-- NHIỆM VỤ GIÁM ĐỊNH -->
+                        <div class="mb-4">
+                          <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            Nhiệm Vụ Giám Định <span class="text-danger">*</span>
+                          </label>
+                          
+                          <div class="row g-3">
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="wardTaskType" value="field" class="d-none" checked>
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #eff6ff; color: #2563eb; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Hiện Trường</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tiếp cận hiện trường</div>
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
+                            
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="wardTaskType" value="detailed" class="d-none">
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #fef2f2; color: #ef4444; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Chi Tiết</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tại Gara/Xưởng</div>
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
+                            
+                            <div class="col-md-4">
+                              <label class="task-radio-card w-100 mb-0 h-100">
+                                <input type="radio" name="wardTaskType" value="both" class="d-none">
+                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
+                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #f0fdf4; color: #22c55e; transition: all 0.3s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                                  </div>
+                                  <div>
+                                    <div class="fw-bold text-dark" style="font-size: 14px;">Cả Hai</div>
+                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Phụ trách toàn bộ</div>
+                                  </div>
+                                </div>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- CẤU HÌNH ĐỊA BÀN VÀ GĐV -->
+                        <div class="row g-4">
+                          <!-- CỘT 1: CHỌN XÃ/PHƯỜNG -->
+                          <div class="col-md-6">
+                            <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+                              Chọn Xã / Phường <span class="text-danger">*</span>
+                            </label>
+                            
+                            <div class="ward-picker-trigger border bg-white d-flex align-items-center justify-content-between cursor-pointer shadow-sm" id="btn-open-ward-picker" style="height: 64px; border-radius: 12px; padding: 0 16px; transition: all 0.2s;">
+                              <div class="d-flex align-items-center gap-3 w-100">
+                                <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 36px; height: 36px; background: #eff6ff; color: #2563eb; flex-shrink: 0;">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg>
+                                </div>
+                                <div class="flex-grow-1 overflow-hidden">
+                                  <div class="fw-bold text-dark text-truncate" id="ward-trigger-title" style="font-size: 14px; line-height: 1.2;">Chưa chọn địa bàn</div>
+                                  <div class="text-muted text-truncate" id="ward-trigger-subtitle" style="font-size: 11.5px; margin-top: 3px;">Nhấp để chọn phường/xã</div>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted flex-shrink: 0" style="opacity: 0.6;"><path d="m9 18 6-6-6-6"/></svg>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <!-- CỘT 2: GĐV PHỤ TRÁCH CHÍNH -->
+                          <div class="col-md-6">
+                            <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                              GĐV Phụ Trách Chính <span class="text-danger">*</span>
+                            </label>
+                            
+                            <div style="position: relative;">
+                              <div class="position-absolute d-flex align-items-center justify-content-center" style="left: 12px; top: 14px; width: 36px; height: 36px; background: #eff6ff; color: #2563eb; border-radius: 8px; pointer-events: none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                              </div>
+                              <select class="form-select border shadow-sm text-dark fw-bold" id="ward-primary-ins" style="height: 64px; border-radius: 12px; padding-left: 56px !important; text-indent: 2px; font-size: 14px; background-color: #fff; cursor: pointer;">
+                                <!-- Dynamically populated -->
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
 
@@ -6390,6 +6559,62 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </div>
                   </form>
                 </div>
+              </div>
+            </div>
+          </div>
+          <!-- MÀN HÌNH CHỌN MULTI-WARD (OVERLAY) -->
+          <div id="ward-picker-overlay" class="ward-picker-overlay d-none">
+            <div class="ward-picker-container shadow-lg d-flex flex-column bg-white">
+              <div class="ward-picker-header p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="d-flex align-items-center justify-content-center rounded bg-white border" style="width: 32px; height: 32px; color: var(--primary);">
+                    <i data-lucide="map" style="width: 16px; height: 16px;"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Chọn Xã/Phường Phụ Trách</h6>
+                    <small class="text-muted" style="font-size: 11px;">Có thể chọn nhiều địa bàn</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center" id="btn-ward-view-list" title="Hiển thị dạng danh sách">
+                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center active" id="btn-ward-view-grid" title="Hiển thị dạng lưới">
+                    <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center ms-2" id="btn-ward-fullscreen" title="Phóng to/Thu nhỏ">
+                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border text-danger d-flex align-items-center ms-1" id="btn-close-ward-picker">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="ward-picker-toolbar p-3 border-bottom bg-white d-flex flex-wrap gap-2 align-items-center">
+                <div class="flex-grow-1 position-relative" style="min-width: 200px;">
+                  <i data-lucide="search" class="position-absolute text-muted" style="left: 12px; top: 10px; width: 16px; height: 16px;"></i>
+                  <input type="text" class="form-control ps-5" id="ward-search-input" placeholder="Tìm kiếm xã/phường..." style="height: 36px; font-size: 13px;">
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ward-select-all" style="font-size: 12px;">Chọn tất cả</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-ward-clear-all" style="font-size: 12px;">Bỏ chọn</button>
+                </div>
+              </div>
+
+              <div class="ward-picker-body flex-grow-1 p-3 overflow-auto" style="background: #f8fafc;">
+                <div id="ward-cards-container" class="ward-grid">
+                  <!-- Rendered via JS -->
+                </div>
+              </div>
+
+              <div class="ward-picker-footer p-3 border-top bg-white d-flex align-items-center justify-content-between">
+                <div class="text-dark fw-bold" style="font-size: 13px;">
+                  Đã chọn: <span id="ward-selected-count" class="text-primary fs-6">0</span> địa bàn
+                </div>
+                <button type="button" class="btn btn-primary-action px-4 py-2" id="btn-apply-wards" style="font-size: 13px;">
+                  Xác nhận & Áp dụng
+                </button>
               </div>
             </div>
           </div>
@@ -6491,7 +6716,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
               summaryDesc = 'Phân bổ theo ngày trong tuần';
             } else if (r.ruleType === 'ward_assignment') {
               templateBadge = '<span class="badge-soft badge-soft-slate fw-semibold"><i data-lucide="map-pin" style="width:12px"></i> Theo Địa Bàn</span>';
-              summaryDesc = `Xã/Phường: ${r.wardCode || '*'}`;
+              summaryDesc = `Xã/Phường: ${r.wardCodes ? (r.wardCodes.includes('*') ? 'Tất cả địa bàn' : r.wardCodes.length + ' địa bàn') : (r.wardCode || '*')}`;
             } else if (r.ruleType === 'specific_date') {
               templateBadge = '<span class="badge-soft badge-soft-rose fw-semibold"><i data-lucide="star" style="width:12px"></i> Ngày Cụ Thể</span>';
               summaryDesc = `Sự kiện: ${r.specificDate}`;
@@ -6861,13 +7086,32 @@ const scheduleEngine = new ScheduleEngine(dbService);
             }
           });
 
-          // 3. Cập nhật Mẫu 3: Địa bàn xã/phường
-          const selWard = container.querySelector('#ward-select');
+          // 3. Cập nhật Mẫu 3: Địa bàn xã/phường (Multi-Select Overlay)
+          const wardCardsContainer = container.querySelector('#ward-cards-container');
           const selWardIns = container.querySelector('#ward-primary-ins');
-          if (selWard) {
-            selWard.innerHTML = zoneWards.length > 0 
-              ? zoneWards.map(w => `<option value="${w.areaCode}">📍 ${w.name}</option>`).join('')
-              : '<option value="*">Toàn bộ địa bàn Zone</option>';
+          
+          if (wardCardsContainer) {
+            if (zoneWards.length > 0) {
+              wardCardsContainer.innerHTML = zoneWards.map(w => `
+                <label class="ward-card m-0 w-100">
+                  <input type="checkbox" class="ward-card-checkbox" value="${w.areaCode}" data-name="${w.name}">
+                  <div class="flex-grow-1">
+                    <div class="ward-card-title">${w.name}</div>
+                    <div class="ward-card-subtitle">Mã: ${w.areaCode}</div>
+                  </div>
+                </label>
+              `).join('');
+            } else {
+              wardCardsContainer.innerHTML = `
+                <label class="ward-card m-0 w-100">
+                  <input type="checkbox" class="ward-card-checkbox" value="*" data-name="Toàn bộ địa bàn Zone">
+                  <div class="flex-grow-1">
+                    <div class="ward-card-title">Toàn bộ địa bàn Zone</div>
+                    <div class="ward-card-subtitle">Mã: *</div>
+                  </div>
+                </label>
+              `;
+            }
           }
           if (selWardIns) {
             selWardIns.innerHTML = zoneInspectors.length > 0
@@ -6998,6 +7242,111 @@ const scheduleEngine = new ScheduleEngine(dbService);
           }
         });
 
+        // Xử lý sự kiện Multi-Ward Overlay
+        let currentSelectedWardCodes = [];
+        
+        const wardOverlay = container.querySelector('#ward-picker-overlay');
+        const wardContainer = container.querySelector('.ward-picker-container');
+        const triggerBtn = container.querySelector('#btn-open-ward-picker');
+        
+        if(triggerBtn) {
+          triggerBtn.addEventListener('click', () => {
+            if(wardOverlay) wardOverlay.classList.remove('d-none');
+            const checkboxes = wardOverlay ? wardOverlay.querySelectorAll('.ward-card-checkbox') : [];
+            checkboxes.forEach(cb => {
+              cb.checked = currentSelectedWardCodes.includes(cb.value);
+              if(cb.checked) cb.closest('.ward-card').classList.add('selected');
+              else cb.closest('.ward-card').classList.remove('selected');
+            });
+            updateWardCount();
+          });
+        }
+        
+        function updateWardCount() {
+          if(!wardOverlay) return;
+          const checked = wardOverlay.querySelectorAll('.ward-card-checkbox:checked').length;
+          container.querySelector('#ward-selected-count').innerText = checked;
+        }
+
+        if(wardOverlay) {
+          container.querySelector('#btn-close-ward-picker').addEventListener('click', () => {
+            wardOverlay.classList.add('d-none');
+          });
+          
+          container.querySelector('#ward-cards-container').addEventListener('change', (e) => {
+            if(e.target.classList.contains('ward-card-checkbox')) {
+              if(e.target.checked) e.target.closest('.ward-card').classList.add('selected');
+              else e.target.closest('.ward-card').classList.remove('selected');
+              updateWardCount();
+            }
+          });
+          
+          container.querySelector('#btn-ward-select-all').addEventListener('click', () => {
+            wardOverlay.querySelectorAll('.ward-card:not([style*="display: none"]) .ward-card-checkbox').forEach(cb => {
+              cb.checked = true;
+              cb.closest('.ward-card').classList.add('selected');
+            });
+            updateWardCount();
+          });
+          
+          container.querySelector('#btn-ward-clear-all').addEventListener('click', () => {
+            wardOverlay.querySelectorAll('.ward-card-checkbox').forEach(cb => {
+              cb.checked = false;
+              cb.closest('.ward-card').classList.remove('selected');
+            });
+            updateWardCount();
+          });
+          
+          container.querySelector('#ward-search-input').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            wardOverlay.querySelectorAll('.ward-card').forEach(card => {
+              const name = card.querySelector('.ward-card-checkbox').dataset.name.toLowerCase();
+              if(name.includes(query)) card.style.display = 'flex';
+              else card.style.display = 'none';
+            });
+          });
+          
+          container.querySelector('#btn-apply-wards').addEventListener('click', () => {
+            currentSelectedWardCodes = Array.from(wardOverlay.querySelectorAll('.ward-card-checkbox:checked')).map(cb => cb.value);
+            const titleEl = container.querySelector('#ward-trigger-title');
+            const subEl = container.querySelector('#ward-trigger-subtitle');
+            
+            if(currentSelectedWardCodes.length === 0) {
+              titleEl.innerText = 'Chưa chọn địa bàn';
+              subEl.innerText = 'Nhấp để chọn phường/xã';
+            } else if(currentSelectedWardCodes.length === 1) {
+              const cb = wardOverlay.querySelector(`.ward-card-checkbox[value="${currentSelectedWardCodes[0]}"]`);
+              if (cb) titleEl.innerText = cb.dataset.name;
+              subEl.innerText = '1 địa bàn đã chọn';
+            } else {
+              titleEl.innerText = currentSelectedWardCodes.length + ' địa bàn đã chọn';
+              subEl.innerText = 'Nhấp để xem hoặc chỉnh sửa';
+            }
+            wardOverlay.classList.add('d-none');
+          });
+
+          const gridContainer = container.querySelector('#ward-cards-container');
+          container.querySelector('#btn-ward-view-list').addEventListener('click', (e) => {
+            gridContainer.classList.remove('ward-grid');
+            gridContainer.classList.add('ward-list');
+            e.currentTarget.classList.add('active');
+            container.querySelector('#btn-ward-view-grid').classList.remove('active');
+          });
+          container.querySelector('#btn-ward-view-grid').addEventListener('click', (e) => {
+            gridContainer.classList.remove('ward-list');
+            gridContainer.classList.add('ward-grid');
+            e.currentTarget.classList.add('active');
+            container.querySelector('#btn-ward-view-list').classList.remove('active');
+          });
+          container.querySelector('#btn-ward-fullscreen').addEventListener('click', (e) => {
+            wardContainer.classList.toggle('is-fullscreen');
+            const icon = e.currentTarget.querySelector('i');
+            if(wardContainer.classList.contains('is-fullscreen')) icon.setAttribute('data-lucide', 'minimize-2');
+            else icon.setAttribute('data-lucide', 'maximize-2');
+            lucide.createIcons();
+          });
+        }
+        
         // Submit tạo quy tắc mới
         container.querySelector('#form-create-rule').addEventListener('submit', async (e) => {
           e.preventDefault();
@@ -7075,16 +7424,23 @@ const scheduleEngine = new ScheduleEngine(dbService);
               }
               ruleDoc.rosterConfig = { weekly };
             } else if (templateVal === 'ward_assignment') {
-              const wardCode = container.querySelector('#ward-select').value;
               const insPrimary = container.querySelector('#ward-primary-ins').value;
+              const taskTypeInput = container.querySelector('input[name="wardTaskType"]:checked');
+              const taskType = taskTypeInput ? taskTypeInput.value : 'both';
+
               if (!insPrimary) {
                 showToast("Vui lòng chọn Giám định viên phụ trách địa bàn!", "error");
                 btn.disabled = false;
                 return;
               }
+              if (currentSelectedWardCodes.length === 0) {
+                showToast("Vui lòng chọn ít nhất 1 địa bàn xã/phường!", "error");
+                btn.disabled = false;
+                return;
+              }
               ruleDoc.ruleType = 'ward_assignment';
-              ruleDoc.taskType = 'both';
-              ruleDoc.wardCode = wardCode;
+              ruleDoc.taskType = taskType;
+              ruleDoc.wardCodes = currentSelectedWardCodes; // Lưu mảng
               ruleDoc.rosterConfig = {
                 assignment: { primaryId: insPrimary, backupId: null }
               };
@@ -7229,6 +7585,62 @@ const scheduleEngine = new ScheduleEngine(dbService);
                     </button>
                   </form>
                 </div>
+              </div>
+            </div>
+          </div>
+          <!-- MÀN HÌNH CHỌN MULTI-WARD (OVERLAY) -->
+          <div id="ward-picker-overlay" class="ward-picker-overlay d-none">
+            <div class="ward-picker-container shadow-lg d-flex flex-column bg-white">
+              <div class="ward-picker-header p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="d-flex align-items-center justify-content-center rounded bg-white border" style="width: 32px; height: 32px; color: var(--primary);">
+                    <i data-lucide="map" style="width: 16px; height: 16px;"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Chọn Xã/Phường Phụ Trách</h6>
+                    <small class="text-muted" style="font-size: 11px;">Có thể chọn nhiều địa bàn</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center" id="btn-ward-view-list" title="Hiển thị dạng danh sách">
+                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center active" id="btn-ward-view-grid" title="Hiển thị dạng lưới">
+                    <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center ms-2" id="btn-ward-fullscreen" title="Phóng to/Thu nhỏ">
+                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border text-danger d-flex align-items-center ms-1" id="btn-close-ward-picker">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="ward-picker-toolbar p-3 border-bottom bg-white d-flex flex-wrap gap-2 align-items-center">
+                <div class="flex-grow-1 position-relative" style="min-width: 200px;">
+                  <i data-lucide="search" class="position-absolute text-muted" style="left: 12px; top: 10px; width: 16px; height: 16px;"></i>
+                  <input type="text" class="form-control ps-5" id="ward-search-input" placeholder="Tìm kiếm xã/phường..." style="height: 36px; font-size: 13px;">
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ward-select-all" style="font-size: 12px;">Chọn tất cả</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-ward-clear-all" style="font-size: 12px;">Bỏ chọn</button>
+                </div>
+              </div>
+
+              <div class="ward-picker-body flex-grow-1 p-3 overflow-auto" style="background: #f8fafc;">
+                <div id="ward-cards-container" class="ward-grid">
+                  <!-- Rendered via JS -->
+                </div>
+              </div>
+
+              <div class="ward-picker-footer p-3 border-top bg-white d-flex align-items-center justify-content-between">
+                <div class="text-dark fw-bold" style="font-size: 13px;">
+                  Đã chọn: <span id="ward-selected-count" class="text-primary fs-6">0</span> địa bàn
+                </div>
+                <button type="button" class="btn btn-primary-action px-4 py-2" id="btn-apply-wards" style="font-size: 13px;">
+                  Xác nhận & Áp dụng
+                </button>
               </div>
             </div>
           </div>
@@ -8627,6 +9039,62 @@ const scheduleEngine = new ScheduleEngine(dbService);
               </div>
             </div>
           </div>
+          <!-- MÀN HÌNH CHỌN MULTI-WARD (OVERLAY) -->
+          <div id="ward-picker-overlay" class="ward-picker-overlay d-none">
+            <div class="ward-picker-container shadow-lg d-flex flex-column bg-white">
+              <div class="ward-picker-header p-3 border-bottom d-flex align-items-center justify-content-between bg-light">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="d-flex align-items-center justify-content-center rounded bg-white border" style="width: 32px; height: 32px; color: var(--primary);">
+                    <i data-lucide="map" style="width: 16px; height: 16px;"></i>
+                  </div>
+                  <div>
+                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Chọn Xã/Phường Phụ Trách</h6>
+                    <small class="text-muted" style="font-size: 11px;">Có thể chọn nhiều địa bàn</small>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center" id="btn-ward-view-list" title="Hiển thị dạng danh sách">
+                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center active" id="btn-ward-view-grid" title="Hiển thị dạng lưới">
+                    <i data-lucide="grid" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border d-flex align-items-center ms-2" id="btn-ward-fullscreen" title="Phóng to/Thu nhỏ">
+                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-light border text-danger d-flex align-items-center ms-1" id="btn-close-ward-picker">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="ward-picker-toolbar p-3 border-bottom bg-white d-flex flex-wrap gap-2 align-items-center">
+                <div class="flex-grow-1 position-relative" style="min-width: 200px;">
+                  <i data-lucide="search" class="position-absolute text-muted" style="left: 12px; top: 10px; width: 16px; height: 16px;"></i>
+                  <input type="text" class="form-control ps-5" id="ward-search-input" placeholder="Tìm kiếm xã/phường..." style="height: 36px; font-size: 13px;">
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ward-select-all" style="font-size: 12px;">Chọn tất cả</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-ward-clear-all" style="font-size: 12px;">Bỏ chọn</button>
+                </div>
+              </div>
+
+              <div class="ward-picker-body flex-grow-1 p-3 overflow-auto" style="background: #f8fafc;">
+                <div id="ward-cards-container" class="ward-grid">
+                  <!-- Rendered via JS -->
+                </div>
+              </div>
+
+              <div class="ward-picker-footer p-3 border-top bg-white d-flex align-items-center justify-content-between">
+                <div class="text-dark fw-bold" style="font-size: 13px;">
+                  Đã chọn: <span id="ward-selected-count" class="text-primary fs-6">0</span> địa bàn
+                </div>
+                <button type="button" class="btn btn-primary-action px-4 py-2" id="btn-apply-wards" style="font-size: 13px;">
+                  Xác nhận & Áp dụng
+                </button>
+              </div>
+            </div>
+          </div>
         `;
 
         lucide.createIcons();
@@ -8778,7 +9246,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 </span>
               </td>
               <td class="py-3 px-3">
-                <div class="d-flex align-items-center gap-2.5">
+                <div class="d-flex align-items-center gap-3">
                   <div style="width: 32px; height: 32px; border-radius: 8px; background: ${item.type === 'ward' ? '#f5f3ff' : '#eff6ff'}; color: ${item.type === 'ward' ? '#7c3aed' : '#2563eb'}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i data-lucide="${item.type === 'ward' ? 'compass' : 'map-pin'}" style="width: 16px;"></i>
                   </div>
