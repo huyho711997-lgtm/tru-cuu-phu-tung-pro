@@ -5472,7 +5472,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         <div class="dropdown-menu-luxury d-none" id="menu-filter-zone" style="min-width: 260px;">
                           <div class="luxury-options-list">
                             <div class="luxury-option-item ${currentFilterZoneId === 'ALL' ? 'active' : ''}" data-value="ALL">
-                              <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                              <div class="d-flex align-items-center gap-3 overflow-hidden">
                                 <div class="option-icon" style="background: #f1f5f9; color: #475569; width: 30px; height: 30px;">
                                   <i data-lucide="globe" style="width: 15px; height: 15px;"></i>
                                 </div>
@@ -5487,7 +5487,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                             </div>
                             ${zones.map(z => `
                               <div class="luxury-option-item ${z.zoneId === currentFilterZoneId ? 'active' : ''}" data-value="${z.zoneId}">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #eff6ff; color: #2563eb; width: 30px; height: 30px;">
                                     <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i>
                                   </div>
@@ -5658,7 +5658,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         <div class="custom-select-luxury" id="wrapper-rule-template-select" style="position: relative; z-index: 20;">
                           <input type="hidden" id="rule-template-type" value="even_odd" required>
                           <button type="button" class="btn-custom-select" id="btn-trigger-template-select" aria-expanded="false">
-                            <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                            <div class="d-flex align-items-center gap-3 overflow-hidden">
                               <div class="custom-select-trigger-icon" id="tpl-trigger-icon-box" style="background: #eff6ff; color: #2563eb;">
                                 <i data-lucide="repeat" id="tpl-trigger-icon" style="width: 17px; height: 17px;"></i>
                               </div>
@@ -5674,7 +5674,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                           <div class="dropdown-menu-luxury d-none" id="menu-template-select">
                             <div class="luxury-options-list">
                               <div class="luxury-option-item active" data-value="even_odd" data-icon="repeat" data-icon-bg="#eff6ff" data-icon-color="#2563eb" data-title="1. Luân phiên Chẵn / Lẻ & Chu kỳ" data-desc="Hai GĐV luân phiên Hiện trường & Chi tiết">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #eff6ff; color: #2563eb;">
                                     <i data-lucide="repeat" style="width: 16px; height: 16px;"></i>
                                   </div>
@@ -5692,7 +5692,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               </div>
 
                               <div class="luxury-option-item" data-value="day_of_week" data-icon="calendar" data-icon-bg="#fef3c7" data-icon-color="#b45309" data-title="2. Theo Thứ trong tuần (T2 - CN)" data-desc="Gán cố định giám định viên theo từng ngày thứ">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #fef3c7; color: #b45309;">
                                     <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
                                   </div>
@@ -5710,7 +5710,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               </div>
 
                               <div class="luxury-option-item" data-value="ward_assignment" data-icon="map-pin" data-icon-bg="#e0e7ff" data-icon-color="#4338ca" data-title="3. Theo Địa bàn cụ thể (Xã/Phường)" data-desc="Gán giám định viên chuyên trách địa bàn hành chính">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #e0e7ff; color: #4338ca;">
                                     <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
                                   </div>
@@ -5728,7 +5728,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                               </div>
 
                               <div class="luxury-option-item" data-value="specific_date" data-icon="star" data-icon-bg="#ffe4e6" data-icon-color="#e11d48" data-title="4. Ngày cụ thể (Lễ / Sự kiện)" data-desc="Lịch trực đặc biệt ưu tiên cho ngày lễ hoặc đột xuất">
-                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                <div class="d-flex align-items-center gap-3 overflow-hidden">
                                   <div class="option-icon" style="background: #ffe4e6; color: #e11d48;">
                                     <i data-lucide="star" style="width: 16px; height: 16px;"></i>
                                   </div>
@@ -8642,7 +8642,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 </span>
               </td>
               <td class="py-3 px-3">
-                <div class="d-flex align-items-center gap-2.5">
+                <div class="d-flex align-items-center gap-3">
                   <div style="width: 32px; height: 32px; border-radius: 8px; background: ${item.type === 'ward' ? '#f5f3ff' : '#eff6ff'}; color: ${item.type === 'ward' ? '#7c3aed' : '#2563eb'}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i data-lucide="${item.type === 'ward' ? 'compass' : 'map-pin'}" style="width: 16px;"></i>
                   </div>
