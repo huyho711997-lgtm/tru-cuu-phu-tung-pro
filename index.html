@@ -8216,6 +8216,13 @@ const scheduleEngine = new ScheduleEngine(dbService);
       // VIEW: PHÂN BỔ ĐỊA BÀN QUẢN LÝ (ZONE COVERAGE)
       // ----------------------------------------
       async renderCoverage(container) {
+        const oldModal = document.getElementById('modalAssignCoverage');
+        if (oldModal) oldModal.remove();
+        document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+
         let zones = [];
         let coverages = [];
         let provinces = [];
