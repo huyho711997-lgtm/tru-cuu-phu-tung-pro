@@ -7254,12 +7254,15 @@ const scheduleEngine = new ScheduleEngine(dbService);
               
               html += `
                 <div class="col-12 cycle-item" data-idx="${i}">
-                  <div class="p-2 bg-white rounded-3 border shadow-sm position-relative">
-                    ${(isContinuous && count > 1) ? `<button type="button" class="btn-close btn-remove-cycle position-absolute top-50 end-0 translate-middle-y me-2" style="font-size: 10px;" onclick="removeContinuousCycle('${typeClass}', ${i})"></button>` : ''}
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                      <span class="badge-soft badge-soft-${colorClass}" style="font-size: 10px;">${labelPrefix} ${i+1}</span>
+                  <div class="p-3 bg-white rounded-3 border shadow-sm position-relative luxury-card-hover" style="transition: all 0.2s ease;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="badge-soft badge-soft-${colorClass}" style="font-size: 10.5px; font-weight: 600; padding: 4px 8px;">
+                        <i data-lucide="arrow-right-circle" style="width: 11px; margin-right: 3px; display: inline-block; vertical-align: middle;"></i> 
+                        ${labelPrefix} ${i+1}
+                      </span>
+                      ${(isContinuous && count > 1) ? `<button type="button" class="btn-close btn-sm" style="font-size: 9px; opacity: 0.5;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5" onclick="removeContinuousCycle('${typeClass}', ${i})" title="Xóa lượt này"></button>` : ''}
                     </div>
-                    <select class="form-select form-select-sm form-select-luxury cycle-select-${typeClass}" required style="border-radius: 6px; ${isContinuous && count > 1 ? 'padding-right: 25px;' : ''}">
+                    <select class="form-select form-select-sm form-select-luxury cycle-select-${typeClass}" required style="border-radius: 8px; font-size: 13px; height: 38px; border-color: #e2e8f0; background-color: #f8fafc;">
                       ${options}
                     </select>
                   </div>
@@ -7273,13 +7276,16 @@ const scheduleEngine = new ScheduleEngine(dbService);
           if (!isContinuous) {
             renderSelects(2, 'even-odd-inspectors-container', 'even-odd', 'Vị trí', 'blue');
             const items = container.querySelectorAll('#even-odd-inspectors-container .badge-soft');
-            if(items[0]) items[0].innerText = 'Lẻ Hiện trường, Chẵn Chi tiết';
-            if(items[1]) items[1].innerText = 'Lẻ Chi tiết, Chẵn Hiện trường';
+            if(items[0]) items[0].innerHTML = '<i data-lucide="arrow-right-circle" style="width: 11px; margin-right: 3px; display: inline-block; vertical-align: middle;"></i> Lẻ Hiện trường, Chẵn Chi tiết';
+            if(items[1]) items[1].innerHTML = '<i data-lucide="arrow-right-circle" style="width: 11px; margin-right: 3px; display: inline-block; vertical-align: middle;"></i> Lẻ Chi tiết, Chẵn Hiện trường';
           } else {
             renderSelects(window.fieldCycleCount, 'continuous-field-container', 'field', 'Lượt', 'blue', 0);
             renderSelects(window.detailedCycleCount, 'continuous-detailed-container', 'detailed', 'Lượt', 'green', 1);
           }
           
+          if (window.lucide) {
+             window.lucide.createIcons();
+          }
           updatePreview();
         };
         
