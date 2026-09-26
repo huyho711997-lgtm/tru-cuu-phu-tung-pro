@@ -8653,110 +8653,108 @@ const scheduleEngine = new ScheduleEngine(dbService);
           }
 
           gridEl.innerHTML = filteredZones.map(z => {
-            const zoneCovDocs = coverages.filter(c => c.zoneId === z.zoneId && c.isActive);
-            const covCodes = zoneCovDocs.map(c => c.provinceCode);
-            const directCodes = Array.isArray(z.provinceCodes) ? z.provinceCodes : (z.provinceCode ? [z.provinceCode] : []);
-            const allCodes = Array.from(new Set([...covCodes, ...directCodes])).filter(Boolean);
-
-            const provObjects = allCodes.map(c => provinces.find(p => p.areaCode === c)).filter(Boolean);
-
-            // Thống kê vùng miền của Zone
-            const regionCountMap = {};
-            provObjects.forEach(p => {
-              const reg = p.region || 'other';
-              regionCountMap[reg] = (regionCountMap[reg] || 0) + 1;
-            });
-            const regionSummaryParts = Object.entries(regionCountMap).map(([reg, cnt]) => `${getRegionName(reg)} (${cnt})`);
-            const regionSummaryText = regionSummaryParts.length > 0 ? regionSummaryParts.join(', ') : 'Chưa xác định';
-
-            return `
-              <div class="col-lg-6 col-12">
-                <div class="zone-card-premium shadow-sm h-100 d-flex flex-column">
-                  <!-- Top accent bar -->
-                  <div style="height: 4px; background: linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6);"></div>
-
-                  <div class="p-4 flex-grow-1">
-                    <!-- Zone Card Header -->
-                    <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
-                      <div class="d-flex align-items-center gap-3">
-                        <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #1e40af, #3b82f6); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); flex-shrink: 0;">
-                          <i data-lucide="shield" style="width: 22px; height: 22px;"></i>
-                        </div>
-                        <div>
-                          <div class="d-flex align-items-center gap-2 flex-wrap">
-                            <h5 class="fw-bold mb-0 text-dark" style="font-size: 16px; letter-spacing: -0.01em;">${z.name}</h5>
-                            <span class="badge bg-light text-secondary border px-2 py-0.5" style="font-size: 11px; font-family: monospace; border-radius: 6px;">${z.code || z.zoneId}</span>
+              const zoneCovDocs = coverages.filter(c => c.zoneId === z.zoneId && c.isActive);
+              const covCodes = zoneCovDocs.map(c => c.provinceCode);
+              const directCodes = Array.isArray(z.provinceCodes) ? z.provinceCodes : (z.provinceCode ? [z.provinceCode] : []);
+              const allCodes = Array.from(new Set([...covCodes, ...directCodes])).filter(Boolean);
+  
+              const provObjects = allCodes.map(c => provinces.find(p => p.areaCode === c)).filter(Boolean);
+  
+              const regionCountMap = {};
+              provObjects.forEach(p => {
+                const reg = p.region || 'other';
+                regionCountMap[reg] = (regionCountMap[reg] || 0) + 1;
+              });
+              const regionSummaryParts = Object.entries(regionCountMap).map(([reg, cnt]) => `${getRegionName(reg)} (${cnt})`);
+              const regionSummaryText = regionSummaryParts.length > 0 ? regionSummaryParts.join(', ') : 'Chưa xác định';
+  
+              return `
+                <div class="col-lg-6 col-12">
+                  <div class="zone-card-premium shadow-sm h-100 d-flex flex-column border">
+                    
+                    <div class="p-4 flex-grow-1">
+                      <!-- Zone Card Header -->
+                      <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                          <div style="width: 48px; height: 48px; border-radius: 12px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
                           </div>
-                          <div class="d-flex align-items-center gap-2 mt-1 text-muted" style="font-size: 12.5px;">
-                            <i data-lucide="user-check" style="width: 13px; height: 13px; color: #64748b;"></i>
-                            <span>Trưởng Zone: <strong class="text-dark">${z.leadName || 'Chưa phân công'}</strong></span>
-                            ${z.leadPhone ? `<span class="badge bg-light text-primary border px-2 py-0.5" style="font-size: 11px;"><i data-lucide="phone" style="width: 10px; height: 10px;"></i> ${z.leadPhone}</span>` : ''}
+                          <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                              <h5 class="fw-bold mb-0 text-dark" style="font-size: 16.5px; letter-spacing: -0.01em;">${z.name}</h5>
+                              <span class="badge bg-light text-secondary border px-2 py-0.5" style="font-size: 11px; font-family: monospace; border-radius: 6px;">${z.code || z.zoneId}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 12.5px;">
+                              <i data-lucide="user" style="width: 14px; height: 14px; color: #94a3b8;"></i>
+                              <span>Trưởng Zone: <strong class="text-dark">${z.leadName || 'Chưa phân công'}</strong></span>
+                              ${z.leadPhone ? `<span class="text-muted" style="font-size: 14px;">·</span> <span class="fw-medium">${z.leadPhone}</span>` : ''}
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      <button class="btn btn-sm btn-outline-primary fw-bold d-flex align-items-center gap-1.5 btn-open-assign px-3 py-1.5 shadow-2xs" data-zone-id="${z.zoneId}" style="border-radius: 8px; font-size: 12.5px; white-space: nowrap;">
-                        <i data-lucide="map-pin-plus" style="width: 14px; height: 14px;"></i> Phân Bổ Địa Bàn
-                      </button>
-                    </div>
-
-                    <!-- Quick Metrics Strip -->
-                    <div class="p-2.5 rounded-3 mb-3 d-flex flex-wrap align-items-center justify-content-between gap-2" style="background: #f8fafc; border: 1px solid #edf2f7;">
-                      <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-white text-primary border shadow-2xs fw-bold px-2.5 py-1" style="font-size: 12px; border-radius: 6px;">
-                          <i data-lucide="map" style="width: 13px; height: 13px;"></i> ${provObjects.length} Tỉnh Thành
-                        </span>
-                        <span class="text-muted" style="font-size: 12px;">• Phủ sóng: <strong class="text-dark">${regionSummaryText}</strong></span>
+                      <!-- Quick Metrics Strip -->
+                      <div class="p-3 rounded-3 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-2" style="background: #f8fafc; border: 1px solid #f1f5f9;">
+                        <div class="d-flex align-items-center gap-4">
+                          <div class="d-flex flex-column">
+                            <span class="text-muted mb-1" style="font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Tỉnh Thành</span>
+                            <span class="fw-bold text-dark" style="font-size: 15px;">${provObjects.length}</span>
+                          </div>
+                          <div style="width: 1px; height: 28px; background: #e2e8f0;"></div>
+                          <div class="d-flex flex-column">
+                            <span class="text-muted mb-1" style="font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Phủ Sóng</span>
+                            <span class="fw-bold text-dark text-truncate" style="font-size: 13.5px; max-width: 140px;" title="${regionSummaryText}">${regionSummaryText}</span>
+                          </div>
+                        </div>
+                        <button class="btn btn-sm btn-white fw-bold d-flex align-items-center gap-1.5 btn-open-assign px-3 py-1.5 shadow-2xs text-primary border" data-zone-id="${z.zoneId}" style="border-radius: 8px; font-size: 12.5px;">
+                          <i data-lucide="settings-2" style="width: 14px; height: 14px;"></i> Phân Bổ Địa Bàn
+                        </button>
                       </div>
-                      <span class="badge-soft ${provObjects.length > 0 ? 'badge-soft-green' : 'badge-soft-amber'} fw-semibold" style="font-size: 11px;">
-                        <span class="pulse-dot" style="width: 5px; height: 5px; background: ${provObjects.length > 0 ? '#10b981' : '#f59e0b'};"></span>
-                        ${provObjects.length > 0 ? 'Đang điều phối' : 'Chưa có địa bàn'}
-                      </span>
-                    </div>
 
-                    <!-- Province Chips Section -->
-                    <div>
-                      <div class="field-label text-muted mb-2" style="font-size: 11px;">Địa bàn phụ trách trực tiếp:</div>
-                      <div class="d-flex flex-wrap gap-1.5" style="min-height: 52px;">
-                        ${provObjects.length > 0 ? provObjects.map(p => {
-                          const regStyle = getRegionStyle(p.region);
-                          return `
-                            <span class="province-tag shadow-2xs" style="background: ${regStyle.bg}; color: ${regStyle.color}; border-color: ${regStyle.border} !important;">
-                              <i data-lucide="map-pin" style="width: 12px; height: 12px; opacity: 0.85;"></i>
-                              <span>${p.name}</span>
-                              <span style="font-size: 10px; opacity: 0.7; font-family: monospace;">(${p.areaCode})</span>
-                              <button type="button" class="btn-remove-prov" data-zone-id="${z.zoneId}" data-code="${p.areaCode}" data-name="${p.name}" title="Gỡ ${p.name} khỏi Zone">
-                                <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                      <!-- Province Chips Section -->
+                      <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2 pb-1">
+                          <div class="fw-bold text-dark" style="font-size: 12.5px; text-transform: uppercase; color: #475569 !important; letter-spacing: 0.02em;">Phạm vi phụ trách trực tiếp</div>
+                          ${provObjects.length > 0 ? `<span class="badge-soft badge-soft-green fw-semibold" style="font-size: 11px;"><span class="pulse-dot" style="width: 5px; height: 5px; background: #10b981;"></span> Đang hoạt động</span>` : `<span class="badge-soft badge-soft-amber fw-semibold" style="font-size: 11px;">Chưa hoạt động</span>`}
+                        </div>
+                        <div class="d-flex flex-wrap gap-2" style="min-height: 52px;">
+                          ${provObjects.length > 0 ? provObjects.map(p => {
+                            return `
+                              <span class="province-tag shadow-none" style="background: #ffffff; color: #334155; border: 1px solid #cbd5e1 !important; padding: 6px 12px;">
+                                <i data-lucide="map-pin" style="width: 12px; height: 12px; color: #64748b;"></i>
+                                <span class="fw-semibold">${p.name}</span>
+                                <button type="button" class="btn-remove-prov ms-1" data-zone-id="${z.zoneId}" data-code="${p.areaCode}" data-name="${p.name}" title="Gỡ ${p.name} khỏi Zone" style="background: #f1f5f9; color: #64748b; border-radius: 4px; padding: 2px;">
+                                  <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                                </button>
+                              </span>
+                            `;
+                          }).join('') : `
+                            <div class="w-100 p-3 text-center rounded-3 border border-dashed text-muted d-flex flex-column align-items-center justify-content-center gap-1" style="background: #f8fafc; border-color: #cbd5e1 !important;">
+                              <i data-lucide="map-pin-off" style="width: 20px; height: 20px; color: #94a3b8;"></i>
+                              <span style="font-size: 12.5px;">Chưa gắn tỉnh thành nào cho Zone này</span>
+                              <button class="btn btn-xs btn-link p-0 text-primary fw-bold btn-open-assign mt-1" data-zone-id="${z.zoneId}" style="font-size: 12.5px; text-decoration: none;">
+                                + Gắn ngay
                               </button>
-                            </span>
-                          `;
-                        }).join('') : `
-                          <div class="w-100 p-3 text-center rounded-3 border border-dashed text-muted d-flex flex-column align-items-center justify-content-center gap-1" style="background: #fafafa; border-color: #cbd5e1 !important;">
-                            <i data-lucide="map-pin-off" style="width: 22px; height: 22px; color: #94a3b8;"></i>
-                            <span style="font-size: 12.5px;">Chưa gán tỉnh thành nào cho Zone này</span>
-                            <button class="btn btn-xs btn-link p-0 text-primary fw-bold btn-open-assign" data-zone-id="${z.zoneId}" style="font-size: 12px; text-decoration: none;">
-                              + Gán tỉnh thành ngay
-                            </button>
-                          </div>
-                        `}
+                            </div>
+                          `}
+                        </div>
                       </div>
                     </div>
-                  </div>
-
-                  <!-- Card Footer -->
-                  <div class="py-2.5 px-4 bg-light border-top d-flex justify-content-between align-items-center text-muted" style="font-size: 12px; border-color: #f1f5f9 !important;">
-                    <div class="d-flex align-items-center gap-1.5 text-muted">
-                      <i data-lucide="radio" style="width: 13px; height: 13px; color: #3b82f6;"></i>
-                      <span>Tự động định tuyến cuộc gọi & lịch trực cho các tỉnh trên</span>
+  
+                    <!-- Card Footer -->
+                    <div class="py-3 px-4 bg-light border-top d-flex justify-content-between align-items-center" style="border-color: #f1f5f9 !important;">
+                      <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 12px;">
+                        <i data-lucide="info" style="width: 14px; height: 14px; color: #94a3b8;"></i>
+                        <span>Hệ thống tự động kích hoạt luật trực</span>
+                      </div>
+                      <a href="#rules" class="text-primary fw-bold text-decoration-none d-flex align-items-center gap-1" style="font-size: 12.5px;">
+                        Cấu hình lịch <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                      </a>
                     </div>
-                    <a href="#rules" class="text-primary fw-semibold text-decoration-none d-flex align-items-center gap-1" style="font-size: 11.5px;">
-                      Lịch trực <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i>
-                    </a>
                   </div>
                 </div>
-              </div>
-            `;
-          }).join('');
+              `;
+            }).join('');
 
           lucide.createIcons();
         };
