@@ -6468,75 +6468,19 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                       <div class="p-4" style="background: #fafaf9;">
                         
-                        <!-- NHIỆM VỤ GIÁM ĐỊNH -->
-                        <div class="mb-4">
-                          <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            Nhiệm Vụ Giám Định <span class="text-danger">*</span>
-                          </label>
-                          
-                          <div class="luxury-segmented-control bg-light border p-1 rounded-pill d-flex shadow-sm mx-auto" style="max-width: 500px; position: relative;">
-                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
-                                <input type="radio" name="wardTaskType" value="field" class="d-none" checked>
-                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
-                                  <i data-lucide="camera" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">GĐ Hiện Trường</span>
-                                </div>
-                              </label>
-                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
-                                <input type="radio" name="wardTaskType" value="detailed" class="d-none">
-                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
-                                  <i data-lucide="search" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">GĐ Chi Tiết</span>
-                                </div>
-                              </label>
-                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
-                                <input type="radio" name="wardTaskType" value="both" class="d-none">
-                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
-                                  <i data-lucide="layers" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">Cả Hai</span>
-                                </div>
-                              </label>
-                            </div>
-                        </div>
-
-                        <!-- CẤU HÌNH ĐỊA BÀN VÀ GĐV -->
-                        <div class="row g-4">
-                          <!-- CỘT 1: CHỌN XÃ/PHƯỜNG -->
-                          <div class="col-md-6">
-                            <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
-                              Chọn Xã / Phường <span class="text-danger">*</span>
-                            </label>
-                            
-                            <div class="ward-picker-trigger border bg-white d-flex align-items-center justify-content-between cursor-pointer shadow-sm" id="btn-open-ward-picker" style="height: 64px; border-radius: 12px; padding: 0 16px; transition: all 0.2s;">
-                              <div class="d-flex align-items-center gap-3 w-100">
-                                <div class="d-flex align-items-center justify-content-center rounded-3" style="width: 36px; height: 36px; background: #eff6ff; color: #2563eb; flex-shrink: 0;">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg>
-                                </div>
-                                <div class="flex-grow-1 overflow-hidden">
-                                  <div class="fw-bold text-dark text-truncate" id="ward-trigger-title" style="font-size: 14px; line-height: 1.2;">Chưa chọn địa bàn</div>
-                                  <div class="text-muted text-truncate" id="ward-trigger-subtitle" style="font-size: 11.5px; margin-top: 3px;">Nhấp để chọn phường/xã</div>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted flex-shrink: 0" style="opacity: 0.6;"><path d="m9 18 6-6-6-6"/></svg>
-                              </div>
-                            </div>
+                        <div id="ward-assignment-rows-container" class="d-flex flex-column gap-3 mb-3">
+                            <!-- JS renders rows here -->
                           </div>
-                          
-                          <!-- CỘT 2: GĐV PHỤ TRÁCH CHÍNH -->
-                          <div class="col-md-6">
-                            <label class="fw-bold text-dark mb-3 d-flex align-items-center gap-2" style="font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.03em;">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-primary"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                              GĐV Phụ Trách Chính <span class="text-danger">*</span>
-                            </label>
-                            
-                            <div style="position: relative;">
-                              <div class="position-absolute d-flex align-items-center justify-content-center" style="left: 12px; top: 14px; width: 36px; height: 36px; background: #eff6ff; color: #2563eb; border-radius: 8px; pointer-events: none;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                              </div>
-                              <select class="form-select border shadow-sm text-dark fw-bold" id="ward-primary-ins" style="height: 64px; border-radius: 12px; padding-left: 56px !important; text-indent: 2px; font-size: 14px; background-color: #fff; cursor: pointer;">
-                                <!-- Dynamically populated -->
-                              </select>
-                            </div>
+                          <div class="text-center">
+                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-4 rounded-pill shadow-sm" onclick="addWardAssignmentRow()">+ Thêm phân công</button>
                           </div>
-                        </div>
+                          <!-- Dummy elements to prevent JS errors from old code if any -->
+                          <div class="d-none">
+                             <input type="radio" name="wardTaskType" value="both" checked>
+                             <div id="ward-trigger-title"></div>
+                             <div id="ward-trigger-subtitle"></div>
+                             <select id="ward-primary-ins"></select>
+                          </div>
 
                       </div>
                     </div>
@@ -7261,6 +7205,88 @@ const scheduleEngine = new ScheduleEngine(dbService);
            });
         });
 
+        
+        window.wardAssignments = [{ id: 1, codes: [], taskType: 'both', primaryId: '' }];
+        window.wardRowCounter = 1;
+        window.activeWardRowId = null;
+
+        window.addWardAssignmentRow = () => {
+           window.wardRowCounter++;
+           window.wardAssignments.push({ id: window.wardRowCounter, codes: [], taskType: 'both', primaryId: '' });
+           renderWardAssignmentRows();
+        };
+
+        window.removeWardAssignmentRow = (id) => {
+           if(window.wardAssignments.length <= 1) return;
+           window.wardAssignments = window.wardAssignments.filter(r => r.id !== id);
+           renderWardAssignmentRows();
+        };
+
+        window.updateWardRowField = (id, field, val) => {
+           const r = window.wardAssignments.find(x => x.id === id);
+           if(r) r[field] = val;
+        };
+
+        window.openWardPickerForRow = (id) => {
+           window.activeWardRowId = id;
+           const r = window.wardAssignments.find(x => x.id === id);
+           if(r) {
+             currentSelectedWardCodes = [...r.codes]; // load to global
+           }
+           const wardOverlay = document.querySelector('#ward-picker-overlay');
+           if(wardOverlay) {
+             wardOverlay.classList.remove('d-none');
+             wardOverlay.querySelectorAll('.ward-card-checkbox').forEach(cb => {
+               cb.checked = currentSelectedWardCodes.includes(cb.value);
+               if(cb.checked) cb.closest('.ward-card').classList.add('selected');
+               else cb.closest('.ward-card').classList.remove('selected');
+             });
+             document.querySelector('#ward-selected-count').innerText = currentSelectedWardCodes.length;
+           }
+        };
+
+        window.renderWardAssignmentRows = () => {
+           const container = document.querySelector('#ward-assignment-rows-container');
+           if(!container) return;
+           
+           let insOptions = '<option value="">-- Chọn GĐV --</option>';
+           if(window.currentZoneInspectors) {
+             insOptions += window.currentZoneInspectors.map(i => `<option value="${i.inspectorId}">${i.fullName} (${i.empCode || 'GĐV'})</option>`).join('');
+           }
+
+           container.innerHTML = window.wardAssignments.map(row => `
+             <div class="ward-assignment-row p-3 bg-white border rounded-3 position-relative shadow-sm">
+               ${window.wardAssignments.length > 1 ? `<button type="button" class="btn-close position-absolute top-0 end-0 m-2" style="font-size: 10px;" onclick="removeWardAssignmentRow(${row.id})"></button>` : ''}
+               <div class="row g-2 align-items-center">
+                 <div class="col-md-5">
+                   <label class="fw-bold text-dark mb-1" style="font-size: 11px; text-transform: uppercase;">1. Chọn Địa Bàn <span class="text-danger">*</span></label>
+                   <div class="ward-picker-trigger border bg-light d-flex align-items-center justify-content-between cursor-pointer rounded-2 px-3" style="height: 42px;" onclick="openWardPickerForRow(${row.id})">
+                     <div class="text-truncate fw-bold text-dark" style="font-size: 13px;" id="ward-row-title-${row.id}">
+                       ${row.codes.length === 0 ? 'Chưa chọn địa bàn' : (row.codes.length === 1 ? '1 địa bàn' : row.codes.length + ' địa bàn đã chọn')}
+                     </div>
+                     <i data-lucide="chevron-right" class="text-muted" style="width: 14px;"></i>
+                   </div>
+                 </div>
+                 <div class="col-md-3">
+                   <label class="fw-bold text-dark mb-1" style="font-size: 11px; text-transform: uppercase;">2. Nhiệm Vụ <span class="text-danger">*</span></label>
+                   <select class="form-select bg-light fw-bold text-primary border" style="font-size: 12.5px; height: 42px;" onchange="updateWardRowField(${row.id}, 'taskType', this.value)">
+                     <option value="both" ${row.taskType === 'both' ? 'selected' : ''}>Cả Hai</option>
+                     <option value="field" ${row.taskType === 'field' ? 'selected' : ''}>Hiện Trường</option>
+                     <option value="detailed" ${row.taskType === 'detailed' ? 'selected' : ''}>Chi Tiết</option>
+                   </select>
+                 </div>
+                 <div class="col-md-4">
+                   <label class="fw-bold text-dark mb-1" style="font-size: 11px; text-transform: uppercase;">3. GĐV Phụ Trách <span class="text-danger">*</span></label>
+                   <select class="form-select bg-light fw-bold text-dark border" style="font-size: 12.5px; height: 42px;" onchange="updateWardRowField(${row.id}, 'primaryId', this.value)">
+                     ${insOptions.replace(`value="${row.primaryId}"`, `value="${row.primaryId}" selected`)}
+                   </select>
+                 </div>
+               </div>
+             </div>
+           `).join('');
+           if(window.lucide) window.lucide.createIcons();
+        };
+
         function updatePreview() {
           const tbody = container.querySelector('#preview-cycle-tbody');
           if(!tbody) return;
@@ -7589,23 +7615,25 @@ const scheduleEngine = new ScheduleEngine(dbService);
           });
           
           container.querySelector('#btn-apply-wards').addEventListener('click', () => {
-            currentSelectedWardCodes = Array.from(wardOverlay.querySelectorAll('.ward-card-checkbox:checked')).map(cb => cb.value);
-            const titleEl = container.querySelector('#ward-trigger-title');
-            const subEl = container.querySelector('#ward-trigger-subtitle');
-            
-            if(currentSelectedWardCodes.length === 0) {
-              titleEl.innerText = 'Chưa chọn địa bàn';
-              subEl.innerText = 'Nhấp để chọn phường/xã';
-            } else if(currentSelectedWardCodes.length === 1) {
-              const cb = wardOverlay.querySelector(`.ward-card-checkbox[value="${currentSelectedWardCodes[0]}"]`);
-              if (cb) titleEl.innerText = cb.dataset.name;
-              subEl.innerText = '1 địa bàn đã chọn';
-            } else {
-              titleEl.innerText = currentSelectedWardCodes.length + ' địa bàn đã chọn';
-              subEl.innerText = 'Nhấp để xem hoặc chỉnh sửa';
-            }
-            wardOverlay.classList.add('d-none');
-          });
+              currentSelectedWardCodes = Array.from(wardOverlay.querySelectorAll('.ward-card-checkbox:checked')).map(cb => cb.value);
+              
+              if(window.activeWardRowId) {
+                 const r = window.wardAssignments.find(x => x.id === window.activeWardRowId);
+                 if(r) {
+                   r.codes = [...currentSelectedWardCodes];
+                   const titleEl = document.querySelector(`#ward-row-title-${r.id}`);
+                   if(titleEl) {
+                     titleEl.innerText = r.codes.length === 0 ? 'Chưa chọn địa bàn' : (r.codes.length === 1 ? '1 địa bàn' : r.codes.length + ' địa bàn đã chọn');
+                   }
+                 }
+              } else {
+                 // Fallback for old code if any
+                 const titleEl = container.querySelector('#ward-trigger-title');
+                 if(titleEl) titleEl.innerText = currentSelectedWardCodes.length + ' địa bàn đã chọn';
+              }
+              
+              wardOverlay.classList.add('d-none');
+            });
 
           const gridContainer = container.querySelector('#ward-cards-container');
           container.querySelector('#btn-ward-view-list').addEventListener('click', (e) => {
@@ -7720,27 +7748,42 @@ const scheduleEngine = new ScheduleEngine(dbService);
               }
               ruleDoc.rosterConfig = { weekly };
             } else if (templateVal === 'ward_assignment') {
-              const insPrimary = container.querySelector('#ward-primary-ins').value;
-              const taskTypeInput = container.querySelector('input[name="wardTaskType"]:checked');
-              const taskType = taskTypeInput ? taskTypeInput.value : 'both';
-
-              if (!insPrimary) {
-                showToast("Vui lòng chọn Giám định viên phụ trách địa bàn!", "error");
+                if (!window.wardAssignments || window.wardAssignments.length === 0) return;
+                
+                for(const r of window.wardAssignments) {
+                   if(!r.primaryId) {
+                      showToast("Vui lòng chọn Giám định viên cho tất cả các dòng phân công!", "error");
+                      btn.disabled = false;
+                      return;
+                   }
+                   if(r.codes.length === 0) {
+                      showToast("Vui lòng chọn ít nhất 1 địa bàn cho tất cả các dòng phân công!", "error");
+                      btn.disabled = false;
+                      return;
+                   }
+                }
+                
+                // Create multiple rules
+                for(const r of window.wardAssignments) {
+                   let newRule = { ...ruleDoc };
+                   newRule.ruleType = 'ward_assignment';
+                   newRule.taskType = r.taskType;
+                   newRule.wardCodes = r.codes;
+                   newRule.rosterConfig = {
+                     assignment: { primaryId: r.primaryId, backupId: null }
+                   };
+                   await dbService.createScheduleRule(newRule);
+                }
+                
+                showToast(`Đã công bố quy tắc cho ${targetZone?.name || 'Zone'} thành công!`, 'success');
+                ruleModal.hide();
+                allRules = await dbService.getAllScheduleRules();
+                renderRulesList();
                 btn.disabled = false;
-                return;
-              }
-              if (currentSelectedWardCodes.length === 0) {
-                showToast("Vui lòng chọn ít nhất 1 địa bàn xã/phường!", "error");
-                btn.disabled = false;
-                return;
-              }
-              ruleDoc.ruleType = 'ward_assignment';
-              ruleDoc.taskType = taskType;
-              ruleDoc.wardCodes = currentSelectedWardCodes; // Lưu mảng
-              ruleDoc.rosterConfig = {
-                assignment: { primaryId: insPrimary, backupId: null }
-              };
-            } else if (templateVal === 'specific_date') {
+                btn.innerHTML = origHtml;
+                if(window.lucide) window.lucide.createIcons();
+                return; // Early return because we handled saving multiple
+              } else if (templateVal === 'specific_date') {
               const specDateStart = container.querySelector('#spec-date-start').value;
               const specDateEnd = container.querySelector('#spec-date-end').value;
               const specTaskType = container.querySelector('input[name="specTaskType"]:checked').value;
