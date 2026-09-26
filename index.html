@@ -6071,10 +6071,39 @@ const scheduleEngine = new ScheduleEngine(dbService);
                       <div class="lookup-step-index">05</div>
                       <div class="lookup-step-label">Thời điểm tra cứu</div>
                       <div class="lookup-time-grid">
-                        <select class="form-select" id="select-time-mode">
-                          <option value="now" selected>Thời điểm hiện tại</option>
-                          <option value="custom">Chọn ngày & giờ khác</option>
-                        </select>
+                        <div class="custom-select-luxury" id="wrapper-lookup-time" style="position: relative; z-index: 25;">
+                          <input type="hidden" id="select-time-mode" value="now">
+                          <button type="button" class="btn-custom-select btn-custom-select-md" id="btn-trigger-lookup-time" aria-expanded="false">
+                            <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                              <div class="custom-select-trigger-icon" id="time-trigger-icon" style="background: #eff6ff; color: #2563eb;">
+                                <i data-lucide="clock" style="width: 17px; height: 17px;"></i>
+                              </div>
+                              <div class="custom-select-trigger-text text-start">
+                                <div class="custom-select-trigger-title text-truncate" id="time-trigger-title" style="color:#0f172a; font-weight:700;">Thời điểm hiện tại</div>
+                                <div class="custom-select-trigger-desc text-truncate" id="time-trigger-desc">Truy vấn theo lịch trực hiện hành</div>
+                              </div>
+                            </div>
+                            <div class="custom-select-trigger-arrow"><i data-lucide="chevron-down" style="width:16px;height:16px;"></i></div>
+                          </button>
+                          <div class="dropdown-menu-luxury d-none" id="menu-lookup-time" style="min-width:100%;padding:8px;">
+                            <div class="luxury-options-list" id="list-time-options">
+                              <div class="luxury-option-item is-selected" data-value="now" data-name="Thời điểm hiện tại" data-desc="Truy vấn theo lịch trực hiện hành" data-icon="clock">
+                                <div class="option-content">
+                                  <div class="option-name">Thời điểm hiện tại</div>
+                                  <div class="option-desc">Truy vấn theo lịch trực hiện hành</div>
+                                </div>
+                                <div class="option-check"><i data-lucide="check"></i></div>
+                              </div>
+                              <div class="luxury-option-item" data-value="custom" data-name="Chọn ngày &amp; giờ khác" data-desc="Truy vấn theo ca trực tùy chỉnh" data-icon="calendar-clock">
+                                <div class="option-content">
+                                  <div class="option-name">Chọn ngày &amp; giờ khác</div>
+                                  <div class="option-desc">Truy vấn theo ca trực tùy chỉnh</div>
+                                </div>
+                                <div class="option-check d-none"><i data-lucide="check"></i></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                         <input type="datetime-local" class="form-control d-none" id="input-custom-datetime">
                       </div>
                     </div>
@@ -6468,6 +6497,10 @@ const scheduleEngine = new ScheduleEngine(dbService);
             wrapWard.classList.remove('is-open');
             menuWard.classList.add('d-none');
             btnWard.setAttribute('aria-expanded', 'false');
+            
+            wrapTime.classList.remove('is-open');
+            menuTime.classList.add('d-none');
+            btnTime.setAttribute('aria-expanded', 'false');
           }
         };
         document.addEventListener('click', handleLookupGlobalClick);
@@ -6481,6 +6514,10 @@ const scheduleEngine = new ScheduleEngine(dbService);
             wrapWard.classList.remove('is-open');
             menuWard.classList.add('d-none');
             btnWard.setAttribute('aria-expanded', 'false');
+            
+            wrapTime.classList.remove('is-open');
+            menuTime.classList.add('d-none');
+            btnTime.setAttribute('aria-expanded', 'false');
           }
         };
         document.addEventListener('keydown', handleLookupKeydown);
@@ -6514,12 +6551,62 @@ const scheduleEngine = new ScheduleEngine(dbService);
         // Chọn giờ tùy chọn
         const timeMode = container.querySelector('#select-time-mode');
         const customDt = container.querySelector('#input-custom-datetime');
-        timeMode.addEventListener('change', (e) => {
-          if (e.target.value === 'custom') {
-            customDt.classList.remove('d-none');
+        
+        const wrapTime = container.querySelector('#wrapper-lookup-time');
+        const btnTime = container.querySelector('#btn-trigger-lookup-time');
+        const menuTime = container.querySelector('#menu-lookup-time');
+        const listTime = container.querySelector('#list-time-options');
+        const titleTime = container.querySelector('#time-trigger-title');
+        const descTime = container.querySelector('#time-trigger-desc');
+        const iconTime = container.querySelector('#time-trigger-icon');
+
+        btnTime.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = wrapTime.classList.contains('is-open');
+          
+          wrapProv.classList.remove('is-open'); menuProv.classList.add('d-none'); btnProv.setAttribute('aria-expanded', 'false');
+          wrapWard.classList.remove('is-open'); menuWard.classList.add('d-none'); btnWard.setAttribute('aria-expanded', 'false');
+
+          if (isOpen) {
+            wrapTime.classList.remove('is-open');
+            menuTime.classList.add('d-none');
+            btnTime.setAttribute('aria-expanded', 'false');
           } else {
-            customDt.classList.add('d-none');
+            wrapTime.classList.add('is-open');
+            menuTime.classList.remove('d-none');
+            btnTime.setAttribute('aria-expanded', 'true');
           }
+        });
+
+        listTime.querySelectorAll('.luxury-option-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            listTime.querySelectorAll('.luxury-option-item').forEach(i => {
+              i.classList.remove('is-selected');
+              i.querySelector('.option-check').classList.add('d-none');
+            });
+            item.classList.add('is-selected');
+            item.querySelector('.option-check').classList.remove('d-none');
+
+            const val = item.getAttribute('data-value');
+            timeMode.value = val;
+            titleTime.textContent = item.getAttribute('data-name');
+            descTime.textContent = item.getAttribute('data-desc');
+            const iconName = item.getAttribute('data-icon');
+            iconTime.innerHTML = `<i data-lucide="${iconName}" style="width: 17px; height: 17px;"></i>`;
+            lucide.createIcons();
+
+            if (val === 'custom') {
+              customDt.classList.remove('d-none');
+              customDt.focus();
+            } else {
+              customDt.classList.add('d-none');
+            }
+
+            wrapTime.classList.remove('is-open');
+            menuTime.classList.add('d-none');
+            btnTime.setAttribute('aria-expanded', 'false');
+          });
         });
 
         // Form Submit
