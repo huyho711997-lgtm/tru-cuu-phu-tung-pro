@@ -1501,7 +1501,21 @@
       box-shadow: 0 4px 12px rgba(37,99,235,0.08) !important;
     }
 
-    /* PREMIUM RADIO CARDS WARD OVERLAY HOVER EFFECTS */
+    
+      .segmented-item input:checked + .segmented-content {
+        background: #ffffff;
+        color: var(--primary) !important;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      }
+      .segmented-item .segmented-content {
+        color: #64748b;
+      }
+      .segmented-item:hover .segmented-content:not(.segmented-item input:checked + .segmented-content) {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+
+      /* PREMIUM RADIO CARDS WARD OVERLAY HOVER EFFECTS */
     .task-radio-card .task-card-inner:hover {
       border-color: #bfdbfe;
       background-color: #f8fafc;
@@ -6461,52 +6475,26 @@ const scheduleEngine = new ScheduleEngine(dbService);
                             Nhiệm Vụ Giám Định <span class="text-danger">*</span>
                           </label>
                           
-                          <div class="row g-3">
-                            <div class="col-md-4">
-                              <label class="task-radio-card w-100 mb-0 h-100">
+                          <div class="luxury-segmented-control bg-light border p-1 rounded-pill d-flex shadow-sm mx-auto" style="max-width: 500px; position: relative;">
+                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
                                 <input type="radio" name="wardTaskType" value="field" class="d-none" checked>
-                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
-                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #eff6ff; color: #2563eb; transition: all 0.3s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-                                  </div>
-                                  <div>
-                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Hiện Trường</div>
-                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tiếp cận hiện trường</div>
-                                  </div>
+                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
+                                  <i data-lucide="camera" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">GĐ Hiện Trường</span>
                                 </div>
                               </label>
-                            </div>
-                            
-                            <div class="col-md-4">
-                              <label class="task-radio-card w-100 mb-0 h-100">
+                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
                                 <input type="radio" name="wardTaskType" value="detailed" class="d-none">
-                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
-                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #fef2f2; color: #ef4444; transition: all 0.3s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                                  </div>
-                                  <div>
-                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Chi Tiết</div>
-                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tại Gara/Xưởng</div>
-                                  </div>
+                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
+                                  <i data-lucide="search" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">GĐ Chi Tiết</span>
                                 </div>
                               </label>
-                            </div>
-                            
-                            <div class="col-md-4">
-                              <label class="task-radio-card w-100 mb-0 h-100">
+                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
                                 <input type="radio" name="wardTaskType" value="both" class="d-none">
-                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
-                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #f0fdf4; color: #22c55e; transition: all 0.3s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                                  </div>
-                                  <div>
-                                    <div class="fw-bold text-dark" style="font-size: 14px;">Cả Hai</div>
-                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Phụ trách toàn bộ</div>
-                                  </div>
+                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
+                                  <i data-lucide="layers" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">Cả Hai</span>
                                 </div>
                               </label>
                             </div>
-                          </div>
                         </div>
 
                         <!-- CẤU HÌNH ĐỊA BÀN VÀ GĐV -->
@@ -6584,52 +6572,26 @@ const scheduleEngine = new ScheduleEngine(dbService);
                             Nhiệm Vụ Giám Định <span class="text-danger">*</span>
                           </label>
                           
-                          <div class="row g-3">
-                            <div class="col-md-4">
-                              <label class="task-radio-card w-100 mb-0 h-100">
+                          <div class="luxury-segmented-control bg-light border p-1 rounded-pill d-flex shadow-sm mx-auto" style="max-width: 500px; position: relative;">
+                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
                                 <input type="radio" name="specTaskType" value="field" class="d-none" checked>
-                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
-                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #eff6ff; color: #2563eb; transition: all 0.3s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-                                  </div>
-                                  <div>
-                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Hiện Trường</div>
-                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tiếp cận hiện trường</div>
-                                  </div>
+                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
+                                  <i data-lucide="camera" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">GĐ Hiện Trường</span>
                                 </div>
                               </label>
-                            </div>
-                            
-                            <div class="col-md-4">
-                              <label class="task-radio-card w-100 mb-0 h-100">
+                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
                                 <input type="radio" name="specTaskType" value="detailed" class="d-none">
-                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
-                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #fef2f2; color: #ef4444; transition: all 0.3s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                                  </div>
-                                  <div>
-                                    <div class="fw-bold text-dark" style="font-size: 14px;">GĐ Chi Tiết</div>
-                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Tại Gara/Xưởng</div>
-                                  </div>
+                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
+                                  <i data-lucide="search" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">GĐ Chi Tiết</span>
                                 </div>
                               </label>
-                            </div>
-                            
-                            <div class="col-md-4">
-                              <label class="task-radio-card w-100 mb-0 h-100">
+                              <label class="segmented-item flex-grow-1 mb-0 position-relative text-center cursor-pointer">
                                 <input type="radio" name="specTaskType" value="both" class="d-none">
-                                <div class="task-card-inner p-3 rounded-4 border bg-white d-flex flex-column align-items-center text-center gap-2 cursor-pointer h-100 shadow-sm transition-all" style="min-height: 110px; justify-content: center;">
-                                  <div class="task-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: #f0fdf4; color: #22c55e; transition: all 0.3s;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                                  </div>
-                                  <div>
-                                    <div class="fw-bold text-dark" style="font-size: 14px;">Cả Hai</div>
-                                    <div class="text-muted" style="font-size: 11.5px; margin-top: 4px;">Phụ trách toàn bộ</div>
-                                  </div>
+                                <div class="segmented-content py-2 px-3 rounded-pill transition-all d-flex align-items-center justify-content-center gap-2">
+                                  <i data-lucide="layers" style="width: 15px;"></i> <span class="fw-bold" style="font-size: 13.5px;">Cả Hai</span>
                                 </div>
                               </label>
                             </div>
-                          </div>
                         </div>
 
                     </div>
