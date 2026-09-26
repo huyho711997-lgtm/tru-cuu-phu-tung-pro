@@ -7202,24 +7202,79 @@ const scheduleEngine = new ScheduleEngine(dbService);
         }
 
         // Hàm cập nhật Live Preview cho Mẫu 1
-        const updatePreview = () => {
-          const optA = container.querySelector('#ins-user-a option:checked');
-          const optB = container.querySelector('#ins-user-b option:checked');
-          const nameA = optA ? optA.text.split('(')[0].trim() : 'Nhân sự A';
-          const nameB = optB ? optB.text.split('(')[0].trim() : 'Nhân sự B';
+        window.cycleCount = 2;
+        const renderCycleInspectors = (count) => {
+          window.cycleCount = count;
+          const containerBox = container.querySelector('#cycle-inspectors-container');
+          if (!containerBox) return;
+          let html = '';
+          for(let i=0; i<count; i++) {
+            let options = '<option value="">-- Chọn GĐV --</option>';
+            if(window.currentZoneInspectors && window.currentZoneInspectors.length > 0) {
+              options = window.currentZoneInspectors.map((ins, idx) => 
+                `<option value="${ins.inspectorId}" ${idx === (i % window.currentZoneInspectors.length) ? 'selected' : ''}>${ins.fullName} (${ins.empCode || 'GĐV'})</option>`
+              ).join('');
+            }
+            html += `
+              <div class="col-md-6 cycle-item" data-idx="${i}">
+                <div class="p-3 bg-white rounded-3 border shadow-sm h-100 position-relative">
+                  ${count > 2 ? `<button type="button" class="btn-close btn-remove-cycle position-absolute top-0 end-0 m-2" style="font-size: 10px;" onclick="removeCycle(${i})"></button>` : ''}
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="field-label text-primary mb-0" style="text-transform: none; font-size: 13px; font-weight: 700;">Ca luân phiên ${i+1}</span>
+                    <span class="badge-soft badge-soft-blue">Ca ${i+1}</span>
+                  </div>
+                  <select class="form-select form-select-luxury cycle-select" required style="height: 44px; border-radius: 8px;">
+                    ${options}
+                  </select>
+                </div>
+              </div>
+            `;
+          }
+          containerBox.innerHTML = html;
           
-          container.querySelector('#prev-d1-f').innerText = nameA;
-          container.querySelector('#prev-d1-d').innerText = nameB;
-          container.querySelector('#prev-d2-f').innerText = nameB;
-          container.querySelector('#prev-d2-d').innerText = nameA;
-          container.querySelector('#prev-d3-f').innerText = nameA;
-          container.querySelector('#prev-d3-d').innerText = nameB;
-          container.querySelector('#prev-d4-f').innerText = nameB;
-          container.querySelector('#prev-d4-d').innerText = nameA;
+          containerBox.querySelectorAll('.cycle-select').forEach(sel => {
+            sel.addEventListener('change', updatePreview);
+          });
+          updatePreview();
         };
 
-        container.querySelector('#ins-user-a').addEventListener('change', updatePreview);
-        container.querySelector('#ins-user-b').addEventListener('change', updatePreview);
+        window.removeCycle = (idx) => {
+           if(window.cycleCount <= 2) return;
+           renderCycleInspectors(window.cycleCount - 1);
+        };
+
+        const btnAddCycle = container.querySelector('#btn-add-cycle-ins');
+        if (btnAddCycle) {
+          btnAddCycle.addEventListener('click', () => {
+            renderCycleInspectors(window.cycleCount + 1);
+          });
+        }
+
+        const updatePreview = () => {
+          const tbody = container.querySelector('#preview-cycle-tbody');
+          if(!tbody) return;
+          let selects = container.querySelectorAll('.cycle-select');
+          if (selects.length === 0) return;
+          let names = Array.from(selects).map(s => {
+             const opt = s.querySelector('option:checked');
+             return opt ? opt.text.split('(')[0].trim() : 'Chưa chọn';
+          });
+          
+          let html = '';
+          const rowCount = Math.max(4, names.length);
+          for(let i=0; i<rowCount; i++) {
+             let fieldName = names[i % names.length];
+             let detailName = names[(i+1) % names.length];
+             html += `
+              <tr>
+                <td><span class="badge bg-light text-dark border w-100">Lượt ${i+1}</span></td>
+                <td class="fw-bold text-primary">${fieldName}</td>
+                <td class="fw-bold text-success">${detailName}</td>
+              </tr>
+             `;
+          }
+          tbody.innerHTML = html;
+        };
 
         // HÀM QUAN TRỌNG: TỰ ĐỘNG ĐỒNG BỘ GĐV VÀ ĐỊA BÀN KHI CHỌN ZONE TRONG MODAL
         async function populateModalForZone(targetZid) {
@@ -7279,21 +7334,11 @@ const scheduleEngine = new ScheduleEngine(dbService);
             if (alertBox) alertBox.classList.add('d-none');
           }
 
-          // 1. Cập nhật Mẫu 1: ins-user-a và ins-user-b
-          const selA = container.querySelector('#ins-user-a');
-          const selB = container.querySelector('#ins-user-b');
-          if (selA && selB) {
-            if (zoneInspectors.length === 0) {
-              selA.innerHTML = '<option value="">-- Zone chưa có Giám định viên --</option>';
-              selB.innerHTML = '<option value="">-- Zone chưa có Giám định viên --</option>';
-            } else {
-              selA.innerHTML = zoneInspectors.map((i, idx) => 
-                `<option value="${i.inspectorId}" ${idx === 0 ? 'selected' : ''}>${i.fullName} (${i.empCode || 'GDV'})</option>`
-              ).join('');
-              selB.innerHTML = zoneInspectors.map((i, idx) => 
-                `<option value="${i.inspectorId}" ${idx === 1 || (idx === 0 && zoneInspectors.length === 1) ? 'selected' : ''}>${i.fullName} (${i.empCode || 'GDV'})</option>`
-              ).join('');
-            }
+          // 1. Cập nhật Mẫu 1: cycle-inspectors-container
+          const cycleContainer = container.querySelector('#cycle-inspectors-container');
+          if (cycleContainer) {
+            window.currentZoneInspectors = zoneInspectors;
+            renderCycleInspectors(zoneInspectors.length === 0 ? 2 : Math.max(2, zoneInspectors.length));
           }
 
           // 2. Cập nhật Mẫu 2: Thứ trong tuần
@@ -7601,16 +7646,16 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             if (templateVal === 'even_odd') {
               const cycleMode = container.querySelector('input[name="cycleMode"]:checked').value;
-              const insA = container.querySelector('#ins-user-a').value;
-              const insB = container.querySelector('#ins-user-b').value;
-
-              if (!insA || !insB) {
-                showToast(`Zone "${targetZone?.name}" chưa có đủ 2 Giám định viên để thiết lập mẫu Chẵn/Lẻ!`, "error");
+              const selects = Array.from(container.querySelectorAll('.cycle-select'));
+              const insValues = selects.map(s => s.value);
+              
+              if (insValues.some(v => !v)) {
+                showToast(`Vui lòng chọn đủ Giám định viên cho tất cả các ca luân phiên!`, "error");
                 btn.disabled = false;
                 return;
               }
-              if (insA === insB) {
-                showToast("Nhân sự A và Nhân sự B phải là 2 Giám định viên khác nhau!", "error");
+              if (new Set(insValues).size !== insValues.length) {
+                showToast("Các Giám định viên trong chu kỳ phải khác nhau!", "error");
                 btn.disabled = false;
                 return;
               }
@@ -7618,16 +7663,20 @@ const scheduleEngine = new ScheduleEngine(dbService);
               ruleDoc.ruleType = cycleMode;
               ruleDoc.taskType = 'both';
               ruleDoc.cycleAnchorDate = '2026-01-01';
-              ruleDoc.cycleLength = 2;
+              ruleDoc.cycleLength = insValues.length;
+              
+              let cycles = [];
+              for(let i=0; i<insValues.length; i++) {
+                 cycles.push({
+                    field: { primaryId: insValues[i], backupId: insValues[(i+1)%insValues.length] },
+                    detailed: { primaryId: insValues[(i+1)%insValues.length], backupId: insValues[i] }
+                 });
+              }
+              
               ruleDoc.rosterConfig = {
-                odd: {
-                  field: { primaryId: insA, backupId: insB },
-                  detailed: { primaryId: insB, backupId: insA }
-                },
-                even: {
-                  field: { primaryId: insB, backupId: insA },
-                  detailed: { primaryId: insA, backupId: insB }
-                }
+                odd: cycles[0],
+                even: cycles[1 % cycles.length],
+                cycles: cycles
               };
             } else if (templateVal === 'day_of_week') {
               ruleDoc.ruleType = 'day_of_week';
