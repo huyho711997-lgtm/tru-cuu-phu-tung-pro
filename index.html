@@ -7225,7 +7225,14 @@ const scheduleEngine = new ScheduleEngine(dbService);
               ).join('');
             }
             
-            let labelTitle = isContinuous ? `Ca luân phiên ${i+1}` : (i===0 ? 'Ngày lẻ trực Hiện trường, ngày chẵn trực Chi tiết' : 'Ngày lẻ trực Chi tiết, ngày chẵn trực Hiện trường');
+            let labelTitle = "";
+            if (!isContinuous) {
+               labelTitle = (i===0) ? 'Ngày lẻ trực Hiện trường, ngày chẵn trực Chi tiết' : 'Ngày lẻ trực Chi tiết, ngày chẵn trực Hiện trường';
+            } else {
+               if (i === 0) labelTitle = 'Vị trí 1 (Lượt 1: Hiện trường)';
+               else if (i === 1) labelTitle = 'Vị trí 2 (Lượt 1: Chi tiết)';
+               else labelTitle = `Vị trí ${i+1} (Lượt 1: Nghỉ luân phiên)`;
+            }
             let labelBadge = isContinuous ? `Ca ${i+1}` : (i===0 ? 'Lẻ' : 'Chẵn');
 
             html += `
