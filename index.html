@@ -1573,6 +1573,26 @@
       background-color: #fee2e2 !important;
     }
   </style>
+  <style>
+    .btn-region-tab.active {
+      background: #ffffff !important;
+      color: #2563eb !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .btn-region-tab:hover:not(.active) {
+      background: rgba(255,255,255,0.6) !important;
+      color: #0f172a !important;
+    }
+    .premium-prov-card:hover {
+      border-color: #94a3b8 !important;
+    }
+    .premium-prov-card.is-selected:hover {
+      border-color: #2563eb !important;
+    }
+    .modal-content {
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -8515,40 +8535,30 @@ const scheduleEngine = new ScheduleEngine(dbService);
                   <input type="hidden" id="assign-target-zone-id" value="">
 
                   <!-- BỘ LỌC TÌM KIẾM & HÀNH ĐỘNG NHANH -->
-                  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 pb-3 border-bottom">
-                    <div class="position-relative" style="min-width: 280px; flex: 1;">
-                      <i data-lucide="search" class="text-muted position-absolute" style="left: 14px; top: 12px; width: 16px; height: 16px;"></i>
-                      <input type="text" class="form-control" id="modal-search-prov" placeholder="Tìm kiếm nhanh tên hoặc mã tỉnh..." style="padding-left: 40px; height: 40px; font-size: 13.5px; border-radius: 10px;">
+                  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <div class="position-relative" style="min-width: 320px; flex: 1;">
+                      <i data-lucide="search" class="position-absolute" style="left: 16px; top: 13px; width: 18px; height: 18px; color: #94a3b8;"></i>
+                      <input type="text" class="form-control bg-light border-0 shadow-sm" id="modal-search-prov" placeholder="Tìm kiếm nhanh tên hoặc mã tỉnh..." style="padding-left: 44px; height: 44px; font-size: 13.5px; border-radius: 12px; font-weight: 500; color: #334155;">
                     </div>
 
                     <div class="d-flex gap-2">
-                      <button type="button" class="btn btn-sm btn-outline-primary fw-semibold d-flex align-items-center gap-1.5 px-3" id="btn-select-all-tab" style="border-radius: 8px; font-size: 12.5px;">
-                        <i data-lucide="check-square" style="width: 14px; height: 14px;"></i> Chọn cả miền
+                      <button type="button" class="btn btn-sm btn-white fw-bold d-flex align-items-center gap-1.5 px-3 py-2 shadow-sm text-primary border" id="btn-select-all-tab" style="border-radius: 10px; font-size: 12.5px;">
+                        <i data-lucide="check-square" style="width: 15px; height: 15px;"></i> Chọn cả miền
                       </button>
-                      <button type="button" class="btn btn-sm btn-outline-secondary fw-semibold d-flex align-items-center gap-1.5 px-3" id="btn-deselect-all-tab" style="border-radius: 8px; font-size: 12.5px;">
-                        <i data-lucide="square" style="width: 14px; height: 14px;"></i> Bỏ chọn cả miền
+                      <button type="button" class="btn btn-sm btn-white fw-bold d-flex align-items-center gap-1.5 px-3 py-2 shadow-sm text-secondary border" id="btn-deselect-all-tab" style="border-radius: 10px; font-size: 12.5px;">
+                        <i data-lucide="square" style="width: 15px; height: 15px;"></i> Bỏ chọn cả miền
                       </button>
                     </div>
                   </div>
 
                   <!-- TABS VÙNG MIỀN -->
-                  <ul class="nav nav-pills mb-3 gap-2" id="region-tabs" role="tablist">
-                    <li class="nav-item">
-                      <button class="nav-link active py-1.5 px-3.5 fw-semibold" data-region="all" style="border-radius: 8px; font-size: 13px;">Tất cả (63)</button>
-                    </li>
-                    <li class="nav-item">
-                      <button class="nav-link py-1.5 px-3.5 fw-semibold" data-region="bac" style="border-radius: 8px; font-size: 13px;">Miền Bắc (25)</button>
-                    </li>
-                    <li class="nav-item">
-                      <button class="nav-link py-1.5 px-3.5 fw-semibold" data-region="trung" style="border-radius: 8px; font-size: 13px;">Miền Trung (14)</button>
-                    </li>
-                    <li class="nav-item">
-                      <button class="nav-link py-1.5 px-3.5 fw-semibold" data-region="tay_nguyen" style="border-radius: 8px; font-size: 13px;">Tây Nguyên (5)</button>
-                    </li>
-                    <li class="nav-item">
-                      <button class="nav-link py-1.5 px-3.5 fw-semibold" data-region="nam" style="border-radius: 8px; font-size: 13px;">Miền Nam (19)</button>
-                    </li>
-                  </ul>
+                  <div class="p-1.5 mb-4 d-inline-flex flex-wrap gap-1 bg-light border" style="border-radius: 12px;" id="region-tabs" role="tablist">
+                    <button class="nav-link btn-region-tab active fw-bold text-secondary" data-region="all" style="border-radius: 8px; font-size: 13px; padding: 6px 18px; border: none; background: transparent; transition: all 0.2s;">Tất cả (63)</button>
+                    <button class="nav-link btn-region-tab fw-bold text-secondary" data-region="bac" style="border-radius: 8px; font-size: 13px; padding: 6px 18px; border: none; background: transparent; transition: all 0.2s;">Miền Bắc (25)</button>
+                    <button class="nav-link btn-region-tab fw-bold text-secondary" data-region="trung" style="border-radius: 8px; font-size: 13px; padding: 6px 18px; border: none; background: transparent; transition: all 0.2s;">Miền Trung (14)</button>
+                    <button class="nav-link btn-region-tab fw-bold text-secondary" data-region="tay_nguyen" style="border-radius: 8px; font-size: 13px; padding: 6px 18px; border: none; background: transparent; transition: all 0.2s;">Tây Nguyên (5)</button>
+                    <button class="nav-link btn-region-tab fw-bold text-secondary" data-region="nam" style="border-radius: 8px; font-size: 13px; padding: 6px 18px; border: none; background: transparent; transition: all 0.2s;">Miền Nam (19)</button>
+                  </div>
 
                   <!-- GRID CHECKBOX CÁC TỈNH -->
                   <div class="row g-2.5" id="modal-provinces-grid">
@@ -8740,25 +8750,31 @@ const scheduleEngine = new ScheduleEngine(dbService);
             const regStyle = getRegionStyle(p.region);
 
             return `
-              <div class="col-md-3 col-sm-4 col-6 prov-item" data-region="${p.region || 'other'}">
-                <label class="p-2.5 border rounded-3 d-flex align-items-center justify-content-between gap-2 h-100 prov-card-label ${isChecked ? 'is-selected' : ''}">
-                  <div class="d-flex align-items-center gap-2 overflow-hidden">
-                    <input type="checkbox" class="form-check-input chk-prov m-0" value="${p.areaCode}" ${isChecked ? 'checked' : ''} style="cursor: pointer; flex-shrink: 0; width: 17px; height: 17px;">
-                    <div class="text-truncate">
-                      <span class="fw-bold text-dark d-block text-truncate" style="font-size: 13px;">${p.name}</span>
-                      <div class="d-flex align-items-center gap-1">
-                        <small class="text-muted font-monospace" style="font-size: 10.5px;">${p.areaCode}</small>
-                        <span class="badge px-1 py-0" style="font-size: 9.5px; background: ${regStyle.bg}; color: ${regStyle.color}; border: 1px solid ${regStyle.border}; border-radius: 4px;">${getRegionName(p.region)}</span>
+                <div class="col-md-3 col-sm-4 col-6 prov-item" data-region="${p.region || 'other'}">
+                  <label class="prov-card-label premium-prov-card w-100 h-100 position-relative ${isChecked ? 'is-selected' : ''}" style="cursor: pointer; border-radius: 12px; padding: 14px 12px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1.5px solid ${isChecked ? '#3b82f6' : '#e2e8f0'}; background: ${isChecked ? '#eff6ff' : '#ffffff'}; display: flex; flex-direction: column; justify-content: space-between; min-height: 85px; ${isChecked ? 'box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);' : 'box-shadow: 0 2px 4px rgba(0,0,0,0.02);'}">
+                    <input type="checkbox" class="d-none chk-prov" value="${p.areaCode}" ${isChecked ? 'checked' : ''}>
+                    
+                    <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                      <div class="text-truncate">
+                        <span class="fw-bold d-block text-truncate" style="font-size: 13.5px; color: ${isChecked ? '#1e3a8a' : '#334155'}; transition: color 0.2s;">${p.name}</span>
+                        <small class="font-monospace" style="font-size: 11px; color: ${isChecked ? '#60a5fa' : '#94a3b8'}; transition: color 0.2s;">${p.areaCode}</small>
+                      </div>
+                      <div class="check-indicator d-flex align-items-center justify-content-center flex-shrink-0" style="width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid ${isChecked ? '#3b82f6' : '#cbd5e1'}; background: ${isChecked ? '#3b82f6' : '#ffffff'}; transition: all 0.2s;">
+                        <i data-lucide="check" class="check-icon" style="width: 12px; height: 12px; color: #ffffff; opacity: ${isChecked ? '1' : '0'}; transition: opacity 0.2s;"></i>
                       </div>
                     </div>
-                  </div>
-                  ${isOther ? `<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle text-nowrap" style="font-size: 9.5px;" title="Đang gán cho ${otherZone.name}">Thuộc: ${otherZone.name}</span>` : ''}
-                </label>
-              </div>
-            `;
+                    
+                    <div class="d-flex align-items-center justify-content-between mt-auto pt-1">
+                      <span class="badge px-1.5 py-0.5" style="font-size: 9.5px; background: ${isChecked ? '#dbeafe' : regStyle.bg}; color: ${isChecked ? '#2563eb' : regStyle.color}; border: 1px solid ${isChecked ? '#bfdbfe' : regStyle.border}; border-radius: 4px; font-weight: 600; transition: all 0.2s;">${getRegionName(p.region)}</span>
+                      ${isOther ? `<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle text-nowrap" style="font-size: 9px; padding: 3px 6px;" title="Đang gán cho ${otherZone.name}">Thuộc: ${otherZone.name}</span>` : ''}
+                    </div>
+                  </label>
+                </div>
+              `;
           }).join('');
 
           container.querySelector('#modal-selected-count').innerText = activeSelectedSet.size;
+          lucide.createIcons();
 
           grid.querySelectorAll('.chk-prov').forEach(chk => {
             chk.addEventListener('change', (e) => {
