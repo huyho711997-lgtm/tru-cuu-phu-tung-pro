@@ -7204,8 +7204,17 @@ const scheduleEngine = new ScheduleEngine(dbService);
         // Hàm cập nhật Live Preview cho Mẫu 1
         window.cycleCount = 2;
         const renderCycleInspectors = (count) => {
+          const isContinuous = container.querySelector('#cycle-mode-continuous').checked;
+          if (!isContinuous) count = 2;
+
           window.cycleCount = count;
           const containerBox = container.querySelector('#cycle-inspectors-container');
+          const btnAdd = container.querySelector('#btn-add-cycle-ins');
+          
+          if (btnAdd) {
+             btnAdd.style.display = isContinuous ? 'inline-block' : 'none';
+          }
+
           if (!containerBox) return;
           let html = '';
           for(let i=0; i<count; i++) {
@@ -7215,13 +7224,17 @@ const scheduleEngine = new ScheduleEngine(dbService);
                 `<option value="${ins.inspectorId}" ${idx === (i % window.currentZoneInspectors.length) ? 'selected' : ''}>${ins.fullName} (${ins.empCode || 'GĐV'})</option>`
               ).join('');
             }
+            
+            let labelTitle = isContinuous ? `Ca luân phiên ${i+1}` : (i===0 ? 'Ngày lẻ trực Hiện trường, ngày chẵn trực Chi tiết' : 'Ngày lẻ trực Chi tiết, ngày chẵn trực Hiện trường');
+            let labelBadge = isContinuous ? `Ca ${i+1}` : (i===0 ? 'Lẻ' : 'Chẵn');
+
             html += `
               <div class="col-md-6 cycle-item" data-idx="${i}">
                 <div class="p-3 bg-white rounded-3 border shadow-sm h-100 position-relative">
-                  ${count > 2 ? `<button type="button" class="btn-close btn-remove-cycle position-absolute top-0 end-0 m-2" style="font-size: 10px;" onclick="removeCycle(${i})"></button>` : ''}
+                  ${(isContinuous && count > 2) ? `<button type="button" class="btn-close btn-remove-cycle position-absolute top-0 end-0 m-2" style="font-size: 10px;" onclick="removeCycle(${i})"></button>` : ''}
                   <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="field-label text-primary mb-0" style="text-transform: none; font-size: 13px; font-weight: 700;">Ca luân phiên ${i+1}</span>
-                    <span class="badge-soft badge-soft-blue">Ca ${i+1}</span>
+                    <span class="field-label text-primary mb-0" style="text-transform: none; font-size: 13px; font-weight: 700;">${labelTitle}</span>
+                    <span class="badge-soft badge-soft-blue">${labelBadge}</span>
                   </div>
                   <select class="form-select form-select-luxury cycle-select" required style="height: 44px; border-radius: 8px;">
                     ${options}
@@ -7249,10 +7262,20 @@ const scheduleEngine = new ScheduleEngine(dbService);
             renderCycleInspectors(window.cycleCount + 1);
           });
         }
+        
+        container.querySelectorAll('input[name="cycleMode"]').forEach(radio => {
+           radio.addEventListener('change', () => {
+              const isContinuous = container.querySelector('#cycle-mode-continuous').checked;
+              let newCount = isContinuous ? (window.currentZoneInspectors ? Math.max(2, window.currentZoneInspectors.length) : 2) : 2;
+              renderCycleInspectors(newCount);
+           });
+        });
 
         const updatePreview = () => {
           const tbody = container.querySelector('#preview-cycle-tbody');
           if(!tbody) return;
+          const isContinuous = container.querySelector('#cycle-mode-continuous').checked;
+          
           let selects = container.querySelectorAll('.cycle-select');
           if (selects.length === 0) return;
           let names = Array.from(selects).map(s => {
@@ -7263,11 +7286,12 @@ const scheduleEngine = new ScheduleEngine(dbService);
           let html = '';
           const rowCount = Math.max(4, names.length);
           for(let i=0; i<rowCount; i++) {
-             let fieldName = names[i % names.length];
-             let detailName = names[(i+1) % names.length];
+             let fieldName = isContinuous ? names[i % names.length] : names[i % 2];
+             let detailName = isContinuous ? names[(i+1) % names.length] : names[(i+1) % 2];
+             let label = isContinuous ? `Lượt ${i+1}` : `Ngày ${i+1} (${(i+1)%2===0 ? 'Chẵn' : 'Lẻ'})`;
              html += `
               <tr>
-                <td><span class="badge bg-light text-dark border w-100">Lượt ${i+1}</span></td>
+                <td><span class="badge bg-light text-dark border w-100">${label}</span></td>
                 <td class="fw-bold text-primary">${fieldName}</td>
                 <td class="fw-bold text-success">${detailName}</td>
               </tr>
