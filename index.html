@@ -1515,6 +1515,18 @@
         color: #0f172a;
       }
 
+      
+      .premium-dropdown-item {
+        border-radius: 8px;
+        margin: 2px 8px;
+        padding: 8px 12px;
+        transition: all 0.2s;
+      }
+      .premium-dropdown-item:hover, .premium-dropdown-item.active {
+        background-color: #eff6ff !important;
+        color: #2563eb !important;
+      }
+
       /* PREMIUM RADIO CARDS WARD OVERLAY HOVER EFFECTS */
     .task-radio-card .task-card-inner:hover {
       border-color: #bfdbfe;
@@ -7226,7 +7238,10 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
         window.updateWardRowField = (id, field, val) => {
            const r = window.wardAssignments.find(x => x.id === id);
-           if(r) r[field] = val;
+           if(r) {
+               r[field] = val;
+               renderWardAssignmentRows();
+           }
         };
 
         window.openWardPickerForRow = (id) => {
@@ -7271,17 +7286,30 @@ const scheduleEngine = new ScheduleEngine(dbService);
                  </div>
                  <div class="col-md-3">
                    <label class="fw-bold text-dark mb-1" style="font-size: 11px; text-transform: uppercase;">2. Nhiệm Vụ <span class="text-danger">*</span></label>
-                   <select class="form-select form-select-luxury fw-bold text-primary" style="height: 44px; background-color: #f8fafc !important;" onchange="updateWardRowField(${row.id}, 'taskType', this.value)">
-                     <option value="both" ${row.taskType === 'both' ? 'selected' : ''}>Cả Hai</option>
-                     <option value="field" ${row.taskType === 'field' ? 'selected' : ''}>Hiện Trường</option>
-                     <option value="detailed" ${row.taskType === 'detailed' ? 'selected' : ''}>Chi Tiết</option>
-                   </select>
+                   <div class="dropdown w-100">
+                     <button class="form-select form-select-luxury fw-bold text-primary text-start w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="dropdown" style="height: 44px; background-color: #f8fafc !important;">
+                       ${row.taskType === 'both' ? 'Cả Hai' : (row.taskType === 'field' ? 'Hiện Trường' : 'Chi Tiết')}
+                     </button>
+                     <ul class="dropdown-menu w-100 shadow-sm border-0" style="border-radius: 12px; padding: 8px 0; border: 1px solid #e2e8f0 !important; z-index: 1050;">
+                       <li><a class="dropdown-item premium-dropdown-item fw-bold text-dark ${row.taskType === 'both' ? 'active' : ''}" href="#" onclick="updateWardRowField(${row.id}, 'taskType', 'both'); return false;">Cả Hai</a></li>
+                       <li><a class="dropdown-item premium-dropdown-item fw-bold text-dark ${row.taskType === 'field' ? 'active' : ''}" href="#" onclick="updateWardRowField(${row.id}, 'taskType', 'field'); return false;">Hiện Trường</a></li>
+                       <li><a class="dropdown-item premium-dropdown-item fw-bold text-dark ${row.taskType === 'detailed' ? 'active' : ''}" href="#" onclick="updateWardRowField(${row.id}, 'taskType', 'detailed'); return false;">Chi Tiết</a></li>
+                     </ul>
+                   </div>
                  </div>
                  <div class="col-md-4">
                    <label class="fw-bold text-dark mb-1" style="font-size: 11px; text-transform: uppercase;">3. GĐV Phụ Trách <span class="text-danger">*</span></label>
-                   <select class="form-select form-select-luxury fw-bold text-dark" style="height: 44px; background-color: #f8fafc !important;" onchange="updateWardRowField(${row.id}, 'primaryId', this.value)">
-                     ${insOptions.replace(`value="${row.primaryId}"`, `value="${row.primaryId}" selected`)}
-                   </select>
+                   <div class="dropdown w-100">
+                     <button class="form-select form-select-luxury fw-bold text-dark text-start w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="dropdown" style="height: 44px; background-color: #f8fafc !important;">
+                       <span class="text-truncate">${row.primaryId ? (window.currentZoneInspectors?.find(i => i.inspectorId === row.primaryId)?.fullName || '-- Chọn GĐV --') : '-- Chọn GĐV --'}</span>
+                     </button>
+                     <ul class="dropdown-menu w-100 shadow-sm border-0" style="border-radius: 12px; padding: 8px 0; border: 1px solid #e2e8f0 !important; max-height: 250px; overflow-y: auto; z-index: 1050;">
+                       <li><a class="dropdown-item premium-dropdown-item fw-bold text-muted" href="#" onclick="updateWardRowField(${row.id}, 'primaryId', ''); return false;">-- Chọn GĐV --</a></li>
+                       ${(window.currentZoneInspectors || []).map(i => `
+                         <li><a class="dropdown-item premium-dropdown-item fw-bold text-dark ${row.primaryId === i.inspectorId ? 'active' : ''}" href="#" onclick="updateWardRowField(${row.id}, 'primaryId', '${i.inspectorId}'); return false;">${i.fullName} <span class="text-muted fw-normal" style="font-size: 12px;">(${i.empCode || 'GĐV'})</span></a></li>
+                       `).join('')}
+                     </ul>
+                   </div>
                  </div>
                </div>
              </div>
