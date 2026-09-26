@@ -6088,18 +6088,24 @@ const scheduleEngine = new ScheduleEngine(dbService);
                           <div class="dropdown-menu-luxury d-none" id="menu-lookup-time" style="min-width:100%;padding:8px;">
                             <div class="luxury-options-list" id="list-time-options">
                               <div class="luxury-option-item is-selected" data-value="now" data-name="Thời điểm hiện tại" data-desc="Truy vấn theo lịch trực hiện hành" data-icon="clock">
-                                <div class="option-content">
-                                  <div class="option-name">Thời điểm hiện tại</div>
-                                  <div class="option-desc">Truy vấn theo lịch trực hiện hành</div>
+                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                  <div class="option-icon" style="background:#eff6ff;color:#2563eb;"><i data-lucide="clock" style="width:16px;height:16px;"></i></div>
+                                  <div class="option-content">
+                                    <div class="option-title">Thời điểm hiện tại</div>
+                                    <div class="option-desc">Truy vấn theo lịch trực hiện hành</div>
+                                  </div>
                                 </div>
-                                <div class="option-check"><i data-lucide="check"></i></div>
+                                <div class="option-check" style="width:19px;height:19px;"><i data-lucide="check" style="width:11px;height:11px;"></i></div>
                               </div>
                               <div class="luxury-option-item" data-value="custom" data-name="Chọn ngày &amp; giờ khác" data-desc="Truy vấn theo ca trực tùy chỉnh" data-icon="calendar-clock">
-                                <div class="option-content">
-                                  <div class="option-name">Chọn ngày &amp; giờ khác</div>
-                                  <div class="option-desc">Truy vấn theo ca trực tùy chỉnh</div>
+                                <div class="d-flex align-items-center gap-2.5 overflow-hidden">
+                                  <div class="option-icon" style="background:#eff6ff;color:#2563eb;"><i data-lucide="calendar-clock" style="width:16px;height:16px;"></i></div>
+                                  <div class="option-content">
+                                    <div class="option-title">Chọn ngày &amp; giờ khác</div>
+                                    <div class="option-desc">Truy vấn theo ca trực tùy chỉnh</div>
+                                  </div>
                                 </div>
-                                <div class="option-check d-none"><i data-lucide="check"></i></div>
+                                <div class="option-check d-none" style="width:19px;height:19px;"><i data-lucide="check" style="width:11px;height:11px;"></i></div>
                               </div>
                             </div>
                           </div>
@@ -6213,6 +6219,12 @@ const scheduleEngine = new ScheduleEngine(dbService);
           wrapWard.classList.remove('is-open');
           menuWard.classList.add('d-none');
           btnWard.setAttribute('aria-expanded', 'false');
+
+          if (typeof wrapTime !== 'undefined' && wrapTime) {
+            wrapTime.classList.remove('is-open');
+            menuTime.classList.add('d-none');
+            btnTime.setAttribute('aria-expanded', 'false');
+          }
 
           if (isOpen) {
             wrapProv.classList.remove('is-open');
@@ -6387,6 +6399,12 @@ const scheduleEngine = new ScheduleEngine(dbService);
           wrapProv.classList.remove('is-open');
           menuProv.classList.add('d-none');
           btnProv.setAttribute('aria-expanded', 'false');
+
+          if (typeof wrapTime !== 'undefined' && wrapTime) {
+            wrapTime.classList.remove('is-open');
+            menuTime.classList.add('d-none');
+            btnTime.setAttribute('aria-expanded', 'false');
+          }
 
           if (isOpen) {
             wrapWard.classList.remove('is-open');
