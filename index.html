@@ -6344,17 +6344,33 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         </div>
                       </div>
 
-                      <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                          <label class="field-label mb-0">Danh sách Giám định viên luân phiên trong chu kỳ:</label>
-                          <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2" id="btn-add-cycle-ins" style="font-size: 11px; font-weight: 700;">
-                            <i data-lucide="plus" style="width: 14px;"></i> Thêm Ca Luân Phiên
-                          </button>
+                      <div class="mb-4" id="even-odd-wrapper">
+                          <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="field-label mb-0">Danh sách Giám định viên luân phiên:</label>
+                          </div>
+                          <div class="row g-3" id="even-odd-inspectors-container">
+                            <!-- JS will render 2 select boxes here -->
+                          </div>
                         </div>
-                        <div class="row g-3" id="cycle-inspectors-container">
-                          <!-- JS will render select boxes here -->
+
+                        <div class="mb-4 d-none" id="continuous-wrapper">
+                          <div class="row g-4">
+                            <div class="col-md-6">
+                              <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="field-label mb-0 text-primary">Luân phiên Hiện trường:</label>
+                                <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2" onclick="addContinuousCycle('field')" style="font-size: 11px; font-weight: 700;">+ Thêm Ca</button>
+                              </div>
+                              <div class="row g-2" id="continuous-field-container"></div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="field-label mb-0 text-success">Luân phiên Chi tiết:</label>
+                                <button type="button" class="btn btn-sm btn-outline-success py-1 px-2" onclick="addContinuousCycle('detailed')" style="font-size: 11px; font-weight: 700;">+ Thêm Ca</button>
+                              </div>
+                              <div class="row g-2" id="continuous-detailed-container"></div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
 
                       <!-- BẢNG LIVE PREVIEW SINH LỊCH -->
                       <div class="bg-white p-3 rounded-3 border shadow-sm">
@@ -7202,79 +7218,78 @@ const scheduleEngine = new ScheduleEngine(dbService);
         }
 
         // Hàm cập nhật Live Preview cho Mẫu 1
-        window.cycleCount = 2;
-        const renderCycleInspectors = (count) => {
+        window.fieldCycleCount = 2;
+        window.detailedCycleCount = 2;
+        
+        window.addContinuousCycle = (type) => {
+           if(type === 'field') { window.fieldCycleCount++; }
+           else { window.detailedCycleCount++; }
+           renderCycleInspectors();
+        };
+        window.removeContinuousCycle = (type, idx) => {
+           if(type === 'field' && window.fieldCycleCount > 1) window.fieldCycleCount--;
+           if(type === 'detailed' && window.detailedCycleCount > 1) window.detailedCycleCount--;
+           renderCycleInspectors();
+        };
+
+        const renderCycleInspectors = () => {
           const isContinuous = container.querySelector('#cycle-mode-continuous').checked;
-          if (!isContinuous) count = 2;
-
-          window.cycleCount = count;
-          const containerBox = container.querySelector('#cycle-inspectors-container');
-          const btnAdd = container.querySelector('#btn-add-cycle-ins');
+          const wrapperEvenOdd = container.querySelector('#even-odd-wrapper');
+          const wrapperContinuous = container.querySelector('#continuous-wrapper');
           
-          if (btnAdd) {
-             btnAdd.style.display = isContinuous ? 'inline-block' : 'none';
-          }
+          if(wrapperEvenOdd) wrapperEvenOdd.classList.toggle('d-none', isContinuous);
+          if(wrapperContinuous) wrapperContinuous.classList.toggle('d-none', !isContinuous);
 
-          if (!containerBox) return;
-          let html = '';
-          for(let i=0; i<count; i++) {
-            let options = '<option value="">-- Chọn GĐV --</option>';
-            if(window.currentZoneInspectors && window.currentZoneInspectors.length > 0) {
-              options = window.currentZoneInspectors.map((ins, idx) => 
-                `<option value="${ins.inspectorId}" ${idx === (i % window.currentZoneInspectors.length) ? 'selected' : ''}>${ins.fullName} (${ins.empCode || 'GĐV'})</option>`
-              ).join('');
-            }
-            
-            let labelTitle = "";
-            if (!isContinuous) {
-               labelTitle = (i===0) ? 'Ngày lẻ trực Hiện trường, ngày chẵn trực Chi tiết' : 'Ngày lẻ trực Chi tiết, ngày chẵn trực Hiện trường';
-            } else {
-               if (i === 0) labelTitle = 'Vị trí 1 (Lượt 1: Hiện trường)';
-               else if (i === 1) labelTitle = 'Vị trí 2 (Lượt 1: Chi tiết)';
-               else labelTitle = `Vị trí ${i+1} (Lượt 1: Nghỉ luân phiên)`;
-            }
-            let labelBadge = isContinuous ? `Ca ${i+1}` : (i===0 ? 'Lẻ' : 'Chẵn');
-
-            html += `
-              <div class="col-md-6 cycle-item" data-idx="${i}">
-                <div class="p-3 bg-white rounded-3 border shadow-sm h-100 position-relative">
-                  ${(isContinuous && count > 2) ? `<button type="button" class="btn-close btn-remove-cycle position-absolute top-0 end-0 m-2" style="font-size: 10px;" onclick="removeCycle(${i})"></button>` : ''}
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="field-label text-primary mb-0" style="text-transform: none; font-size: 13px; font-weight: 700;">${labelTitle}</span>
-                    <span class="badge-soft badge-soft-blue">${labelBadge}</span>
+          const renderSelects = (count, containerId, typeClass, labelPrefix, colorClass, preselectedIndexOffset = 0) => {
+            const box = container.querySelector('#' + containerId);
+            if (!box) return;
+            let html = '';
+            for(let i=0; i<count; i++) {
+              let options = '<option value="">-- Chọn GĐV --</option>';
+              if(window.currentZoneInspectors && window.currentZoneInspectors.length > 0) {
+                options = window.currentZoneInspectors.map((ins, idx) => 
+                  `<option value="${ins.inspectorId}" ${idx === ((i + preselectedIndexOffset) % window.currentZoneInspectors.length) ? 'selected' : ''}>${ins.fullName} (${ins.empCode || 'GĐV'})</option>`
+                ).join('');
+              }
+              
+              html += `
+                <div class="col-12 cycle-item" data-idx="${i}">
+                  <div class="p-2 bg-white rounded-3 border shadow-sm position-relative">
+                    ${(isContinuous && count > 1) ? `<button type="button" class="btn-close btn-remove-cycle position-absolute top-50 end-0 translate-middle-y me-2" style="font-size: 10px;" onclick="removeContinuousCycle('${typeClass}', ${i})"></button>` : ''}
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <span class="badge-soft badge-soft-${colorClass}" style="font-size: 10px;">${labelPrefix} ${i+1}</span>
+                    </div>
+                    <select class="form-select form-select-sm form-select-luxury cycle-select-${typeClass}" required style="border-radius: 6px; ${isContinuous && count > 1 ? 'padding-right: 25px;' : ''}">
+                      ${options}
+                    </select>
                   </div>
-                  <select class="form-select form-select-luxury cycle-select" required style="height: 44px; border-radius: 8px;">
-                    ${options}
-                  </select>
                 </div>
-              </div>
-            `;
+              `;
+            }
+            box.innerHTML = html;
+            box.querySelectorAll('select').forEach(sel => sel.addEventListener('change', updatePreview));
+          };
+
+          if (!isContinuous) {
+            renderSelects(2, 'even-odd-inspectors-container', 'even-odd', 'Vị trí', 'blue');
+            const items = container.querySelectorAll('#even-odd-inspectors-container .badge-soft');
+            if(items[0]) items[0].innerText = 'Lẻ Hiện trường, Chẵn Chi tiết';
+            if(items[1]) items[1].innerText = 'Lẻ Chi tiết, Chẵn Hiện trường';
+          } else {
+            renderSelects(window.fieldCycleCount, 'continuous-field-container', 'field', 'Lượt', 'blue', 0);
+            renderSelects(window.detailedCycleCount, 'continuous-detailed-container', 'detailed', 'Lượt', 'green', 1);
           }
-          containerBox.innerHTML = html;
           
-          containerBox.querySelectorAll('.cycle-select').forEach(sel => {
-            sel.addEventListener('change', updatePreview);
-          });
           updatePreview();
         };
-
-        window.removeCycle = (idx) => {
-           if(window.cycleCount <= 2) return;
-           renderCycleInspectors(window.cycleCount - 1);
-        };
-
-        const btnAddCycle = container.querySelector('#btn-add-cycle-ins');
-        if (btnAddCycle) {
-          btnAddCycle.addEventListener('click', () => {
-            renderCycleInspectors(window.cycleCount + 1);
-          });
-        }
         
         container.querySelectorAll('input[name="cycleMode"]').forEach(radio => {
            radio.addEventListener('change', () => {
-              const isContinuous = container.querySelector('#cycle-mode-continuous').checked;
-              let newCount = isContinuous ? (window.currentZoneInspectors ? Math.max(2, window.currentZoneInspectors.length) : 2) : 2;
-              renderCycleInspectors(newCount);
+              if (window.currentZoneInspectors) {
+                 window.fieldCycleCount = window.currentZoneInspectors.length || 2;
+                 window.detailedCycleCount = window.currentZoneInspectors.length || 2;
+              }
+              renderCycleInspectors();
            });
         });
 
@@ -7282,27 +7297,29 @@ const scheduleEngine = new ScheduleEngine(dbService);
           const tbody = container.querySelector('#preview-cycle-tbody');
           if(!tbody) return;
           const isContinuous = container.querySelector('#cycle-mode-continuous').checked;
-          
-          let selects = container.querySelectorAll('.cycle-select');
-          if (selects.length === 0) return;
-          let names = Array.from(selects).map(s => {
-             const opt = s.querySelector('option:checked');
-             return opt ? opt.text.split('(')[0].trim() : 'Chưa chọn';
-          });
-          
           let html = '';
-          const rowCount = Math.max(4, names.length);
-          for(let i=0; i<rowCount; i++) {
-             let fieldName = isContinuous ? names[i % names.length] : names[i % 2];
-             let detailName = isContinuous ? names[(i+1) % names.length] : names[(i+1) % 2];
-             let label = isContinuous ? `Lượt ${i+1}` : `Ngày ${i+1} (${(i+1)%2===0 ? 'Chẵn' : 'Lẻ'})`;
-             html += `
-              <tr>
-                <td><span class="badge bg-light text-dark border w-100">${label}</span></td>
-                <td class="fw-bold text-primary">${fieldName}</td>
-                <td class="fw-bold text-success">${detailName}</td>
-              </tr>
-             `;
+          
+          if (!isContinuous) {
+             const selects = container.querySelectorAll('.cycle-select-even-odd');
+             if(selects.length < 2) return;
+             const nameA = (selects[0].querySelector('option:checked')?.text.split('(')[0].trim()) || 'Chưa chọn';
+             const nameB = (selects[1].querySelector('option:checked')?.text.split('(')[0].trim()) || 'Chưa chọn';
+             html += `<tr><td><span class="badge bg-light text-dark border w-100">Ngày Lẻ</span></td><td class="fw-bold text-primary">${nameA}</td><td class="fw-bold text-success">${nameB}</td></tr>`;
+             html += `<tr><td><span class="badge bg-light text-dark border w-100">Ngày Chẵn</span></td><td class="fw-bold text-primary">${nameB}</td><td class="fw-bold text-success">${nameA}</td></tr>`;
+          } else {
+             const selF = Array.from(container.querySelectorAll('.cycle-select-field')).map(s => s.querySelector('option:checked')?.text.split('(')[0].trim() || 'Chưa chọn');
+             const selD = Array.from(container.querySelectorAll('.cycle-select-detailed')).map(s => s.querySelector('option:checked')?.text.split('(')[0].trim() || 'Chưa chọn');
+             
+             if(selF.length === 0 || selD.length === 0) return;
+             
+             const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+             const lcm = (a, b) => (a * b) / gcd(a, b);
+             let totalRows = Math.max(4, lcm(selF.length, selD.length));
+             if (totalRows > 12) totalRows = 12;
+             
+             for(let i=0; i<totalRows; i++) {
+                html += `<tr><td><span class="badge bg-light text-dark border w-100">Lượt ${i+1}</span></td><td class="fw-bold text-primary">${selF[i % selF.length]}</td><td class="fw-bold text-success">${selD[i % selD.length]}</td></tr>`;
+             }
           }
           tbody.innerHTML = html;
         };
@@ -7366,11 +7383,10 @@ const scheduleEngine = new ScheduleEngine(dbService);
           }
 
           // 1. Cập nhật Mẫu 1: cycle-inspectors-container
-          const cycleContainer = container.querySelector('#cycle-inspectors-container');
-          if (cycleContainer) {
-            window.currentZoneInspectors = zoneInspectors;
-            renderCycleInspectors(zoneInspectors.length === 0 ? 2 : Math.max(2, zoneInspectors.length));
-          }
+          window.currentZoneInspectors = zoneInspectors;
+            window.fieldCycleCount = zoneInspectors.length || 2;
+            window.detailedCycleCount = zoneInspectors.length || 2;
+            renderCycleInspectors();
 
           // 2. Cập nhật Mẫu 2: Thứ trong tuần
           container.querySelectorAll('.sel-dow-inspector').forEach((sel, selIdx) => {
@@ -7677,38 +7693,48 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             if (templateVal === 'even_odd') {
               const cycleMode = container.querySelector('input[name="cycleMode"]:checked').value;
-              const selects = Array.from(container.querySelectorAll('.cycle-select'));
-              const insValues = selects.map(s => s.value);
-              
-              if (insValues.some(v => !v)) {
-                showToast(`Vui lòng chọn đủ Giám định viên cho tất cả các ca luân phiên!`, "error");
-                btn.disabled = false;
-                return;
-              }
-              if (new Set(insValues).size !== insValues.length) {
-                showToast("Các Giám định viên trong chu kỳ phải khác nhau!", "error");
-                btn.disabled = false;
-                return;
-              }
-
               ruleDoc.ruleType = cycleMode;
               ruleDoc.taskType = 'both';
               ruleDoc.cycleAnchorDate = '2026-01-01';
-              ruleDoc.cycleLength = insValues.length;
               
-              let cycles = [];
-              for(let i=0; i<insValues.length; i++) {
-                 cycles.push({
-                    field: { primaryId: insValues[i], backupId: insValues[(i+1)%insValues.length] },
-                    detailed: { primaryId: insValues[(i+1)%insValues.length], backupId: insValues[i] }
-                 });
+              if (cycleMode === 'even_odd') {
+                 const selects = Array.from(container.querySelectorAll('.cycle-select-even-odd')).map(s => s.value);
+                 if(selects.includes('')) { showToast("Vui lòng chọn đủ GĐV!", "error"); btn.disabled = false; return; }
+                 if(selects[0] === selects[1]) { showToast("2 GĐV phải khác nhau!", "error"); btn.disabled = false; return; }
+                 
+                 ruleDoc.cycleLength = 2;
+                 ruleDoc.rosterConfig = {
+                   odd: { field: { primaryId: selects[0] }, detailed: { primaryId: selects[1] } },
+                   even: { field: { primaryId: selects[1] }, detailed: { primaryId: selects[0] } },
+                   cycles: [
+                     { field: { primaryId: selects[0] }, detailed: { primaryId: selects[1] } },
+                     { field: { primaryId: selects[1] }, detailed: { primaryId: selects[0] } }
+                   ]
+                 };
+              } else {
+                 const selF = Array.from(container.querySelectorAll('.cycle-select-field')).map(s => s.value);
+                 const selD = Array.from(container.querySelectorAll('.cycle-select-detailed')).map(s => s.value);
+                 if(selF.includes('') || selD.includes('')) { showToast("Vui lòng chọn đủ GĐV!", "error"); btn.disabled = false; return; }
+                 
+                 const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                 const lcm = (a, b) => (a * b) / gcd(a, b);
+                 const totalLen = lcm(selF.length, selD.length);
+                 
+                 let cycles = [];
+                 for(let i=0; i<totalLen; i++) {
+                    cycles.push({
+                       field: { primaryId: selF[i % selF.length], backupId: null },
+                       detailed: { primaryId: selD[i % selD.length], backupId: null }
+                    });
+                 }
+                 
+                 ruleDoc.cycleLength = totalLen;
+                 ruleDoc.rosterConfig = {
+                    odd: cycles[0],
+                    even: cycles[1 % totalLen],
+                    cycles: cycles
+                 };
               }
-              
-              ruleDoc.rosterConfig = {
-                odd: cycles[0],
-                even: cycles[1 % cycles.length],
-                cycles: cycles
-              };
             } else if (templateVal === 'day_of_week') {
               ruleDoc.ruleType = 'day_of_week';
               ruleDoc.taskType = 'both';
