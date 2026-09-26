@@ -1306,80 +1306,77 @@
   
     /* KPI Cards inspired by Modern Sample Dashboard */
     .kpi-card-sample {
-      border-radius: 18px;
+      border-radius: 12px;
       padding: 16px 20px;
       display: flex;
       align-items: center;
       gap: 16px;
-      color: #ffffff;
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      border: none;
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
       position: relative;
       overflow: hidden;
       cursor: default;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .kpi-card-sample:hover {
       transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
     }
 
-    .kpi-card-sample.purple {
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      box-shadow: 0 10px 22px -3px rgba(124, 58, 237, 0.4);
-    }
-    .kpi-card-sample.purple:hover {
-      box-shadow: 0 14px 28px -3px rgba(124, 58, 237, 0.55);
-    }
-
-    .kpi-card-sample.blue {
-      background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-      box-shadow: 0 10px 22px -3px rgba(37, 99, 235, 0.4);
-    }
-    .kpi-card-sample.blue:hover {
-      box-shadow: 0 14px 28px -3px rgba(37, 99, 235, 0.55);
+    .kpi-card-sample::before {
+      content: '';
+      position: absolute;
+      top: -24px;
+      right: -24px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      z-index: 0;
+      opacity: 0.6;
     }
 
-    .kpi-card-sample.coral {
-      background: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
-      box-shadow: 0 10px 22px -3px rgba(244, 63, 94, 0.4);
-    }
-    .kpi-card-sample.coral:hover {
-      box-shadow: 0 14px 28px -3px rgba(244, 63, 94, 0.55);
-    }
+    .kpi-card-sample.purple { border-color: #f3e8ff; }
+    .kpi-card-sample.purple::before { background-color: #f3e8ff; }
 
-    .kpi-card-sample.orange {
-      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-      box-shadow: 0 10px 22px -3px rgba(249, 115, 22, 0.4);
-    }
-    .kpi-card-sample.orange:hover {
-      box-shadow: 0 14px 28px -3px rgba(249, 115, 22, 0.55);
-    }
+    .kpi-card-sample.blue { border-color: #dbeafe; }
+    .kpi-card-sample.blue::before { background-color: #dbeafe; }
+
+    .kpi-card-sample.green { border-color: #dcfce7; }
+    .kpi-card-sample.green::before { background-color: #dcfce7; }
+
+    .kpi-card-sample.orange { border-color: #ffedd5; }
+    .kpi-card-sample.orange::before { background-color: #ffedd5; }
+    
+    .kpi-card-sample.coral { border-color: #ffe4e6; }
+    .kpi-card-sample.coral::before { background-color: #ffe4e6; }
 
     .kpi-circle-icon {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.25);
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
       flex-shrink: 0;
-      transition: transform 0.22s ease, background 0.22s ease;
+      z-index: 1;
+      transition: transform 0.22s ease;
     }
+
+    .kpi-card-sample.purple .kpi-circle-icon { background: #f3e8ff; color: #7e22ce; }
+    .kpi-card-sample.blue .kpi-circle-icon { background: #dbeafe; color: #1d4ed8; }
+    .kpi-card-sample.green .kpi-circle-icon { background: #dcfce7; color: #15803d; }
+    .kpi-card-sample.orange .kpi-circle-icon { background: #ffedd5; color: #c2410c; }
+    .kpi-card-sample.coral .kpi-circle-icon { background: #ffe4e6; color: #e11d48; }
 
     .kpi-card-sample:hover .kpi-circle-icon {
       transform: scale(1.08);
-      background: rgba(255, 255, 255, 0.32);
     }
 
     .kpi-circle-icon svg {
-      width: 22px;
-      height: 22px;
-      color: #ffffff;
+      width: 20px;
+      height: 20px;
       stroke-width: 2.2;
     }
 
@@ -1388,22 +1385,22 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
+      z-index: 1;
     }
 
     .kpi-sample-number {
-      font-size: 23px;
+      font-size: 22px;
       font-weight: 800;
-      color: #ffffff;
+      color: #0f172a;
       line-height: 1.15;
       letter-spacing: -0.02em;
     }
 
     .kpi-sample-label {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.92);
-      line-height: 1.25;
-      margin-top: 3px;
+      color: #64748b;
+      margin-top: 4px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -5883,7 +5880,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             <!-- 3. Mẫu Chẵn / Lẻ (Coral / Red-Pink) -->
             <div class="col-6 col-lg-3">
-              <div class="kpi-card-sample coral">
+              <div class="kpi-card-sample green">
                 <div class="kpi-circle-icon">
                   <i data-lucide="repeat"></i>
                 </div>
@@ -8358,7 +8355,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
                 <!-- KPI 3: Assigned Provinces (Coral) -->
                 <div class="col-6 col-lg-3">
-                  <div class="kpi-card-sample coral">
+                  <div class="kpi-card-sample green">
                     <div class="kpi-circle-icon">
                       <i data-lucide="map-pin"></i>
                     </div>
@@ -9041,7 +9038,7 @@ const scheduleEngine = new ScheduleEngine(dbService);
 
             <!-- 3. Phuong / Xa / TT (Coral / Red-Pink) -->
             <div class="col-6 col-lg-3">
-              <div class="kpi-card-sample coral">
+              <div class="kpi-card-sample green">
                 <div class="kpi-circle-icon">
                   <i data-lucide="compass"></i>
                 </div>
