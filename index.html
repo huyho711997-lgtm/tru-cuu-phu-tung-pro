@@ -6344,28 +6344,15 @@ const scheduleEngine = new ScheduleEngine(dbService);
                         </div>
                       </div>
 
-                      <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                          <div class="p-3 bg-white rounded-3 border shadow-sm h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                              <span class="field-label text-primary mb-0" style="text-transform: none; font-size: 13px; font-weight: 700;">Ngày lẻ trực Hiện trường, ngày chẵn trực Giám định</span>
-                              <span class="badge-soft badge-soft-blue">Ca 1</span>
-                            </div>
-                            <select class="form-select form-select-luxury" id="ins-user-a" required style="height: 44px; border-radius: 8px;">
-                              <!-- Dynamically populated -->
-                            </select>
-                          </div>
+                      <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                          <label class="field-label mb-0">Danh sách Giám định viên luân phiên trong chu kỳ:</label>
+                          <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2" id="btn-add-cycle-ins" style="font-size: 11px; font-weight: 700;">
+                            <i data-lucide="plus" style="width: 14px;"></i> Thêm Ca Luân Phiên
+                          </button>
                         </div>
-                        <div class="col-md-6">
-                          <div class="p-3 bg-white rounded-3 border shadow-sm h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                              <span class="field-label text-success mb-0" style="text-transform: none; font-size: 13px; font-weight: 700;">Ngày lẻ trực Giám định, ngày chẵn trực Hiện trường</span>
-                              <span class="badge-soft badge-soft-green">Ca 2</span>
-                            </div>
-                            <select class="form-select form-select-luxury" id="ins-user-b" required style="height: 44px; border-radius: 8px;">
-                              <!-- Dynamically populated -->
-                            </select>
-                          </div>
+                        <div class="row g-3" id="cycle-inspectors-container">
+                          <!-- JS will render select boxes here -->
                         </div>
                       </div>
 
