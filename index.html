@@ -1558,7 +1558,23 @@
     }
   </style>
 
+
+  <style>
+    .premium-table-row:hover {
+      background-color: #f8fafc !important;
+    }
+    .badge-premium-prov:hover {
+      background-color: #ffffff !important;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      border-color: #cbd5e1 !important;
+    }
+    .btn-remove-prov:hover {
+      color: #ef4444 !important;
+      background-color: #fee2e2 !important;
+    }
+  </style>
 </head>
+
 <body>
 
   <!-- Mobile Sidebar Overlay -->
@@ -8439,38 +8455,30 @@ const scheduleEngine = new ScheduleEngine(dbService);
               </div>
             ` : ''}
 
-            <!-- 4. BẢN ĐỒ & DANH SÁCH ZONE -->
-            <div class="col-12 mt-3">
-              <div class="row g-4">
-                <!-- CỘT TRÁI: BẢN ĐỒ VIỆT NAM -->
-                <div class="col-xl-4 col-lg-4 col-12">
-                  <div class="card border-0 h-100 overflow-hidden" style="border-radius: 20px; background: #0f172a; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
-                    <div class="card-header border-bottom-0 pt-4 pb-2 px-4" style="background: transparent; z-index: 2; position: relative;">
-                      <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="font-size: 15px; color: #f8fafc; letter-spacing: 0.5px;">
-                        <i data-lucide="radar" style="width: 18px; color: #38bdf8;"></i> RADAR ĐIỀU PHỐI (LIVE)
-                      </h6>
-                      <small class="d-block mt-1" style="font-size: 12px; color: #94a3b8;">Bản đồ địa hình các tỉnh thành đang được kiểm soát</small>
-                    </div>
-                    <div class="card-body p-0 position-relative" style="background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);">
-                      <!-- Map Container -->
-                      <div id="vietnam-map-container" style="width: 100%; height: 750px;"></div>
-                      <!-- Map overlay effect -->
-                      <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(15,23,42,0.8) 0%, rgba(15,23,42,0) 15%, rgba(15,23,42,0) 85%, rgba(15,23,42,0.8) 100%); pointer-events: none;"></div>
-                    </div>
-                  </div>
+            <!-- 4. DANH SÁCH ZONE - THIẾT KẾ PREMIUM DATA TABLE -->
+            <div class="col-12 mt-4">
+              <div class="d-flex justify-content-between align-items-end mb-3">
+                <div>
+                  <h6 class="fw-bold text-dark mb-1" style="font-size: 16px;">Danh Sách Phân Bổ Địa Bàn</h6>
+                  <small class="text-muted">Quản lý chi tiết danh sách các Tỉnh/Thành phố do từng Zone phụ trách</small>
                 </div>
-
-                <!-- CỘT PHẢI: DANH SÁCH ZONE -->
-                <div class="col-xl-8 col-lg-8 col-12">
-                  <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="d-flex align-items-center gap-2">
-                      <h6 class="fw-bold text-dark mb-0" style="font-size: 15px;">Danh Sách Zone</h6>
-                      <span class="badge bg-secondary-subtle text-secondary border px-2 py-0.5 fw-semibold" style="font-size: 11.5px; border-radius: 6px;">${zones.length} Đơn vị</span>
-                    </div>
-                  </div>
-                  <div class="row g-3" id="zone-coverage-grid" style="max-height: 750px; overflow-y: auto; overflow-x: hidden; padding-right: 5px;">
-                    <!-- Rendered by JS -->
-                  </div>
+              </div>
+              
+              <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0" style="min-width: 900px;">
+                    <thead style="background: #f8fafc;">
+                      <tr>
+                        <th class="text-uppercase text-muted fw-bold border-0 py-3 ps-4" style="font-size: 11px; letter-spacing: 0.05em; width: 25%;">Thông Tin Zone</th>
+                        <th class="text-uppercase text-muted fw-bold border-0 py-3" style="font-size: 11px; letter-spacing: 0.05em; width: 15%;">Phân Vùng</th>
+                        <th class="text-uppercase text-muted fw-bold border-0 py-3" style="font-size: 11px; letter-spacing: 0.05em; width: 45%;">Địa Bàn Phụ Trách</th>
+                        <th class="text-uppercase text-muted fw-bold border-0 py-3 pe-4 text-end" style="font-size: 11px; letter-spacing: 0.05em; width: 15%;">Hành Động</th>
+                      </tr>
+                    </thead>
+                    <tbody class="border-top-0" id="zone-coverage-grid">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -8652,92 +8660,56 @@ const scheduleEngine = new ScheduleEngine(dbService);
               const regionSummaryText = regionSummaryParts.length > 0 ? regionSummaryParts.join(', ') : 'Chưa xác định';
   
               return `
-                <div class="col-lg-6 col-12">
-                  <div class="zone-card-premium shadow-sm h-100 d-flex flex-column border">
-                    
-                    <div class="p-4 flex-grow-1">
-                      <!-- Zone Card Header -->
-                      <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="d-flex align-items-center gap-3">
-                          <div style="width: 48px; height: 48px; border-radius: 12px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
-                          </div>
-                          <div>
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                              <h5 class="fw-bold mb-0 text-dark" style="font-size: 16.5px; letter-spacing: -0.01em;">${z.name}</h5>
-                              <span class="badge bg-light text-secondary border px-2 py-0.5" style="font-size: 11px; font-family: monospace; border-radius: 6px;">${z.code || z.zoneId}</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 12.5px;">
-                              <i data-lucide="user" style="width: 14px; height: 14px; color: #94a3b8;"></i>
-                              <span>Trưởng Zone: <strong class="text-dark">${z.leadName || 'Chưa phân công'}</strong></span>
-                              ${z.leadPhone ? `<span class="text-muted" style="font-size: 14px;">·</span> <span class="fw-medium">${z.leadPhone}</span>` : ''}
-                            </div>
-                          </div>
-                        </div>
+                <tr class="align-middle premium-table-row bg-white transition-all position-relative" style="border-bottom: 1px solid #f1f5f9;">
+                  <!-- Thông tin Zone -->
+                  <td class="py-4 ps-4">
+                    <div class="d-flex align-items-center gap-3">
+                      <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i data-lucide="shield-check" style="width: 20px; height: 20px;"></i>
                       </div>
-
-                      <!-- Quick Metrics Strip -->
-                      <div class="p-3 rounded-3 mb-4 d-flex flex-wrap align-items-center justify-content-between gap-2" style="background: #f8fafc; border: 1px solid #f1f5f9;">
-                        <div class="d-flex align-items-center gap-4">
-                          <div class="d-flex flex-column">
-                            <span class="text-muted mb-1" style="font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Tỉnh Thành</span>
-                            <span class="fw-bold text-dark" style="font-size: 15px;">${provObjects.length}</span>
-                          </div>
-                          <div style="width: 1px; height: 28px; background: #e2e8f0;"></div>
-                          <div class="d-flex flex-column">
-                            <span class="text-muted mb-1" style="font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Phủ Sóng</span>
-                            <span class="fw-bold text-dark text-truncate" style="font-size: 13.5px; max-width: 140px;" title="${regionSummaryText}">${regionSummaryText}</span>
-                          </div>
-                        </div>
-                        <button class="btn btn-sm btn-white fw-bold d-flex align-items-center gap-1.5 btn-open-assign px-3 py-1.5 shadow-2xs text-primary border" data-zone-id="${z.zoneId}" style="border-radius: 8px; font-size: 12.5px;">
-                          <i data-lucide="settings-2" style="width: 14px; height: 14px;"></i> Phân Bổ Địa Bàn
-                        </button>
-                      </div>
-
-                      <!-- Province Chips Section -->
-                      <div>
-                        <div class="d-flex align-items-center justify-content-between mb-2 pb-1">
-                          <div class="fw-bold text-dark" style="font-size: 12.5px; text-transform: uppercase; color: #475569 !important; letter-spacing: 0.02em;">Phạm vi phụ trách trực tiếp</div>
-                          ${provObjects.length > 0 ? `<span class="badge-soft badge-soft-green fw-semibold" style="font-size: 11px;"><span class="pulse-dot" style="width: 5px; height: 5px; background: #10b981;"></span> Đang hoạt động</span>` : `<span class="badge-soft badge-soft-amber fw-semibold" style="font-size: 11px;">Chưa hoạt động</span>`}
-                        </div>
-                        <div class="d-flex flex-wrap gap-2" style="min-height: 52px;">
-                          ${provObjects.length > 0 ? provObjects.map(p => {
-                            return `
-                              <span class="province-tag shadow-none" style="background: #ffffff; color: #334155; border: 1px solid #cbd5e1 !important; padding: 6px 12px;">
-                                <i data-lucide="map-pin" style="width: 12px; height: 12px; color: #64748b;"></i>
-                                <span class="fw-semibold">${p.name}</span>
-                                <button type="button" class="btn-remove-prov ms-1" data-zone-id="${z.zoneId}" data-code="${p.areaCode}" data-name="${p.name}" title="Gỡ ${p.name} khỏi Zone" style="background: #f1f5f9; color: #64748b; border-radius: 4px; padding: 2px;">
-                                  <i data-lucide="x" style="width: 12px; height: 12px;"></i>
-                                </button>
-                              </span>
-                            `;
-                          }).join('') : `
-                            <div class="w-100 p-3 text-center rounded-3 border border-dashed text-muted d-flex flex-column align-items-center justify-content-center gap-1" style="background: #f8fafc; border-color: #cbd5e1 !important;">
-                              <i data-lucide="map-pin-off" style="width: 20px; height: 20px; color: #94a3b8;"></i>
-                              <span style="font-size: 12.5px;">Chưa gắn tỉnh thành nào cho Zone này</span>
-                              <button class="btn btn-xs btn-link p-0 text-primary fw-bold btn-open-assign mt-1" data-zone-id="${z.zoneId}" style="font-size: 12.5px; text-decoration: none;">
-                                + Gắn ngay
-                              </button>
-                            </div>
-                          `}
+                      <div class="min-w-0">
+                        <h6 class="fw-bold text-dark mb-1 text-truncate" style="font-size: 14.5px;">${z.name}</h6>
+                        <div class="d-flex align-items-center gap-2 text-muted text-truncate" style="font-size: 12px;">
+                          <i data-lucide="user" style="width: 12px; height: 12px;"></i> 
+                          <span class="text-truncate">${z.leadName || 'Chưa có trưởng Zone'}</span>
                         </div>
                       </div>
                     </div>
-  
-                    <!-- Card Footer -->
-                    <div class="py-3 px-4 bg-light border-top d-flex justify-content-between align-items-center" style="border-color: #f1f5f9 !important;">
-                      <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 12px;">
-                        <i data-lucide="info" style="width: 14px; height: 14px; color: #94a3b8;"></i>
-                        <span>Hệ thống tự động kích hoạt luật trực</span>
-                      </div>
-                      <a href="#rules" class="text-primary fw-bold text-decoration-none d-flex align-items-center gap-1" style="font-size: 12.5px;">
-                        Cấu hình lịch <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
-                      </a>
+                  </td>
+                  
+                  <!-- Phân Vùng -->
+                  <td class="py-4">
+                    <div class="d-flex flex-column gap-1">
+                      <span class="fw-bold text-dark" style="font-size: 13.5px;">${provObjects.length} Tỉnh</span>
+                      <span class="text-muted text-truncate" style="font-size: 11.5px; max-width: 120px;" title="${regionSummaryText}">${regionSummaryText}</span>
                     </div>
-                  </div>
-                </div>
+                  </td>
+                  
+                  <!-- Địa Bàn Phụ Trách -->
+                  <td class="py-4 pe-3">
+                    <div class="d-flex flex-wrap gap-2" style="max-height: 80px; overflow-y: auto; padding-right: 5px;">
+                      ${provObjects.length > 0 
+                        ? provObjects.map(p => `
+                          <span class="badge-premium-prov d-inline-flex align-items-center bg-light text-dark border" style="padding: 4px 6px 4px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 500; border-color: #e2e8f0 !important;">
+                            <i data-lucide="map-pin" style="width: 10px; margin-right: 4px; color: #64748b;"></i> ${p.name}
+                            <button type="button" class="btn-remove-prov btn-link p-0 border-0 ms-2 d-flex align-items-center justify-content-center" data-zone-id="${z.zoneId}" data-code="${p.areaCode}" data-name="${p.name}" title="Gỡ tỉnh này" style="color: #94a3b8; background: #f1f5f9; border-radius: 4px; width: 16px; height: 16px; transition: all 0.2s;">
+                              <i data-lucide="x" style="width: 10px; height: 10px;"></i>
+                            </button>
+                          </span>
+                        `).join('') 
+                        : `<span class="text-danger small fw-medium d-flex align-items-center gap-1"><i data-lucide="alert-circle" style="width:13px;"></i> Chưa phân bổ địa bàn</span>`
+                      }
+                    </div>
+                  </td>
+                  
+                  <!-- Hành Động -->
+                  <td class="py-4 pe-4 text-end">
+                    <button class="btn btn-primary btn-sm rounded-pill fw-semibold px-3 py-1.5 btn-open-assign shadow-sm" data-zone-id="${z.zoneId}" style="font-size: 12px; transition: all 0.2s;">
+                      <i data-lucide="settings-2" class="me-1" style="width: 13px;"></i> Phân Bổ
+                    </button>
+                  </td>
+                </tr>
               `;
-            }).join('');
 
           lucide.createIcons();
         };
@@ -8796,150 +8768,6 @@ const scheduleEngine = new ScheduleEngine(dbService);
           });
         };
         renderGrid();
-
-        // Initialize Echarts Map
-        const initMap = async () => {
-          const mapContainer = container.querySelector('#vietnam-map-container');
-          const loader = container.querySelector('#vietnam-map-loader');
-          if (!mapContainer || typeof echarts === 'undefined') {
-            if (loader) loader.innerHTML = '<span class="text-danger small">Không thể tải thư viện bản đồ</span>';
-            return;
-          }
-          
-          try {
-            let geoJson = window.vietnamGeoJsonCache;
-            if (!geoJson) {
-              const res = await fetch('https://code.highcharts.com/mapdata/countries/vn/vn-all.geo.json');
-              geoJson = await res.json();
-              window.vietnamGeoJsonCache = geoJson;
-            }
-            
-            echarts.registerMap('VN', geoJson);
-            const myChart = echarts.init(mapContainer);
-            
-            // Map data preparation
-            const mapData = [];
-            const zoneColors = ['#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#f472b6', '#2dd4bf', '#a78bfa'];
-            
-            provinces.forEach(p => {
-              let assignedZone = null;
-              let zoneIdx = 0;
-              for (let i = 0; i < zones.length; i++) {
-                const z = zones[i];
-                const zoneCovDocs = coverages.filter(c => c.zoneId === z.zoneId && c.isActive);
-                const covCodes = zoneCovDocs.map(c => c.provinceCode);
-                const directCodes = Array.isArray(z.provinceCodes) ? z.provinceCodes : (z.provinceCode ? [z.provinceCode] : []);
-                const allCodes = new Set([...covCodes, ...directCodes]);
-                if (allCodes.has(p.areaCode)) {
-                  assignedZone = z;
-                  zoneIdx = i;
-                  break;
-                }
-              }
-              
-              const norm = (s) => (s||'').toLowerCase().replace(/^(tỉnh|thành phố|tp\.)\s*/, '').trim();
-              
-              let geoName = geoJson.features.find(f => {
-                 let fn = norm(f.properties.name);
-                 let pn = norm(p.name);
-                 if (pn.includes('hồ chí minh') && fn.includes('hồ chí minh')) return true;
-                 if (pn.includes('thừa thiên') && fn.includes('thừa thiên')) return true;
-                 if (pn.includes('bà rịa') && fn.includes('bà rịa')) return true;
-                 return fn === pn;
-              })?.properties.name || p.name;
-              
-              if (assignedZone) {
-                mapData.push({
-                  name: geoName,
-                  value: 1,
-                  zoneName: assignedZone.name,
-                  zoneCode: assignedZone.code || assignedZone.zoneId,
-                  itemStyle: { areaColor: zoneColors[zoneIdx % zoneColors.length] }
-                });
-              } else {
-                mapData.push({
-                  name: geoName,
-                  value: 0,
-                  zoneName: 'Chưa phân bổ',
-                  itemStyle: { areaColor: '#f8fafc' }
-                });
-              }
-            });
-
-            const option = {
-              backgroundColor: 'transparent',
-              tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                  if (!params.name) return '';
-                  const isAssigned = params.data?.value;
-                  const zName = params.data?.zoneName || 'Chưa phân bổ';
-                  return `<div style="padding: 6px; border-radius: 8px;">
-                    <div style="font-weight: 800; font-size: 14px; color: #ffffff; margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase;">${params.name}</div>
-                    <div style="font-size: 12.5px; color: #94a3b8;">
-                      <i data-lucide="shield-check" style="width: 14px; display: inline-block; vertical-align: middle; margin-right: 4px; color: ${isAssigned ? '#38bdf8' : '#94a3b8'};"></i>
-                      <span style="color: ${isAssigned ? '#38bdf8' : '#64748b'}; font-weight: 600;">${zName}</span>
-                    </div>
-                  </div>`;
-                },
-                backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                borderColor: 'rgba(56, 189, 248, 0.3)',
-                borderWidth: 1,
-                textStyle: { color: '#f8fafc' },
-                extraCssText: 'box-shadow: 0 8px 32px rgba(0,0,0,0.4); backdrop-filter: blur(8px); border-radius: 12px;'
-              },
-              geo: {
-                map: 'VN',
-                roam: true,
-                zoom: 1.2,
-                label: { emphasis: { show: false } },
-                itemStyle: {
-                  areaColor: '#1e293b',
-                  borderColor: '#334155',
-                  borderWidth: 1,
-                  shadowColor: 'rgba(0, 0, 0, 0.5)',
-                  shadowBlur: 15,
-                  shadowOffsetX: 5,
-                  shadowOffsetY: 10
-                },
-                emphasis: {
-                  itemStyle: { areaColor: '#334155' }
-                }
-              },
-              series: [
-                {
-                  type: 'map',
-                  geoIndex: 0,
-                  data: mapData.map(d => {
-                     // If assigned, give it a glowing premium color
-                     if (d.value === 1) {
-                       d.itemStyle = {
-                         areaColor: d.itemStyle.areaColor,
-                         shadowColor: d.itemStyle.areaColor,
-                         shadowBlur: 10,
-                         opacity: 0.85,
-                         borderColor: '#ffffff',
-                         borderWidth: 0.5
-                       };
-                     }
-                     return d;
-                  })
-                }
-              ]
-            };
-            
-            if (loader) loader.style.display = 'none';
-            myChart.setOption(option);
-            
-            window.addEventListener('resize', () => myChart.resize());
-            
-          } catch (err) {
-            console.error('Error loading map:', err);
-            if (loader) loader.innerHTML = '<span class="text-danger small">Lỗi tải bản đồ</span>';
-          }
-        };
-        
-        initMap();
 
         // Tìm kiếm Zone / Tỉnh ngoài trang chính
         container.querySelector('#search-coverage').addEventListener('input', (e) => {
