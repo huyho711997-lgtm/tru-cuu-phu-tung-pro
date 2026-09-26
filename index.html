@@ -8266,118 +8266,80 @@ const scheduleEngine = new ScheduleEngine(dbService);
         };
 
         container.innerHTML = `
-          <div class="row g-4">
             <!-- 1. HERO TITLE & SEARCH BAR -->
             <div class="col-12">
-              <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-1">
                 <div>
-                  <div class="d-flex align-items-center gap-2 mb-1">
-                    <h4 class="fw-bold mb-0 text-dark" style="font-size: 21px; letter-spacing: -0.02em;">Phân Bổ Địa Bàn Quản Lý</h4>
-                    <span class="badge-soft badge-soft-blue fw-bold" style="font-size: 11px;">Zone Coverage Matrix</span>
-                  </div>
-                  <p class="text-muted mb-0" style="font-size: 13px;">
-                    1 Zone có thể quản lý nhiều Tỉnh/Thành phố. Hệ thống tự động kích hoạt lịch trực của Zone khi tra cứu tại bất kỳ địa bàn phụ trách nào.
-                  </p>
+                  <h4 class="fw-bold mb-1" style="color: var(--text-main); font-size: 20px;">Phân Bổ Địa Bàn Quản Lý</h4>
+                  <p class="text-muted mb-0 small" style="font-size: 12.5px;">1 Zone có thể quản lý nhiều Tỉnh/Thành phố. Hệ thống tự động kích hoạt lịch trực của Zone tương ứng với địa bàn.</p>
                 </div>
-
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2 flex-shrink-0">
                   <div class="position-relative" style="min-width: 280px;">
-                    <i data-lucide="search" class="text-muted position-absolute" style="left: 14px; top: 12px; width: 16px; height: 16px;"></i>
-                    <input type="text" class="form-control shadow-2xs" id="search-coverage" placeholder="Tìm Zone, Trưởng Zone, Tỉnh..." style="padding-left: 40px; height: 40px; font-size: 13px; border-radius: 10px;">
+                    <i data-lucide="search" class="text-muted position-absolute" style="left: 14px; top: 11px; width: 16px; height: 16px;"></i>
+                    <input type="text" class="form-control shadow-sm border-0 bg-white" id="search-coverage" placeholder="Tìm Zone, Trưởng Zone, Tỉnh..." style="padding-left: 40px; height: 38px; font-size: 13px; border-radius: 10px;">
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- 2. EXECUTIVE KPI METRICS (4 CARDS) -->
+            <!-- 2. KPI THỐNG KÊ (THIẾT KẾ THEO MẪU QUẢN LÝ PHƯỜNG XÃ) -->
             <div class="col-12">
-              <div class="row g-3">
-                <!-- KPI 1: Zones count -->
-                <div class="col-xl-3 col-sm-6 col-12">
-                  <div class="kpi-card-metric h-100">
-                    <div class="d-flex align-items-center justify-content-between">
-                      <div>
-                        <span class="text-muted text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.05em;">Zone Điều Hành</span>
-                        <h3 class="fw-bold text-dark mt-1 mb-0" style="font-size: 26px; letter-spacing: -0.03em;">${String(zones.length).padStart(2, '0')}</h3>
-                      </div>
-                      <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #2563eb; display: flex; align-items: center; justify-content: center;">
-                        <i data-lucide="shield" style="width: 22px; height: 22px;"></i>
-                      </div>
+              <div class="row g-3 mb-2">
+                <!-- KPI 1: Zones count (Purple) -->
+                <div class="col-6 col-lg-3">
+                  <div class="kpi-card-sample purple">
+                    <div class="kpi-circle-icon">
+                      <i data-lucide="shield"></i>
                     </div>
-                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between" style="font-size: 12px;">
-                      <span class="text-muted">Đơn vị tiếp nhận</span>
-                      <span class="badge-soft badge-soft-green fw-semibold"><span class="pulse-dot" style="width:6px;height:6px;"></span> Sẵn sàng trực</span>
+                    <div class="kpi-sample-content">
+                      <div class="kpi-sample-number">${String(zones.length).padStart(2, '0')}</div>
+                      <div class="kpi-sample-label">Zone Điều Hành</div>
                     </div>
                   </div>
                 </div>
 
-                <!-- KPI 2: National Coverage -->
-                <div class="col-xl-3 col-sm-6 col-12">
-                  <div class="kpi-card-metric h-100">
-                    <div class="d-flex align-items-center justify-content-between">
-                      <div>
-                        <span class="text-muted text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.05em;">Độ Phủ Toàn Quốc</span>
-                        <h3 class="fw-bold text-dark mt-1 mb-0" style="font-size: 26px; letter-spacing: -0.03em;">${coveragePercent}%</h3>
-                      </div>
-                      <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #f5f3ff, #ede9fe); color: #7c3aed; display: flex; align-items: center; justify-content: center;">
-                        <i data-lucide="globe" style="width: 22px; height: 22px;"></i>
-                      </div>
+                <!-- KPI 2: National Coverage (Blue) -->
+                <div class="col-6 col-lg-3">
+                  <div class="kpi-card-sample blue">
+                    <div class="kpi-circle-icon">
+                      <i data-lucide="globe"></i>
                     </div>
-                    <div class="mt-3 pt-2 border-top">
-                      <div class="d-flex justify-content-between text-muted mb-1" style="font-size: 11.5px;">
-                        <span>${assignedProvincesCount} / ${totalProvinces} Tỉnh Thành</span>
-                        <span class="fw-semibold text-dark">${coveragePercent}%</span>
-                      </div>
-                      <div class="progress" style="height: 6px; border-radius: 6px; background: #f1f5f9;">
-                        <div class="progress-bar" role="progressbar" style="width: ${coveragePercent}%; background: linear-gradient(90deg, #6366f1, #3b82f6); border-radius: 6px;"></div>
-                      </div>
+                    <div class="kpi-sample-content">
+                      <div class="kpi-sample-number">${coveragePercent}%</div>
+                      <div class="kpi-sample-label">Độ Phủ Toàn Quốc</div>
                     </div>
                   </div>
                 </div>
 
-                <!-- KPI 3: Assigned Provinces -->
-                <div class="col-xl-3 col-sm-6 col-12">
-                  <div class="kpi-card-metric h-100">
-                    <div class="d-flex align-items-center justify-content-between">
-                      <div>
-                        <span class="text-muted text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.05em;">Tỉnh Đã Phân Bổ</span>
-                        <h3 class="fw-bold mt-1 mb-0" style="font-size: 26px; letter-spacing: -0.03em; color: #059669;">${String(assignedProvincesCount).padStart(2, '0')}</h3>
-                      </div>
-                      <div style="width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #059669; display: flex; align-items: center; justify-content: center;">
-                        <i data-lucide="map-pin" style="width: 22px; height: 22px;"></i>
-                      </div>
+                <!-- KPI 3: Assigned Provinces (Coral) -->
+                <div class="col-6 col-lg-3">
+                  <div class="kpi-card-sample coral">
+                    <div class="kpi-circle-icon">
+                      <i data-lucide="map-pin"></i>
                     </div>
-                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between" style="font-size: 12px;">
-                      <span class="text-muted">Định tuyến tự động</span>
-                      <span class="text-dark fw-semibold">Hoạt động 24/7</span>
+                    <div class="kpi-sample-content">
+                      <div class="kpi-sample-number">${String(assignedProvincesCount).padStart(2, '0')}</div>
+                      <div class="kpi-sample-label">Tỉnh Đã Phân Bổ</div>
                     </div>
                   </div>
                 </div>
 
-                <!-- KPI 4: Unassigned Provinces Alert & Toggle -->
-                <div class="col-xl-3 col-sm-6 col-12">
-                  <div class="kpi-card-metric h-100" style="${unassignedProvinces.length > 0 ? 'background: linear-gradient(135deg, #fffbeb, #fef3c7); border-color: #fde68a !important;' : ''}">
-                    <div class="d-flex align-items-center justify-content-between">
-                      <div>
-                        <span class="text-uppercase fw-bold" style="font-size: 11px; letter-spacing: 0.05em; color: ${unassignedProvinces.length > 0 ? '#92400e' : '#64748b'};">Tỉnh Chưa Gán</span>
-                        <h3 class="fw-bold mt-1 mb-0" style="font-size: 26px; letter-spacing: -0.03em; color: ${unassignedProvinces.length > 0 ? '#b45309' : '#059669'};">${String(unassignedProvinces.length).padStart(2, '0')}</h3>
-                      </div>
-                      <div style="width: 46px; height: 46px; border-radius: 12px; background: ${unassignedProvinces.length > 0 ? '#fef3c7' : '#ecfdf5'}; color: ${unassignedProvinces.length > 0 ? '#d97706' : '#059669'}; display: flex; align-items: center; justify-content: center;">
-                        <i data-lucide="${unassignedProvinces.length > 0 ? 'alert-triangle' : 'check-circle'}" style="width: 22px; height: 22px;"></i>
-                      </div>
+                <!-- KPI 4: Unassigned Provinces (Orange) -->
+                <div class="col-6 col-lg-3">
+                  <div class="kpi-card-sample orange position-relative ${unassignedProvinces.length > 0 ? 'cursor-pointer' : ''}" id="${unassignedProvinces.length > 0 ? 'btn-toggle-unassigned' : ''}" style="${unassignedProvinces.length > 0 ? 'border: 1.5px solid #fde68a !important; cursor: pointer;' : ''}">
+                    <div class="kpi-circle-icon">
+                      <i data-lucide="${unassignedProvinces.length > 0 ? 'alert-triangle' : 'check-circle'}"></i>
                     </div>
-                    <div class="mt-3 pt-2 border-top d-flex align-items-center justify-content-between" style="font-size: 12px; border-color: ${unassignedProvinces.length > 0 ? 'rgba(217, 119, 6, 0.2)' : '#f1f5f9'} !important;">
-                      <span style="color: ${unassignedProvinces.length > 0 ? '#92400e' : '#64748b'};">${unassignedProvinces.length > 0 ? 'Cần bổ sung đơn vị' : 'Đã phủ kín toàn quốc'}</span>
-                      ${unassignedProvinces.length > 0 ? `
-                        <button type="button" class="btn btn-xs fw-bold p-0 text-decoration-none d-flex align-items-center gap-1" id="btn-toggle-unassigned" style="font-size: 12px; color: #b45309; background: none; border: none; cursor: pointer;">
-                          <span>Xem chi tiết</span> <i data-lucide="chevron-down" id="chevron-unassigned" style="width:13px; height:13px; transition: transform 0.2s;"></i>
-                        </button>
-                      ` : ''}
+                    <div class="kpi-sample-content">
+                      <div class="kpi-sample-number">${String(unassignedProvinces.length).padStart(2, '0')}</div>
+                      <div class="kpi-sample-label">Tỉnh Chưa Gán</div>
                     </div>
+                    ${unassignedProvinces.length > 0 ? `<div class="position-absolute top-0 end-0 p-2 me-1"><span class="pulse-dot" style="background:#f59e0b; width: 6px; height: 6px;"></span></div>` : ''}
                   </div>
                 </div>
               </div>
             </div>
+
 
             <!-- 3. COLLAPSIBLE UNASSIGNED PROVINCES PANEL (CLEAN & REGIONAL) -->
             ${unassignedProvinces.length > 0 ? `
