@@ -3583,7 +3583,22 @@
       },
       async getAllInspectors() {
         const snap = await getDocs(collection(db, "inspectors"));
-        return snap.docs.map(d => ({ inspectorId: d.id, ...d.data() }));
+        const inspectors = snap.docs.map(d => ({ inspectorId: d.id, ...d.data() }));
+        const zoneSnap = await getDocs(collection(db, "zones"));
+        zoneSnap.docs.forEach(d => {
+          const z = d.data();
+          if (z.leadName) {
+            inspectors.push({
+              inspectorId: d.id,
+              zoneId: d.id,
+              empCode: 'Trưởng Zone',
+              fullName: z.leadName,
+              phone: z.leadPhone,
+              isActive: true
+            });
+          }
+        });
+        return inspectors;
       },
       async getAllZoneCoverages() {
         const snap = await getDocs(collection(db, "zoneCoverage"));
@@ -3905,13 +3920,45 @@
       async getInspectorById(inspectorId) {
         if (!inspectorId) return null;
         const snap = await getDoc(doc(db, "inspectors", inspectorId));
-        return snap.exists() ? { inspectorId: snap.id, ...snap.data() } : null;
+        if (snap.exists()) {
+          return { inspectorId: snap.id, ...snap.data() };
+        }
+        const zoneSnap = await getDoc(doc(db, "zones", inspectorId));
+        if (zoneSnap.exists()) {
+          const zData = zoneSnap.data();
+          if (zData.leadName) {
+            return {
+              inspectorId: zoneSnap.id,
+              zoneId: zoneSnap.id,
+              empCode: 'Trưởng Zone',
+              fullName: zData.leadName,
+              phone: zData.leadPhone,
+              isActive: true
+            };
+          }
+        }
+        return null;
       },
 
       async getInspectorsByZone(zoneId) {
         const q = query(collection(db, "inspectors"), where("zoneId", "==", zoneId), where("isActive", "==", true));
         const snap = await getDocs(q);
-        return snap.docs.map(d => ({ inspectorId: d.id, ...d.data() }));
+        const inspectors = snap.docs.map(d => ({ inspectorId: d.id, ...d.data() }));
+        const zoneDoc = await getDoc(doc(db, "zones", zoneId));
+        if (zoneDoc.exists()) {
+          const zData = zoneDoc.data();
+          if (zData.leadName) {
+            inspectors.unshift({
+              inspectorId: zoneId,
+              zoneId: zoneId,
+              empCode: 'Trưởng Zone',
+              fullName: zData.leadName,
+              phone: zData.leadPhone,
+              isActive: true
+            });
+          }
+        }
+        return inspectors;
       },
 
       async getAllRulesByZone(zoneId) {
